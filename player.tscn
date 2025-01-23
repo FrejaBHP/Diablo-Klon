@@ -1,0 +1,45 @@
+[gd_scene load_steps=7 format=3 uid="uid://dqhy454qpbnlg"]
+
+[ext_resource type="Texture2D" uid="uid://ci3657tcwp4x4" path="res://textures/fVSI.png" id="1_10g8w"]
+[ext_resource type="Script" path="res://scripts/Player.cs" id="1_lgjii"]
+[ext_resource type="PackedScene" uid="uid://dq2ktajvurn05" path="res://models/humanf.tscn" id="3_mo1hl"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_cvuyr"]
+
+[sub_resource type="Animation" id="Animation_lv0no"]
+resource_name = "new_animation"
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_my3p0"]
+_data = {
+"new_animation": SubResource("Animation_lv0no")
+}
+
+[node name="Player" type="CharacterBody3D"]
+collision_layer = 4
+collision_mask = 3
+input_ray_pickable = false
+floor_constant_speed = true
+script = ExtResource("1_lgjii")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_cvuyr")
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+visible = false
+pixel_size = 0.005
+texture = ExtResource("1_10g8w")
+
+[node name="DebugLabel" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="humanF" parent="." instance=ExtResource("3_mo1hl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+visible = false
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_my3p0")
+}

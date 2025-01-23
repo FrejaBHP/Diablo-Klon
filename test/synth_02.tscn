@@ -1,0 +1,213 @@
+[gd_scene load_steps=2 format=3 uid="uid://cni65t5prbpe4"]
+
+[ext_resource type="PackedScene" uid="uid://cxfv6rys4kdjw" path="res://test/Synth02.fbx" id="1_8dx4c"]
+
+[node name="Synth02" instance=ExtResource("1_8dx4c")]
+
+[node name="plane" parent="Skeleton3D" index="0"]
+transform = Transform3D(1.19209e-07, -0.953717, -0.300706, 1, 1.19209e-07, 1.49012e-08, 1.49012e-08, -0.300706, 0.953717, -0.08125, 1.30469, -0.148438)
+bone_idx = 9
+
+[node name="plane_1" parent="Skeleton3D" index="1"]
+transform = Transform3D(1.19209e-07, 0.953717, 0.300706, -1, 1.19209e-07, 1.49012e-08, -1.49012e-08, -0.300706, 0.953717, 0.08125, 1.30469, -0.148438)
+bone_idx = 10
+
+[node name="cylinder" parent="Skeleton3D" index="2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1875, 0)
+bone_idx = 11
+
+[node name="cylinder_1" parent="Skeleton3D" index="3"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 1.30469, -0.015625)
+bone_idx = 12
+
+[node name="cuboid" parent="Skeleton3D" index="4"]
+transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, -0.109375, 1.3125, 0)
+bone_idx = 13
+
+[node name="cuboid_1" parent="Skeleton3D" index="5"]
+transform = Transform3D(0, 1, 0, -1, 0, 0, 0, 0, 1, 0.109375, 1.3125, 0)
+bone_idx = 14
+
+[node name="cylinder_2" parent="Skeleton3D" index="6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.16406, 0.015625)
+bone_idx = 15
+
+[node name="cylinder_3" parent="Skeleton3D" index="7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.11719, 0.015625)
+bone_idx = 16
+
+[node name="cylinder_4" parent="Skeleton3D" index="8"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.07031, 0.015625)
+bone_idx = 17
+
+[node name="cuboid_7" parent="Skeleton3D" index="9"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0.570313, 1, -0.0742188)
+bone_idx = 22
+
+[node name="cuboid_5" parent="Skeleton3D" index="10"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.679688, 0.996094, 0.0078125)
+bone_idx = 25
+
+[node name="cuboid_9" parent="Skeleton3D" index="11"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.640625, 0.996094, 0.0078125)
+bone_idx = 26
+
+[node name="cuboid_3" parent="Skeleton3D" index="12"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.59375, 0.992188, 0.0078125)
+bone_idx = 27
+
+[node name="cylinder_26" parent="Skeleton3D" index="13"]
+transform = Transform3D(0, 1, 0, -1, 0, 0, 0, 0, 1, 0.4375, 1.00781, 0.015625)
+bone_idx = 28
+
+[node name="cylinder_12" parent="Skeleton3D" index="14"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0.195313, 1.00781, 0.046875)
+bone_idx = 29
+
+[node name="cylinder_14" parent="Skeleton3D" index="15"]
+transform = Transform3D(0, 1, 0, -1, 0, 0, 0, 0, 1, 0.273438, 1.00781, 0.015625)
+bone_idx = 30
+
+[node name="plane_3" parent="Skeleton3D" index="16"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.277344, 1.06641, 0.015625)
+bone_idx = 31
+
+[node name="cuboid_6" parent="Skeleton3D" index="17"]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -0.570313, 1, -0.0742188)
+bone_idx = 36
+
+[node name="cuboid_8" parent="Skeleton3D" index="18"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.679688, 0.996094, 0.0078125)
+bone_idx = 39
+
+[node name="cuboid_4" parent="Skeleton3D" index="19"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.640625, 0.996094, 0.0078125)
+bone_idx = 40
+
+[node name="cuboid_2" parent="Skeleton3D" index="20"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.59375, 0.992188, 0.0078125)
+bone_idx = 41
+
+[node name="cylinder_25" parent="Skeleton3D" index="21"]
+transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, -0.4375, 1.00781, 0.015625)
+bone_idx = 42
+
+[node name="cylinder_11" parent="Skeleton3D" index="22"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, -0.195313, 1.00781, 0.046875)
+bone_idx = 43
+
+[node name="cylinder_13" parent="Skeleton3D" index="23"]
+transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, -0.273438, 1.00781, 0.015625)
+bone_idx = 44
+
+[node name="plane_2" parent="Skeleton3D" index="24"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.277344, 1.06641, 0.015625)
+bone_idx = 45
+
+[node name="cylinder_5" parent="Skeleton3D" index="25"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0.960938, 0.078125)
+bone_idx = 46
+
+[node name="cylinder_35" parent="Skeleton3D" index="26"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 1.05469, 0.140625)
+bone_idx = 47
+
+[node name="cylinder_36" parent="Skeleton3D" index="27"]
+transform = Transform3D(1, 0, 0, 0, -0.21644, -0.976296, 0, 0.976296, -0.21644, -0.0625, 0.976563, 0.210938)
+bone_idx = 48
+
+[node name="cylinder_37" parent="Skeleton3D" index="28"]
+transform = Transform3D(1, 0, 0, 0, -0.21644, -0.976296, 0, 0.976296, -0.21644, 0.0625, 0.976563, 0.210938)
+bone_idx = 49
+
+[node name="cylinder_34" parent="Skeleton3D" index="29"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0.652344, 0.820313)
+bone_idx = 58
+
+[node name="cylinder_33" parent="Skeleton3D" index="30"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0.648438, 0.757813)
+bone_idx = 59
+
+[node name="cylinder_32" parent="Skeleton3D" index="31"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0.644531, 0.695313)
+bone_idx = 60
+
+[node name="cylinder_31" parent="Skeleton3D" index="32"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0.640625, 0.617188)
+bone_idx = 61
+
+[node name="cylinder_30" parent="Skeleton3D" index="33"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0.636719, 0.515625)
+bone_idx = 62
+
+[node name="cylinder_29" parent="Skeleton3D" index="34"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0.632813, 0.40625)
+bone_idx = 63
+
+[node name="cylinder_28" parent="Skeleton3D" index="35"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0.628906, 0.289063)
+bone_idx = 64
+
+[node name="cylinder_27" parent="Skeleton3D" index="36"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0.625, 0.179688)
+bone_idx = 65
+
+[node name="cylinder_6" parent="Skeleton3D" index="37"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.71875, 0.0078125)
+bone_idx = 66
+
+[node name="cylinder_22" parent="Skeleton3D" index="38"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.109375, -0.03125, -0.109375)
+bone_idx = 72
+
+[node name="cylinder_20" parent="Skeleton3D" index="39"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0.109375, 0.015625, 0.0390625)
+bone_idx = 73
+
+[node name="cylinder_18" parent="Skeleton3D" index="40"]
+transform = Transform3D(1, 0, 0, 0, 0.766044, -0.642788, 0, 0.642788, 0.766044, 0.109375, 0.125, 0.0625)
+bone_idx = 74
+
+[node name="cylinder_16" parent="Skeleton3D" index="41"]
+transform = Transform3D(1, 0, 0, 0, 0.642787, 0.766045, 0, -0.766045, 0.642787, 0.109375, 0.289063, 0.0820313)
+bone_idx = 75
+
+[node name="cylinder_10" parent="Skeleton3D" index="42"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.109375, 0.421875, 0)
+bone_idx = 76
+
+[node name="cylinder_21" parent="Skeleton3D" index="43"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.109375, -0.03125, -0.109375)
+bone_idx = 82
+
+[node name="cylinder_19" parent="Skeleton3D" index="44"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, -0.109375, 0.015625, 0.0390625)
+bone_idx = 83
+
+[node name="cylinder_17" parent="Skeleton3D" index="45"]
+transform = Transform3D(1, 0, 0, 0, 0.766044, -0.642788, 0, 0.642788, 0.766044, -0.109375, 0.125, 0.0625)
+bone_idx = 84
+
+[node name="cylinder_15" parent="Skeleton3D" index="46"]
+transform = Transform3D(1, 0, 0, 0, 0.642787, 0.766045, 0, -0.766045, 0.642787, -0.109375, 0.289063, 0.0820313)
+bone_idx = 85
+
+[node name="cylinder_9" parent="Skeleton3D" index="47"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.109375, 0.421875, 0)
+bone_idx = 86
+
+[node name="cylinder_7" parent="Skeleton3D" index="48"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0.109375, 0.609375, 0.0703125)
+bone_idx = 87
+
+[node name="cylinder_8" parent="Skeleton3D" index="49"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, -0.109375, 0.609375, 0.0703125)
+bone_idx = 88
+
+[node name="cylinder_23" parent="Skeleton3D" index="50"]
+transform = Transform3D(0.258819, -0.965926, 0, 0.965926, 0.258819, 0, 0, 0, 1, -0.1875, 0.644531, 0.0078125)
+bone_idx = 89
+
+[node name="cylinder_24" parent="Skeleton3D" index="51"]
+transform = Transform3D(0.258819, 0.965926, 0, -0.965926, 0.258819, 0, 0, 0, 1, 0.1875, 0.644531, 0.0078125)
+bone_idx = 90

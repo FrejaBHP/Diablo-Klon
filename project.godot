@@ -1,0 +1,30 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="Dibbles"
+run/main_scene="res://game.tscn"
+config/features=PackedStringArray("4.3", "C#", "Forward Plus")
+config/icon="res://icon.svg"
+
+[dotnet]
+
+project/assembly_name="Dibbles"
+
+[layer_names]
+
+3d_physics/layer_1="Wall"
+3d_physics/layer_2="Floor"
+3d_physics/layer_3="Player"
+
+[physics]
+
+3d/layer_3="Player"

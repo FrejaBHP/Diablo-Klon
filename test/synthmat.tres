@@ -1,0 +1,10 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://c64udftrdsx34"]
+
+[ext_resource type="Texture2D" uid="uid://btarixhm0pouh" path="res://test/SynthTexture01.png" id="1_3bpfi"]
+
+[resource]
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+albedo_texture = ExtResource("1_3bpfi")
+texture_filter = 0

@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://icarsw2rpyi4"]
+
+[ext_resource type="Texture2D" uid="uid://dh1nj83qjsvhi" path="res://textures/world/snow.jpg" id="1_xhynh"]
+
+[resource]
+resource_local_to_scene = true
+albedo_texture = ExtResource("1_xhynh")
+anisotropy = 1.0

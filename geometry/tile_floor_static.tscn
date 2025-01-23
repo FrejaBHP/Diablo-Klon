@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://bdl4w88qwql7"]
+
+[ext_resource type="Script" path="res://scripts/TileFloorStatic.cs" id="1_e4ndk"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_yiixm"]
+resource_local_to_scene = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2y6k2"]
+size = Vector3(2, 0.1, 2)
+
+[node name="TileFloorStatic" type="StaticBody3D"]
+collision_layer = 2
+collision_mask = 5
+input_ray_pickable = false
+script = ExtResource("1_e4ndk")
+
+[node name="TileMesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_yiixm")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
+shape = SubResource("BoxShape3D_2y6k2")

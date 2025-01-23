@@ -1,0 +1,16 @@
+[gd_scene load_steps=5 format=3 uid="uid://c8yfhqa8akoeb"]
+
+[ext_resource type="PackedScene" uid="uid://byrbkmdth7i0l" path="res://level_01.tscn" id="1_76jp2"]
+[ext_resource type="Script" path="res://scripts/Game.cs" id="1_rw8dc"]
+[ext_resource type="PackedScene" uid="uid://dqhy454qpbnlg" path="res://player.tscn" id="2_51cil"]
+[ext_resource type="PackedScene" uid="uid://bvbig2y0lfddq" path="res://player_camera.tscn" id="4_os4hh"]
+
+[node name="Game" type="Node3D"]
+script = ExtResource("1_rw8dc")
+
+[node name="Level01" parent="." instance=ExtResource("1_76jp2")]
+
+[node name="Player" parent="." instance=ExtResource("2_51cil")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, -1)
+
+[node name="PlayerCamera" parent="." instance=ExtResource("4_os4hh")]
