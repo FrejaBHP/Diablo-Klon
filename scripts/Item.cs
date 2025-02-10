@@ -28,6 +28,10 @@ public partial class Item {
 	protected WorldItem worldItemRef;
 	protected InventoryItem invItemRef;
 
+	public Vector2I GetGridSize() {
+		return new Vector2I(gridSizeX, gridSizeY);
+	}
+
 	public WorldItem ConvertToWorldItem() {
 		PlayerOwner = null;
 		WorldItem worldItem = worldItemScene.Instantiate<WorldItem>();
@@ -46,31 +50,55 @@ public partial class Item {
 		return worldItem;
 	}
 
-	public void ConvertToInventoryItem(Player newOwner) {
-		PlayerOwner = newOwner;
+	public void ConvertToInventoryItem(Player player) {
 		InventoryItem inventoryItem = inventoryItemScene.Instantiate<InventoryItem>();
 		inventoryItem.SetItemReference(this);
 		inventoryItem.SetGridSize(gridSizeX, gridSizeY);
 
-		if (IsInWorld) {
-			worldItemRef.QueueFree();
-			worldItemRef = null;
-		}
+		if (player.PlayerInventory.TryAddItemToInventory(ref inventoryItem)) {
+			if (IsInWorld) {
+				worldItemRef.QueueFree();
+				worldItemRef = null;
+			}
 
-		IsInWorld = false;
-		IsPickedUp = true;
-		
-		PlayerOwner.PlayerInventory.TryAddItemToInventory(ref inventoryItem);
-		//PlayerOwner.PlayerInventory.AddChild(inventoryItem);
+			IsInWorld = false;
+			IsPickedUp = true;
+			PlayerOwner = player;
+			invItemRef = inventoryItem;
+			inventoryItem.InventoryReference = player.PlayerInventory;
+		}
+		else {
+			inventoryItem.QueueFree();
+		}
 	}
 }
 
-public partial class TestItem : Item {
-	public TestItem() {
+public partial class TestItem23 : Item {
+	public TestItem23() {
 		gridSizeX = 2;
 		gridSizeY = 3;
 		ItemTexture = UITextureLib.TestItem;
 		ItemRarity = EItemRarity.Common;
-		ItemName = "Test Item";
+		ItemName = "Test Item 2x3";
+	}
+}
+
+public partial class TestItem22 : Item {
+	public TestItem22() {
+		gridSizeX = 2;
+		gridSizeY = 2;
+		ItemTexture = UITextureLib.TestItem2;
+		ItemRarity = EItemRarity.Common;
+		ItemName = "Test Item 2x2";
+	}
+}
+
+public partial class TestItem11 : Item {
+	public TestItem11() {
+		gridSizeX = 1;
+		gridSizeY = 1;
+		ItemTexture = UITextureLib.TestItem3;
+		ItemRarity = EItemRarity.Common;
+		ItemName = "Test Item 1x1";
 	}
 }

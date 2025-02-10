@@ -29,6 +29,7 @@ public partial class Player : Actor {
 		debugLabel = GetNode<Label>("DebugLabel");
 		PlayerHUD = GetNode<HUD>("PlayerHUD");
 		PlayerInventory = GetNode<Inventory>("PlayerHUD/Inventory");
+		PlayerInventory.PlayerOwner = this;
 		moveTo = GlobalPosition;
 	}
 
@@ -42,13 +43,21 @@ public partial class Player : Actor {
 		}
 		else if (@event.IsActionPressed("DebugSpawnTestItem")) {
 			// logik for at spawne items skal flyttes til en mere generel klasse som fx Combat eller Game
-			Game game = (Game)GetParent();
-
-			TestItem testItem = new();
+			TestItem23 testItem = new();
 			WorldItem worldItem = testItem.ConvertToWorldItem();
-			game.AddChild(worldItem);
-			worldItem.Position = Position;
-			worldItem.PostSpawn();
+			DropItem(worldItem);
+		}
+		else if (@event.IsActionPressed("DebugSpawnTestItem2")) {
+			// logik for at spawne items skal flyttes til en mere generel klasse som fx Combat eller Game
+			TestItem22 testItem = new();
+			WorldItem worldItem = testItem.ConvertToWorldItem();
+			DropItem(worldItem);
+		}
+		else if (@event.IsActionPressed("DebugSpawnTestItem3")) {
+			// logik for at spawne items skal flyttes til en mere generel klasse som fx Combat eller Game
+			TestItem11 testItem = new();
+			WorldItem worldItem = testItem.ConvertToWorldItem();
+			DropItem(worldItem);
 		}
     }
 
@@ -57,8 +66,6 @@ public partial class Player : Actor {
 		targetedNode = null;
 		lastMouseInputPos = position;
 		newMouseInput = true;
-
-		GD.Print("Moving towards position");
 	}
 
 	public void SetDestinationNode(Node3D node) {
@@ -66,8 +73,14 @@ public partial class Player : Actor {
 		targetedNode = node;
 		moveTo = node.GlobalPosition;
 		newMouseInput = true;
+	}
 
-		GD.Print("Moving towards object");
+	public void DropItem(WorldItem worldItem) {
+		Game game = (Game)GetParent();
+
+		game.AddChild(worldItem);
+		worldItem.Position = Position;
+		worldItem.PostSpawn();
 	}
 
 	private void HandleMouseInput() {
@@ -84,6 +97,7 @@ public partial class Player : Actor {
 				Velocity = direction * Speed;
 
 				LookAt(moveTo with { Y = GlobalPosition.Y }, null, true);
+				GD.Print("Moving towards position");
 			}
 		}
 		else {
@@ -91,6 +105,7 @@ public partial class Player : Actor {
 			Velocity = direction * Speed;
 
 			LookAt(moveTo with { Y = GlobalPosition.Y }, null, true);
+			GD.Print("Moving towards object");
 		}
 
 		newMouseInput = false;
