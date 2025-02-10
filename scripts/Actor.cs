@@ -73,10 +73,10 @@ public class ActorPenetrations {
 }
 
 public partial class Actor : CharacterBody3D {
-    protected ActorBasicStats stats = new();
-    protected ActorDamageModifiers dmgMods = new();
-    protected ActorResistances resists = new();
-    protected ActorPenetrations penetrations = new();
+    protected ActorBasicStats BasicStats = new();
+    protected ActorDamageModifiers DamageMods = new();
+    protected ActorResistances Resistances = new();
+    protected ActorPenetrations Penetrations = new();
 
     
 

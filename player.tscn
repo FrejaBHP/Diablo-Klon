@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://dqhy454qpbnlg"]
+[gd_scene load_steps=8 format=3 uid="uid://dqhy454qpbnlg"]
 
 [ext_resource type="Texture2D" uid="uid://ci3657tcwp4x4" path="res://textures/fVSI.png" id="1_10g8w"]
 [ext_resource type="Script" path="res://scripts/Player.cs" id="1_lgjii"]
-[ext_resource type="PackedScene" uid="uid://dq2ktajvurn05" path="res://models/humanf.tscn" id="3_mo1hl"]
+[ext_resource type="PackedScene" uid="uid://bjr2unj1x1myt" path="res://hud_combined.tscn" id="2_nq0pa"]
+[ext_resource type="PackedScene" uid="uid://bvbig2y0lfddq" path="res://player_camera.tscn" id="4_lsgwb"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_cvuyr"]
 
@@ -21,13 +22,14 @@ input_ray_pickable = false
 floor_constant_speed = true
 script = ExtResource("1_lgjii")
 
+[node name="PlayerHUD" parent="." instance=ExtResource("2_nq0pa")]
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_cvuyr")
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-visible = false
 pixel_size = 0.005
 texture = ExtResource("1_10g8w")
 
@@ -35,11 +37,11 @@ texture = ExtResource("1_10g8w")
 offset_right = 40.0
 offset_bottom = 23.0
 
-[node name="humanF" parent="." instance=ExtResource("3_mo1hl")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-visible = false
-
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
 "": SubResource("AnimationLibrary_my3p0")
 }
+
+[node name="PlayerCamera" parent="." instance=ExtResource("4_lsgwb")]
+transform = Transform3D(0.707107, -0.40558, 0.579228, 0, 0.819152, 0.573577, -0.707107, -0.40558, 0.579228, 3, 3, 3)
+top_level = true

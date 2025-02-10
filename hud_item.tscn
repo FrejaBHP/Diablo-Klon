@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://dgqne1vmyhihu"]
+
+[ext_resource type="Script" path="res://scripts/InventoryItem.cs" id="1_elhkp"]
+
+[node name="ItemContainer" type="PanelContainer"]
+script = ExtResource("1_elhkp")
+
+[node name="ItemTexture" type="TextureRect" parent="."]
+layout_mode = 2
