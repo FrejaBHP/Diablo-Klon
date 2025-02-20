@@ -37,25 +37,27 @@ public partial class WorldItem : StaticBody3D {
 
 		switch (ItemReference.ItemRarity) {
 			case EItemRarity.Common:
-				floatingLabel.ApplyColourSet(ELabelColourSet.Common);
+				floatingLabel.ApplyTextColour(ETextColour.Common);
 				break;
 			
 			case EItemRarity.Magic:
-				floatingLabel.ApplyColourSet(ELabelColourSet.Magic);
+				floatingLabel.ApplyTextColour(ETextColour.Magic);
 				break;
 
 			case EItemRarity.Rare:
-				floatingLabel.ApplyColourSet(ELabelColourSet.Rare);
+				floatingLabel.ApplyTextColour(ETextColour.Rare);
 				break;
 
 			case EItemRarity.Unique:
-				floatingLabel.ApplyColourSet(ELabelColourSet.Unique);
+				floatingLabel.ApplyTextColour(ETextColour.Unique);
 				break;
 
 			default:
-				floatingLabel.ApplyColourSet(ELabelColourSet.Default);
+				floatingLabel.ApplyTextColour(ETextColour.Default);
 				break;
 		}
+
+		floatingLabel.ApplyColourSet(ELabelColourSet.Item);
 	}
 
 	public bool FindAndSnapToFloor() {

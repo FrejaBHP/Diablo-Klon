@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://brjwg2cnv4ce3"
-path="res://.godot/imported/test.png-796778acaf9d6cd5ddda1283e6383bc1.ctex"
+uid="uid://bgur8855mwfru"
+path="res://.godot/imported/d2_LeatherArmour.png-c0aafcd698018d3e5dcc9a8ff56c22f6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://textures/ui/test.png"
-dest_files=["res://.godot/imported/test.png-796778acaf9d6cd5ddda1283e6383bc1.ctex"]
+source_file="res://textures/items/d2_LeatherArmour.png"
+dest_files=["res://.godot/imported/d2_LeatherArmour.png-c0aafcd698018d3e5dcc9a8ff56c22f6.ctex"]
 
 [params]
 

@@ -1,12 +1,25 @@
-[gd_scene load_steps=2 format=3 uid="uid://dgqne1vmyhihu"]
+[gd_scene load_steps=3 format=3 uid="uid://dgqne1vmyhihu"]
 
 [ext_resource type="Script" path="res://scripts/InventoryItem.cs" id="1_elhkp"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fhibi"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_blend = true
+
 [node name="ItemContainer" type="PanelContainer"]
 z_index = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_fhibi")
 script = ExtResource("1_elhkp")
+
+[node name="ItemBackground" type="ColorRect" parent="."]
+layout_mode = 2
+mouse_filter = 2
 
 [node name="ItemTexture" type="TextureRect" parent="."]
 layout_mode = 2
+mouse_filter = 2
+expand_mode = 1
 
 [connection signal="gui_input" from="." to="." method="OnClicked"]
+[connection signal="mouse_entered" from="." to="." method="OnMouseEntered"]
+[connection signal="mouse_exited" from="." to="." method="OnMouseExited"]

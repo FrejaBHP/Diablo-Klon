@@ -27,18 +27,21 @@ public partial class Player : Actor {
 		playerCamera.AssignPlayer(this);
 
 		debugLabel = GetNode<Label>("DebugLabel");
-		PlayerHUD = GetNode<HUD>("PlayerHUD");
-		PlayerInventory = GetNode<Inventory>("PlayerHUD/Inventory");
+		PlayerHUD = GetNode<HUD>("SubViewportContainer/SubViewport/PlayerHUD");
+		PlayerHUD.PlayerOwner = this;
+		PlayerInventory = GetNode<Inventory>("SubViewportContainer/SubViewport/PlayerHUD/Inventory");
 		PlayerInventory.PlayerOwner = this;
 		moveTo = GlobalPosition;
 	}
 
     public override void _Input(InputEvent @event) {
+		/*
         if (@event is InputEventMouseButton eventMouseButton && eventMouseButton.IsPressed()) {
 			// Dette skal fikses, så der ikke forsøges at bevæges mod et punkt uanset hvad
 			SetDestinationPosition(eventMouseButton.Position);
 		}
-		else if (@event.IsActionPressed("InventoryKey")) {
+		*/
+		if (@event.IsActionPressed("InventoryKey")) {
 			PlayerInventory.ToggleInventory();
 		}
 		else if (@event.IsActionPressed("DebugSpawnTestItem")) {
@@ -96,7 +99,11 @@ public partial class Player : Actor {
 				Vector3 direction = GlobalPosition.DirectionTo(moveTo);
 				Velocity = direction * Speed;
 
-				LookAt(moveTo with { Y = GlobalPosition.Y }, null, true);
+				Vector3 lookAt = moveTo with { Y = GlobalPosition.Y };
+				if (!Mathf.IsZeroApprox(GlobalPosition.DistanceTo(lookAt))) {
+					LookAt(lookAt, null, true);
+				}
+
 				GD.Print("Moving towards position");
 			}
 		}
@@ -104,7 +111,11 @@ public partial class Player : Actor {
 			Vector3 direction = GlobalPosition.DirectionTo(moveTo);
 			Velocity = direction * Speed;
 
-			LookAt(moveTo with { Y = GlobalPosition.Y }, null, true);
+			Vector3 lookAt = moveTo with { Y = GlobalPosition.Y };
+			if (!Mathf.IsZeroApprox(GlobalPosition.DistanceTo(lookAt))) {
+				LookAt(lookAt, null, true);
+			}
+
 			GD.Print("Moving towards object");
 		}
 

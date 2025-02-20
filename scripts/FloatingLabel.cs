@@ -3,6 +3,11 @@ using System;
 
 public enum ELabelColourSet {
 	Default,
+	Item
+}
+
+public enum ETextColour {
+	Default,
 	Common,
 	Magic,
 	Rare,
@@ -23,6 +28,7 @@ public partial class FloatingLabel : Control {
 
 	private Color primaryColour;
 	private Color hoveredColour;
+	private Color textColour;
 	private bool isHovered = false;
 
 	// Called when the node enters the scene tree for the first time.
@@ -172,7 +178,7 @@ public partial class FloatingLabel : Control {
 				hoveredColour.A8 = 175;
 				break;
 
-			case ELabelColourSet.Common:
+			case ELabelColourSet.Item:
 				primaryColour.R8 = 65;
 				primaryColour.G8 = 65;
 				primaryColour.B8 = 65;
@@ -182,15 +188,6 @@ public partial class FloatingLabel : Control {
 				hoveredColour.G8 = 95;
 				hoveredColour.B8 = 95;
 				hoveredColour.A8 = 175;
-				break;
-
-			case ELabelColourSet.Magic:
-				break;
-			
-			case ELabelColourSet.Rare:
-				break;
-
-			case ELabelColourSet.Unique:
 				break;
 			
 			default:
@@ -203,5 +200,34 @@ public partial class FloatingLabel : Control {
 		else {
 			labelBackground.Color = primaryColour;
 		}
+	}
+
+	public void ApplyTextColour(ETextColour colour) {
+		switch (colour) {
+			case ETextColour.Default:
+				textColour = UILib.ColorWhite;
+				break;
+
+			case ETextColour.Common:
+				textColour = UILib.ColorWhite;
+				break;
+
+			case ETextColour.Magic:
+				textColour = UILib.ColorMagic;
+				break;
+			
+			case ETextColour.Rare:
+				textColour = UILib.ColorRare;
+				break;
+
+			case ETextColour.Unique:
+				textColour = UILib.ColorUnique;
+				break;
+			
+			default:
+				break;
+		}
+
+		label.AddThemeColorOverride("font_color", textColour);
 	}
 }

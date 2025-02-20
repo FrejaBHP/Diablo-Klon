@@ -12,14 +12,30 @@ public partial class InventoryItem : PanelContainer {
 	protected int gridSizeY;
 
 	protected TextureRect itemTexture;
+	protected ColorRect itemBackground;
 	public Item ItemReference;
 
-	protected List<InventoryGridSquare> occupiedInventorySlots = new List<InventoryGridSquare>();
+	protected const int margin = 6; // Don't touch
+
+	protected List<InventoryGridCell> occupiedInventorySlots = new List<InventoryGridCell>();
+
+	private bool isHovered = false;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready() {
 		itemTexture = GetNode<TextureRect>("ItemTexture");
 		itemTexture.Texture = ItemReference.ItemTexture;
+
+		itemBackground = GetNode<ColorRect>("ItemBackground");
+		itemBackground.Color = UILib.ColorItemBackground;
+
+		ApplyBorder();
+
+		// Each grid slot is 32x32 units
+		Vector2 newMinSize = GetGridSize() * 32;
+		newMinSize.X -= margin;
+		newMinSize.Y -= margin;
+		itemTexture.CustomMinimumSize = newMinSize;
 	}
 
 	public void OnClicked(InputEvent @event) {
@@ -30,6 +46,31 @@ public partial class InventoryItem : PanelContainer {
 		}
 	}
 
+	public void OnMouseEntered() {
+		if (!InventoryReference.IsAnItemSelected) {
+			itemBackground.Color = UILib.ColorItemBackgroundHovered;
+			isHovered = true;
+		}
+	}
+
+	public void OnMouseExited() {
+		if (!InventoryReference.IsAnItemSelected) {
+			itemBackground.Color = UILib.ColorItemBackground;
+			isHovered = false;
+		}
+	}
+
+	public void ToggleBackground() {
+		if (IsClicked) {
+			itemBackground.Color = UILib.ColorTransparent;
+		}
+		else {
+			itemBackground.Color = UILib.ColorItemBackground;
+		}
+	}
+
+	// For adjusting click functionality
+	// A physics frame delay is inserted to prevent things from overlapping in unintended ways
 	public async void ToggleClickable() {
 		if (MouseFilter == MouseFilterEnum.Stop) {
 			await ToSignal(GetTree(), SceneTree.SignalName.PhysicsFrame);
@@ -54,16 +95,36 @@ public partial class InventoryItem : PanelContainer {
 		gridSizeY = y;
 	}
 
-	public void SetOccupiedSlots(List<InventoryGridSquare> list) {
-		occupiedInventorySlots = list;
+	// Sets the list of slots that this item will occupy
+	public void SetOccupiedSlots(List<InventoryGridCell> list) {
+		//GD.Print("Slots set");
+		occupiedInventorySlots = list.GetRange(0, list.Count);
 
-		foreach (InventoryGridSquare slot in occupiedInventorySlots) {
+		foreach (InventoryGridCell slot in occupiedInventorySlots) {
             slot.IsEmpty = false;
         }
 	}
 
+	// Sets the list of occupied slots as empty without taking a new list. Used for when moving items around
+	public void OpenOccupiedSlots() {
+		//GD.Print("Slots opened");
+		foreach (InventoryGridCell slot in occupiedInventorySlots) {
+            slot.IsEmpty = true;
+        }
+	}
+
+	// Sets the list of occupied slots as used without clearing the list. Used for when moving items around
+	public void CloseOccupiedSlots() {
+		//GD.Print("Slots closed");
+		foreach (InventoryGridCell slot in occupiedInventorySlots) {
+            slot.IsEmpty = false;
+        }
+	}
+
+	// Empties the list of occupied slots
 	public void ClearOccupiedSlots() {
-		foreach (InventoryGridSquare slot in occupiedInventorySlots) {
+		//GD.Print("Slots cleared");
+		foreach (InventoryGridCell slot in occupiedInventorySlots) {
             slot.IsEmpty = true;
         }
 
@@ -73,10 +134,39 @@ public partial class InventoryItem : PanelContainer {
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta) {
 		if (IsClicked) {
-			float newX = GetGlobalMousePosition().X - Size.X / 2;
-			float newY = GetGlobalMousePosition().Y - Size.Y / 2;
+			float newX = GetGlobalMousePosition().X - (Size.X / 2) * Scale.X;
+			float newY = GetGlobalMousePosition().Y - (Size.Y / 2) * Scale.Y;
 			Vector2 newPosition = new Vector2(newX, newY);
 			GlobalPosition = newPosition;
 		}
+	}
+
+	public void ApplyBorder() {
+		StyleBoxFlat styleBoxFlat = GetThemeStylebox("panel").Duplicate() as StyleBoxFlat;
+		const int marginFactor = margin / 2;
+		styleBoxFlat.BorderWidthLeft = marginFactor;
+		styleBoxFlat.BorderWidthTop = marginFactor;
+		styleBoxFlat.BorderWidthRight = marginFactor;
+		styleBoxFlat.BorderWidthBottom = marginFactor;
+
+		switch (ItemReference.ItemRarity) {
+			case EItemRarity.Magic:
+				styleBoxFlat.BorderColor = UILib.ColorMagic;
+				break;
+
+			case EItemRarity.Rare:
+				styleBoxFlat.BorderColor = UILib.ColorRare;
+				break;
+
+			case EItemRarity.Unique:
+				styleBoxFlat.BorderColor = UILib.ColorUnique;
+				break;
+			
+			default:
+				styleBoxFlat.BorderColor = UILib.ColorTransparent;
+				break;
+		}
+
+		AddThemeStyleboxOverride("panel", styleBoxFlat);
 	}
 }

@@ -22,8 +22,6 @@ input_ray_pickable = false
 floor_constant_speed = true
 script = ExtResource("1_lgjii")
 
-[node name="PlayerHUD" parent="." instance=ExtResource("2_nq0pa")]
-
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_cvuyr")
@@ -45,3 +43,23 @@ libraries = {
 [node name="PlayerCamera" parent="." instance=ExtResource("4_lsgwb")]
 transform = Transform3D(0.707107, -0.40558, 0.579228, 0, 0.819152, 0.573577, -0.707107, -0.40558, 0.579228, 3, 3, 3)
 top_level = true
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+z_index = 10
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+disable_3d = true
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(1280, 720)
+size_2d_override = Vector2i(1280, 720)
+size_2d_override_stretch = true
+render_target_update_mode = 4
+
+[node name="PlayerHUD" parent="SubViewportContainer/SubViewport" instance=ExtResource("2_nq0pa")]

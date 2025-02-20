@@ -9,6 +9,20 @@ public enum EItemRarity {
 	What
 }
 
+public enum EItemEquipmentSlot {
+	None,
+	Head,
+	Chest,
+	Hands,
+	Feet,
+	Ring,
+	Amulet,
+	Weapon,
+	Weapon1H,
+	Weapon2H,
+	Shield
+}
+
 public partial class Item {
 	PackedScene worldItemScene = GD.Load<PackedScene>("res://worlditem.tscn");
 	PackedScene inventoryItemScene = GD.Load<PackedScene>("res://hud_item.tscn");
@@ -18,6 +32,7 @@ public partial class Item {
 	// Alle disse burde flyttes væk herfra og ind i en separat tabel
 	public string ItemName;
 	public EItemRarity ItemRarity;
+	public EItemEquipmentSlot ItemEquipmentSlot = EItemEquipmentSlot.None;
 	public Texture2D ItemTexture;
 	public bool IsInWorld = false;
 	public bool IsPickedUp = false;
@@ -77,8 +92,9 @@ public partial class TestItem23 : Item {
 	public TestItem23() {
 		gridSizeX = 2;
 		gridSizeY = 3;
-		ItemTexture = UITextureLib.TestItem;
+		ItemTexture = UILib.TextureItemD2LeatherArmour;
 		ItemRarity = EItemRarity.Common;
+		ItemEquipmentSlot = EItemEquipmentSlot.Chest;
 		ItemName = "Test Item 2x3";
 	}
 }
@@ -87,8 +103,9 @@ public partial class TestItem22 : Item {
 	public TestItem22() {
 		gridSizeX = 2;
 		gridSizeY = 2;
-		ItemTexture = UITextureLib.TestItem2;
-		ItemRarity = EItemRarity.Common;
+		ItemTexture = UILib.TextureItemD2LeatherGloves;
+		ItemRarity = EItemRarity.Rare;
+		ItemEquipmentSlot = EItemEquipmentSlot.Hands;
 		ItemName = "Test Item 2x2";
 	}
 }
@@ -97,8 +114,9 @@ public partial class TestItem11 : Item {
 	public TestItem11() {
 		gridSizeX = 1;
 		gridSizeY = 1;
-		ItemTexture = UITextureLib.TestItem3;
-		ItemRarity = EItemRarity.Common;
+		ItemTexture = UILib.TextureItemD2Ring0;
+		ItemRarity = EItemRarity.Unique;
+		ItemEquipmentSlot = EItemEquipmentSlot.Ring;
 		ItemName = "Test Item 1x1";
 	}
 }
