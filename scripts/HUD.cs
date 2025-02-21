@@ -26,7 +26,19 @@ public partial class HUD : Control {
 			// If no items are held
 			else {
 				// If HUD elements are not obstructing the player
-				PlayerOwner.SetDestinationPosition(mbe.Position);
+				
+				// Since the HUD is set to always treat itself internally as 1280x720, scaling into the game world
+				// will need to happen, because the player's viewport will follow the window size.
+				// Stretched 1280x720 coordinates will not work in a 1920x1080 resolution or similar,
+				// and therefore the HUD's input is scaled into the viewport's global space
+
+				Vector2 playerViewportSize = PlayerOwner.GetViewport().GetVisibleRect().Size;
+				Vector2 subViewportSize = GetGlobalRect().Size;
+				Vector2 translationRatio = playerViewportSize / subViewportSize;
+
+				Vector2 translatedPosition = mbe.GlobalPosition * translationRatio;
+
+				PlayerOwner.SetDestinationPosition(translatedPosition);
 			}
 		}
 	}

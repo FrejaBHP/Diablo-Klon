@@ -2,6 +2,9 @@ using Godot;
 using System;
 
 public partial class Player : Actor {
+	public HUD PlayerHUD;
+	public Inventory PlayerInventory;
+
 	private const float RayLength = 1000f;
 	public const float Speed = 5.0f;
 
@@ -19,9 +22,6 @@ public partial class Player : Actor {
 	private float remainingDist = 0f;
 	private Node3D targetedNode;
 
-	public HUD PlayerHUD;
-	public Inventory PlayerInventory;
-
 	public override void _Ready() {
 		playerCamera = GetNode<PlayerCamera>("PlayerCamera");
 		playerCamera.AssignPlayer(this);
@@ -35,29 +35,21 @@ public partial class Player : Actor {
 	}
 
     public override void _Input(InputEvent @event) {
-		/*
-        if (@event is InputEventMouseButton eventMouseButton && eventMouseButton.IsPressed()) {
-			// Dette skal fikses, så der ikke forsøges at bevæges mod et punkt uanset hvad
-			SetDestinationPosition(eventMouseButton.Position);
-		}
-		*/
 		if (@event.IsActionPressed("InventoryKey")) {
 			PlayerInventory.ToggleInventory();
 		}
+		// logik for at spawne items skal flyttes til en mere generel klasse som fx Combat eller Game
 		else if (@event.IsActionPressed("DebugSpawnTestItem")) {
-			// logik for at spawne items skal flyttes til en mere generel klasse som fx Combat eller Game
 			TestItem23 testItem = new();
 			WorldItem worldItem = testItem.ConvertToWorldItem();
 			DropItem(worldItem);
 		}
 		else if (@event.IsActionPressed("DebugSpawnTestItem2")) {
-			// logik for at spawne items skal flyttes til en mere generel klasse som fx Combat eller Game
 			TestItem22 testItem = new();
 			WorldItem worldItem = testItem.ConvertToWorldItem();
 			DropItem(worldItem);
 		}
 		else if (@event.IsActionPressed("DebugSpawnTestItem3")) {
-			// logik for at spawne items skal flyttes til en mere generel klasse som fx Combat eller Game
 			TestItem11 testItem = new();
 			WorldItem worldItem = testItem.ConvertToWorldItem();
 			DropItem(worldItem);

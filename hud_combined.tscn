@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://bjr2unj1x1myt"]
+[gd_scene load_steps=4 format=3 uid="uid://bjr2unj1x1myt"]
 
 [ext_resource type="Script" path="res://scripts/HUD.cs" id="1_k6sm4"]
 [ext_resource type="PackedScene" uid="uid://feaoc135f1ku" path="res://hud_inventory.tscn" id="1_v82wo"]
+[ext_resource type="PackedScene" uid="uid://dn73hlfk77c1y" path="res://hud_lower.tscn" id="3_ucw7d"]
 
 [node name="PlayerHUD" type="Control"]
 layout_mode = 3
@@ -16,12 +17,15 @@ script = ExtResource("1_k6sm4")
 visible = false
 layout_mode = 1
 anchor_right = 0.4
-anchor_bottom = 1.0
+anchor_bottom = 0.8
 
 [node name="Inventory" parent="." instance=ExtResource("1_v82wo")]
 visible = false
 layout_mode = 1
 grow_horizontal = 1
 grow_vertical = 1
+
+[node name="LowerHUD" parent="." instance=ExtResource("3_ucw7d")]
+layout_mode = 1
 
 [connection signal="gui_input" from="." to="." method="OnGUIInput"]

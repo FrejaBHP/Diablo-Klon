@@ -1,0 +1,89 @@
+[gd_scene load_steps=5 format=3 uid="uid://dn73hlfk77c1y"]
+
+[ext_resource type="Texture2D" uid="uid://dw4rlfgcgt3o4" path="res://textures/ui/hud_health.png" id="1_0xjef"]
+[ext_resource type="Texture2D" uid="uid://b2fn70hn06bsu" path="res://textures/ui/hud_mana.png" id="2_op11f"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_froqh"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_37rsg"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[node name="LowerHUD" type="Control"]
+layout_mode = 3
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -136.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="LeftSide" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -128.0
+offset_bottom = -128.0
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_froqh")
+
+[node name="Control" type="Control" parent="LeftSide"]
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="LeftSide/Control"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = -4.0
+offset_right = 132.0
+offset_bottom = 124.0
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_37rsg")
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="LeftSide/Control/PanelContainer"]
+layout_mode = 2
+value = 100.0
+fill_mode = 3
+nine_patch_stretch = true
+texture_progress = ExtResource("1_0xjef")
+
+[node name="RightSide" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_froqh")
+
+[node name="Control" type="Control" parent="RightSide"]
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="RightSide/Control"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -132.0
+offset_top = -132.0
+offset_right = -4.0
+offset_bottom = -4.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_37rsg")
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="RightSide/Control/PanelContainer"]
+layout_mode = 2
+value = 100.0
+fill_mode = 3
+nine_patch_stretch = true
+texture_progress = ExtResource("2_op11f")

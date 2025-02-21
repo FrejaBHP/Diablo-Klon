@@ -3,9 +3,6 @@ using System;
 
 public static class UILib {
 	public static readonly Texture2D InventoryGridSlot = GD.Load<Texture2D>("res://textures/ui/inventoryGridSlot.png");
-	public static readonly Texture2D TestItem = GD.Load<Texture2D>("res://textures/ui/test.png");
-	public static readonly Texture2D TestItem2 = GD.Load<Texture2D>("res://textures/ui/test2.png");
-	public static readonly Texture2D TestItem3 = GD.Load<Texture2D>("res://textures/ui/test3.png");
 
 	public static readonly Texture2D TextureItemD2LeatherArmour = GD.Load<Texture2D>("res://textures/items/d2_LeatherArmour.png");
 	public static readonly Texture2D TextureItemD2LeatherGloves = GD.Load<Texture2D>("res://textures/items/d2_LeatherGloves.png");
