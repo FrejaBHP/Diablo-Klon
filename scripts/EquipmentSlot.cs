@@ -38,7 +38,7 @@ public partial class EquipmentSlot : PanelContainer {
         // On left-click
 		if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == MouseButton.Left && mbe.Pressed) {
 			// Implement proper check for different weapon types and slots later, since this will now always fail for weapon slots
-			if (InventoryReference.IsAnItemSelected && InventoryReference.SelectedItem.ItemReference.ItemEquipmentSlot == Slot) {
+			if (InventoryReference.IsAnItemSelected && InventoryReference.CanEquipItemInSlot(this, InventoryReference.SelectedItem) && CanEquipItem(InventoryReference.SelectedItem.ItemReference.ItemAllBaseType)) {
 				if (itemInSlot == null) {
 					//GD.Print("Equip - slot empty");
 					SetItem(InventoryReference.SelectedItem);
@@ -65,6 +65,9 @@ public partial class EquipmentSlot : PanelContainer {
 		
 		if (itemInSlot != null) {
 			HighlightSlot();
+
+			Vector2 anchor = GlobalPosition with { X = GlobalPosition.X + Size.X / 2, Y = GlobalPosition.Y };
+			InventoryReference.PlayerOwner.PlayerHUD.CreateItemTooltip(itemInSlot.GetCustomTooltip(), anchor);
 		}
 	}
 
@@ -73,6 +76,8 @@ public partial class EquipmentSlot : PanelContainer {
 
 		if (itemInSlot != null) {
 			RemoveHighlight();
+
+			InventoryReference.PlayerOwner.PlayerHUD.RemoveItemTooltip();
 		}
 	}
 
@@ -92,5 +97,72 @@ public partial class EquipmentSlot : PanelContainer {
 
 	public void RemoveHighlight() {
 		highlight.Color = UILib.ColorTransparent;
+	}
+
+	private bool CanEquipItem(EItemAllBaseType itemType) {
+		switch (itemType) {
+			case EItemAllBaseType.Head:
+				if (Slot == EItemEquipmentSlot.Head) {
+					return true;
+				}
+				return false;
+
+			case EItemAllBaseType.Chest:
+				if (Slot == EItemEquipmentSlot.Chest) {
+					return true;
+				}
+				return false;
+
+			case EItemAllBaseType.Hands:
+				if (Slot == EItemEquipmentSlot.Hands) {
+					return true;
+				}
+				return false;
+
+			case EItemAllBaseType.Feet:
+				if (Slot == EItemEquipmentSlot.Feet) {
+					return true;
+				}
+				return false;
+
+			case EItemAllBaseType.Belt:
+				if (Slot == EItemEquipmentSlot.Belt) {
+					return true;
+				}
+				return false;
+
+			case EItemAllBaseType.Ring:
+				if (Slot == EItemEquipmentSlot.Ring) {
+					return true;
+				}
+				return false;
+
+			case EItemAllBaseType.Amulet:
+				if (Slot == EItemEquipmentSlot.Amulet) {
+					return true;
+				}
+				return false;
+
+			case EItemAllBaseType.Weapon1H:
+				if (Slot == EItemEquipmentSlot.WeaponLeft || Slot == EItemEquipmentSlot.WeaponRight) {
+					return true;
+				}
+				return false;
+
+			case EItemAllBaseType.Weapon2H:
+				if (Slot == EItemEquipmentSlot.WeaponLeft) {
+					return true;
+				}
+				return false;
+
+			case EItemAllBaseType.Shield:
+				if (Slot == EItemEquipmentSlot.WeaponRight) {
+					return true;
+				}
+				return false;
+
+			default:
+				return false;
+		}
 	}
 }

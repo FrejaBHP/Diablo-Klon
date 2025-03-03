@@ -5,21 +5,25 @@ using System.Numerics;
 using Vector2 = Godot.Vector2;
 
 public partial class InventoryItem : PanelContainer {
+	PackedScene itemTooltipScene = GD.Load<PackedScene>("res://hud_item_tooltip.tscn");
+
 	public Inventory InventoryReference;
 	public bool IsClicked = false;
+
+	public Item ItemReference;
 
 	protected int gridSizeX;
 	protected int gridSizeY;
 
 	protected TextureRect itemTexture;
 	protected ColorRect itemBackground;
-	public Item ItemReference;
-
-	protected const int margin = 6; // Don't touch
+	protected ItemTooltip itemTooltip;
 
 	protected List<InventoryGridCell> occupiedInventorySlots = new List<InventoryGridCell>();
 
-	private bool isHovered = false;
+	protected const int margin = 6; // Don't touch
+
+	protected bool isHovered = false;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready() {
@@ -50,6 +54,9 @@ public partial class InventoryItem : PanelContainer {
 		if (!InventoryReference.IsAnItemSelected) {
 			itemBackground.Color = UILib.ColorItemBackgroundHovered;
 			isHovered = true;
+
+			Vector2 anchor = GlobalPosition with { X = GlobalPosition.X + Size.X / 2, Y = GlobalPosition.Y };
+			InventoryReference.PlayerOwner.PlayerHUD.CreateItemTooltip(GetCustomTooltip(), anchor);
 		}
 	}
 
@@ -57,6 +64,8 @@ public partial class InventoryItem : PanelContainer {
 		if (!InventoryReference.IsAnItemSelected) {
 			itemBackground.Color = UILib.ColorItemBackground;
 			isHovered = false;
+			
+			InventoryReference.PlayerOwner.PlayerHUD.RemoveItemTooltip();
 		}
 	}
 
@@ -148,25 +157,117 @@ public partial class InventoryItem : PanelContainer {
 		styleBoxFlat.BorderWidthTop = marginFactor;
 		styleBoxFlat.BorderWidthRight = marginFactor;
 		styleBoxFlat.BorderWidthBottom = marginFactor;
-
-		switch (ItemReference.ItemRarity) {
-			case EItemRarity.Magic:
-				styleBoxFlat.BorderColor = UILib.ColorMagic;
-				break;
-
-			case EItemRarity.Rare:
-				styleBoxFlat.BorderColor = UILib.ColorRare;
-				break;
-
-			case EItemRarity.Unique:
-				styleBoxFlat.BorderColor = UILib.ColorUnique;
-				break;
-			
-			default:
-				styleBoxFlat.BorderColor = UILib.ColorTransparent;
-				break;
-		}
+		
+		styleBoxFlat.BorderColor = GetRarityColour();
 
 		AddThemeStyleboxOverride("panel", styleBoxFlat);
+	}
+
+	private Color GetRarityColour() {
+		switch (ItemReference.ItemRarity) {
+			case EItemRarity.Common:
+				return UILib.ColorWhite;
+
+			case EItemRarity.Magic:
+				return UILib.ColorMagic;
+
+			case EItemRarity.Rare:
+				return UILib.ColorRare;
+
+			case EItemRarity.Unique:
+				return UILib.ColorUnique;
+			
+			default:
+				return UILib.ColorTransparent;
+		}
+	}
+
+	public Control GetCustomTooltip() {
+		ItemTooltip tooltipContent = itemTooltipScene.Instantiate<ItemTooltip>();
+
+		tooltipContent.NameLabel.Text = ItemReference.ItemName;
+		tooltipContent.NameLabel.AddThemeColorOverride("font_color", GetRarityColour());
+
+		if (ItemReference.ItemRarity == EItemRarity.Rare || ItemReference.ItemRarity == EItemRarity.Unique) {
+			tooltipContent.BaseLabel.Text = ItemReference.ItemBase;
+			tooltipContent.BaseLabel.AddThemeColorOverride("font_color", GetRarityColour());
+		}
+		else {
+			tooltipContent.BaseLabel.Visible = false;
+		}
+
+		if (ItemReference.GetType().IsSubclassOf(typeof(WeaponItem))) {
+			WeaponItem item = ItemReference as WeaponItem;
+
+			Label weaponClassLabel = new Label();
+			weaponClassLabel.AddThemeFontSizeOverride("font_size", 15);
+			weaponClassLabel.AddThemeColorOverride("font_color", UILib.ColorGrey);
+			weaponClassLabel.Text = item.WeaponClass;
+			weaponClassLabel.HorizontalAlignment = HorizontalAlignment.Center;
+			tooltipContent.BaseStatsContainer.AddChild(weaponClassLabel);
+
+			if (item.PhysicalMinimumDamage > 0) {
+				HBoxContainer physLabel = GenerateBaseStatLabel("Physical Damage:", item.PhysicalMinimumDamage.ToString() + " - " + item.PhysicalMaximumDamage.ToString());
+				tooltipContent.BaseStatsContainer.AddChild(physLabel);
+			}
+		}
+		else if (ItemReference.GetType().IsSubclassOf(typeof(ArmourItem))) {
+			ArmourItem item = ItemReference as ArmourItem;
+
+			if (item.ItemDefences.HasFlag(EItemDefences.Armour)) {
+				HBoxContainer armourLabel = GenerateBaseStatLabel("Armour:", item.Armour.ToString());
+				tooltipContent.BaseStatsContainer.AddChild(armourLabel);
+			}
+
+			if (item.ItemDefences.HasFlag(EItemDefences.Evasion)) {
+				HBoxContainer evasionLabel = GenerateBaseStatLabel("Evasion Rating:", item.Evasion.ToString());
+				tooltipContent.BaseStatsContainer.AddChild(evasionLabel);
+			}
+
+			if (item.ItemDefences.HasFlag(EItemDefences.EnergyShield)) {
+				HBoxContainer esLabel = GenerateBaseStatLabel("Energy Shield:", item.EnergyShield.ToString());
+				tooltipContent.BaseStatsContainer.AddChild(esLabel);
+			}
+		}
+
+		foreach (Affix prefix in ItemReference.Prefixes) {
+			Label prefixLabel = GenerateAffixLabel(prefix.GetAffixTooltipText());
+			tooltipContent.AffixContainer.AddChild(prefixLabel);
+		}
+
+		foreach (Affix suffix in ItemReference.Suffixes) {
+			Label suffixLabel = GenerateAffixLabel(suffix.GetAffixTooltipText());
+			tooltipContent.AffixContainer.AddChild(suffixLabel);
+		}
+
+		return tooltipContent;
+	}
+
+	private HBoxContainer GenerateBaseStatLabel(string statName, string statValue) {
+		HBoxContainer labelContainer = new HBoxContainer();
+
+		Label baseStatNameLabel = new Label();
+		baseStatNameLabel.Text = statName;
+		baseStatNameLabel.AddThemeFontSizeOverride("font_size", 15);
+		baseStatNameLabel.AddThemeColorOverride("font_color", UILib.ColorGrey);
+		labelContainer.AddChild(baseStatNameLabel);
+
+		Label baseStatValueLabel = new Label();
+		baseStatValueLabel.Text = statValue;
+		baseStatValueLabel.AddThemeFontSizeOverride("font_size", 15);
+		labelContainer.AddChild(baseStatValueLabel);
+
+		return labelContainer;
+	}
+
+	private Label GenerateAffixLabel(string affixText) {
+		Label affixTextLabel = new Label();
+
+		affixTextLabel.Text = affixText;
+		affixTextLabel.AddThemeFontSizeOverride("font_size", 15);
+		affixTextLabel.AddThemeColorOverride("font_color", UILib.ColorBlurple);
+		affixTextLabel.HorizontalAlignment = HorizontalAlignment.Center;
+
+		return affixTextLabel;
 	}
 }

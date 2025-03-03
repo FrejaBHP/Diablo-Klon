@@ -54,6 +54,16 @@ public partial class Player : Actor {
 			WorldItem worldItem = testItem.ConvertToWorldItem();
 			DropItem(worldItem);
 		}
+		else if (@event.IsActionPressed("DebugSpawnTestItem4")) {
+			TestItem21 testItem = new();
+			WorldItem worldItem = testItem.ConvertToWorldItem();
+			DropItem(worldItem);
+		}
+		else if (@event.IsActionPressed("DebugSpawnRandomItem")) {
+			Item item = ItemGeneration.GenerateItemFromCategory(EItemCategory.None);
+			WorldItem worldItem = item.ConvertToWorldItem();
+			DropItem(worldItem);
+		}
     }
 
 	public void SetDestinationPosition(Vector2 position) {
@@ -141,7 +151,7 @@ public partial class Player : Actor {
 
 		MoveAndSlide();
 
-		debugLabel.Text = $"Velocity: {Velocity}\nVel Length: {Velocity.Length()}\nRem. Dist: {remainingDist}\nRotation: {RotationDegrees.Y}";
+		//debugLabel.Text = $"Velocity: {Velocity}\nVel Length: {Velocity.Length()}\nRem. Dist: {remainingDist}\nRotation: {RotationDegrees.Y}";
 	}
 
 	public bool PickupItem(ref WorldItem item) {

@@ -2,8 +2,12 @@ using Godot;
 using System;
 
 public partial class HUD : Control {
+	PackedScene itemTooltipPopupScene = GD.Load<PackedScene>("res://hud_item_tooltip_popup.tscn");
+	
 	public Player PlayerOwner;
 	private Inventory playerInventory;
+
+	private ItemTooltipPopup activeTooltipPopup;
 
 	public override void _Ready() {
 		playerInventory = GetNode<Inventory>("Inventory");
@@ -32,14 +36,34 @@ public partial class HUD : Control {
 				// Stretched 1280x720 coordinates will not work in a 1920x1080 resolution or similar,
 				// and therefore the HUD's input is scaled into the viewport's global space
 
-				Vector2 playerViewportSize = PlayerOwner.GetViewport().GetVisibleRect().Size;
-				Vector2 subViewportSize = GetGlobalRect().Size;
-				Vector2 translationRatio = playerViewportSize / subViewportSize;
-
-				Vector2 translatedPosition = mbe.GlobalPosition * translationRatio;
-
-				PlayerOwner.SetDestinationPosition(translatedPosition);
+				PlayerOwner.SetDestinationPosition(SubViewportToViewport(mbe.GlobalPosition));
 			}
 		}
+	}
+
+	public void CreateItemTooltip(Control tooltipContent, Vector2 anchor) {
+		ItemTooltipPopup tooltipPopup = itemTooltipPopupScene.Instantiate<ItemTooltipPopup>();
+		AddChild(tooltipPopup);
+		activeTooltipPopup = tooltipPopup;
+
+		tooltipPopup.AddChild(tooltipContent);
+		tooltipPopup.Position = (Vector2I)SubViewportToViewport(anchor);
+    }
+
+	public void RemoveItemTooltip() {
+		if (activeTooltipPopup != null) {
+			activeTooltipPopup.QueueFree();
+			activeTooltipPopup = null;
+		}
+	}
+
+	public Vector2 SubViewportToViewport(Vector2 globalPosition) {
+		Vector2 playerViewportSize = PlayerOwner.GetViewport().GetVisibleRect().Size;
+		Vector2 subViewportSize = GetGlobalRect().Size;
+		Vector2 translationRatio = playerViewportSize / subViewportSize;
+
+		Vector2 translatedPosition = globalPosition * translationRatio;
+
+		return translatedPosition;
 	}
 }

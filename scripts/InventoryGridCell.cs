@@ -9,8 +9,6 @@ public partial class InventoryGridCell : TextureRect {
 	private Item referencedItem = null;
 	public Vector2I GridPosition = Vector2I.Zero;
 
-	//private Label label;
-
 	public InventoryGridCell(Vector2I pos) {
 		GridPosition = pos;
 	}
@@ -18,9 +16,5 @@ public partial class InventoryGridCell : TextureRect {
     public override void _Ready() {
 		MouseFilter = MouseFilterEnum.Ignore;
 		Texture = UILib.InventoryGridSlot;
-
-		//ExpandMode = ExpandModeEnum.FitHeightProportional;
-		//SizeFlagsHorizontal = SizeFlags.ExpandFill;
-		//SizeFlagsVertical = SizeFlags.ExpandFill;
     }
 }

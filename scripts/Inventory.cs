@@ -11,6 +11,7 @@ public partial class Inventory : Control {
     public EquipmentSlot ChestSlot;
     public EquipmentSlot HandsSlot;
     public EquipmentSlot FeetSlot;
+    public EquipmentSlot BeltSlot;
     public EquipmentSlot RingSlotLeft;
     public EquipmentSlot RingSlotRight;
     public EquipmentSlot AmuletSlot;
@@ -48,6 +49,7 @@ public partial class Inventory : Control {
         ChestSlot = equipmentPanelControl.GetNode<EquipmentSlot>("ChestSlot");
         HandsSlot = equipmentPanelControl.GetNode<EquipmentSlot>("HandsSlot");
         FeetSlot = equipmentPanelControl.GetNode<EquipmentSlot>("FeetSlot");
+        BeltSlot = equipmentPanelControl.GetNode<EquipmentSlot>("BeltSlot");
         RingSlotLeft = equipmentPanelControl.GetNode<EquipmentSlot>("RingSlotLeft");
         RingSlotRight = equipmentPanelControl.GetNode<EquipmentSlot>("RingSlotRight");
         AmuletSlot = equipmentPanelControl.GetNode<EquipmentSlot>("AmuletSlot");
@@ -58,16 +60,18 @@ public partial class Inventory : Control {
         ChestSlot.Slot = EItemEquipmentSlot.Chest;
         HandsSlot.Slot = EItemEquipmentSlot.Hands;
         FeetSlot.Slot = EItemEquipmentSlot.Feet;
+        BeltSlot.Slot = EItemEquipmentSlot.Belt;
         RingSlotLeft.Slot = EItemEquipmentSlot.Ring;
         RingSlotRight.Slot = EItemEquipmentSlot.Ring;
         AmuletSlot.Slot = EItemEquipmentSlot.Amulet;
-        WeaponSlotLeft.Slot = EItemEquipmentSlot.Weapon;
-        WeaponSlotRight.Slot = EItemEquipmentSlot.Weapon;
+        WeaponSlotLeft.Slot = EItemEquipmentSlot.WeaponLeft;
+        WeaponSlotRight.Slot = EItemEquipmentSlot.WeaponRight;
 
         equipmentSlots.Add(HelmetSlot);
         equipmentSlots.Add(ChestSlot);
         equipmentSlots.Add(HandsSlot);
         equipmentSlots.Add(FeetSlot);
+        equipmentSlots.Add(BeltSlot);
         equipmentSlots.Add(RingSlotLeft);
         equipmentSlots.Add(RingSlotRight);
         equipmentSlots.Add(AmuletSlot);
@@ -188,7 +192,7 @@ public partial class Inventory : Control {
             item.ZIndex = 5;
             item.ToggleClickable();
 
-            foreach (EquipmentSlot slot in GetEquipmentSlots(item.ItemReference.ItemEquipmentSlot)) {
+            foreach (EquipmentSlot slot in GetEquipmentSlots(item.ItemReference.ItemAllBaseType)) {
                 slot.HighlightSlot();
             }
         }
@@ -209,7 +213,7 @@ public partial class Inventory : Control {
             item.ZIndex = 1;
             item.ToggleClickable();
 
-            foreach (EquipmentSlot slot in GetEquipmentSlots(item.ItemReference.ItemEquipmentSlot)) {
+            foreach (EquipmentSlot slot in GetEquipmentSlots(item.ItemReference.ItemAllBaseType)) {
                 slot.RemoveHighlight();
             }
         }
@@ -218,7 +222,7 @@ public partial class Inventory : Control {
     public void ItemClickDrop(InventoryItem item) {
         //GD.Print("Item Dropped!");
 
-        foreach (EquipmentSlot slot in GetEquipmentSlots(item.ItemReference.ItemEquipmentSlot)) {
+        foreach (EquipmentSlot slot in GetEquipmentSlots(item.ItemReference.ItemAllBaseType)) {
             slot.RemoveHighlight();
         }
 
@@ -247,6 +251,24 @@ public partial class Inventory : Control {
         }
     }
 
+    public bool CanEquipItemInSlot(EquipmentSlot slot, InventoryItem item) {
+        if (slot.Slot == EItemEquipmentSlot.WeaponLeft) {
+            if (item.ItemReference.ItemAllBaseType == EItemAllBaseType.Shield) {
+                return false;
+            }
+        }
+        else if (slot.Slot == EItemEquipmentSlot.WeaponRight) {
+            if (item.ItemReference.ItemAllBaseType == EItemAllBaseType.Weapon2H) {
+                return false;
+            }
+            else if (WeaponSlotLeft.ItemInSlot != null && WeaponSlotLeft.ItemInSlot.ItemReference.ItemAllBaseType == EItemAllBaseType.Weapon2H) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public void EquipItemInSlot(EquipmentSlot slot, InventoryItem item) {
         //GD.Print("Item Equipped!");
 
@@ -265,6 +287,10 @@ public partial class Inventory : Control {
             if (!slotAll.IsHovered) {
                 slotAll.RemoveHighlight();
             }
+        }
+
+        if (item.ItemReference.ItemAllBaseType == EItemAllBaseType.Weapon2H && WeaponSlotRight.ItemInSlot != null) {
+            WeaponSlotRight.UnequipItem(WeaponSlotRight.ItemInSlot);
         }
     }
 
@@ -310,47 +336,55 @@ public partial class Inventory : Control {
                 slotAll.RemoveHighlight();
             }
         }
+
+        if (newItem.ItemReference.ItemAllBaseType == EItemAllBaseType.Weapon2H && WeaponSlotRight.ItemInSlot != null) {
+            WeaponSlotRight.UnequipItem(WeaponSlotRight.ItemInSlot);
+        }
     }
 
-    private List<EquipmentSlot> GetEquipmentSlots(EItemEquipmentSlot slot) {
+    private List<EquipmentSlot> GetEquipmentSlots(EItemAllBaseType type) {
         List<EquipmentSlot> equipmentSlots = new List<EquipmentSlot>();
 
-        switch (slot) {
-            case EItemEquipmentSlot.Head:
+        switch (type) {
+            case EItemAllBaseType.Head:
                 equipmentSlots.Add(HelmetSlot);
                 break;
             
-            case EItemEquipmentSlot.Chest:
+            case EItemAllBaseType.Chest:
                 equipmentSlots.Add(ChestSlot);
                 break;
             
-            case EItemEquipmentSlot.Hands:
+            case EItemAllBaseType.Hands:
                 equipmentSlots.Add(HandsSlot);
                 break;
             
-            case EItemEquipmentSlot.Feet:
+            case EItemAllBaseType.Feet:
                 equipmentSlots.Add(FeetSlot);
                 break;
 
-            case EItemEquipmentSlot.Ring:
+            case EItemAllBaseType.Belt:
+                equipmentSlots.Add(BeltSlot);
+                break;
+
+            case EItemAllBaseType.Ring:
                 equipmentSlots.Add(RingSlotLeft);
                 equipmentSlots.Add(RingSlotRight);
                 break;
             
-            case EItemEquipmentSlot.Amulet:
+            case EItemAllBaseType.Amulet:
                 equipmentSlots.Add(AmuletSlot);
                 break;
-
-            case EItemEquipmentSlot.Weapon1H:
+            
+            case EItemAllBaseType.Weapon1H:
                 equipmentSlots.Add(WeaponSlotLeft);
                 equipmentSlots.Add(WeaponSlotRight);
                 break;
             
-            case EItemEquipmentSlot.Weapon2H:
+            case EItemAllBaseType.Weapon2H:
                 equipmentSlots.Add(WeaponSlotLeft);
                 break;
             
-            case EItemEquipmentSlot.Shield:
+            case EItemAllBaseType.Shield:
                 equipmentSlots.Add(WeaponSlotRight);
                 break;
 

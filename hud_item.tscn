@@ -8,6 +8,8 @@ border_blend = true
 
 [node name="ItemContainer" type="PanelContainer"]
 z_index = 1
+size_flags_horizontal = 4
+size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_fhibi")
 script = ExtResource("1_elhkp")
 
@@ -19,6 +21,7 @@ mouse_filter = 2
 layout_mode = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 3
 
 [connection signal="gui_input" from="." to="." method="OnClicked"]
 [connection signal="mouse_entered" from="." to="." method="OnMouseEntered"]
