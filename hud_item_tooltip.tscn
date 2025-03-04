@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://cbi1kt3l0wpen"]
 
-[ext_resource type="Script" path="res://scripts/ItemTooltip.cs" id="1_53ehe"]
+[ext_resource type="Script" uid="uid://enjq0rq2sn2t" path="res://scripts/ItemTooltip.cs" id="1_53ehe"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ddotj"]
 content_margin_left = 4.0
@@ -27,7 +27,7 @@ script = ExtResource("1_53ehe")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
-theme_override_constants/separation = 4
+theme_override_constants/separation = 0
 
 [node name="NameContainer" type="VBoxContainer" parent="VBoxContainer"]
 layout_mode = 2

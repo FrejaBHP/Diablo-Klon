@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://bdl4w88qwql7"]
 
-[ext_resource type="Script" path="res://scripts/TileFloorStatic.cs" id="1_e4ndk"]
+[ext_resource type="Script" uid="uid://drspgp5ht3nce" path="res://scripts/TileFloorStatic.cs" id="1_e4ndk"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_yiixm"]
 resource_local_to_scene = true

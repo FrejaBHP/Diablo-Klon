@@ -66,11 +66,25 @@ public static class AffixDataTables {
 		new(EAffixItemFlags.Armour, "of the Flame", 15, 19, 0)
 	};
 
+	public static readonly List<AffixData> ColdResistanceAffixData = new List<AffixData> {
+		new(EAffixItemFlags.Armour, "of Sleet", 5, 9, 0),
+		new(EAffixItemFlags.Armour, "of the Tundra", 10, 14, 0),
+		new(EAffixItemFlags.Armour, "of Ice", 15, 19, 0)
+	};
+
+	public static readonly List<AffixData> LightningResistanceAffixData = new List<AffixData> {
+		new(EAffixItemFlags.Armour, "of the Spark", 5, 9, 0),
+		new(EAffixItemFlags.Armour, "of Insulation", 10, 14, 0),
+		new(EAffixItemFlags.Armour, "of Lightning", 15, 19, 0)
+	};
+
 	public static readonly List<AffixTableType> PrefixData = new List<AffixTableType> {
 		new(EAffixPosition.Prefix, EAffixItemFlags.Armour, HealthAffixData, typeof(HealthAffix)),
 	};
 
 	public static readonly List<AffixTableType> SuffixData = new List<AffixTableType> {
-		new(EAffixPosition.Suffix, EAffixItemFlags.Armour, FireResistanceAffixData, typeof(FireResistanceAffix))
+		new(EAffixPosition.Suffix, EAffixItemFlags.Armour, FireResistanceAffixData, typeof(FireResistanceAffix)),
+		new(EAffixPosition.Suffix, EAffixItemFlags.Armour, ColdResistanceAffixData, typeof(ColdResistanceAffix)),
+		new(EAffixPosition.Suffix, EAffixItemFlags.Armour, LightningResistanceAffixData, typeof(LightningResistanceAffix))
 	};
 }
