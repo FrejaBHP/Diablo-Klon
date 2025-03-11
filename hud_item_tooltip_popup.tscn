@@ -6,8 +6,10 @@
 
 [node name="ItemTooltipPopup" type="PopupPanel"]
 disable_3d = true
+handle_input_locally = false
 gui_disable_input = true
 size = Vector2i(8, 8)
 visible = true
+mouse_passthrough = true
 theme_override_styles/panel = SubResource("StyleBoxEmpty_8uv7j")
 script = ExtResource("1_7lcjh")

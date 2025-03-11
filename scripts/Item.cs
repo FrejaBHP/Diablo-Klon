@@ -71,6 +71,22 @@ public enum EItemCategory {
 }
 
 [Flags]
+public enum EItemBaseSpecifierFlags {
+	NONE = 0,
+	NoFlags = 1 << 0,
+	AArmour = 1 << 1,
+	AEvasion = 1 << 2,
+	AEnergyShield = 1 << 3,
+	AArmourEvasion = 1 << 4,
+	AEvasionEnergyShield = 1 << 5,
+	AEnergyShieldArmour = 1 << 6,
+	AAll = 1 << 7,
+
+	W1HSword = 1 << 8,
+	W2HSword = 1 << 9
+}
+
+[Flags]
 public enum EItemDefences {
 	None = 0,
 	Armour = 1,
@@ -95,10 +111,15 @@ public partial class Item {
 	public string ItemBase;
 	public EItemRarity ItemRarity;
 	public EItemAllBaseType ItemAllBaseType = EItemAllBaseType.None;
+	public EItemBaseSpecifierFlags ItemBaseSpecifierFlags = EItemBaseSpecifierFlags.NoFlags;
 	public EAffixItemFlags ItemAffixFlags;
 	public int MinimumLevel = 0;
 	public int ItemLevel = 0;
 
+	public int MagicMaxPrefixes = 1;
+	public int MagicMaxSuffixes = 1;
+	public int RareMaxPrefixes = 3;
+	public int RareMaxSuffixes = 3;
 	public List<Affix> Prefixes = new List<Affix>();
 	public List<Affix> Suffixes = new List<Affix>();
 
@@ -156,12 +177,82 @@ public partial class Item {
 		}
 	}
 
-	public virtual List<AffixTableType> GetValidPrefixTypes() {
-		return AffixDataTables.PrefixData.Where(i => i.AffixItemFlags.HasFlag(ItemAffixFlags)).ToList();
+	public List<AffixTableType> GetValidPrefixTypes() {
+		List<AffixTableType> validPrefixes = AffixDataTables.PrefixData.Where(p => Utilities.HasAnyFlags(ItemAffixFlags, p.AffixItemFlags)).ToList();
+		validPrefixes.RemoveAll(p => !Utilities.HasAnyFlags(ItemBaseSpecifierFlags, p.AffixItemSpecifierFlags));
+
+		for (int i = 0; i < Prefixes.Count; i++) {
+			validPrefixes.RemoveAll(p => p.AffixTable[0].AffixFamily == Prefixes[i].Data.AffixFamily);
+		}
+		
+		return validPrefixes;
 	}
 
-	public virtual List<AffixTableType> GetValidSuffixTypes() {
-		return AffixDataTables.SuffixData.Where(i => i.AffixItemFlags.HasFlag(ItemAffixFlags)).ToList();
+	public List<AffixTableType> GetValidSuffixTypes() {
+		List<AffixTableType> validSuffixes = AffixDataTables.SuffixData.Where(s => Utilities.HasAnyFlags(ItemAffixFlags, s.AffixItemFlags)).ToList();
+		validSuffixes.RemoveAll(s => !Utilities.HasAnyFlags(ItemBaseSpecifierFlags, s.AffixItemSpecifierFlags));
+
+		for (int i = 0; i < Suffixes.Count; i++) {
+			validSuffixes.RemoveAll(s => s.AffixTable[0].AffixFamily == Suffixes[i].Data.AffixFamily);
+		}
+
+		return validSuffixes;
+	}
+
+	public void AddRandomAffix(EAffixPosition position) {
+		List<AffixTableType> tableTypes;
+
+		if (position == EAffixPosition.Prefix) {
+			//GD.Print($"Valid prefixes: {item.GetValidPrefixTypes().Count}");
+			//tableTypes = GetValidPrefixTypes().GetRange(0, GetValidPrefixTypes().Count);
+			tableTypes = GetValidPrefixTypes();
+
+			if (tableTypes.Count == 0) {
+				//GD.PrintErr("No valid prefixes");
+				return;
+			}
+
+			//GD.Print($"{tableTypes.Count} valid prefixes with item specifier flags ({ItemBaseSpecifierFlags})");
+		}
+		else {
+			//GD.Print($"Valid suffixes: {item.GetValidPrefixTypes().Count}");
+			//tableTypes = GetValidSuffixTypes().GetRange(0, GetValidSuffixTypes().Count);
+			tableTypes = GetValidSuffixTypes();
+			
+			if (tableTypes.Count == 0) {
+				//GD.PrintErr("No valid suffixes");
+				return;
+			}
+		}
+
+		AffixTableType affixTableType = tableTypes[Utilities.RNG.Next(tableTypes.Count)];
+
+		Affix newAffix = (Affix)Activator.CreateInstance(affixTableType.AffixClassType);
+		newAffix.RollAffixTier(ItemLevel);
+		newAffix.RollAffixValue();
+
+		if (position == EAffixPosition.Prefix) {
+			Prefixes.Add(newAffix);
+
+			if (ItemRarity == EItemRarity.Magic) {
+				string newName = $"{newAffix.GetAffixName()} {ItemName}";
+				ItemName = newName;
+			}
+		}
+		else {
+			Suffixes.Add(newAffix);
+
+			if (ItemRarity == EItemRarity.Magic) {
+				string newName = $"{ItemName} {newAffix.GetAffixName()}";
+				ItemName = newName;
+			}
+		}
+
+		ApplyAffix(newAffix, true);
+	}
+
+	protected virtual void ApplyAffix(Affix affix, bool add) {
+
 	}
 
 	protected static string GetRandomName() {
@@ -170,23 +261,139 @@ public partial class Item {
 }
 
 public partial class WeaponItem : Item {
-	public double BasePhysicalMinimumDamage;
-	public double PhysicalMinimumDamage;
-	public double BasePhysicalMaximumDamage;
-	public double PhysicalMaximumDamage;
+	public int BasePhysicalMinimumDamage;
+	public int BasePhysicalMaximumDamage;
+	public int AddedPhysicalMinimumDamage = 0;
+	public int AddedPhysicalMaximumDamage = 0;
+	public int PercentageIncreasedPhysicalDamage = 0;
+	public int PhysicalMinimumDamage;
+	public int PhysicalMaximumDamage;
 	public EItemWeaponBaseType ItemWeaponBaseType;
 	public string WeaponClass;
+
+	public void CalculatePhysicalDamage() {
+		PhysicalMinimumDamage = (int)((BasePhysicalMinimumDamage + AddedPhysicalMinimumDamage) * (1 + ((double)PercentageIncreasedPhysicalDamage / 100)));
+		PhysicalMaximumDamage = (int)((BasePhysicalMaximumDamage + AddedPhysicalMaximumDamage) * (1 + ((double)PercentageIncreasedPhysicalDamage / 100))); 
+	}
+
+	protected override void ApplyAffix(Affix affix, bool add) {
+		switch (affix.Data.AffixFamily) {
+			case EAffixFamily.LocalFlatPhysDamage:
+				if (add) {
+					AddedPhysicalMinimumDamage += (int)affix.ValueFirst;
+					AddedPhysicalMaximumDamage += (int)affix.ValueSecond;
+				}
+				else {
+					AddedPhysicalMinimumDamage -= (int)affix.ValueFirst;
+					AddedPhysicalMaximumDamage -= (int)affix.ValueSecond;
+				}
+				CalculatePhysicalDamage();
+				break;
+
+			case EAffixFamily.LocalPercentagePhysDamage:
+				if (add) {
+					PercentageIncreasedPhysicalDamage += (int)affix.ValueFirst;
+				}
+				else {
+					PercentageIncreasedPhysicalDamage -= (int)affix.ValueFirst;
+				}
+				CalculatePhysicalDamage();
+				break;
+			
+			default:
+				break;
+		}
+	}
 }
 
 public partial class ArmourItem : Item {
 	public EItemDefences ItemDefences;
-	public double BaseArmour;
-	public double Armour;
-	public double BaseEvasion;
-	public double Evasion;
-	public double BaseEnergyShield;
-	public double EnergyShield;
+	public int BaseArmour;
+	public int AddedArmour;
+	public int IncreasedArmour;
+	public int Armour;
+	public int BaseEvasion;
+	public int AddedEvasion;
+	public int IncreasedEvasion;
+	public int Evasion;
+	public int BaseEnergyShield;
+	public int AddedEnergyShield;
+	public int IncreasedEnergyShield;
+	public int EnergyShield;
 	public EItemArmourBaseType ItemArmourBaseType;
+
+	public void CalculateDefences() {
+		Armour = (int)((BaseArmour + AddedArmour) * (1 + ((double)IncreasedArmour / 100)));
+		Evasion = (int)((BaseEvasion + AddedEvasion) * (1 + ((double)IncreasedEvasion / 100)));
+		EnergyShield = (int)((BaseEnergyShield + AddedEnergyShield) * (1 + ((double)IncreasedEnergyShield / 100)));
+	}
+
+	protected override void ApplyAffix(Affix affix, bool add) {
+		switch (affix.Data.AffixFamily) {
+			case EAffixFamily.FlatArmour:
+				if (add) {
+					AddedArmour += (int)affix.ValueFirst;
+				}
+				else {
+					AddedArmour -= (int)affix.ValueFirst;
+				}
+				CalculateDefences();
+				break;
+
+			case EAffixFamily.PercentageArmour:
+				if (add) {
+					IncreasedArmour += (int)affix.ValueFirst;
+				}
+				else {
+					IncreasedArmour -= (int)affix.ValueFirst;
+				}
+				CalculateDefences();
+				break;
+			
+			case EAffixFamily.FlatEvasion:
+				if (add) {
+					AddedEvasion += (int)affix.ValueFirst;
+				}
+				else {
+					AddedEvasion -= (int)affix.ValueFirst;
+				}
+				CalculateDefences();
+				break;
+
+			case EAffixFamily.PercentageEvasion:
+				if (add) {
+					IncreasedEvasion += (int)affix.ValueFirst;
+				}
+				else {
+					IncreasedEvasion -= (int)affix.ValueFirst;
+				}
+				CalculateDefences();
+				break;
+
+			case EAffixFamily.FlatEnergyShield:
+				if (add) {
+					AddedEnergyShield += (int)affix.ValueFirst;
+				}
+				else {
+					AddedEnergyShield -= (int)affix.ValueFirst;
+				}
+				CalculateDefences();
+				break;
+
+			case EAffixFamily.PercentageEnergyShield:
+				if (add) {
+					IncreasedEnergyShield += (int)affix.ValueFirst;
+				}
+				else {
+					IncreasedEnergyShield -= (int)affix.ValueFirst;
+				}
+				CalculateDefences();
+				break;
+			
+			default:
+				break;
+		}
+	}
 }
 
 public partial class JewelleryItem : Item {
@@ -201,14 +408,6 @@ public partial class HeadItem : ArmourItem {
 		ItemArmourBaseType = EItemArmourBaseType.Helmet;
 		ItemAffixFlags = EAffixItemFlags.Helmet | EAffixItemFlags.Armour;
 	}
-
-	public override List<AffixTableType> GetValidPrefixTypes() {
-		return AffixDataTables.PrefixData.Where(i => i.AffixItemFlags.HasFlag(EAffixItemFlags.Helmet) || i.AffixItemFlags.HasFlag(EAffixItemFlags.Armour)).ToList();
-	}
-
-	public override List<AffixTableType> GetValidSuffixTypes() {
-		return AffixDataTables.SuffixData.Where(i => i.AffixItemFlags.HasFlag(EAffixItemFlags.Helmet) || i.AffixItemFlags.HasFlag(EAffixItemFlags.Armour)).ToList();
-	}
 }
 
 public partial class ChestItem : ArmourItem {
@@ -218,14 +417,6 @@ public partial class ChestItem : ArmourItem {
 		ItemAllBaseType = EItemAllBaseType.Chest;
 		ItemArmourBaseType = EItemArmourBaseType.Chestplate;
 		ItemAffixFlags = EAffixItemFlags.Chest | EAffixItemFlags.Armour;
-	}
-
-	public override List<AffixTableType> GetValidPrefixTypes() {
-		return AffixDataTables.PrefixData.Where(i => i.AffixItemFlags.HasFlag(EAffixItemFlags.Chest) || i.AffixItemFlags.HasFlag(EAffixItemFlags.Armour)).ToList();
-	}
-
-	public override List<AffixTableType> GetValidSuffixTypes() {
-		return AffixDataTables.SuffixData.Where(i => i.AffixItemFlags.HasFlag(EAffixItemFlags.Chest) || i.AffixItemFlags.HasFlag(EAffixItemFlags.Armour)).ToList();
 	}
 }
 
@@ -237,14 +428,6 @@ public partial class HandsItem : ArmourItem {
 		ItemArmourBaseType = EItemArmourBaseType.Gloves;
 		ItemAffixFlags = EAffixItemFlags.Gloves | EAffixItemFlags.Armour;
 	}
-
-	public override List<AffixTableType> GetValidPrefixTypes() {
-		return AffixDataTables.PrefixData.Where(i => i.AffixItemFlags.HasFlag(EAffixItemFlags.Gloves) || i.AffixItemFlags.HasFlag(EAffixItemFlags.Armour)).ToList();
-	}
-
-	public override List<AffixTableType> GetValidSuffixTypes() {
-		return AffixDataTables.SuffixData.Where(i => i.AffixItemFlags.HasFlag(EAffixItemFlags.Gloves) || i.AffixItemFlags.HasFlag(EAffixItemFlags.Armour)).ToList();
-	}
 }
 
 public partial class FeetItem : ArmourItem {
@@ -254,14 +437,6 @@ public partial class FeetItem : ArmourItem {
 		ItemAllBaseType = EItemAllBaseType.Feet;
 		ItemArmourBaseType = EItemArmourBaseType.Boots;
 		ItemAffixFlags = EAffixItemFlags.Boots | EAffixItemFlags.Armour;
-	}
-
-	public override List<AffixTableType> GetValidPrefixTypes() {
-		return AffixDataTables.PrefixData.Where(i => i.AffixItemFlags.HasFlag(EAffixItemFlags.Boots) || i.AffixItemFlags.HasFlag(EAffixItemFlags.Armour)).ToList();
-	}
-
-	public override List<AffixTableType> GetValidSuffixTypes() {
-		return AffixDataTables.SuffixData.Where(i => i.AffixItemFlags.HasFlag(EAffixItemFlags.Boots) || i.AffixItemFlags.HasFlag(EAffixItemFlags.Armour)).ToList();
 	}
 }
 
@@ -273,14 +448,6 @@ public partial class BeltItem : JewelleryItem {
 		ItemJewelleryBaseType = EItemJewelleryBaseType.Belt;
 		ItemAffixFlags = EAffixItemFlags.Belt | EAffixItemFlags.Jewellery;
 	}
-
-	public override List<AffixTableType> GetValidPrefixTypes() {
-		return AffixDataTables.PrefixData.Where(i => i.AffixItemFlags.HasFlag(EAffixItemFlags.Belt) || i.AffixItemFlags.HasFlag(EAffixItemFlags.Jewellery)).ToList();
-	}
-
-	public override List<AffixTableType> GetValidSuffixTypes() {
-		return AffixDataTables.SuffixData.Where(i => i.AffixItemFlags.HasFlag(EAffixItemFlags.Belt) || i.AffixItemFlags.HasFlag(EAffixItemFlags.Jewellery)).ToList();
-	}
 }
 
 public partial class RingItem : JewelleryItem {
@@ -291,13 +458,15 @@ public partial class RingItem : JewelleryItem {
 		ItemJewelleryBaseType = EItemJewelleryBaseType.Ring;
 		ItemAffixFlags = EAffixItemFlags.Ring | EAffixItemFlags.Jewellery;
 	}
+}
 
-	public override List<AffixTableType> GetValidPrefixTypes() {
-		return AffixDataTables.PrefixData.Where(i => i.AffixItemFlags.HasFlag(EAffixItemFlags.Ring) || i.AffixItemFlags.HasFlag(EAffixItemFlags.Jewellery)).ToList();
-	}
-
-	public override List<AffixTableType> GetValidSuffixTypes() {
-		return AffixDataTables.SuffixData.Where(i => i.AffixItemFlags.HasFlag(EAffixItemFlags.Ring) || i.AffixItemFlags.HasFlag(EAffixItemFlags.Jewellery)).ToList();
+public partial class AmuletItem : JewelleryItem {
+	public AmuletItem() {
+		gridSizeX = 1;
+		gridSizeY = 1;
+		ItemAllBaseType = EItemAllBaseType.Amulet;
+		ItemJewelleryBaseType = EItemJewelleryBaseType.Amulet;
+		ItemAffixFlags = EAffixItemFlags.Amulet | EAffixItemFlags.Jewellery;
 	}
 }
 
@@ -310,14 +479,6 @@ public partial class OneHandedSwordItem : WeaponItem {
 		ItemAffixFlags = EAffixItemFlags.OHWeapon | EAffixItemFlags.Weapon;
 		WeaponClass = "One Handed Sword";
 	}
-
-	public override List<AffixTableType> GetValidPrefixTypes() {
-		return AffixDataTables.PrefixData.Where(i => i.AffixItemFlags.HasFlag(EAffixItemFlags.OHWeapon) || i.AffixItemFlags.HasFlag(EAffixItemFlags.Weapon)).ToList();
-	}
-
-	public override List<AffixTableType> GetValidSuffixTypes() {
-		return AffixDataTables.SuffixData.Where(i => i.AffixItemFlags.HasFlag(EAffixItemFlags.OHWeapon) || i.AffixItemFlags.HasFlag(EAffixItemFlags.Weapon)).ToList();
-	}
 }
 
 public partial class TwoHandedSwordItem : WeaponItem {
@@ -328,14 +489,6 @@ public partial class TwoHandedSwordItem : WeaponItem {
 		ItemWeaponBaseType = EItemWeaponBaseType.Weapon2H;
 		ItemAffixFlags = EAffixItemFlags.THWeapon | EAffixItemFlags.Weapon;
 		WeaponClass = "Two Handed Sword";
-	}
-
-	public override List<AffixTableType> GetValidPrefixTypes() {
-		return AffixDataTables.PrefixData.Where(i => i.AffixItemFlags.HasFlag(EAffixItemFlags.THWeapon) || i.AffixItemFlags.HasFlag(EAffixItemFlags.Weapon)).ToList();
-	}
-
-	public override List<AffixTableType> GetValidSuffixTypes() {
-		return AffixDataTables.SuffixData.Where(i => i.AffixItemFlags.HasFlag(EAffixItemFlags.THWeapon) || i.AffixItemFlags.HasFlag(EAffixItemFlags.Weapon)).ToList();
 	}
 }
 

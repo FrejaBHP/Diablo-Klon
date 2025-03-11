@@ -8,9 +8,10 @@ public static class UILib {
 	public static readonly Texture2D TextureItemD2Cap = GD.Load<Texture2D>("res://textures/items/d2_Cap.png");
 	public static readonly Texture2D TextureItemD2LeatherArmour = GD.Load<Texture2D>("res://textures/items/d2_LeatherArmour.png");
 	public static readonly Texture2D TextureItemD2LeatherGloves = GD.Load<Texture2D>("res://textures/items/d2_LeatherGloves.png");
-	public static readonly Texture2D TextureItemD2Ring0 = GD.Load<Texture2D>("res://textures/items/d2_Ring0.png");
-	public static readonly Texture2D TextureItemD2Sash = GD.Load<Texture2D>("res://textures/items/d2_Sash.png");
 	public static readonly Texture2D TextureItemD2Boots = GD.Load<Texture2D>("res://textures/items/d2_Boots.png");
+	public static readonly Texture2D TextureItemD2Sash = GD.Load<Texture2D>("res://textures/items/d2_Sash.png");
+	public static readonly Texture2D TextureItemD2Ring0 = GD.Load<Texture2D>("res://textures/items/d2_Ring0.png");
+	public static readonly Texture2D TextureItemD2Amulet0 = GD.Load<Texture2D>("res://textures/items/d2_Amulet0.png");
 	public static readonly Texture2D TextureItemD2ShortSword = GD.Load<Texture2D>("res://textures/items/d2_ShortSword.png");
 	public static readonly Texture2D TextureItemD2LongSword = GD.Load<Texture2D>("res://textures/items/d2_LongSword.png");
 

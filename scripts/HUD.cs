@@ -41,7 +41,18 @@ public partial class HUD : Control {
 		}
 	}
 
-	public void CreateItemTooltip(Control tooltipContent, Vector2 anchor) {
+    public override void _UnhandledInput(InputEvent @event) {
+		
+    }
+
+    public void CreateItemTooltip(Control tooltipContent, Vector2 anchor) {
+		/* 
+		=========================================================
+		Skriv dette om, så den tager et origin + en størrelse og regner ankeret derfra
+		Det er for at gøre det muligt sende nogle koordinater til selve vinduet, hvorfra den selv kan undgå at placere sig selv oven på items,
+		men i stedet forsøge at være ved siden af, da det både ser træls ud, men også giver nogle problemer med inputprioritering
+		=========================================================
+		*/
 		ItemTooltipPopup tooltipPopup = itemTooltipPopupScene.Instantiate<ItemTooltipPopup>();
 		AddChild(tooltipPopup);
 		activeTooltipPopup = tooltipPopup;

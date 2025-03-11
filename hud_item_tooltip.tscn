@@ -27,6 +27,7 @@ script = ExtResource("1_53ehe")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 0
 
 [node name="NameContainer" type="VBoxContainer" parent="VBoxContainer"]

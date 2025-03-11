@@ -27,9 +27,9 @@ public partial class Player : Actor {
 		playerCamera.AssignPlayer(this);
 
 		debugLabel = GetNode<Label>("DebugLabel");
-		PlayerHUD = GetNode<HUD>("SubViewportContainer/SubViewport/PlayerHUD");
+		PlayerHUD = GetNode<HUD>("SubViewportContainer/SubViewport/CanvasLayer/PlayerHUD");
 		PlayerHUD.PlayerOwner = this;
-		PlayerInventory = GetNode<Inventory>("SubViewportContainer/SubViewport/PlayerHUD/Inventory");
+		PlayerInventory = GetNode<Inventory>("SubViewportContainer/SubViewport/CanvasLayer/PlayerHUD/Inventory");
 		PlayerInventory.PlayerOwner = this;
 		moveTo = GlobalPosition;
 	}
@@ -82,8 +82,9 @@ public partial class Player : Actor {
 
 	public void DropItem(WorldItem worldItem) {
 		Game game = (Game)GetParent();
+		CanvasLayer gameObjectLayer = game.GetNode<CanvasLayer>("WorldObjects");
 
-		game.AddChild(worldItem);
+		gameObjectLayer.AddChild(worldItem);
 		worldItem.Position = Position;
 		worldItem.PostSpawn();
 	}
@@ -106,7 +107,7 @@ public partial class Player : Actor {
 					LookAt(lookAt, null, true);
 				}
 
-				GD.Print("Moving towards position");
+				//GD.Print("Moving towards position");
 			}
 		}
 		else {
@@ -118,7 +119,7 @@ public partial class Player : Actor {
 				LookAt(lookAt, null, true);
 			}
 
-			GD.Print("Moving towards object");
+			//GD.Print("Moving towards object");
 		}
 
 		newMouseInput = false;
@@ -156,7 +157,7 @@ public partial class Player : Actor {
 
 	public bool PickupItem(ref WorldItem item) {
 		targetedNode = null;
-		GD.Print("Tried picking up item");
+		//GD.Print("Tried picking up item");
 
 		item.ItemReference.ConvertToInventoryItem(this);
 

@@ -53,7 +53,8 @@ public static class ItemGeneration {
 	}
 	*/
 
-	private static Item GenerateWeaponItem(EItemWeaponBaseType weaponType, EItemRarity rarity) {
+	private static WeaponItem GenerateWeaponItem(EItemWeaponBaseType weaponType, EItemRarity rarity) {
+		GD.Print($"Weapon Type: {weaponType}");
 		WeaponItem weaponItem;
 
 		switch (weaponType) {
@@ -79,7 +80,8 @@ public static class ItemGeneration {
 		return weaponItem;
 	}
 
-	private static Item GenerateArmourItem(EItemArmourBaseType armourType, EItemRarity rarity) {
+	private static ArmourItem GenerateArmourItem(EItemArmourBaseType armourType, EItemRarity rarity) {
+		GD.Print($"Armour Type: {armourType}");
 		ArmourItem armourItem;
 
 		switch (armourType) {
@@ -120,7 +122,8 @@ public static class ItemGeneration {
 		return armourItem;
 	}
 
-	private static Item GenerateJewelleryItem(EItemJewelleryBaseType jewelleryType, EItemRarity rarity) {
+	private static JewelleryItem GenerateJewelleryItem(EItemJewelleryBaseType jewelleryType, EItemRarity rarity) {
+		GD.Print($"Jewellery Type: {jewelleryType}");
 		JewelleryItem jewelleryItem;
 
 		switch (jewelleryType) {
@@ -131,12 +134,18 @@ public static class ItemGeneration {
 				jewelleryItem = beltItem;
 				break;
 
-			//case EItemJewelleryBaseType.Ring:
-			default:
+			case EItemJewelleryBaseType.Ring:
 				RingItem ringItem = new();
 				ringItem.ItemTexture = UILib.TextureItemD2Ring0;
 
 				jewelleryItem = ringItem;
+				break;
+
+			default:
+				AmuletItem amuletItem = new();
+				amuletItem.ItemTexture = UILib.TextureItemD2Amulet0;
+
+				jewelleryItem = amuletItem;
 				break;
 		}
 
@@ -225,6 +234,7 @@ public static class ItemGeneration {
 
 	private static void ApplyWeaponBaseStats(ref WeaponItem item, WeaponItemData data) {
 		item.ItemBase = data.BaseName;
+		item.ItemBaseSpecifierFlags |= data.ItemSpecifierFlags;
 		item.ItemTexture = data.Texture;
 		item.MinimumLevel = data.MinimumLevel;
 
@@ -232,12 +242,12 @@ public static class ItemGeneration {
 		item.BasePhysicalMaximumDamage = data.BasePhysicalMaximumDamage;
 
 		// indtil der bliver implementeret affixes:
-		item.PhysicalMinimumDamage = item.BasePhysicalMinimumDamage;
-		item.PhysicalMaximumDamage = item.BasePhysicalMaximumDamage;
+		item.CalculatePhysicalDamage();
 	}
 
 	private static void ApplyArmourBaseStats(ref ArmourItem item, ArmourItemData data) {
 		item.ItemBase = data.BaseName;
+		item.ItemBaseSpecifierFlags |= data.ItemSpecifierFlags;
 		item.ItemTexture = data.Texture;
 		item.MinimumLevel = data.MinimumLevel;
 
@@ -247,9 +257,7 @@ public static class ItemGeneration {
 		item.BaseEnergyShield = data.BaseEnergyShield;
 
 		// indtil der bliver implementeret affixes:
-		item.Armour = item.BaseArmour;
-		item.Evasion = item.BaseEvasion;
-		item.EnergyShield = item.BaseEnergyShield;
+		item.CalculateDefences();
 	}
 
 	private static void ApplyRarityAndAffixes(ref Item item) {
@@ -263,13 +271,13 @@ public static class ItemGeneration {
 
 				for (int i = 0; i < affixesToRollM; i++) {
 					if (item.Prefixes.Count != magicMaxPrefixes && item.Suffixes.Count != magicMaxSuffixes) {
-						AddAffix(ref item, (EAffixPosition)Utilities.RNG.Next(0, 2));
+						item.AddRandomAffix((EAffixPosition)Utilities.RNG.Next(0, 2));
 					}
 					else if (item.Prefixes.Count == magicMaxPrefixes && item.Suffixes.Count == 0) {
-						AddAffix(ref item, EAffixPosition.Suffix);
+						item.AddRandomAffix(EAffixPosition.Suffix);
 					}
 					else {
-						AddAffix(ref item, EAffixPosition.Prefix);
+						item.AddRandomAffix(EAffixPosition.Prefix);
 					}
 				}
 				break;
@@ -280,13 +288,13 @@ public static class ItemGeneration {
 
 				for (int i = 0; i < affixesToRollR; i++) {
 					if (item.Prefixes.Count < rareMaxPrefixes && item.Suffixes.Count < rareMaxSuffixes) {
-						AddAffix(ref item, (EAffixPosition)Utilities.RNG.Next(0, 2));
+						item.AddRandomAffix((EAffixPosition)Utilities.RNG.Next(0, 2));
 					}
 					else if (item.Prefixes.Count == rareMaxPrefixes) {
-						AddAffix(ref item, EAffixPosition.Suffix);
+						item.AddRandomAffix(EAffixPosition.Suffix);
 					}
 					else {
-						AddAffix(ref item, EAffixPosition.Prefix);
+						item.AddRandomAffix(EAffixPosition.Prefix);
 					}
 				}
 				break;
@@ -310,7 +318,7 @@ public static class ItemGeneration {
 			tableTypes = item.GetValidPrefixTypes().GetRange(0, item.GetValidPrefixTypes().Count);
 
 			if (tableTypes.Count == 0) {
-				GD.PrintErr("No valid prefixes");
+				//GD.PrintErr("No valid prefixes");
 				return;
 			}
 		}
@@ -319,7 +327,7 @@ public static class ItemGeneration {
 			tableTypes = item.GetValidSuffixTypes().GetRange(0, item.GetValidSuffixTypes().Count);
 			
 			if (tableTypes.Count == 0) {
-				GD.PrintErr("No valid suffixes");
+				//GD.PrintErr("No valid suffixes");
 				return;
 			}
 		}

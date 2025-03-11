@@ -200,14 +200,19 @@ public partial class InventoryItem : PanelContainer {
 			WeaponItem item = ItemReference as WeaponItem;
 
 			Label weaponClassLabel = new Label();
+			weaponClassLabel.Text = item.WeaponClass;
+			weaponClassLabel.MouseFilter = MouseFilterEnum.Ignore;
 			weaponClassLabel.AddThemeFontSizeOverride("font_size", 15);
 			weaponClassLabel.AddThemeColorOverride("font_color", UILib.ColorGrey);
-			weaponClassLabel.Text = item.WeaponClass;
 			weaponClassLabel.HorizontalAlignment = HorizontalAlignment.Center;
 			tooltipContent.BaseStatsContainer.AddChild(weaponClassLabel);
 
 			if (item.PhysicalMinimumDamage > 0) {
-				HBoxContainer physLabel = GenerateBaseStatLabel("Physical Damage:", item.PhysicalMinimumDamage.ToString() + " - " + item.PhysicalMaximumDamage.ToString());
+				bool shouldHighlight = false;
+				if (item.PhysicalMinimumDamage > item.BasePhysicalMinimumDamage) {
+					shouldHighlight = true;
+				}
+				HBoxContainer physLabel = GenerateBaseStatLabel("Physical Damage:", item.PhysicalMinimumDamage.ToString() + "-" + item.PhysicalMaximumDamage.ToString(), shouldHighlight);
 				tooltipContent.BaseStatsContainer.AddChild(physLabel);
 			}
 		}
@@ -215,17 +220,29 @@ public partial class InventoryItem : PanelContainer {
 			ArmourItem item = ItemReference as ArmourItem;
 
 			if (item.ItemDefences.HasFlag(EItemDefences.Armour)) {
-				HBoxContainer armourLabel = GenerateBaseStatLabel("Armour:", item.Armour.ToString());
+				bool shouldHighlight = false;
+				if (item.Armour > item.BaseArmour) {
+					shouldHighlight = true;
+				}
+				HBoxContainer armourLabel = GenerateBaseStatLabel("Armour:", item.Armour.ToString(), shouldHighlight);
 				tooltipContent.BaseStatsContainer.AddChild(armourLabel);
 			}
 
 			if (item.ItemDefences.HasFlag(EItemDefences.Evasion)) {
-				HBoxContainer evasionLabel = GenerateBaseStatLabel("Evasion Rating:", item.Evasion.ToString());
+				bool shouldHighlight = false;
+				if (item.Evasion > item.BaseEvasion) {
+					shouldHighlight = true;
+				}
+				HBoxContainer evasionLabel = GenerateBaseStatLabel("Evasion Rating:", item.Evasion.ToString(), shouldHighlight);
 				tooltipContent.BaseStatsContainer.AddChild(evasionLabel);
 			}
 
 			if (item.ItemDefences.HasFlag(EItemDefences.EnergyShield)) {
-				HBoxContainer esLabel = GenerateBaseStatLabel("Energy Shield:", item.EnergyShield.ToString());
+				bool shouldHighlight = false;
+				if (item.EnergyShield > item.BaseEnergyShield) {
+					shouldHighlight = true;
+				}
+				HBoxContainer esLabel = GenerateBaseStatLabel("Energy Shield:", item.EnergyShield.ToString(), shouldHighlight);
 				tooltipContent.BaseStatsContainer.AddChild(esLabel);
 			}
 		}
@@ -243,18 +260,24 @@ public partial class InventoryItem : PanelContainer {
 		return tooltipContent;
 	}
 
-	private HBoxContainer GenerateBaseStatLabel(string statName, string statValue) {
+	private HBoxContainer GenerateBaseStatLabel(string statName, string statValue, bool highlight) {
 		HBoxContainer labelContainer = new HBoxContainer();
+		labelContainer.MouseFilter = MouseFilterEnum.Ignore;
 
 		Label baseStatNameLabel = new Label();
 		baseStatNameLabel.Text = statName;
+		baseStatNameLabel.MouseFilter = MouseFilterEnum.Ignore;
 		baseStatNameLabel.AddThemeFontSizeOverride("font_size", 15);
 		baseStatNameLabel.AddThemeColorOverride("font_color", UILib.ColorGrey);
 		labelContainer.AddChild(baseStatNameLabel);
 
 		Label baseStatValueLabel = new Label();
 		baseStatValueLabel.Text = statValue;
+		baseStatValueLabel.MouseFilter = MouseFilterEnum.Ignore;
 		baseStatValueLabel.AddThemeFontSizeOverride("font_size", 15);
+		if (highlight) {
+			baseStatValueLabel.AddThemeColorOverride("font_color", UILib.ColorBlurple);
+		}
 		labelContainer.AddChild(baseStatValueLabel);
 
 		return labelContainer;
@@ -264,6 +287,7 @@ public partial class InventoryItem : PanelContainer {
 		Label affixTextLabel = new Label();
 
 		affixTextLabel.Text = affixText;
+		affixTextLabel.MouseFilter = MouseFilterEnum.Ignore;
 		affixTextLabel.AddThemeFontSizeOverride("font_size", 15);
 		affixTextLabel.AddThemeColorOverride("font_color", UILib.ColorBlurple);
 		affixTextLabel.HorizontalAlignment = HorizontalAlignment.Center;
