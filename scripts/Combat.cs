@@ -4,29 +4,15 @@ public enum DamageType {
     Fire,       // DoT: Ignite - Burn/Burning
     Cold,       // DoT: Frostburn/Frostburning
     Lightning,  // DoT: Electrocute/Electrocuted
-    Corrosive,  // DoT: Poison/Poisoned
-    Holy,       // DoT: Soulfire/Soulfired
-    Shadow      // DoT: Agony/Agonised
+    Chaos       // DoT: Poison
 }
 
-public class HitDamageInstance {
-    public readonly float DamagePhysical;
-    public readonly float DamageFire;
-    public readonly float DamageCold;
-    public readonly float DamageLightning;
-    public readonly float DamageCorrosive;
-    public readonly float DamageHoly;
-    public readonly float DamageShadow;
-
-    public HitDamageInstance(float phys, float fire, float cold, float lightning, float corrosive, float holy, float shadow) {
-        DamagePhysical = phys;
-        DamageFire = fire;
-        DamageCold = cold;
-        DamageLightning = lightning;
-        DamageCorrosive = corrosive;
-        DamageHoly = holy;
-        DamageShadow = shadow;
-    }
+public class HitDamageInstance(float phys, float fire, float cold, float lightning, float chaos) {
+    public readonly float DamagePhysical = phys;
+    public readonly float DamageFire = fire;
+    public readonly float DamageCold = cold;
+    public readonly float DamageLightning = lightning;
+    public readonly float DamageChaos = chaos;
 }
 
 interface IDoT {
@@ -39,7 +25,7 @@ interface IDoT {
 }
 
 public class PoisonInstance : IDoT {
-    public static DamageType Type { get; } = DamageType.Corrosive;
+    public static DamageType Type { get; } = DamageType.Chaos;
     public static float BaseLength { get; } = 2f;
     public float TotalLength { get; private set; }
     public float TotalDamage { get; private set; }

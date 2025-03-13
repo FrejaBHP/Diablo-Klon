@@ -14,6 +14,7 @@ public static class UILib {
 	public static readonly Texture2D TextureItemD2Amulet0 = GD.Load<Texture2D>("res://textures/items/d2_Amulet0.png");
 	public static readonly Texture2D TextureItemD2ShortSword = GD.Load<Texture2D>("res://textures/items/d2_ShortSword.png");
 	public static readonly Texture2D TextureItemD2LongSword = GD.Load<Texture2D>("res://textures/items/d2_LongSword.png");
+	public static readonly Texture2D TextureItemD2SmallShield = GD.Load<Texture2D>("res://textures/items/d2_SmallShield.png");
 
 	public static readonly Color ColorWhite = Color.Color8(255, 255, 255, 255);
 	public static readonly Color ColorGrey = Color.Color8(150, 150, 150, 255);

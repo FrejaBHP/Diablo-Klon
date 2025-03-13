@@ -43,6 +43,10 @@ public static class ItemDataTables {
 	};
 
 	public static readonly List<ArmourItemData> FeetArmourData = new List<ArmourItemData> {
-		new ArmourItemData{ BaseName = "Boots", ItemSpecifierFlags = EItemBaseSpecifierFlags.AEvasion, Texture = UILib.TextureItemD2Boots, MinimumLevel = 0, ItemDefences = EItemDefences.Evasion, BaseArmour = 0, BaseEvasion = 15, BaseEnergyShield = 0 } 
+		new ArmourItemData{ BaseName = "Boots", ItemSpecifierFlags = EItemBaseSpecifierFlags.AEvasion, Texture = UILib.TextureItemD2Boots, MinimumLevel = 0, ItemDefences = EItemDefences.Evasion, BaseArmour = 0, BaseEvasion = 15, BaseEnergyShield = 0 }
+	};
+
+	public static readonly List<ArmourItemData> SmallShieldArmourData = new List<ArmourItemData> {
+		new ArmourItemData{ BaseName = "Small Shield", ItemSpecifierFlags = EItemBaseSpecifierFlags.AEvasion, Texture = UILib.TextureItemD2SmallShield, MinimumLevel = 0, ItemDefences = EItemDefences.Evasion, BaseArmour = 0, BaseEvasion = 20, BaseEnergyShield = 0 }
 	};
 }

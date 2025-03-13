@@ -101,8 +101,6 @@ public partial class Inventory : Control {
                     int slotX = (int)Math.Floor(offset.X / slotSize.X);
                     int slotY = (int)Math.Floor(offset.Y / slotSize.Y);
 
-                    //GD.Print($"X: {slotX}, Y: {slotY}");
-
                     if (CanFitInSlot(slotX, slotY, selectedItem)) {
                         MoveSelectedItemToSlot(slotX, slotY);
                     }
@@ -135,14 +133,12 @@ public partial class Inventory : Control {
                 if (invGridCells[i, j].IsEmpty) {
                     if (CanFitInSlot(i, j, item)) {
                         AddItemToInventory(item, i, j);
-                        //GD.Print("Slots not occupied, picking up");
                         return true;
                     }
                 }
             }
         }
         
-        //GD.Print("Slots occupied, can't pick up");
         return false;
     }
 
@@ -167,7 +163,6 @@ public partial class Inventory : Control {
         
         for (int i = 0; i < item.GetGridSize().X; i++) {
             for (int j = 0; j < item.GetGridSize().Y; j++) {
-                //GD.Print("Testing slot " + (slotX + i) + ", " + (slotY + j));
                 if (!invGridCells[slotX + i, slotY + j].IsEmpty) {
                     return false;
                 }
@@ -180,8 +175,6 @@ public partial class Inventory : Control {
 
     public void ItemClickSelect(InventoryItem item) {
         if (!IsAnItemSelected && selectedItem == null) {
-            //GD.Print("Item Selected!");
-
             selectedItem = item;
             selectedItem.IsClicked = true;
             IsAnItemSelected = true;
@@ -200,8 +193,6 @@ public partial class Inventory : Control {
 
     public void ItemClickDeselect(InventoryItem item) {
         if (IsAnItemSelected && selectedItem != null) {
-            //GD.Print("Item Deselected!");
-
             item.CloseOccupiedSlots();
             item.Position = Vector2.Zero;
 
@@ -220,8 +211,6 @@ public partial class Inventory : Control {
     }
 
     public void ItemClickDrop(InventoryItem item) {
-        //GD.Print("Item Dropped!");
-
         foreach (EquipmentSlot slot in GetEquipmentSlots(item.ItemReference.ItemAllBaseType)) {
             slot.RemoveHighlight();
         }
@@ -270,8 +259,6 @@ public partial class Inventory : Control {
     }
 
     public void EquipItemInSlot(EquipmentSlot slot, InventoryItem item) {
-        //GD.Print("Item Equipped!");
-
         item.ClearOccupiedSlots();
         item.GetParent().RemoveChild(item);
         slot.AddChild(item);
@@ -289,13 +276,28 @@ public partial class Inventory : Control {
             }
         }
 
+        if (slot.Slot == EItemEquipmentSlot.WeaponLeft) {
+            PlayerOwner.AssignMainHand((WeaponItem)item.ItemReference);
+        }
+        else if (slot.Slot == EItemEquipmentSlot.WeaponRight) {
+            PlayerOwner.AssignOffHand(item.ItemReference);
+        }
+
         if (item.ItemReference.ItemAllBaseType == EItemAllBaseType.Weapon2H && WeaponSlotRight.ItemInSlot != null) {
             WeaponSlotRight.UnequipItem(WeaponSlotRight.ItemInSlot);
+            PlayerOwner.AssignOffHand(null);
         }
+
+        PlayerOwner.ApplyItemStats(slot, item.ItemReference);
     }
 
     public void UnequipItemInSlot(EquipmentSlot slot, InventoryItem item) {
-        //GD.Print("Item Unequipped!");
+        if (slot.Slot == EItemEquipmentSlot.WeaponLeft) {
+            PlayerOwner.AssignMainHand(null);
+        }
+        else if (slot.Slot == EItemEquipmentSlot.WeaponRight) {
+            PlayerOwner.AssignOffHand(null);
+        }
 
         slot.RemoveChild(item);
 
@@ -306,11 +308,11 @@ public partial class Inventory : Control {
             item.ToggleClickable();
             item.ToggleBackground();
         }
+
+        PlayerOwner.RemoveItemStats(slot, item.ItemReference);
     }
 
     public void SwapItemsInSlot(EquipmentSlot slot, InventoryItem oldItem, InventoryItem newItem) {
-        //GD.Print("Items Swapped!");
-
         newItem.ClearOccupiedSlots();
         slot.RemoveChild(oldItem);
         newItem.GetParent().RemoveChild(newItem);
@@ -337,9 +339,20 @@ public partial class Inventory : Control {
             }
         }
 
+        if (slot.Slot == EItemEquipmentSlot.WeaponLeft) {
+            PlayerOwner.AssignMainHand((WeaponItem)newItem.ItemReference);
+        }
+        else if (slot.Slot == EItemEquipmentSlot.WeaponRight) {
+            PlayerOwner.AssignOffHand(newItem.ItemReference);
+        }
+
         if (newItem.ItemReference.ItemAllBaseType == EItemAllBaseType.Weapon2H && WeaponSlotRight.ItemInSlot != null) {
             WeaponSlotRight.UnequipItem(WeaponSlotRight.ItemInSlot);
+            PlayerOwner.AssignOffHand(null);
         }
+
+        PlayerOwner.RemoveItemStats(slot, oldItem.ItemReference);
+        PlayerOwner.ApplyItemStats(slot, newItem.ItemReference);
     }
 
     private List<EquipmentSlot> GetEquipmentSlots(EItemAllBaseType type) {
@@ -392,6 +405,10 @@ public partial class Inventory : Control {
                 break;
         }
 
+        return equipmentSlots;
+    }
+
+    public List<EquipmentSlot> GetEquipmentSlots() {
         return equipmentSlots;
     }
 }

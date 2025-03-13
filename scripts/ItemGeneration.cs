@@ -54,7 +54,6 @@ public static class ItemGeneration {
 	*/
 
 	private static WeaponItem GenerateWeaponItem(EItemWeaponBaseType weaponType, EItemRarity rarity) {
-		GD.Print($"Weapon Type: {weaponType}");
 		WeaponItem weaponItem;
 
 		switch (weaponType) {
@@ -81,7 +80,6 @@ public static class ItemGeneration {
 	}
 
 	private static ArmourItem GenerateArmourItem(EItemArmourBaseType armourType, EItemRarity rarity) {
-		GD.Print($"Armour Type: {armourType}");
 		ArmourItem armourItem;
 
 		switch (armourType) {
@@ -106,12 +104,24 @@ public static class ItemGeneration {
 				armourItem = handsItem;
 				break;
 
-			//case EItemArmourBaseType.Boots:
-			default:
+			case EItemArmourBaseType.Boots:
 				FeetItem feetItem = new();
 				GetBaseFromTable(ref feetItem, 0);
 
 				armourItem = feetItem;
+				break;
+
+			//case EItemArmourBaseType.Shield:
+			default:
+				int shieldType = Utilities.RNG.Next(0, 3);
+				switch (shieldType) {
+					default:
+						SmallShieldItem smallShieldItem = new();
+						GetBaseFromTable(ref smallShieldItem, 0);
+
+						armourItem = smallShieldItem;
+						break;
+				}
 				break;
 		}
 
@@ -123,7 +133,6 @@ public static class ItemGeneration {
 	}
 
 	private static JewelleryItem GenerateJewelleryItem(EItemJewelleryBaseType jewelleryType, EItemRarity rarity) {
-		GD.Print($"Jewellery Type: {jewelleryType}");
 		JewelleryItem jewelleryItem;
 
 		switch (jewelleryType) {
@@ -141,6 +150,7 @@ public static class ItemGeneration {
 				jewelleryItem = ringItem;
 				break;
 
+			// case EItemJewelleryBaseType.Amulet:
 			default:
 				AmuletItem amuletItem = new();
 				amuletItem.ItemTexture = UILib.TextureItemD2Amulet0;
@@ -191,6 +201,7 @@ public static class ItemGeneration {
 					ApplyWeaponBaseStats(ref weaponItem, data); // Flyt ned når alle branches er udfyldt
 					break;
 
+				// case EItemWeaponBaseType.Weapon2H:
 				default:
 					legalWeaponData = ItemDataTables.THSwordWeaponData.Where(i => i.MinimumLevel >= minLevel).ToList();
 					data = legalWeaponData[Utilities.RNG.Next(legalWeaponData.Count)];
@@ -221,9 +232,14 @@ public static class ItemGeneration {
 					data = legalArmourData[Utilities.RNG.Next(legalArmourData.Count)];
 					break;
 
-				// case EItemArmourBaseType.Boots:
-				default:
+				case EItemArmourBaseType.Boots:
 					legalArmourData = ItemDataTables.FeetArmourData.Where(i => i.MinimumLevel >= minLevel).ToList();
+					data = legalArmourData[Utilities.RNG.Next(legalArmourData.Count)];
+					break;
+
+				// case EItemArmourBaseType.Shield:
+				default:
+					legalArmourData = ItemDataTables.SmallShieldArmourData.Where(i => i.MinimumLevel >= minLevel).ToList();
 					data = legalArmourData[Utilities.RNG.Next(legalArmourData.Count)];
 					break;
 			}
@@ -307,52 +323,6 @@ public static class ItemGeneration {
 					item.ItemName = item.ItemAllBaseType.ToString();
 				}
 				break;
-		}
-	}
-
-	private static void AddAffix(ref Item item, EAffixPosition position) {
-		List<AffixTableType> tableTypes;
-
-		if (position == EAffixPosition.Prefix) {
-			//GD.Print($"Valid prefixes: {item.GetValidPrefixTypes().Count}");
-			tableTypes = item.GetValidPrefixTypes().GetRange(0, item.GetValidPrefixTypes().Count);
-
-			if (tableTypes.Count == 0) {
-				//GD.PrintErr("No valid prefixes");
-				return;
-			}
-		}
-		else {
-			//GD.Print($"Valid suffixes: {item.GetValidPrefixTypes().Count}");
-			tableTypes = item.GetValidSuffixTypes().GetRange(0, item.GetValidSuffixTypes().Count);
-			
-			if (tableTypes.Count == 0) {
-				//GD.PrintErr("No valid suffixes");
-				return;
-			}
-		}
-
-		AffixTableType affixTableType = tableTypes[Utilities.RNG.Next(tableTypes.Count)];
-
-		Affix newAffix = (Affix)Activator.CreateInstance(affixTableType.AffixClassType);
-		newAffix.RollAffixTier(item.ItemLevel);
-		newAffix.RollAffixValue();
-
-		if (position == EAffixPosition.Prefix) {
-			item.Prefixes.Add(newAffix);
-
-			if (item.ItemRarity == EItemRarity.Magic) {
-				string newName = $"{newAffix.GetAffixName()} {item.ItemName}";
-				item.ItemName = newName;
-			}
-		}
-		else {
-			item.Suffixes.Add(newAffix);
-
-			if (item.ItemRarity == EItemRarity.Magic) {
-				string newName = $"{item.ItemName} {newAffix.GetAffixName()}";
-				item.ItemName = newName;
-			}
 		}
 	}
 }

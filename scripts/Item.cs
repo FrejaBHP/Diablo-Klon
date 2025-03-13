@@ -3,102 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-public enum EItemRarity {
-	Common,
-	Magic,
-	Rare,
-	Unique,
-	What
-}
 
-public enum EItemEquipmentSlot {
-	None,
-	Head,
-	Chest,
-	Hands,
-	Feet,
-	Belt,
-	Ring,
-	Amulet,
-	WeaponLeft,
-	WeaponRight,
-	COUNT
-}
-
-public enum EItemAllBaseType {
-	None,
-	Head,
-	Chest,
-	Hands,
-	Feet,
-	Belt,
-	Ring,
-	Amulet,
-	Weapon1H,
-	Weapon2H,
-	Shield,
-	COUNT
-}
-
-public enum EItemArmourBaseType {
-	Helmet,
-	Chestplate,
-	Gloves,
-	Boots,
-	COUNT
-}
-
-public enum EItemWeaponBaseType {
-	Weapon1H,
-	Weapon2H,
-	Shield,
-	COUNT
-}
-
-public enum EItemJewelleryBaseType {
-	Belt,
-	Ring,
-	Amulet,
-	COUNT
-}
-
-public enum EItemCategory {
-	None,
-	Armour,
-	Weapon,
-	Jewellery,
-	COUNT
-}
-
-[Flags]
-public enum EItemBaseSpecifierFlags {
-	NONE = 0,
-	NoFlags = 1 << 0,
-	AArmour = 1 << 1,
-	AEvasion = 1 << 2,
-	AEnergyShield = 1 << 3,
-	AArmourEvasion = 1 << 4,
-	AEvasionEnergyShield = 1 << 5,
-	AEnergyShieldArmour = 1 << 6,
-	AAll = 1 << 7,
-
-	W1HSword = 1 << 8,
-	W2HSword = 1 << 9
-}
-
-[Flags]
-public enum EItemDefences {
-	None = 0,
-	Armour = 1,
-	Evasion = 2,
-	EnergyShield = 4,
-
-	ArmourEvasion = Armour | Evasion,
-	EvasionEnergyShield = Evasion | EnergyShield,
-	EnergyShieldArmour = EnergyShield | Armour,
-
-	All = Armour | Evasion | EnergyShield
-}
 
 public partial class Item {
 	PackedScene worldItemScene = GD.Load<PackedScene>("res://worlditem.tscn");
@@ -106,7 +11,6 @@ public partial class Item {
 
 	public Player PlayerOwner = null;
 
-	// Alle disse burde flyttes væk herfra og ind i en separat tabel
 	public string ItemName;
 	public string ItemBase;
 	public EItemRarity ItemRarity;
@@ -126,6 +30,8 @@ public partial class Item {
 	public Texture2D ItemTexture;
 	public bool IsInWorld = false;
 	public bool IsPickedUp = false;
+
+	public Dictionary<EStatName, double> StatDictionary = new();
 
 	protected int gridSizeX = 1;
 	protected int gridSizeY = 1;
@@ -203,24 +109,16 @@ public partial class Item {
 		List<AffixTableType> tableTypes;
 
 		if (position == EAffixPosition.Prefix) {
-			//GD.Print($"Valid prefixes: {item.GetValidPrefixTypes().Count}");
-			//tableTypes = GetValidPrefixTypes().GetRange(0, GetValidPrefixTypes().Count);
 			tableTypes = GetValidPrefixTypes();
 
 			if (tableTypes.Count == 0) {
-				//GD.PrintErr("No valid prefixes");
 				return;
 			}
-
-			//GD.Print($"{tableTypes.Count} valid prefixes with item specifier flags ({ItemBaseSpecifierFlags})");
 		}
 		else {
-			//GD.Print($"Valid suffixes: {item.GetValidPrefixTypes().Count}");
-			//tableTypes = GetValidSuffixTypes().GetRange(0, GetValidSuffixTypes().Count);
 			tableTypes = GetValidSuffixTypes();
 			
 			if (tableTypes.Count == 0) {
-				//GD.PrintErr("No valid suffixes");
 				return;
 			}
 		}
@@ -252,6 +150,49 @@ public partial class Item {
 	}
 
 	protected virtual void ApplyAffix(Affix affix, bool add) {
+		if (affix.IsLocal) {
+			ApplyLocalAffix(affix, add);
+			return;
+		}
+
+		// First affix value
+		if (StatDictionary.ContainsKey(affix.StatNameFirst)) {
+			if (add) {
+				StatDictionary[affix.StatNameFirst] += (double)affix.ValueFirst;
+			}
+			else {
+				StatDictionary[affix.StatNameFirst] -= (double)affix.ValueFirst;
+
+				if (StatDictionary[affix.StatNameFirst] == 0) {
+					StatDictionary.Remove(affix.StatNameFirst);
+				}
+			}
+		}
+		else {
+			StatDictionary.Add(affix.StatNameFirst, (double)affix.ValueFirst);
+		}
+
+		// Second affix value, if affix is a range (such as added min and max damage values)
+		if (affix.StatNameSecond != EStatName.None) {
+			if (StatDictionary.ContainsKey(affix.StatNameSecond)) {
+				if (add) {
+					StatDictionary[affix.StatNameSecond] += (double)affix.ValueSecond;
+				}
+				else {
+					StatDictionary[affix.StatNameSecond] -= (double)affix.ValueSecond;
+
+					if (StatDictionary[affix.StatNameSecond] == 0) {
+						StatDictionary.Remove(affix.StatNameSecond);
+					}
+				}
+			}
+			else {
+				StatDictionary.Add(affix.StatNameSecond, (double)affix.ValueSecond);
+			}
+		}
+	}
+
+	protected virtual void ApplyLocalAffix(Affix affix, bool add) {
 
 	}
 
@@ -261,22 +202,27 @@ public partial class Item {
 }
 
 public partial class WeaponItem : Item {
+	public EItemWeaponBaseType ItemWeaponBaseType;
+	public string WeaponClass;
+
 	public int BasePhysicalMinimumDamage;
 	public int BasePhysicalMaximumDamage;
 	public int AddedPhysicalMinimumDamage = 0;
 	public int AddedPhysicalMaximumDamage = 0;
-	public int PercentageIncreasedPhysicalDamage = 0;
+	public float PercentageIncreasedPhysicalDamage = 0;
 	public int PhysicalMinimumDamage;
 	public int PhysicalMaximumDamage;
-	public EItemWeaponBaseType ItemWeaponBaseType;
-	public string WeaponClass;
+	
+	public WeaponItem() {
 
-	public void CalculatePhysicalDamage() {
-		PhysicalMinimumDamage = (int)((BasePhysicalMinimumDamage + AddedPhysicalMinimumDamage) * (1 + ((double)PercentageIncreasedPhysicalDamage / 100)));
-		PhysicalMaximumDamage = (int)((BasePhysicalMaximumDamage + AddedPhysicalMaximumDamage) * (1 + ((double)PercentageIncreasedPhysicalDamage / 100))); 
 	}
 
-	protected override void ApplyAffix(Affix affix, bool add) {
+	public void CalculatePhysicalDamage() {
+		PhysicalMinimumDamage = (int)MathF.Round((BasePhysicalMinimumDamage + AddedPhysicalMinimumDamage) * (1 + PercentageIncreasedPhysicalDamage), 0);
+		PhysicalMaximumDamage = (int)MathF.Round((BasePhysicalMaximumDamage + AddedPhysicalMaximumDamage) * (1 + PercentageIncreasedPhysicalDamage), 0);
+	}
+
+	protected override void ApplyLocalAffix(Affix affix, bool add) {
 		switch (affix.Data.AffixFamily) {
 			case EAffixFamily.LocalFlatPhysDamage:
 				if (add) {
@@ -292,10 +238,10 @@ public partial class WeaponItem : Item {
 
 			case EAffixFamily.LocalPercentagePhysDamage:
 				if (add) {
-					PercentageIncreasedPhysicalDamage += (int)affix.ValueFirst;
+					PercentageIncreasedPhysicalDamage += (float)affix.ValueFirst;
 				}
 				else {
-					PercentageIncreasedPhysicalDamage -= (int)affix.ValueFirst;
+					PercentageIncreasedPhysicalDamage -= (float)affix.ValueFirst;
 				}
 				CalculatePhysicalDamage();
 				break;
@@ -308,29 +254,40 @@ public partial class WeaponItem : Item {
 
 public partial class ArmourItem : Item {
 	public EItemDefences ItemDefences;
+	public EItemArmourBaseType ItemArmourBaseType;
+
 	public int BaseArmour;
 	public int AddedArmour;
-	public int IncreasedArmour;
+	public float IncreasedArmour = 0;
 	public int Armour;
 	public int BaseEvasion;
 	public int AddedEvasion;
-	public int IncreasedEvasion;
+	public float IncreasedEvasion = 0;
 	public int Evasion;
 	public int BaseEnergyShield;
 	public int AddedEnergyShield;
-	public int IncreasedEnergyShield;
+	public float IncreasedEnergyShield = 0;
 	public int EnergyShield;
-	public EItemArmourBaseType ItemArmourBaseType;
 
-	public void CalculateDefences() {
-		Armour = (int)((BaseArmour + AddedArmour) * (1 + ((double)IncreasedArmour / 100)));
-		Evasion = (int)((BaseEvasion + AddedEvasion) * (1 + ((double)IncreasedEvasion / 100)));
-		EnergyShield = (int)((BaseEnergyShield + AddedEnergyShield) * (1 + ((double)IncreasedEnergyShield / 100)));
+	public ArmourItem() {
+		StatDictionary.Add(EStatName.FlatArmour, 0);
+		StatDictionary.Add(EStatName.FlatEvasion, 0);
+		StatDictionary.Add(EStatName.FlatEnergyShield, 0);
 	}
 
-	protected override void ApplyAffix(Affix affix, bool add) {
+	public void CalculateDefences() {
+		Armour = (int)MathF.Round((BaseArmour + AddedArmour) * (1 + IncreasedArmour), 0);
+		Evasion = (int)MathF.Round((BaseEvasion + AddedEvasion) * (1 + IncreasedEvasion), 0);
+		EnergyShield = (int)MathF.Round((BaseEnergyShield + AddedEnergyShield) * (1 + IncreasedEnergyShield), 0);
+
+		StatDictionary[EStatName.FlatArmour] = Armour;
+		StatDictionary[EStatName.FlatEvasion] = Evasion;
+		StatDictionary[EStatName.FlatEnergyShield] = EnergyShield;
+	}
+
+	protected override void ApplyLocalAffix(Affix affix, bool add) {
 		switch (affix.Data.AffixFamily) {
-			case EAffixFamily.FlatArmour:
+			case EAffixFamily.LocalFlatArmour:
 				if (add) {
 					AddedArmour += (int)affix.ValueFirst;
 				}
@@ -340,17 +297,17 @@ public partial class ArmourItem : Item {
 				CalculateDefences();
 				break;
 
-			case EAffixFamily.PercentageArmour:
+			case EAffixFamily.LocalPercentageArmour:
 				if (add) {
-					IncreasedArmour += (int)affix.ValueFirst;
+					IncreasedArmour += (float)affix.ValueFirst;
 				}
 				else {
-					IncreasedArmour -= (int)affix.ValueFirst;
+					IncreasedArmour -= (float)affix.ValueFirst;
 				}
 				CalculateDefences();
 				break;
 			
-			case EAffixFamily.FlatEvasion:
+			case EAffixFamily.LocalFlatEvasion:
 				if (add) {
 					AddedEvasion += (int)affix.ValueFirst;
 				}
@@ -360,17 +317,17 @@ public partial class ArmourItem : Item {
 				CalculateDefences();
 				break;
 
-			case EAffixFamily.PercentageEvasion:
+			case EAffixFamily.LocalPercentageEvasion:
 				if (add) {
-					IncreasedEvasion += (int)affix.ValueFirst;
+					IncreasedEvasion += (float)affix.ValueFirst;
 				}
 				else {
-					IncreasedEvasion -= (int)affix.ValueFirst;
+					IncreasedEvasion -= (float)affix.ValueFirst;
 				}
 				CalculateDefences();
 				break;
 
-			case EAffixFamily.FlatEnergyShield:
+			case EAffixFamily.LocalFlatEnergyShield:
 				if (add) {
 					AddedEnergyShield += (int)affix.ValueFirst;
 				}
@@ -380,12 +337,12 @@ public partial class ArmourItem : Item {
 				CalculateDefences();
 				break;
 
-			case EAffixFamily.PercentageEnergyShield:
+			case EAffixFamily.LocalPercentageEnergyShield:
 				if (add) {
-					IncreasedEnergyShield += (int)affix.ValueFirst;
+					IncreasedEnergyShield += (float)affix.ValueFirst;
 				}
 				else {
-					IncreasedEnergyShield -= (int)affix.ValueFirst;
+					IncreasedEnergyShield -= (float)affix.ValueFirst;
 				}
 				CalculateDefences();
 				break;
@@ -440,6 +397,35 @@ public partial class FeetItem : ArmourItem {
 	}
 }
 
+public partial class ShieldItem : ArmourItem {
+	public ShieldItem() {
+		ItemAllBaseType = EItemAllBaseType.Shield;
+		ItemArmourBaseType = EItemArmourBaseType.Shield;
+		ItemAffixFlags = EAffixItemFlags.Shield | EAffixItemFlags.Armour;
+	}
+}
+
+public partial class SmallShieldItem : ShieldItem {
+	public SmallShieldItem() {
+		gridSizeX = 2;
+		gridSizeY = 2;
+	}
+}
+
+public partial class MediumShieldItem : ShieldItem {
+	public MediumShieldItem() {
+		gridSizeX = 2;
+		gridSizeY = 3;
+	}
+}
+
+public partial class LargeShieldItem : ShieldItem {
+	public LargeShieldItem() {
+		gridSizeX = 2;
+		gridSizeY = 4;
+	}
+}
+
 public partial class BeltItem : JewelleryItem {
 	public BeltItem() {
 		gridSizeX = 2;
@@ -489,57 +475,5 @@ public partial class TwoHandedSwordItem : WeaponItem {
 		ItemWeaponBaseType = EItemWeaponBaseType.Weapon2H;
 		ItemAffixFlags = EAffixItemFlags.THWeapon | EAffixItemFlags.Weapon;
 		WeaponClass = "Two Handed Sword";
-	}
-}
-
-
-// DEBUG
-
-public partial class TestItem23 : ChestItem {
-	public TestItem23() {
-		ItemTexture = UILib.TextureItemD2LeatherArmour;
-		ItemRarity = EItemRarity.Common;
-		ItemName = "Leather Armour";
-		ItemBase = "Leather Armour";
-	}
-}
-
-public partial class TestItem22 : HandsItem {
-	public TestItem22() {
-		ItemTexture = UILib.TextureItemD2LeatherGloves;
-		ItemRarity = EItemRarity.Rare;
-		ItemName = GetRandomName();
-		ItemBase = "Leather Gloves";
-	}
-}
-
-public partial class TestItem11 : JewelleryItem {
-	public TestItem11() {
-		gridSizeX = 1;
-		gridSizeY = 1;
-		ItemTexture = UILib.TextureItemD2Ring0;
-		ItemRarity = EItemRarity.Unique;
-		ItemAllBaseType = EItemAllBaseType.Ring;
-		ItemJewelleryBaseType = EItemJewelleryBaseType.Ring;
-		ItemName = "Ring";
-		ItemBase = "Ring";
-	}
-}
-
-public partial class TestItem21 : BeltItem {
-	public TestItem21() {
-		ItemTexture = UILib.TextureItemD2Sash;
-		ItemRarity = EItemRarity.Magic;
-		ItemName = GetRandomName();
-		ItemBase = "Sash";
-	}
-}
-
-public partial class TestItemWeapon : OneHandedSwordItem {
-	public TestItemWeapon() {
-		ItemTexture = UILib.TextureItemD2ShortSword;
-		ItemRarity = EItemRarity.Rare;
-		ItemName = GetRandomName();
-		ItemBase = "Short Sword";
 	}
 }
