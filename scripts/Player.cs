@@ -5,7 +5,6 @@ using System.Linq;
 
 public partial class Player : Actor {
 	public HUD PlayerHUD;
-	public Inventory PlayerInventory;
 
 	private const float RayLength = 1000f;
 	public const float Speed = 5.0f;
@@ -57,16 +56,21 @@ public partial class Player : Actor {
 		playerCamera.AssignPlayer(this);
 
 		debugLabel = GetNode<Label>("DebugLabel");
-		PlayerHUD = GetNode<HUD>("SubViewportContainer/SubViewport/CanvasLayer/PlayerHUD");
+		PlayerHUD = GetNode<HUD>("CanvasLayer/SubViewportContainer/SubViewport/PlayerHUD");
 		PlayerHUD.PlayerOwner = this;
-		PlayerInventory = GetNode<Inventory>("SubViewportContainer/SubViewport/CanvasLayer/PlayerHUD/Inventory");
-		PlayerInventory.PlayerOwner = this;
+		PlayerHUD.PlayerPanel.PlayerOwner = this;
+		PlayerHUD.PlayerInventory.PlayerOwner = this;
 		moveTo = GlobalPosition;
+
+		CalculateStats();
 	}
 
     public override void _Input(InputEvent @event) {
 		if (@event.IsActionPressed("InventoryKey")) {
-			PlayerInventory.ToggleInventory();
+			PlayerHUD.PlayerInventory.ToggleInventory();
+		}
+		else if (@event.IsActionPressed("CharacterPanelKey")) {
+			PlayerHUD.PlayerPanel.TogglePanel();
 		}
 		// logik for at spawne items skal flyttes til en mere generel klasse som fx Combat eller Game
 		else if (@event.IsActionPressed("DebugSpawnRandomItem")) {
@@ -203,7 +207,7 @@ public partial class Player : Actor {
 			ItemStatDictionary[key] = 0;
 		}
 		
-		foreach (var slot in PlayerInventory.GetEquipmentSlots()) {
+		foreach (var slot in PlayerHUD.PlayerInventory.GetEquipmentSlots()) {
 			if (slot.ItemInSlot != null) {
 				foreach (var stat in slot.ItemInSlot.ItemReference.StatDictionary) {
 					ItemStatDictionary[stat.Key] += stat.Value;
@@ -218,11 +222,11 @@ public partial class Player : Actor {
 		BasicStats.AddedLife = (int)ItemStatDictionary[EStatName.FlatMaxLife];
 
 		BasicStats.AddedEvasion = (int)ItemStatDictionary[EStatName.FlatEvasion];
-		BasicStats.IncreasedEvasion = (float)ItemStatDictionary[EStatName.PercentageEvasion];
+		BasicStats.IncreasedEvasion = ItemStatDictionary[EStatName.PercentageEvasion];
 
 		DamageMods.AddedPhysicalMin = (int)ItemStatDictionary[EStatName.FlatMinPhysDamage];
 		DamageMods.AddedPhysicalMax = (int)ItemStatDictionary[EStatName.FlatMaxPhysDamage];
-		DamageMods.IncreasedPhysical = (float)ItemStatDictionary[EStatName.PercentagePhysDamage];
+		DamageMods.IncreasedPhysical = ItemStatDictionary[EStatName.PercentagePhysDamage];
 
 		Resistances.ResFire = (int)ItemStatDictionary[EStatName.FireResistance];
 		Resistances.ResCold = (int)ItemStatDictionary[EStatName.ColdResistance];
@@ -240,18 +244,31 @@ public partial class Player : Actor {
 
 		if (OffHandItem != null && IsOffHandAWeapon) {
 			WeaponItem offHandWeapon = (WeaponItem)OffHandItem;
-			offHandMinPhysDamage = Math.Round((float)((offHandWeapon.PhysicalMinimumDamage + DamageMods.AddedPhysicalMin) * (1 + DamageMods.IncreasedPhysical) * (1 + DamageMods.MorePhysical)), 0);
-			offHandMaxPhysDamage = Math.Round((float)((offHandWeapon.PhysicalMaximumDamage + DamageMods.AddedPhysicalMax) * (1 + DamageMods.IncreasedPhysical) * (1 + DamageMods.MorePhysical)), 0);
+			offHandMinPhysDamage = Math.Round((offHandWeapon.PhysicalMinimumDamage + DamageMods.AddedPhysicalMin) * (1 + DamageMods.IncreasedPhysical) * (1 + DamageMods.MorePhysical), 0);
+			offHandMaxPhysDamage = Math.Round((offHandWeapon.PhysicalMaximumDamage + DamageMods.AddedPhysicalMax) * (1 + DamageMods.IncreasedPhysical) * (1 + DamageMods.MorePhysical), 0);
 		}
 		else {
 			offHandMinPhysDamage = Math.Round(DamageMods.AddedPhysicalMin * (1 + DamageMods.IncreasedPhysical) * (1 + DamageMods.MorePhysical), 0);
 			offHandMaxPhysDamage = Math.Round(DamageMods.AddedPhysicalMax * (1 + DamageMods.IncreasedPhysical) * (1 + DamageMods.MorePhysical), 0);
 		}
 
-		debugLabel.Text = $"Life: {BasicStats.TotalLife}\nEvasion Rating: {BasicStats.TotalEvasion}\n\n" + 
-		$"MH Physical Damage: {mainHandMinPhysDamage} - {mainHandMaxPhysDamage}\n" +
-		$"OH Physical Damage: {offHandMinPhysDamage} - {offHandMaxPhysDamage}\n\n" +
-		$"Fire Res: {Resistances.ResFire}\nCold Res: {Resistances.ResCold}\nLightning Res: {Resistances.ResLightning}";
+		//debugLabel.Text = $"Life: {BasicStats.TotalLife}\nEvasion Rating: {BasicStats.TotalEvasion}\n\n" + 
+		//$"MH Physical Damage: {mainHandMinPhysDamage} - {mainHandMaxPhysDamage}\n" +
+		//$"OH Physical Damage: {offHandMinPhysDamage} - {offHandMaxPhysDamage}\n\n" +
+		//$"Fire Res: {Resistances.ResFire}\nCold Res: {Resistances.ResCold}\nLightning Res: {Resistances.ResLightning}";
+
+		UpdateStatsPanel();
+	}
+
+	protected void UpdateStatsPanel() {
+		PlayerHUD.PlayerPanel.OffenceTabPanel.MainHandPhysDamage.SetValue($"{mainHandMinPhysDamage} - {mainHandMaxPhysDamage}");
+		PlayerHUD.PlayerPanel.OffenceTabPanel.OffHandPhysDamage.SetValue($"{offHandMinPhysDamage} - {offHandMaxPhysDamage}");
+
+		PlayerHUD.PlayerPanel.DefenceTabPanel.Armour.SetValue($"{BasicStats.TotalArmour}");
+		PlayerHUD.PlayerPanel.DefenceTabPanel.Evasion.SetValue($"{BasicStats.TotalEvasion}");
+		PlayerHUD.PlayerPanel.DefenceTabPanel.FireRes.SetValue($"{Resistances.ResFire}%");
+		PlayerHUD.PlayerPanel.DefenceTabPanel.ColdRes.SetValue($"{Resistances.ResCold}%");
+		PlayerHUD.PlayerPanel.DefenceTabPanel.LightningRes.SetValue($"{Resistances.ResLightning}%");
 	}
 
 	public void AssignMainHand(WeaponItem item) {
@@ -259,13 +276,19 @@ public partial class Player : Actor {
 	}
 
 	public void AssignOffHand(Item item) {
-		OffHandItem = item;
-
-		if (OffHandItem.GetType() == typeof(WeaponItem)) {
-			IsOffHandAWeapon = true;
+		if (item == null) {
+			OffHandItem = null;
+			IsOffHandAWeapon = false;
 		}
 		else {
-			IsOffHandAWeapon = false;
+			OffHandItem = item;
+
+			if (OffHandItem.GetType().IsSubclassOf(typeof(WeaponItem))) {
+				IsOffHandAWeapon = true;
+			}
+			else {
+				IsOffHandAWeapon = false;
+			}
 		}
 	}
 }

@@ -5,12 +5,14 @@ public partial class HUD : Control {
 	PackedScene itemTooltipPopupScene = GD.Load<PackedScene>("res://hud_item_tooltip_popup.tscn");
 	
 	public Player PlayerOwner;
-	private Inventory playerInventory;
+	public CharacterPanel PlayerPanel;
+	public Inventory PlayerInventory;
 
 	private ItemTooltipPopup activeTooltipPopup;
 
 	public override void _Ready() {
-		playerInventory = GetNode<Inventory>("Inventory");
+		PlayerPanel = GetNode<CharacterPanel>("PlayerPanel");
+		PlayerInventory = GetNode<Inventory>("Inventory");
 	}
 
 	public override void _Process(double delta) {
@@ -21,10 +23,10 @@ public partial class HUD : Control {
         // On left-click
 		if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == MouseButton.Left && mbe.Pressed) {
 			// If an item is selected
-			if (playerInventory.IsAnItemSelected && playerInventory.SelectedItem != null) {
+			if (PlayerInventory.IsAnItemSelected && PlayerInventory.SelectedItem != null) {
                 // If click is outside the inventory panel, drop it on the floor
-                if (!playerInventory.GetGlobalRect().HasPoint(mbe.GlobalPosition) || !playerInventory.IsOpen) {
-                    playerInventory.ItemClickDrop(playerInventory.SelectedItem);
+                if (!PlayerInventory.GetGlobalRect().HasPoint(mbe.GlobalPosition) || !PlayerInventory.IsOpen) {
+                    PlayerInventory.ItemClickDrop(PlayerInventory.SelectedItem);
                 }
             }
 			// If no items are held

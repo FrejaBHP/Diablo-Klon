@@ -1,0 +1,37 @@
+[gd_scene load_steps=5 format=3 uid="uid://rilnotgo0i7c"]
+
+[ext_resource type="Script" uid="uid://bix5ey2ty0dqq" path="res://scripts/StatTableEntry.cs" id="1_3nbi1"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3nbi1"]
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="FontVariation" id="FontVariation_3nbi1"]
+spacing_top = -1
+spacing_bottom = 1
+
+[sub_resource type="FontVariation" id="FontVariation_nuu42"]
+spacing_top = -1
+spacing_bottom = 1
+
+[node name="StatLabelsContainer" type="PanelContainer"]
+offset_right = 2.0
+offset_bottom = 22.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_3nbi1")
+script = ExtResource("1_3nbi1")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Description" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 3.0
+theme_override_fonts/font = SubResource("FontVariation_3nbi1")
+theme_override_font_sizes/font_size = 15
+
+[node name="Value" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/font = SubResource("FontVariation_nuu42")
+theme_override_font_sizes/font_size = 15

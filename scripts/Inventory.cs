@@ -216,6 +216,7 @@ public partial class Inventory : Control {
         }
 
         inventoryItems.Remove(item);
+        item.RemoveTooltip();
         item.IsClicked = false;
         IsAnItemSelected = false;
         selectedItem = null;

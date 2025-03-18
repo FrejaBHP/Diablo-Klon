@@ -1,0 +1,125 @@
+[gd_scene load_steps=12 format=3 uid="uid://b7u2byhy4hvye"]
+
+[ext_resource type="Texture2D" uid="uid://byijg62afsl55" path="res://textures/ui/inventoryPanelDecoration2x.png" id="1_dx0lv"]
+[ext_resource type="Script" uid="uid://dxb0ucoiema4" path="res://scripts/CharacterPanel.cs" id="1_mybj1"]
+[ext_resource type="Texture2D" uid="uid://fhobutpfvwf2" path="res://textures/ui/inventoryPanelShort2x.png" id="2_ugd1u"]
+[ext_resource type="PackedScene" uid="uid://clhmn52gysdy5" path="res://hud_offence_stat_container.tscn" id="4_ugd1u"]
+[ext_resource type="PackedScene" uid="uid://ics6toyv4umb" path="res://hud_defence_stat_container.tscn" id="5_keu0t"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_keu0t"]
+bg_color = Color(0, 0, 0, 0.705882)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pr0bt"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_color = Color(0.881937, 0.881937, 0.881936, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ugd1u"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0, 0, 0, 0.72549)
+border_color = Color(0.784314, 0.784314, 0.784314, 0.705882)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eoyli"]
+content_margin_left = 8.0
+content_margin_right = 8.0
+bg_color = Color(0.255659, 0.255659, 0.255659, 0.588235)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_blend = true
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_detail = 5
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pvihv"]
+content_margin_left = 8.0
+content_margin_right = 8.0
+bg_color = Color(0.197937, 0.197937, 0.197937, 0.588235)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pgw3i"]
+content_margin_left = 8.0
+content_margin_right = 8.0
+bg_color = Color(0, 0, 0, 0.588235)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_detail = 5
+
+[node name="PlayerPanel" type="Control"]
+layout_mode = 3
+anchor_right = 0.4
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_mybj1")
+
+[node name="BackgroundTexture" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.8
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_ugd1u")
+expand_mode = 1
+
+[node name="BottomTexture" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.8
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_dx0lv")
+expand_mode = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.04
+anchor_top = 0.15
+anchor_right = 0.96
+anchor_bottom = 0.35
+theme_override_styles/panel = SubResource("StyleBoxFlat_keu0t")
+
+[node name="TabContainer" type="TabContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.04
+anchor_top = 0.36
+anchor_right = 0.96
+anchor_bottom = 0.76
+theme_override_constants/side_margin = 6
+theme_override_styles/tab_focus = SubResource("StyleBoxFlat_pr0bt")
+theme_override_styles/panel = SubResource("StyleBoxFlat_ugd1u")
+theme_override_styles/tab_selected = SubResource("StyleBoxFlat_eoyli")
+theme_override_styles/tab_hovered = SubResource("StyleBoxFlat_pvihv")
+theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_pgw3i")
+current_tab = 0
+
+[node name="Offence" parent="TabContainer" instance=ExtResource("4_ugd1u")]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="Defence" parent="TabContainer" instance=ExtResource("5_keu0t")]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1

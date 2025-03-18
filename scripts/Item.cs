@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-
-
 public partial class Item {
 	PackedScene worldItemScene = GD.Load<PackedScene>("res://worlditem.tscn");
 	PackedScene inventoryItemScene = GD.Load<PackedScene>("res://hud_item.tscn");
@@ -66,7 +64,7 @@ public partial class Item {
 		inventoryItem.SetItemReference(this);
 		inventoryItem.SetGridSize(gridSizeX, gridSizeY);
 
-		if (player.PlayerInventory.TryAddItemToInventory(ref inventoryItem)) {
+		if (player.PlayerHUD.PlayerInventory.TryAddItemToInventory(ref inventoryItem)) {
 			if (IsInWorld) {
 				worldItemRef.QueueFree();
 				worldItemRef = null;
@@ -76,7 +74,7 @@ public partial class Item {
 			IsPickedUp = true;
 			PlayerOwner = player;
 			invItemRef = inventoryItem;
-			inventoryItem.InventoryReference = player.PlayerInventory;
+			inventoryItem.InventoryReference = player.PlayerHUD.PlayerInventory;
 		}
 		else {
 			inventoryItem.QueueFree();

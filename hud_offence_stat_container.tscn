@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3 uid="uid://clhmn52gysdy5"]
+
+[ext_resource type="PackedScene" uid="uid://dithbuvclx67u" path="res://hud_stat_scroll_container.tscn" id="1_381s3"]
+[ext_resource type="Script" uid="uid://n13xcoldcve8" path="res://scripts/OffencePanel.cs" id="2_xhymy"]
+
+[node name="StatScrollContainer" instance=ExtResource("1_381s3")]
+script = ExtResource("2_xhymy")

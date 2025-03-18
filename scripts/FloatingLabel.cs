@@ -43,7 +43,7 @@ public partial class FloatingLabel : Control {
 	public void OnClicked(InputEvent @event) {
 		if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == MouseButton.Left && mbe.Pressed) {
 			Player player = camera.GetParent<Player>();
-			if (!player.PlayerInventory.IsAnItemSelected) {
+			if (!player.PlayerHUD.PlayerInventory.IsAnItemSelected) {
 				player.SetDestinationNode(parentAnchor.GetParent<StaticBody3D>());
 			}
 		}
@@ -161,9 +161,6 @@ public partial class FloatingLabel : Control {
 	public void SetLabelText(string text) {
 		labelText = text;
 		label.Text = labelText;
-
-		//labelBackground.CustomMinimumSize = label.Size;
-		//labelBackground.GetGlobalTransform().Origin = labelBackground.GetGlobalTransform().Origin with { X = labelX };
 	}
 
 	public void ApplyColourSet(ELabelColourSet set) {

@@ -18,6 +18,7 @@ public partial class InventoryItem : PanelContainer {
 	protected TextureRect itemTexture;
 	protected ColorRect itemBackground;
 	protected ItemTooltip itemTooltip;
+	protected bool hasActiveTooltip = false;
 
 	protected List<InventoryGridCell> occupiedInventorySlots = new List<InventoryGridCell>();
 
@@ -57,6 +58,7 @@ public partial class InventoryItem : PanelContainer {
 
 			Vector2 anchor = GlobalPosition with { X = GlobalPosition.X + Size.X / 2, Y = GlobalPosition.Y };
 			InventoryReference.PlayerOwner.PlayerHUD.CreateItemTooltip(GetCustomTooltip(), anchor);
+			hasActiveTooltip = true;
 		}
 	}
 
@@ -64,8 +66,8 @@ public partial class InventoryItem : PanelContainer {
 		if (!InventoryReference.IsAnItemSelected) {
 			itemBackground.Color = UILib.ColorItemBackground;
 			isHovered = false;
-			
-			InventoryReference.PlayerOwner.PlayerHUD.RemoveItemTooltip();
+
+			RemoveTooltip();
 		}
 	}
 
@@ -76,6 +78,11 @@ public partial class InventoryItem : PanelContainer {
 		else {
 			itemBackground.Color = UILib.ColorItemBackground;
 		}
+	}
+
+	public void RemoveTooltip() {
+		InventoryReference.PlayerOwner.PlayerHUD.RemoveItemTooltip();
+		hasActiveTooltip = false;
 	}
 
 	// For adjusting click functionality

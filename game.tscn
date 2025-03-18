@@ -9,8 +9,8 @@ script = ExtResource("1_rw8dc")
 
 [node name="Level01" parent="." instance=ExtResource("1_76jp2")]
 
-[node name="Player" parent="." instance=ExtResource("2_51cil")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.125929, -1)
-
 [node name="WorldObjects" type="CanvasLayer" parent="."]
 layer = 0
+
+[node name="Player" parent="." instance=ExtResource("2_51cil")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.125929, -1)
