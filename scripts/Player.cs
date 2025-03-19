@@ -261,6 +261,9 @@ public partial class Player : Actor {
 	}
 
 	protected void UpdateStatsPanel() {
+		PlayerHUD.PlayerPanel.LifeContainer.SetValue($"{BasicStats.TotalLife}");
+		PlayerHUD.PlayerPanel.ManaContainer.SetValue($"{BasicStats.TotalMana}");
+
 		PlayerHUD.PlayerPanel.OffenceTabPanel.MainHandPhysDamage.SetValue($"{mainHandMinPhysDamage} - {mainHandMaxPhysDamage}");
 		PlayerHUD.PlayerPanel.OffenceTabPanel.OffHandPhysDamage.SetValue($"{offHandMinPhysDamage} - {offHandMaxPhysDamage}");
 

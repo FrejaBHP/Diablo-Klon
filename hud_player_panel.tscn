@@ -1,8 +1,9 @@
-[gd_scene load_steps=12 format=3 uid="uid://b7u2byhy4hvye"]
+[gd_scene load_steps=13 format=3 uid="uid://b7u2byhy4hvye"]
 
 [ext_resource type="Texture2D" uid="uid://byijg62afsl55" path="res://textures/ui/inventoryPanelDecoration2x.png" id="1_dx0lv"]
 [ext_resource type="Script" uid="uid://dxb0ucoiema4" path="res://scripts/CharacterPanel.cs" id="1_mybj1"]
 [ext_resource type="Texture2D" uid="uid://fhobutpfvwf2" path="res://textures/ui/inventoryPanelShort2x.png" id="2_ugd1u"]
+[ext_resource type="PackedScene" uid="uid://rilnotgo0i7c" path="res://hud_stat_labels_container.tscn" id="4_keu0t"]
 [ext_resource type="PackedScene" uid="uid://clhmn52gysdy5" path="res://hud_offence_stat_container.tscn" id="4_ugd1u"]
 [ext_resource type="PackedScene" uid="uid://ics6toyv4umb" path="res://hud_defence_stat_container.tscn" id="5_keu0t"]
 
@@ -91,7 +92,7 @@ grow_vertical = 2
 texture = ExtResource("1_dx0lv")
 expand_mode = 1
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="CharacterPlateContainer" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.04
@@ -99,6 +100,54 @@ anchor_top = 0.15
 anchor_right = 0.96
 anchor_bottom = 0.35
 theme_override_styles/panel = SubResource("StyleBoxFlat_keu0t")
+
+[node name="MarginContainer" type="MarginContainer" parent="CharacterPlateContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="PlateVContainer" type="VBoxContainer" parent="CharacterPlateContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="NamePlateContainer" type="VBoxContainer" parent="CharacterPlateContainer/MarginContainer/PlateVContainer"]
+layout_mode = 2
+
+[node name="Name" type="Label" parent="CharacterPlateContainer/MarginContainer/PlateVContainer/NamePlateContainer"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="Level" type="Label" parent="CharacterPlateContainer/MarginContainer/PlateVContainer/NamePlateContainer"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="StatsContainer" type="HBoxContainer" parent="CharacterPlateContainer/MarginContainer/PlateVContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="ResourceContainer" type="VBoxContainer" parent="CharacterPlateContainer/MarginContainer/PlateVContainer/StatsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LifeLabelsContainer" parent="CharacterPlateContainer/MarginContainer/PlateVContainer/StatsContainer/ResourceContainer" instance=ExtResource("4_keu0t")]
+layout_mode = 2
+
+[node name="ManaLabelsContainer" parent="CharacterPlateContainer/MarginContainer/PlateVContainer/StatsContainer/ResourceContainer" instance=ExtResource("4_keu0t")]
+layout_mode = 2
+
+[node name="AttributeContainer" type="VBoxContainer" parent="CharacterPlateContainer/MarginContainer/PlateVContainer/StatsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="StrLabelsContainer" parent="CharacterPlateContainer/MarginContainer/PlateVContainer/StatsContainer/AttributeContainer" instance=ExtResource("4_keu0t")]
+layout_mode = 2
+
+[node name="DexLabelsContainer" parent="CharacterPlateContainer/MarginContainer/PlateVContainer/StatsContainer/AttributeContainer" instance=ExtResource("4_keu0t")]
+layout_mode = 2
+
+[node name="IntLabelsContainer" parent="CharacterPlateContainer/MarginContainer/PlateVContainer/StatsContainer/AttributeContainer" instance=ExtResource("4_keu0t")]
+layout_mode = 2
 
 [node name="TabContainer" type="TabContainer" parent="."]
 layout_mode = 1
