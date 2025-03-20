@@ -56,7 +56,7 @@ public partial class Player : Actor {
 		playerCamera.AssignPlayer(this);
 
 		debugLabel = GetNode<Label>("DebugLabel");
-		PlayerHUD = GetNode<HUD>("CanvasLayer/SubViewportContainer/SubViewport/PlayerHUD");
+		PlayerHUD = GetNode<HUD>("CanvasLayer/PlayerHUD");
 		PlayerHUD.PlayerOwner = this;
 		PlayerHUD.PlayerPanel.PlayerOwner = this;
 		PlayerHUD.PlayerInventory.PlayerOwner = this;
@@ -80,7 +80,23 @@ public partial class Player : Actor {
 		}
     }
 
-	public void SetDestinationPosition(Vector2 position) {
+    public override void _UnhandledInput(InputEvent @event) {
+		// On left click outside of UI elements
+        if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == MouseButton.Left && mbe.Pressed) {
+			// If an item is currently selected
+			if (PlayerHUD.PlayerInventory.IsAnItemSelected && PlayerHUD.PlayerInventory.SelectedItem != null) {
+                // If click is outside the inventory panel, drop it on the floor
+                if (!PlayerHUD.PlayerInventory.GetGlobalRect().HasPoint(mbe.GlobalPosition) || !PlayerHUD.PlayerInventory.IsOpen) {
+                    PlayerHUD.PlayerInventory.ItemClickDrop(PlayerHUD.PlayerInventory.SelectedItem);
+                }
+            }
+			else {
+				SetDestinationPosition(mbe.GlobalPosition);
+			}
+		}
+    }
+
+    public void SetDestinationPosition(Vector2 position) {
 		MovingTowardsObject = false;
 		targetedNode = null;
 		lastMouseInputPos = position;

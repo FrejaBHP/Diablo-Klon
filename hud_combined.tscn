@@ -18,12 +18,13 @@ script = ExtResource("1_k6sm4")
 [node name="PlayerPanel" parent="." instance=ExtResource("2_stx8b")]
 visible = false
 layout_mode = 1
+anchor_right = 0.0
 
 [node name="Inventory" parent="." instance=ExtResource("1_v82wo")]
 visible = false
 layout_mode = 1
-grow_horizontal = 1
-grow_vertical = 1
+anchors_preset = 11
+anchor_left = 1.0
 
 [node name="LowerHUD" parent="." instance=ExtResource("3_ucw7d")]
 layout_mode = 1

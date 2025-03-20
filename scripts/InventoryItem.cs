@@ -57,9 +57,13 @@ public partial class InventoryItem : PanelContainer {
 			isHovered = true;
 
 			Vector2 anchor = GlobalPosition with { X = GlobalPosition.X + Size.X / 2, Y = GlobalPosition.Y };
-			InventoryReference.PlayerOwner.PlayerHUD.CreateItemTooltip(GetCustomTooltip(), anchor);
-			hasActiveTooltip = true;
+			SignalCreateTooltip(anchor, GetGlobalRect());
 		}
+	}
+
+	public void SignalCreateTooltip(Vector2 anchor, Rect2 rect) {
+		InventoryReference.PlayerOwner.PlayerHUD.CreateItemTooltip(GetCustomTooltip(), anchor, rect);
+		hasActiveTooltip = true;
 	}
 
 	public void OnMouseExited() {

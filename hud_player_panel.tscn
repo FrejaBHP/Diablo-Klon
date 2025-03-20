@@ -64,10 +64,10 @@ corner_radius_top_right = 4
 corner_detail = 5
 
 [node name="PlayerPanel" type="Control"]
+custom_minimum_size = Vector2(512, 0)
 layout_mode = 3
-anchor_right = 0.4
+anchors_preset = 9
 anchor_bottom = 1.0
-grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_mybj1")
 
@@ -92,70 +92,75 @@ grow_vertical = 2
 texture = ExtResource("1_dx0lv")
 expand_mode = 1
 
-[node name="CharacterPlateContainer" type="PanelContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.04
-anchor_top = 0.15
-anchor_right = 0.96
-anchor_bottom = 0.35
+anchor_top = 0.1
+anchor_right = 1.0
+anchor_bottom = 0.8
+offset_left = 15.0
+offset_top = 20.0
+offset_right = -15.0
+offset_bottom = -20.0
+theme_override_constants/separation = 16
+
+[node name="CharacterPlateContainer" type="PanelContainer" parent="VBoxContainer"]
+layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_keu0t")
 
-[node name="MarginContainer" type="MarginContainer" parent="CharacterPlateContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/CharacterPlateContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 4
-theme_override_constants/margin_top = 4
+theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 4
-theme_override_constants/margin_bottom = 4
+theme_override_constants/margin_bottom = 12
 
-[node name="PlateVContainer" type="VBoxContainer" parent="CharacterPlateContainer/MarginContainer"]
+[node name="PlateVContainer" type="VBoxContainer" parent="VBoxContainer/CharacterPlateContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="NamePlateContainer" type="VBoxContainer" parent="VBoxContainer/CharacterPlateContainer/MarginContainer/PlateVContainer"]
 layout_mode = 2
 
-[node name="NamePlateContainer" type="VBoxContainer" parent="CharacterPlateContainer/MarginContainer/PlateVContainer"]
-layout_mode = 2
-
-[node name="Name" type="Label" parent="CharacterPlateContainer/MarginContainer/PlateVContainer/NamePlateContainer"]
-layout_mode = 2
-horizontal_alignment = 1
-
-[node name="Level" type="Label" parent="CharacterPlateContainer/MarginContainer/PlateVContainer/NamePlateContainer"]
+[node name="Name" type="Label" parent="VBoxContainer/CharacterPlateContainer/MarginContainer/PlateVContainer/NamePlateContainer"]
 layout_mode = 2
 horizontal_alignment = 1
 
-[node name="StatsContainer" type="HBoxContainer" parent="CharacterPlateContainer/MarginContainer/PlateVContainer"]
+[node name="Level" type="Label" parent="VBoxContainer/CharacterPlateContainer/MarginContainer/PlateVContainer/NamePlateContainer"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="StatsContainer" type="HBoxContainer" parent="VBoxContainer/CharacterPlateContainer/MarginContainer/PlateVContainer"]
 layout_mode = 2
 theme_override_constants/separation = 0
+alignment = 2
 
-[node name="ResourceContainer" type="VBoxContainer" parent="CharacterPlateContainer/MarginContainer/PlateVContainer/StatsContainer"]
+[node name="ResourceContainer" type="VBoxContainer" parent="VBoxContainer/CharacterPlateContainer/MarginContainer/PlateVContainer/StatsContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="LifeLabelsContainer" parent="CharacterPlateContainer/MarginContainer/PlateVContainer/StatsContainer/ResourceContainer" instance=ExtResource("4_keu0t")]
+[node name="LifeLabelsContainer" parent="VBoxContainer/CharacterPlateContainer/MarginContainer/PlateVContainer/StatsContainer/ResourceContainer" instance=ExtResource("4_keu0t")]
 layout_mode = 2
 
-[node name="ManaLabelsContainer" parent="CharacterPlateContainer/MarginContainer/PlateVContainer/StatsContainer/ResourceContainer" instance=ExtResource("4_keu0t")]
+[node name="ManaLabelsContainer" parent="VBoxContainer/CharacterPlateContainer/MarginContainer/PlateVContainer/StatsContainer/ResourceContainer" instance=ExtResource("4_keu0t")]
 layout_mode = 2
 
-[node name="AttributeContainer" type="VBoxContainer" parent="CharacterPlateContainer/MarginContainer/PlateVContainer/StatsContainer"]
+[node name="AttributeContainer" type="VBoxContainer" parent="VBoxContainer/CharacterPlateContainer/MarginContainer/PlateVContainer/StatsContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="StrLabelsContainer" parent="CharacterPlateContainer/MarginContainer/PlateVContainer/StatsContainer/AttributeContainer" instance=ExtResource("4_keu0t")]
+[node name="StrLabelsContainer" parent="VBoxContainer/CharacterPlateContainer/MarginContainer/PlateVContainer/StatsContainer/AttributeContainer" instance=ExtResource("4_keu0t")]
 layout_mode = 2
 
-[node name="DexLabelsContainer" parent="CharacterPlateContainer/MarginContainer/PlateVContainer/StatsContainer/AttributeContainer" instance=ExtResource("4_keu0t")]
+[node name="DexLabelsContainer" parent="VBoxContainer/CharacterPlateContainer/MarginContainer/PlateVContainer/StatsContainer/AttributeContainer" instance=ExtResource("4_keu0t")]
 layout_mode = 2
 
-[node name="IntLabelsContainer" parent="CharacterPlateContainer/MarginContainer/PlateVContainer/StatsContainer/AttributeContainer" instance=ExtResource("4_keu0t")]
+[node name="IntLabelsContainer" parent="VBoxContainer/CharacterPlateContainer/MarginContainer/PlateVContainer/StatsContainer/AttributeContainer" instance=ExtResource("4_keu0t")]
 layout_mode = 2
 
-[node name="TabContainer" type="TabContainer" parent="."]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.04
-anchor_top = 0.36
-anchor_right = 0.96
-anchor_bottom = 0.76
+[node name="TabContainer" type="TabContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
 theme_override_constants/side_margin = 6
 theme_override_styles/tab_focus = SubResource("StyleBoxFlat_pr0bt")
 theme_override_styles/panel = SubResource("StyleBoxFlat_ugd1u")
@@ -164,11 +169,11 @@ theme_override_styles/tab_hovered = SubResource("StyleBoxFlat_pvihv")
 theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_pgw3i")
 current_tab = 0
 
-[node name="Offence" parent="TabContainer" instance=ExtResource("4_ugd1u")]
+[node name="Offence" parent="VBoxContainer/TabContainer" instance=ExtResource("4_ugd1u")]
 layout_mode = 2
 metadata/_tab_index = 0
 
-[node name="Defence" parent="TabContainer" instance=ExtResource("5_keu0t")]
+[node name="Defence" parent="VBoxContainer/TabContainer" instance=ExtResource("5_keu0t")]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 1

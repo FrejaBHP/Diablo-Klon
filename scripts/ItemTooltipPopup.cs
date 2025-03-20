@@ -2,6 +2,7 @@ using Godot;
 using System;
 
 public partial class ItemTooltipPopup : PopupPanel {
+	public Rect2 ItemRect;
 
 	public override void _Ready() {
 		//GD.Print($"First size check: {Size}");
@@ -18,9 +19,6 @@ public partial class ItemTooltipPopup : PopupPanel {
 
 		Vector2I windowSize = GetTree().Root.GetViewport().GetWindow().Size;
 
-		//GD.Print($"Tooltip X: {correctedPosition.X} - {correctedPosition.X + GetContentsMinimumSize().X}");
-		//GD.Print($"Tooltip Y: {correctedPosition.Y} - {correctedPosition.Y + GetContentsMinimumSize().Y}");
-
 		// If tooltip would extend past the right side of the window
 		if (correctedPosition.X + GetContentsMinimumSize().X > windowSize.X) {
 			correctedPosition.X += windowSize.X - (correctedPosition.X + GetContentsMinimumSize().X);
@@ -33,6 +31,12 @@ public partial class ItemTooltipPopup : PopupPanel {
 		// If tooltip would extend above the window
 		if (correctedPosition.Y < 0) {
 			correctedPosition.Y -= correctedPosition.Y;
+
+			// If tooltip would now cover the hovered item, move it to the left
+			if (correctedPosition.Y + GetContentsMinimumSize().Y > ItemRect.Position.Y) {
+				float distanceToMove = ItemRect.Size.X - (correctedPosition.X - ItemRect.Position.X);
+				correctedPosition.X -= distanceToMove;
+			}
 		}
 		// If tooltip would extend below the window
 		else if (correctedPosition.Y + GetContentsMinimumSize().Y > windowSize.Y) {
@@ -40,11 +44,5 @@ public partial class ItemTooltipPopup : PopupPanel {
 		}
 
 		Position = (Vector2I)correctedPosition;
-
-		//GD.Print($"Viewport size: {GetTree().Root.GetViewport().GetWindow().Size}");
-		//GD.Print($"Tooltip X: {Position.X} - {Position.X + GetContentsMinimumSize().X}");
-		//GD.Print($"Tooltip Y: {Position.Y} - {Position.Y + GetContentsMinimumSize().Y}");
-		//GD.Print($"Position: {Position}");
-		//GD.Print($"Second min size check: {GetContentsMinimumSize()}");
 	}
 }

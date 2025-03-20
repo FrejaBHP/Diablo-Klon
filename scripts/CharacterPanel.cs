@@ -18,7 +18,7 @@ public partial class CharacterPanel : Control {
     private TabContainer statTabContainer;
 
     public override void _Ready() {
-        characterPlateContainer = GetNode<PanelContainer>("CharacterPlateContainer");
+        characterPlateContainer = GetNode<PanelContainer>("VBoxContainer/CharacterPlateContainer");
         CharacterNameLabel = characterPlateContainer.GetNode<Label>("MarginContainer/PlateVContainer/NamePlateContainer/Name");
         CharacterLevelLabel = characterPlateContainer.GetNode<Label>("MarginContainer/PlateVContainer/NamePlateContainer/Level");
 
@@ -29,7 +29,7 @@ public partial class CharacterPanel : Control {
         DexContainer = characterPlateContainer.GetNode<StatTableEntry>("MarginContainer/PlateVContainer/StatsContainer/AttributeContainer/DexLabelsContainer");
         IntContainer = characterPlateContainer.GetNode<StatTableEntry>("MarginContainer/PlateVContainer/StatsContainer/AttributeContainer/IntLabelsContainer");
 
-        statTabContainer = GetNode<TabContainer>("TabContainer");
+        statTabContainer = GetNode<TabContainer>("VBoxContainer/TabContainer");
         OffenceTabPanel = statTabContainer.GetNode<OffencePanel>("Offence");
         DefenceTabPanel = statTabContainer.GetNode<DefencePanel>("Defence");
 

@@ -42,8 +42,8 @@ public partial class Inventory : Control {
     }
 
     private void AssignAndPrepareNodes() {
-        InventoryGridContainer = GetNode<GridContainer>("InventoryContainer/InventoryGrid");
-        equipmentPanelControl = GetNode<Control>("InventoryContainer/EquipmentContainer/Control/Control");
+        equipmentPanelControl = GetNode<Control>("EquipmentContainer/Control/Control");
+        InventoryGridContainer = GetNode<GridContainer>("CenterContainer/InventoryGrid");
 
         HelmetSlot = equipmentPanelControl.GetNode<EquipmentSlot>("HelmetSlot");
         ChestSlot = equipmentPanelControl.GetNode<EquipmentSlot>("ChestSlot");

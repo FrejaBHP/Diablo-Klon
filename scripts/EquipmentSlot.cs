@@ -65,9 +65,8 @@ public partial class EquipmentSlot : PanelContainer {
 		
 		if (itemInSlot != null) {
 			HighlightSlot();
-
 			Vector2 anchor = GlobalPosition with { X = GlobalPosition.X + Size.X / 2, Y = GlobalPosition.Y };
-			InventoryReference.PlayerOwner.PlayerHUD.CreateItemTooltip(itemInSlot.GetCustomTooltip(), anchor);
+			itemInSlot.SignalCreateTooltip(anchor, GetGlobalRect());
 		}
 	}
 

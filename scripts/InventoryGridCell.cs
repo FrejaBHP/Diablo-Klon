@@ -16,5 +16,6 @@ public partial class InventoryGridCell : TextureRect {
     public override void _Ready() {
 		MouseFilter = MouseFilterEnum.Ignore;
 		Texture = UILib.InventoryGridSlot;
+		CustomMinimumSize = new Vector2(32, 32);
     }
 }

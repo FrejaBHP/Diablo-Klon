@@ -22,37 +22,37 @@ public abstract class Affix {
 	protected bool isLocal;
 	public bool IsLocal { get => isLocal; }
 
-	public abstract void RollAffixTier(int itemLevel);
+	protected List<AffixData> affixDataTable;
+	public List<AffixData> AffixDataTable  { get => affixDataTable; }
 
-	public abstract void SetAffixTier(int tier);
+	public virtual void RollAffixTier(int itemLevel) {
+		List<AffixData> legalAffixData = affixDataTable.Where(a => a.MinimumLevel <= itemLevel).ToList();
+        data = legalAffixData[Utilities.RNG.Next(legalAffixData.Count)];
+	}
 
-	public abstract void RollAffixValue();
+	public virtual void SetAffixTier(int tier) {
+		data = affixDataTable[tier];
+	}
 
 	public virtual string GetAffixName() {
 		return data.Name;
 	}
+
+	public abstract void RollAffixValue();
 
 	public abstract string GetAffixTooltipText();
 }
 
 public class LocalFlatPhysDamageAffix : Affix {
 	public LocalFlatPhysDamageAffix() {
+		affixDataTable = AffixDataTables.LocalFlatPhysDamageAffixData;
 		isLocal = true;
 	}
 
-    public override void RollAffixTier(int itemLevel) {
-		List<AffixData> legalAffixData = AffixDataTables.LocalFlatPhysDamageAffixData.Where(a => a.MinimumLevel <= itemLevel).ToList();
-        data = legalAffixData[Utilities.RNG.Next(legalAffixData.Count)];
-    }
-
-    public override void SetAffixTier(int tier) {
-		data = AffixDataTables.LocalFlatPhysDamageAffixData[tier];
-    }
-
 	public override void RollAffixValue() {
-		if (Data != null) {
-			valueFirst = Utilities.RandomDoubleInclusiveToInt(Data.AffixMinFirst, Data.AffixMaxFirst);
-			valueSecond = Utilities.RandomDoubleInclusiveToInt(Data.AffixMinSecond, Data.AffixMaxSecond);
+		if (data != null) {
+			valueFirst = Utilities.RandomDoubleInclusiveToInt(data.AffixMinFirst, data.AffixMaxFirst);
+			valueSecond = Utilities.RandomDoubleInclusiveToInt(data.AffixMinSecond, data.AffixMaxSecond);
 		}
 	}
 
@@ -63,21 +63,13 @@ public class LocalFlatPhysDamageAffix : Affix {
 
 public class LocalPercentagePhysDamageAffix : Affix {
 	public LocalPercentagePhysDamageAffix() {
+		affixDataTable = AffixDataTables.LocalPercentagePhysDamageAffixData;
 		isLocal = true;
 	}
 
-    public override void RollAffixTier(int itemLevel) {
-		List<AffixData> legalAffixData = AffixDataTables.LocalPercentagePhysDamageAffixData.Where(a => a.MinimumLevel <= itemLevel).ToList();
-        data = legalAffixData[Utilities.RNG.Next(legalAffixData.Count)];
-    }
-
-    public override void SetAffixTier(int tier) {
-		data = AffixDataTables.LocalPercentagePhysDamageAffixData[tier];
-    }
-
 	public override void RollAffixValue() {
-		if (Data != null) {
-			valueFirst = Utilities.RandomDouble(Data.AffixMinFirst, Data.AffixMaxFirst);
+		if (data != null) {
+			valueFirst = Utilities.RandomDouble(data.AffixMinFirst, data.AffixMaxFirst);
 		}
 	}
 
@@ -88,22 +80,14 @@ public class LocalPercentagePhysDamageAffix : Affix {
 
 public class HealthAffix : Affix {
 	public HealthAffix() {
+		affixDataTable = AffixDataTables.FlatHealthAffixData;
 		isLocal = false;
 		statNameFirst = EStatName.FlatMaxLife;
 	}
 
-    public override void RollAffixTier(int itemLevel) {
-		List<AffixData> legalAffixData = AffixDataTables.FlatHealthAffixData.Where(a => a.MinimumLevel <= itemLevel).ToList();
-        data = legalAffixData[Utilities.RNG.Next(legalAffixData.Count)];
-    }
-
-    public override void SetAffixTier(int tier) {
-		data = AffixDataTables.FlatHealthAffixData[tier];
-    }
-
 	public override void RollAffixValue() {
-		if (Data != null) {
-			valueFirst = Utilities.RandomDoubleInclusiveToInt(Data.AffixMinFirst, Data.AffixMaxFirst);
+		if (data != null) {
+			valueFirst = Utilities.RandomDoubleInclusiveToInt(data.AffixMinFirst, data.AffixMaxFirst);
 		}
 	}
 
@@ -114,21 +98,13 @@ public class HealthAffix : Affix {
 
 public class LocalFlatArmourAffix : Affix {
 	public LocalFlatArmourAffix() {
+		affixDataTable = AffixDataTables.LocalFlatArmourAffixData;
 		isLocal = true;
 	}
 
-    public override void RollAffixTier(int itemLevel) {
-		List<AffixData> legalAffixData = AffixDataTables.LocalFlatArmourAffixData.Where(a => a.MinimumLevel <= itemLevel).ToList();
-        data = legalAffixData[Utilities.RNG.Next(legalAffixData.Count)];
-    }
-
-    public override void SetAffixTier(int tier) {
-		data = AffixDataTables.LocalFlatArmourAffixData[tier];
-    }
-
 	public override void RollAffixValue() {
-		if (Data != null) {
-			valueFirst = Utilities.RandomDoubleInclusiveToInt(Data.AffixMinFirst, Data.AffixMaxFirst);
+		if (data != null) {
+			valueFirst = Utilities.RandomDoubleInclusiveToInt(data.AffixMinFirst, data.AffixMaxFirst);
 		}
 	}
 
@@ -139,21 +115,13 @@ public class LocalFlatArmourAffix : Affix {
 
 public class LocalPercentageArmourAffix : Affix {
 	public LocalPercentageArmourAffix() {
+		affixDataTable = AffixDataTables.LocalPercentageArmourAffixData;
 		isLocal = true;
 	}
 
-    public override void RollAffixTier(int itemLevel) {
-		List<AffixData> legalAffixData = AffixDataTables.LocalPercentageArmourAffixData.Where(a => a.MinimumLevel <= itemLevel).ToList();
-        data = legalAffixData[Utilities.RNG.Next(legalAffixData.Count)];
-    }
-
-    public override void SetAffixTier(int tier) {
-		data = AffixDataTables.LocalPercentageArmourAffixData[tier];
-    }
-
 	public override void RollAffixValue() {
-		if (Data != null) {
-			valueFirst = Utilities.RandomDouble(Data.AffixMinFirst, Data.AffixMaxFirst);
+		if (data != null) {
+			valueFirst = Utilities.RandomDouble(data.AffixMinFirst, data.AffixMaxFirst);
 		}
 	}
 
@@ -165,21 +133,13 @@ public class LocalPercentageArmourAffix : Affix {
 
 public class LocalFlatEvasionAffix : Affix {
 	public LocalFlatEvasionAffix() {
+		affixDataTable = AffixDataTables.LocalFlatEvasionAffixData;
 		isLocal = true;
 	}
 
-    public override void RollAffixTier(int itemLevel) {
-		List<AffixData> legalAffixData = AffixDataTables.LocalFlatEvasionAffixData.Where(a => a.MinimumLevel <= itemLevel).ToList();
-        data = legalAffixData[Utilities.RNG.Next(legalAffixData.Count)];
-    }
-
-    public override void SetAffixTier(int tier) {
-		data = AffixDataTables.LocalFlatEvasionAffixData[tier];
-    }
-
 	public override void RollAffixValue() {
-		if (Data != null) {
-			valueFirst = Utilities.RandomDoubleInclusiveToInt(Data.AffixMinFirst, Data.AffixMaxFirst);
+		if (data != null) {
+			valueFirst = Utilities.RandomDoubleInclusiveToInt(data.AffixMinFirst, data.AffixMaxFirst);
 		}
 	}
 
@@ -190,21 +150,13 @@ public class LocalFlatEvasionAffix : Affix {
 
 public class LocalPercentageEvasionAffix : Affix {
 	public LocalPercentageEvasionAffix() {
+		affixDataTable = AffixDataTables.LocalPercentageEvasionAffixData;
 		isLocal = true;
 	}
 
-    public override void RollAffixTier(int itemLevel) {
-		List<AffixData> legalAffixData = AffixDataTables.LocalPercentageEvasionAffixData.Where(a => a.MinimumLevel <= itemLevel).ToList();
-        data = legalAffixData[Utilities.RNG.Next(legalAffixData.Count)];
-    }
-
-    public override void SetAffixTier(int tier) {
-		data = AffixDataTables.LocalPercentageEvasionAffixData[tier];
-    }
-
 	public override void RollAffixValue() {
-		if (Data != null) {
-			valueFirst = Utilities.RandomDouble(Data.AffixMinFirst, Data.AffixMaxFirst);
+		if (data != null) {
+			valueFirst = Utilities.RandomDouble(data.AffixMinFirst, data.AffixMaxFirst);
 		}
 	}
 
@@ -215,21 +167,13 @@ public class LocalPercentageEvasionAffix : Affix {
 
 public class LocalFlatEnergyShieldAffix : Affix {
 	public LocalFlatEnergyShieldAffix() {
+		affixDataTable = AffixDataTables.LocalFlatEnergyShieldAffixData;
 		isLocal = true;
 	}
 
-    public override void RollAffixTier(int itemLevel) {
-		List<AffixData> legalAffixData = AffixDataTables.LocalFlatEnergyShieldAffixData.Where(a => a.MinimumLevel <= itemLevel).ToList();
-        data = legalAffixData[Utilities.RNG.Next(legalAffixData.Count)];
-    }
-
-    public override void SetAffixTier(int tier) {
-		data = AffixDataTables.LocalFlatEnergyShieldAffixData[tier];
-    }
-
 	public override void RollAffixValue() {
-		if (Data != null) {
-			valueFirst = Utilities.RandomDoubleInclusiveToInt(Data.AffixMinFirst, Data.AffixMaxFirst);
+		if (data != null) {
+			valueFirst = Utilities.RandomDoubleInclusiveToInt(data.AffixMinFirst, data.AffixMaxFirst);
 		}
 	}
 
@@ -240,21 +184,13 @@ public class LocalFlatEnergyShieldAffix : Affix {
 
 public class LocalPercentageEnergyShieldAffix : Affix {
 	public LocalPercentageEnergyShieldAffix() {
+		affixDataTable = AffixDataTables.LocalPercentageEnergyShieldAffixData;
 		isLocal = true;
 	}
 
-    public override void RollAffixTier(int itemLevel) {
-		List<AffixData> legalAffixData = AffixDataTables.LocalPercentageEnergyShieldAffixData.Where(a => a.MinimumLevel <= itemLevel).ToList();
-        data = legalAffixData[Utilities.RNG.Next(legalAffixData.Count)];
-    }
-
-    public override void SetAffixTier(int tier) {
-		data = AffixDataTables.LocalPercentageEnergyShieldAffixData[tier];
-    }
-
 	public override void RollAffixValue() {
-		if (Data != null) {
-			valueFirst = Utilities.RandomDouble(Data.AffixMinFirst, Data.AffixMaxFirst);
+		if (data != null) {
+			valueFirst = Utilities.RandomDouble(data.AffixMinFirst, data.AffixMaxFirst);
 		}
 	}
 
@@ -266,22 +202,14 @@ public class LocalPercentageEnergyShieldAffix : Affix {
 
 public class FireResistanceAffix : Affix {
 	public FireResistanceAffix() {
+		affixDataTable = AffixDataTables.FireResistanceAffixData;
 		isLocal = false;
 		statNameFirst = EStatName.FireResistance;
 	}
 
-	public override void RollAffixTier(int itemLevel) {
-		List<AffixData> legalAffixData = AffixDataTables.FireResistanceAffixData.Where(a => a.MinimumLevel <= itemLevel).ToList();
-        data = legalAffixData[Utilities.RNG.Next(legalAffixData.Count)];
-    }
-
-    public override void SetAffixTier(int tier) {
-		data = AffixDataTables.FireResistanceAffixData[tier];
-    }
-
 	public override void RollAffixValue() {
-		if (Data != null) {
-			valueFirst = Utilities.RandomDoubleInclusiveToInt(Data.AffixMinFirst, Data.AffixMaxFirst);
+		if (data != null) {
+			valueFirst = Utilities.RandomDoubleInclusiveToInt(data.AffixMinFirst, data.AffixMaxFirst);
 		}
 	}
 
@@ -292,22 +220,14 @@ public class FireResistanceAffix : Affix {
 
 public class ColdResistanceAffix : Affix {
 	public ColdResistanceAffix() {
+		affixDataTable = AffixDataTables.ColdResistanceAffixData;
 		isLocal = false;
 		statNameFirst = EStatName.ColdResistance;
 	}
 
-	public override void RollAffixTier(int itemLevel) {
-		List<AffixData> legalAffixData = AffixDataTables.ColdResistanceAffixData.Where(a => a.MinimumLevel <= itemLevel).ToList();
-        data = legalAffixData[Utilities.RNG.Next(legalAffixData.Count)];
-    }
-
-    public override void SetAffixTier(int tier) {
-		data = AffixDataTables.ColdResistanceAffixData[tier];
-    }
-
 	public override void RollAffixValue() {
-		if (Data != null) {
-			valueFirst = Utilities.RandomDoubleInclusiveToInt(Data.AffixMinFirst, Data.AffixMaxFirst);
+		if (data != null) {
+			valueFirst = Utilities.RandomDoubleInclusiveToInt(data.AffixMinFirst, data.AffixMaxFirst);
 		}
 	}
 
@@ -318,22 +238,14 @@ public class ColdResistanceAffix : Affix {
 
 public class LightningResistanceAffix : Affix {
 	public LightningResistanceAffix() {
+		affixDataTable = AffixDataTables.LightningResistanceAffixData;
 		isLocal = false;
 		statNameFirst = EStatName.LightningResistance;
 	}
 
-	public override void RollAffixTier(int itemLevel) {
-		List<AffixData> legalAffixData = AffixDataTables.LightningResistanceAffixData.Where(a => a.MinimumLevel <= itemLevel).ToList();
-        data = legalAffixData[Utilities.RNG.Next(legalAffixData.Count)];
-    }
-
-    public override void SetAffixTier(int tier) {
-		data = AffixDataTables.LightningResistanceAffixData[tier];
-    }
-
 	public override void RollAffixValue() {
-		if (Data != null) {
-			valueFirst = Utilities.RandomDoubleInclusiveToInt(Data.AffixMinFirst, Data.AffixMaxFirst);
+		if (data != null) {
+			valueFirst = Utilities.RandomDoubleInclusiveToInt(data.AffixMinFirst, data.AffixMaxFirst);
 		}
 	}
 
