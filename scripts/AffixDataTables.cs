@@ -55,6 +55,18 @@ public static class AffixDataTables {
 		new(EAffixItemFlags.Weapon, EItemBaseSpecifierFlags.NoFlags, EAffixFamily.LocalPercentagePhysDamage, "Mad", 0.40, 0.49, 0, 0, 0)
 	};
 
+	public static readonly List<AffixData> LocalPercentageAttackSpeedAffixData = new List<AffixData> {
+		new(EAffixItemFlags.Weapon, EItemBaseSpecifierFlags.NoFlags, EAffixFamily.LocalPercentageAttackSpeed, "of AS1", 0.05, 0.08, 0, 0, 0),
+		new(EAffixItemFlags.Weapon, EItemBaseSpecifierFlags.NoFlags, EAffixFamily.LocalPercentageAttackSpeed, "of AS2", 0.09, 0.12, 0, 0, 0),
+		new(EAffixItemFlags.Weapon, EItemBaseSpecifierFlags.NoFlags, EAffixFamily.LocalPercentageAttackSpeed, "of AS3", 0.13, 0.16, 0, 0, 0)
+	};
+
+	public static readonly List<AffixData> LocalPercentageCritChanceAffixData = new List<AffixData> {
+		new(EAffixItemFlags.Weapon, EItemBaseSpecifierFlags.NoFlags, EAffixFamily.LocalPercentageCritChance, "of CC1", 0.10, 0.13, 0, 0, 0),
+		new(EAffixItemFlags.Weapon, EItemBaseSpecifierFlags.NoFlags, EAffixFamily.LocalPercentageCritChance, "of CC2", 0.14, 0.18, 0, 0, 0),
+		new(EAffixItemFlags.Weapon, EItemBaseSpecifierFlags.NoFlags, EAffixFamily.LocalPercentageCritChance, "of CC3", 0.19, 0.23, 0, 0, 0)
+	};
+
 
 	public static readonly List<AffixData> FlatHealthAffixData = new List<AffixData> {
 		new(EAffixItemFlags.Armour | EAffixItemFlags.Jewellery, EItemBaseSpecifierFlags.NoFlags, EAffixFamily.FlatMaxLife, "Healthy", 20, 29, 0, 0, 0),
@@ -130,6 +142,8 @@ public static class AffixDataTables {
 	};
 
 	public static readonly List<AffixTableType> SuffixData = new List<AffixTableType> {
+		new(EAffixPosition.Suffix, EAffixItemFlags.Weapon, EItemBaseSpecifierFlags.NoFlags, LocalPercentageAttackSpeedAffixData, typeof(LocalPercentageAttackSpeedAffix)),
+		new(EAffixPosition.Suffix, EAffixItemFlags.Weapon, EItemBaseSpecifierFlags.NoFlags, LocalPercentageCritChanceAffixData, typeof(LocalPercentageCritChanceAffix)),
 		new(EAffixPosition.Suffix, EAffixItemFlags.Armour | EAffixItemFlags.Jewellery, EItemBaseSpecifierFlags.NoFlags, FireResistanceAffixData, typeof(FireResistanceAffix)),
 		new(EAffixPosition.Suffix, EAffixItemFlags.Armour | EAffixItemFlags.Jewellery, EItemBaseSpecifierFlags.NoFlags, ColdResistanceAffixData, typeof(ColdResistanceAffix)),
 		new(EAffixPosition.Suffix, EAffixItemFlags.Armour | EAffixItemFlags.Jewellery, EItemBaseSpecifierFlags.NoFlags, LightningResistanceAffixData, typeof(LightningResistanceAffix))

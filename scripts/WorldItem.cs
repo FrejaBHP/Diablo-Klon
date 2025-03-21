@@ -33,7 +33,7 @@ public partial class WorldItem : StaticBody3D {
 
 		floatingLabel = floatingLabelScene.Instantiate<FloatingLabel>();
 		labelAnchor.AddChild(floatingLabel);
-		floatingLabel.SetLabelText(ItemReference.ItemName);
+		floatingLabel.SetLabelText(ItemReference.ItemName, ItemReference.ItemBase);
 
 		switch (ItemReference.ItemRarity) {
 			case EItemRarity.Common:

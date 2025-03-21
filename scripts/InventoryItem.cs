@@ -212,48 +212,37 @@ public partial class InventoryItem : PanelContainer {
 
 			Label weaponClassLabel = new Label();
 			weaponClassLabel.Text = item.WeaponClass;
-			weaponClassLabel.MouseFilter = MouseFilterEnum.Ignore;
 			weaponClassLabel.AddThemeFontSizeOverride("font_size", 15);
 			weaponClassLabel.AddThemeColorOverride("font_color", UILib.ColorGrey);
 			weaponClassLabel.HorizontalAlignment = HorizontalAlignment.Center;
 			tooltipContent.BaseStatsContainer.AddChild(weaponClassLabel);
 
 			if (item.PhysicalMinimumDamage > 0) {
-				bool shouldHighlight = false;
-				if (item.PhysicalMinimumDamage > item.BasePhysicalMinimumDamage) {
-					shouldHighlight = true;
-				}
-				HBoxContainer physLabel = GenerateBaseStatLabel("Physical Damage:", item.PhysicalMinimumDamage.ToString() + "-" + item.PhysicalMaximumDamage.ToString(), shouldHighlight);
+				HBoxContainer physLabel = GenerateBaseStatLabel("Physical Damage:", item.PhysicalMinimumDamage.ToString() + "-" + item.PhysicalMaximumDamage.ToString(), item.PhysicalMinimumDamage > item.BasePhysicalMinimumDamage);
 				tooltipContent.BaseStatsContainer.AddChild(physLabel);
 			}
+
+			HBoxContainer critLabel = GenerateBaseStatLabel("Critical Strike Chance:", item.GetCritChance(), item.CriticalStrikeChance > item.BaseCriticalStrikeChance);
+			tooltipContent.BaseStatsContainer.AddChild(critLabel);
+
+			HBoxContainer asLabel = GenerateBaseStatLabel("Attacks Per Second:", item.GetAttackSpeed(), item.BaseAttackSpeed > item.AttackSpeed);
+			tooltipContent.BaseStatsContainer.AddChild(asLabel);
 		}
 		else if (ItemReference.GetType().IsSubclassOf(typeof(ArmourItem))) {
 			ArmourItem item = ItemReference as ArmourItem;
 
 			if (item.ItemDefences.HasFlag(EItemDefences.Armour)) {
-				bool shouldHighlight = false;
-				if (item.Armour > item.BaseArmour) {
-					shouldHighlight = true;
-				}
-				HBoxContainer armourLabel = GenerateBaseStatLabel("Armour:", item.Armour.ToString(), shouldHighlight);
+				HBoxContainer armourLabel = GenerateBaseStatLabel("Armour:", item.Armour.ToString(), item.Armour > item.BaseArmour);
 				tooltipContent.BaseStatsContainer.AddChild(armourLabel);
 			}
 
 			if (item.ItemDefences.HasFlag(EItemDefences.Evasion)) {
-				bool shouldHighlight = false;
-				if (item.Evasion > item.BaseEvasion) {
-					shouldHighlight = true;
-				}
-				HBoxContainer evasionLabel = GenerateBaseStatLabel("Evasion Rating:", item.Evasion.ToString(), shouldHighlight);
+				HBoxContainer evasionLabel = GenerateBaseStatLabel("Evasion Rating:", item.Evasion.ToString(), item.Evasion > item.BaseEvasion);
 				tooltipContent.BaseStatsContainer.AddChild(evasionLabel);
 			}
 
 			if (item.ItemDefences.HasFlag(EItemDefences.EnergyShield)) {
-				bool shouldHighlight = false;
-				if (item.EnergyShield > item.BaseEnergyShield) {
-					shouldHighlight = true;
-				}
-				HBoxContainer esLabel = GenerateBaseStatLabel("Energy Shield:", item.EnergyShield.ToString(), shouldHighlight);
+				HBoxContainer esLabel = GenerateBaseStatLabel("Energy Shield:", item.EnergyShield.ToString(), item.EnergyShield > item.BaseEnergyShield);
 				tooltipContent.BaseStatsContainer.AddChild(esLabel);
 			}
 		}
@@ -273,18 +262,17 @@ public partial class InventoryItem : PanelContainer {
 
 	private HBoxContainer GenerateBaseStatLabel(string statName, string statValue, bool highlight) {
 		HBoxContainer labelContainer = new HBoxContainer();
+		labelContainer.SizeFlagsHorizontal = SizeFlags.ShrinkCenter;
 		labelContainer.MouseFilter = MouseFilterEnum.Ignore;
 
 		Label baseStatNameLabel = new Label();
 		baseStatNameLabel.Text = statName;
-		baseStatNameLabel.MouseFilter = MouseFilterEnum.Ignore;
 		baseStatNameLabel.AddThemeFontSizeOverride("font_size", 15);
 		baseStatNameLabel.AddThemeColorOverride("font_color", UILib.ColorGrey);
 		labelContainer.AddChild(baseStatNameLabel);
 
 		Label baseStatValueLabel = new Label();
 		baseStatValueLabel.Text = statValue;
-		baseStatValueLabel.MouseFilter = MouseFilterEnum.Ignore;
 		baseStatValueLabel.AddThemeFontSizeOverride("font_size", 15);
 		if (highlight) {
 			baseStatValueLabel.AddThemeColorOverride("font_color", UILib.ColorBlurple);
@@ -298,7 +286,6 @@ public partial class InventoryItem : PanelContainer {
 		Label affixTextLabel = new Label();
 
 		affixTextLabel.Text = affixText;
-		affixTextLabel.MouseFilter = MouseFilterEnum.Ignore;
 		affixTextLabel.AddThemeFontSizeOverride("font_size", 15);
 		affixTextLabel.AddThemeColorOverride("font_color", UILib.ColorBlurple);
 		affixTextLabel.HorizontalAlignment = HorizontalAlignment.Center;

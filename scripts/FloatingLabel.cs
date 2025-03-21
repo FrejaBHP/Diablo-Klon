@@ -15,13 +15,14 @@ public enum ETextColour {
 }
 
 public partial class FloatingLabel : Control {
-	private string labelText = "";
 	public bool IsSticky = false;
 
 	private const int margin = 8;
 
+	private PanelContainer labelContainer;
 	private ColorRect labelBackground;
-	private Label label;
+	private Label nameLabel;
+	private Label typeLabel;
 
 	private Camera3D camera;
 	private Marker3D parentAnchor;
@@ -33,8 +34,10 @@ public partial class FloatingLabel : Control {
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready() {
-		labelBackground = GetNode<ColorRect>("Container/LabelBackground");
-		label = GetNode<Label>("Container/MarginContainer/Label");
+		labelContainer = GetNode<PanelContainer>("Container");
+		labelBackground = labelContainer.GetNode<ColorRect>("LabelBackground");
+		nameLabel = labelContainer.GetNode<Label>("MarginContainer/VBoxContainer/NameLabel");
+		typeLabel = labelContainer.GetNode<Label>("MarginContainer/VBoxContainer/TypeLabel");
 
 		camera = GetViewport().GetCamera3D();
 		parentAnchor = GetParent<Marker3D>();
@@ -126,7 +129,7 @@ public partial class FloatingLabel : Control {
 			Mathf.Clamp(unprojectedPosition.Y, margin, viewportBaseSize.Y - margin)
 		);
 
-		label.Visible = true;
+		labelContainer.Visible = true;
 		Rotation = 0;
 
 		// Used to display a diagonal arrow when the waypoint is displayed in
@@ -136,31 +139,31 @@ public partial class FloatingLabel : Control {
 		if (Position.X <= margin) {
 			// Left overflow
 			overflow = (int)(Mathf.Tau / 8);
-			label.Visible = false;
+			labelContainer.Visible = false;
 			Rotation = Mathf.Tau / 4;
 		}
 		else if (Position.X >= viewportBaseSize.X - margin) {
 			// Right overflow
 			overflow = (int)Mathf.Tau / 8;
-			label.Visible = false;
+			labelContainer.Visible = false;
 			Rotation = Mathf.Tau * 3 / 4;
 		}
 
 		if (Position.Y <= margin) {
 			// Top overflow
-			label.Visible = false;
+			labelContainer.Visible = false;
 			Rotation = Mathf.Tau / 2 + overflow;
 		}
 		else if (Position.Y >= viewportBaseSize.Y - margin) {
 			// Bottom overflow
-			label.Visible = false;
+			labelContainer.Visible = false;
 			Rotation = -overflow;
 		}
 	}
 
-	public void SetLabelText(string text) {
-		labelText = text;
-		label.Text = labelText;
+	public void SetLabelText(string name, string type) {
+		nameLabel.Text = name;
+		typeLabel.Text = type;
 	}
 
 	public void ApplyColourSet(ELabelColourSet set) {
@@ -217,16 +220,20 @@ public partial class FloatingLabel : Control {
 			
 			case ETextColour.Rare:
 				textColour = UILib.ColorRare;
+				// If item is of Rare rarity, show type, as random name obscures it
+				typeLabel.Visible = true;
 				break;
 
 			case ETextColour.Unique:
 				textColour = UILib.ColorUnique;
+				//typeLabel.Visible = true;
 				break;
 			
 			default:
 				break;
 		}
 
-		label.AddThemeColorOverride("font_color", textColour);
+		nameLabel.AddThemeColorOverride("font_color", textColour);
+		typeLabel.AddThemeColorOverride("font_color", textColour);
 	}
 }

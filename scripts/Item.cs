@@ -197,6 +197,10 @@ public partial class Item {
 	protected static string GetRandomName() {
 		return NameGeneration.GenerateItemName();
 	}
+
+	public virtual void PostGenCalculation() {
+
+	}
 }
 
 public partial class WeaponItem : Item {
@@ -210,14 +214,44 @@ public partial class WeaponItem : Item {
 	public float PercentageIncreasedPhysicalDamage = 0;
 	public int PhysicalMinimumDamage;
 	public int PhysicalMaximumDamage;
+
+	public float BaseAttackSpeed;
+	public float PercentageIncreasedAttackSpeed = 0;
+	public float AttackSpeed;
+
+	public float BaseCriticalStrikeChance;
+	public float PercentageIncreasedCriticalStrikeChance = 0;
+	public float CriticalStrikeChance;
 	
 	public WeaponItem() {
+		
+	}
 
+	public override void PostGenCalculation() {
+		CalculatePhysicalDamage();
+		CalculateAttackSpeed();
+		CalculateCriticalStrikeChance();
 	}
 
 	public void CalculatePhysicalDamage() {
 		PhysicalMinimumDamage = (int)MathF.Round((BasePhysicalMinimumDamage + AddedPhysicalMinimumDamage) * (1 + PercentageIncreasedPhysicalDamage), 0);
 		PhysicalMaximumDamage = (int)MathF.Round((BasePhysicalMaximumDamage + AddedPhysicalMaximumDamage) * (1 + PercentageIncreasedPhysicalDamage), 0);
+	}
+
+	public void CalculateAttackSpeed() {
+		AttackSpeed = BaseAttackSpeed / (1 + PercentageIncreasedAttackSpeed);
+	}
+
+	public string GetAttackSpeed() {
+		return $"{(1 / AttackSpeed):F2}";
+	}
+
+	public void CalculateCriticalStrikeChance() {
+		CriticalStrikeChance = BaseCriticalStrikeChance * (1 + PercentageIncreasedCriticalStrikeChance);
+	}
+
+	public string GetCritChance() {
+		return $"{CriticalStrikeChance:F2}%";
 	}
 
 	protected override void ApplyLocalAffix(Affix affix, bool add) {
@@ -242,6 +276,26 @@ public partial class WeaponItem : Item {
 					PercentageIncreasedPhysicalDamage -= (float)affix.ValueFirst;
 				}
 				CalculatePhysicalDamage();
+				break;
+
+			case EAffixFamily.LocalPercentageAttackSpeed:
+				if (add) {
+					PercentageIncreasedAttackSpeed += (float)affix.ValueFirst;
+				}
+				else {
+					PercentageIncreasedAttackSpeed -= (float)affix.ValueFirst;
+				}
+				CalculateAttackSpeed();
+				break;
+
+			case EAffixFamily.LocalPercentageCritChance:
+				if (add) {
+					PercentageIncreasedCriticalStrikeChance += (float)affix.ValueFirst;
+				}
+				else {
+					PercentageIncreasedCriticalStrikeChance -= (float)affix.ValueFirst;
+				}
+				CalculateCriticalStrikeChance();
 				break;
 			
 			default:
@@ -271,6 +325,10 @@ public partial class ArmourItem : Item {
 		StatDictionary.Add(EStatName.FlatArmour, 0);
 		StatDictionary.Add(EStatName.FlatEvasion, 0);
 		StatDictionary.Add(EStatName.FlatEnergyShield, 0);
+	}
+
+	public override void PostGenCalculation() {
+		CalculateDefences();
 	}
 
 	public void CalculateDefences() {

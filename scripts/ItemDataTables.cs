@@ -9,6 +9,13 @@ public class ItemData {
 	public int MinimumLevel;
 }
 
+public class WeaponItemData : ItemData {
+	public int BasePhysicalMinimumDamage;
+	public int BasePhysicalMaximumDamage;
+	public float BaseAttackSpeed;
+	public float BaseCritChance;
+}
+
 public class ArmourItemData : ItemData {
 	public EItemDefences ItemDefences;
 	public int BaseArmour;
@@ -16,18 +23,13 @@ public class ArmourItemData : ItemData {
 	public int BaseEnergyShield;
 }
 
-public class WeaponItemData : ItemData {
-	public int BasePhysicalMinimumDamage;
-	public int BasePhysicalMaximumDamage;
-}
-
 public static class ItemDataTables {
 	public static readonly List<WeaponItemData> OHSwordWeaponData = new List<WeaponItemData> {
-		new WeaponItemData{ BaseName = "Short Sword", ItemSpecifierFlags = EItemBaseSpecifierFlags.W1HSword, Texture = UILib.TextureItemD2ShortSword, MinimumLevel = 0, BasePhysicalMinimumDamage = 5, BasePhysicalMaximumDamage = 9 } 
+		new WeaponItemData{ BaseName = "Short Sword", ItemSpecifierFlags = EItemBaseSpecifierFlags.W1HSword, Texture = UILib.TextureItemD2ShortSword, MinimumLevel = 0, BasePhysicalMinimumDamage = 5, BasePhysicalMaximumDamage = 9, BaseAttackSpeed = 0.714f, BaseCritChance = 5f } 
 	};
 
 	public static readonly List<WeaponItemData> THSwordWeaponData = new List<WeaponItemData> {
-		new WeaponItemData{ BaseName = "Long Sword", ItemSpecifierFlags = EItemBaseSpecifierFlags.W2HSword, Texture = UILib.TextureItemD2LongSword, MinimumLevel = 0, BasePhysicalMinimumDamage = 7, BasePhysicalMaximumDamage = 11 } 
+		new WeaponItemData{ BaseName = "Long Sword", ItemSpecifierFlags = EItemBaseSpecifierFlags.W2HSword, Texture = UILib.TextureItemD2LongSword, MinimumLevel = 0, BasePhysicalMinimumDamage = 7, BasePhysicalMaximumDamage = 11, BaseAttackSpeed = 0.769f, BaseCritChance = 5f } 
 	};
 
 	public static readonly List<ArmourItemData> HeadArmourData = new List<ArmourItemData> {

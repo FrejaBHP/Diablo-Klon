@@ -256,9 +256,10 @@ public static class ItemGeneration {
 
 		item.BasePhysicalMinimumDamage = data.BasePhysicalMinimumDamage;
 		item.BasePhysicalMaximumDamage = data.BasePhysicalMaximumDamage;
+		item.BaseAttackSpeed = data.BaseAttackSpeed;
+		item.BaseCriticalStrikeChance = data.BaseCritChance;
 
-		// indtil der bliver implementeret affixes:
-		item.CalculatePhysicalDamage();
+		item.PostGenCalculation();
 	}
 
 	private static void ApplyArmourBaseStats(ref ArmourItem item, ArmourItemData data) {
@@ -272,8 +273,7 @@ public static class ItemGeneration {
 		item.BaseEvasion = data.BaseEvasion;
 		item.BaseEnergyShield = data.BaseEnergyShield;
 
-		// indtil der bliver implementeret affixes:
-		item.CalculateDefences();
+		item.PostGenCalculation();
 	}
 
 	private static void ApplyRarityAndAffixes(ref Item item) {

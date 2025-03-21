@@ -54,6 +54,8 @@ public enum EAffixFamily {
 	PercentageMaxLife,
 	FlatPhysDamage,
 	PercentagePhysDamage,
+	PercentageAttackSpeed,
+	PercentageCritChance,
 	FlatArmour,
 	PercentageArmour,
 	FlatEvasion,
@@ -66,6 +68,8 @@ public enum EAffixFamily {
 
 	LocalFlatPhysDamage,
 	LocalPercentagePhysDamage,
+	LocalPercentageAttackSpeed,
+	LocalPercentageCritChance,
 	LocalFlatArmour,
 	LocalPercentageArmour,
 	LocalFlatEvasion,

@@ -199,6 +199,40 @@ public class LocalPercentageEnergyShieldAffix : Affix {
 	}
 }
 
+public class LocalPercentageAttackSpeedAffix : Affix {
+	public LocalPercentageAttackSpeedAffix() {
+		affixDataTable = AffixDataTables.LocalPercentageAttackSpeedAffixData;
+		isLocal = true;
+	}
+
+	public override void RollAffixValue() {
+		if (data != null) {
+			valueFirst = Utilities.RandomDouble(data.AffixMinFirst, data.AffixMaxFirst);
+		}
+	}
+
+	public override string GetAffixTooltipText() {
+		return $"{Math.Round(valueFirst * 100, 0)}% increased Attack Speed";
+	}
+}
+
+public class LocalPercentageCritChanceAffix : Affix {
+	public LocalPercentageCritChanceAffix() {
+		affixDataTable = AffixDataTables.LocalPercentageCritChanceAffixData;
+		isLocal = true;
+	}
+
+	public override void RollAffixValue() {
+		if (data != null) {
+			valueFirst = Utilities.RandomDouble(data.AffixMinFirst, data.AffixMaxFirst);
+		}
+	}
+
+	public override string GetAffixTooltipText() {
+		return $"{Math.Round(valueFirst * 100, 0)}% increased Critical Strike Chance";
+	}
+}
+
 
 public class FireResistanceAffix : Affix {
 	public FireResistanceAffix() {
