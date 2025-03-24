@@ -40,7 +40,7 @@ public static class ItemGeneration {
 				break;
 		}
 
-		ApplyRarityAndAffixes(ref item);
+		ApplyRarityAndAffixes(item);
 
 		return item;
 	}
@@ -138,14 +138,14 @@ public static class ItemGeneration {
 		switch (jewelleryType) {
 			case EItemJewelleryBaseType.Belt:
 				BeltItem beltItem = new();
-				beltItem.ItemTexture = UILib.TextureItemD2Sash;
+				GetBaseFromTable(ref beltItem, 0);
 
 				jewelleryItem = beltItem;
 				break;
 
 			case EItemJewelleryBaseType.Ring:
 				RingItem ringItem = new();
-				ringItem.ItemTexture = UILib.TextureItemD2Ring0;
+				GetBaseFromTable(ref ringItem, 0);
 
 				jewelleryItem = ringItem;
 				break;
@@ -153,7 +153,7 @@ public static class ItemGeneration {
 			// case EItemJewelleryBaseType.Amulet:
 			default:
 				AmuletItem amuletItem = new();
-				amuletItem.ItemTexture = UILib.TextureItemD2Amulet0;
+				GetBaseFromTable(ref amuletItem, 0);
 
 				jewelleryItem = amuletItem;
 				break;
@@ -197,18 +197,17 @@ public static class ItemGeneration {
 				case EItemWeaponBaseType.Weapon1H:
 					legalWeaponData = ItemDataTables.OHSwordWeaponData.Where(i => i.MinimumLevel >= minLevel).ToList();
 					data = legalWeaponData[Utilities.RNG.Next(legalWeaponData.Count)];
-					
-					ApplyWeaponBaseStats(ref weaponItem, data); // Flyt ned når alle branches er udfyldt
 					break;
 
 				// case EItemWeaponBaseType.Weapon2H:
 				default:
 					legalWeaponData = ItemDataTables.THSwordWeaponData.Where(i => i.MinimumLevel >= minLevel).ToList();
 					data = legalWeaponData[Utilities.RNG.Next(legalWeaponData.Count)];
-					
-					ApplyWeaponBaseStats(ref weaponItem, data); // Flyt ned når alle branches er udfyldt
 					break;
 			}
+
+			weaponItem.ApplyImplicits(data.ImplicitTypes);
+			ApplyWeaponBaseStats(weaponItem, data);
 		}
 		else if (item.GetType().IsSubclassOf(typeof(ArmourItem))) {
 			ArmourItem armourItem = item as ArmourItem;
@@ -244,11 +243,39 @@ public static class ItemGeneration {
 					break;
 			}
 
-			ApplyArmourBaseStats(ref armourItem, data);
+			armourItem.ApplyImplicits(data.ImplicitTypes);
+			ApplyArmourBaseStats(armourItem, data);
+		}
+		else if (item.GetType().IsSubclassOf(typeof(JewelleryItem))) {
+			JewelleryItem jewelItem = item as JewelleryItem;
+			ItemData data;
+
+			List<ItemData> legalJewelleryData = new List<ItemData>();
+
+			switch (jewelItem.ItemJewelleryBaseType) {
+				case EItemJewelleryBaseType.Amulet:
+					legalJewelleryData = ItemDataTables.AmuletJewelleryData.Where(i => i.MinimumLevel >= minLevel).ToList();
+					data = legalJewelleryData[Utilities.RNG.Next(legalJewelleryData.Count)];
+					break;
+
+				case EItemJewelleryBaseType.Ring:
+					legalJewelleryData = ItemDataTables.RingJewelleryData.Where(i => i.MinimumLevel >= minLevel).ToList();
+					data = legalJewelleryData[Utilities.RNG.Next(legalJewelleryData.Count)];
+					break;
+
+				//case EItemJewelleryBaseType.Belt:
+					default:
+					legalJewelleryData = ItemDataTables.BeltJewelleryData.Where(i => i.MinimumLevel >= minLevel).ToList();
+					data = legalJewelleryData[Utilities.RNG.Next(legalJewelleryData.Count)];
+					break;
+			}
+
+			jewelItem.ApplyImplicits(data.ImplicitTypes);
+			ApplyJewelleryBaseStats(jewelItem, data);
 		}
 	}
 
-	private static void ApplyWeaponBaseStats(ref WeaponItem item, WeaponItemData data) {
+	private static void ApplyWeaponBaseStats(WeaponItem item, WeaponItemData data) {
 		item.ItemBase = data.BaseName;
 		item.ItemBaseSpecifierFlags |= data.ItemSpecifierFlags;
 		item.ItemTexture = data.Texture;
@@ -262,7 +289,7 @@ public static class ItemGeneration {
 		item.PostGenCalculation();
 	}
 
-	private static void ApplyArmourBaseStats(ref ArmourItem item, ArmourItemData data) {
+	private static void ApplyArmourBaseStats(ArmourItem item, ArmourItemData data) {
 		item.ItemBase = data.BaseName;
 		item.ItemBaseSpecifierFlags |= data.ItemSpecifierFlags;
 		item.ItemTexture = data.Texture;
@@ -276,7 +303,16 @@ public static class ItemGeneration {
 		item.PostGenCalculation();
 	}
 
-	private static void ApplyRarityAndAffixes(ref Item item) {
+	private static void ApplyJewelleryBaseStats(JewelleryItem item, ItemData data) {
+		item.ItemBase = data.BaseName;
+		item.ItemBaseSpecifierFlags |= data.ItemSpecifierFlags;
+		item.ItemTexture = data.Texture;
+		item.MinimumLevel = data.MinimumLevel;
+
+		item.PostGenCalculation();
+	}
+
+	private static void ApplyRarityAndAffixes(Item item) {
 		EItemRarity rarity = CalculateRarity();
 		item.ItemRarity = rarity;
 

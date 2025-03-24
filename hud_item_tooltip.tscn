@@ -60,14 +60,12 @@ alignment = 1
 
 [node name="ImplicitSeparator" type="HSeparator" parent="VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 0
 
 [node name="ImplicitContainer" type="VBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 
 [node name="AffixSeparator" type="HSeparator" parent="VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 0
 
 [node name="AffixContainer" type="VBoxContainer" parent="VBoxContainer"]
 layout_mode = 2

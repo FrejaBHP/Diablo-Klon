@@ -87,7 +87,7 @@ public partial class Item {
 		validPrefixes.RemoveAll(p => !Utilities.HasAnyFlags(ItemBaseSpecifierFlags, p.AffixItemSpecifierFlags));
 
 		for (int i = 0; i < Prefixes.Count; i++) {
-			validPrefixes.RemoveAll(p => p.AffixTable[0].AffixFamily == Prefixes[i].Data.AffixFamily);
+			validPrefixes.RemoveAll(p => p.AffixFamily == Prefixes[i].AffixFamily);
 		}
 		
 		return validPrefixes;
@@ -98,10 +98,19 @@ public partial class Item {
 		validSuffixes.RemoveAll(s => !Utilities.HasAnyFlags(ItemBaseSpecifierFlags, s.AffixItemSpecifierFlags));
 
 		for (int i = 0; i < Suffixes.Count; i++) {
-			validSuffixes.RemoveAll(s => s.AffixTable[0].AffixFamily == Suffixes[i].Data.AffixFamily);
+			validSuffixes.RemoveAll(s => s.AffixFamily == Suffixes[i].AffixFamily);
 		}
 
 		return validSuffixes;
+	}
+
+	public void ApplyImplicits(List<Type> implicitTypes) {
+		foreach (Type type in implicitTypes) {
+			Affix newImplicitAffix = (Affix)Activator.CreateInstance(type);
+			newImplicitAffix.RollAffixValue();
+			Implicits.Add(newImplicitAffix);
+			ApplyAffix(newImplicitAffix, true);
+		}
 	}
 
 	public void AddRandomAffix(EAffixPosition position) {
@@ -256,7 +265,7 @@ public partial class WeaponItem : Item {
 	}
 
 	protected override void ApplyLocalAffix(Affix affix, bool add) {
-		switch (affix.Data.AffixFamily) {
+		switch (affix.AffixFamily) {
 			case EAffixFamily.LocalFlatPhysDamage:
 				if (add) {
 					AddedPhysicalMinimumDamage += (int)affix.ValueFirst;
@@ -343,7 +352,7 @@ public partial class ArmourItem : Item {
 	}
 
 	protected override void ApplyLocalAffix(Affix affix, bool add) {
-		switch (affix.Data.AffixFamily) {
+		switch (affix.AffixFamily) {
 			case EAffixFamily.LocalFlatArmour:
 				if (add) {
 					AddedArmour += (int)affix.ValueFirst;

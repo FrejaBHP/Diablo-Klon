@@ -78,6 +78,21 @@ public partial class Player : Actor {
 			WorldItem worldItem = item.ConvertToWorldItem();
 			DropItem(worldItem);
 		}
+		else if (@event.IsActionPressed("DebugSpawnRandomWeapon")) {
+			Item item = ItemGeneration.GenerateItemFromCategory(EItemCategory.Weapon);
+			WorldItem worldItem = item.ConvertToWorldItem();
+			DropItem(worldItem);
+		}
+		else if (@event.IsActionPressed("DebugSpawnRandomArmour")) {
+			Item item = ItemGeneration.GenerateItemFromCategory(EItemCategory.Armour);
+			WorldItem worldItem = item.ConvertToWorldItem();
+			DropItem(worldItem);
+		}
+		else if (@event.IsActionPressed("DebugSpawnRandomJewellery")) {
+			Item item = ItemGeneration.GenerateItemFromCategory(EItemCategory.Jewellery);
+			WorldItem worldItem = item.ConvertToWorldItem();
+			DropItem(worldItem);
+		}
     }
 
     public override void _UnhandledInput(InputEvent @event) {
