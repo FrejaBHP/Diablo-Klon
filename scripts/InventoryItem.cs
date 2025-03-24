@@ -247,16 +247,33 @@ public partial class InventoryItem : PanelContainer {
 			}
 		}
 
-		foreach (Affix prefix in ItemReference.Prefixes) {
-			Label prefixLabel = GenerateAffixLabel(prefix.GetAffixTooltipText());
-			tooltipContent.AffixContainer.AddChild(prefixLabel);
+		if (ItemReference.Implicits.Count > 0) {
+			foreach (Affix impl in ItemReference.Implicits) {
+				Label implicitLabel = GenerateAffixLabel(impl.GetAffixTooltipText());
+				tooltipContent.ImplicitContainer.AddChild(implicitLabel);
+			}
+		}
+		else {
+			tooltipContent.ImplicitSeparator.Visible = false;
+			tooltipContent.ImplicitContainer.Visible = false;
 		}
 
-		foreach (Affix suffix in ItemReference.Suffixes) {
-			Label suffixLabel = GenerateAffixLabel(suffix.GetAffixTooltipText());
-			tooltipContent.AffixContainer.AddChild(suffixLabel);
-		}
+		if (ItemReference.Prefixes.Count > 0 || ItemReference.Suffixes.Count > 0) {
+			foreach (Affix prefix in ItemReference.Prefixes) {
+				Label prefixLabel = GenerateAffixLabel(prefix.GetAffixTooltipText());
+				tooltipContent.AffixContainer.AddChild(prefixLabel);
+			}
 
+			foreach (Affix suffix in ItemReference.Suffixes) {
+				Label suffixLabel = GenerateAffixLabel(suffix.GetAffixTooltipText());
+				tooltipContent.AffixContainer.AddChild(suffixLabel);
+			}
+		}
+		else {
+			tooltipContent.AffixSeparator.Visible = false;
+			tooltipContent.AffixContainer.Visible = false;
+		}
+		
 		return tooltipContent;
 	}
 

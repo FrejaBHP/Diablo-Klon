@@ -22,6 +22,7 @@ public partial class Item {
 	public int MagicMaxSuffixes = 1;
 	public int RareMaxPrefixes = 3;
 	public int RareMaxSuffixes = 3;
+	public List<Affix> Implicits = new List<Affix>();
 	public List<Affix> Prefixes = new List<Affix>();
 	public List<Affix> Suffixes = new List<Affix>();
 
