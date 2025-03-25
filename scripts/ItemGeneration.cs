@@ -206,7 +206,7 @@ public static class ItemGeneration {
 					break;
 			}
 
-			weaponItem.ApplyImplicits(data.ImplicitTypes);
+			weaponItem.AddImplicits(data.ImplicitTypes);
 			ApplyWeaponBaseStats(weaponItem, data);
 		}
 		else if (item.GetType().IsSubclassOf(typeof(ArmourItem))) {
@@ -243,7 +243,7 @@ public static class ItemGeneration {
 					break;
 			}
 
-			armourItem.ApplyImplicits(data.ImplicitTypes);
+			armourItem.AddImplicits(data.ImplicitTypes);
 			ApplyArmourBaseStats(armourItem, data);
 		}
 		else if (item.GetType().IsSubclassOf(typeof(JewelleryItem))) {
@@ -270,7 +270,7 @@ public static class ItemGeneration {
 					break;
 			}
 
-			jewelItem.ApplyImplicits(data.ImplicitTypes);
+			jewelItem.AddImplicits(data.ImplicitTypes);
 			ApplyJewelleryBaseStats(jewelItem, data);
 		}
 	}

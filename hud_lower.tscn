@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://dn73hlfk77c1y"]
+[gd_scene load_steps=6 format=3 uid="uid://dn73hlfk77c1y"]
 
 [ext_resource type="Texture2D" uid="uid://dw4rlfgcgt3o4" path="res://textures/ui/hud_health.png" id="1_0xjef"]
+[ext_resource type="Script" uid="uid://dj4vk70ft5cgg" path="res://scripts/LowerHUD.cs" id="1_27lpo"]
 [ext_resource type="Texture2D" uid="uid://b2fn70hn06bsu" path="res://textures/ui/hud_mana.png" id="2_op11f"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_froqh"]
@@ -19,6 +20,7 @@ offset_top = -136.0
 grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 2
+script = ExtResource("1_27lpo")
 
 [node name="LeftSide" type="PanelContainer" parent="."]
 layout_mode = 1
@@ -33,6 +35,20 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_froqh")
 [node name="Control" type="Control" parent="LeftSide"]
 layout_mode = 2
 
+[node name="LifeLabel" type="Label" parent="LeftSide/Control"]
+visible = false
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -30.0
+offset_right = 136.0
+offset_bottom = -7.0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+horizontal_alignment = 1
+
 [node name="PanelContainer" type="PanelContainer" parent="LeftSide/Control"]
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 1
@@ -46,7 +62,7 @@ offset_bottom = 124.0
 grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_37rsg")
 
-[node name="TextureProgressBar" type="TextureProgressBar" parent="LeftSide/Control/PanelContainer"]
+[node name="LifeOrb" type="TextureProgressBar" parent="LeftSide/Control/PanelContainer"]
 layout_mode = 2
 value = 100.0
 fill_mode = 3
@@ -67,6 +83,23 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_froqh")
 [node name="Control" type="Control" parent="RightSide"]
 layout_mode = 2
 
+[node name="ManaLabel" type="Label" parent="RightSide/Control"]
+visible = false
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -136.0
+offset_top = -158.0
+offset_bottom = -135.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+horizontal_alignment = 1
+
 [node name="PanelContainer" type="PanelContainer" parent="RightSide/Control"]
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 1
@@ -83,9 +116,14 @@ grow_horizontal = 0
 grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_37rsg")
 
-[node name="TextureProgressBar" type="TextureProgressBar" parent="RightSide/Control/PanelContainer"]
+[node name="ManaOrb" type="TextureProgressBar" parent="RightSide/Control/PanelContainer"]
 layout_mode = 2
 value = 100.0
 fill_mode = 3
 nine_patch_stretch = true
 texture_progress = ExtResource("2_op11f")
+
+[connection signal="mouse_entered" from="LeftSide/Control/PanelContainer" to="." method="OnLifeOrbEntered"]
+[connection signal="mouse_exited" from="LeftSide/Control/PanelContainer" to="." method="OnLifeOrbExited"]
+[connection signal="mouse_entered" from="RightSide/Control/PanelContainer" to="." method="OnManaOrbEntered"]
+[connection signal="mouse_exited" from="RightSide/Control/PanelContainer" to="." method="OnManaOrbExited"]

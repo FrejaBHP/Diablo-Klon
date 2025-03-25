@@ -34,25 +34,21 @@ public partial class EquipmentSlot : PanelContainer {
 		
 	}
 
-	public void OnGUIInput(InputEvent @event) {
-        // On left-click
+	public void GUIInput(InputEvent @event) {
+		// On left-click
 		if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == MouseButton.Left && mbe.Pressed) {
-			// Implement proper check for different weapon types and slots later, since this will now always fail for weapon slots
 			if (InventoryReference.IsAnItemSelected && InventoryReference.CanEquipItemInSlot(this, InventoryReference.SelectedItem) && CanEquipItem(InventoryReference.SelectedItem.ItemReference.ItemAllBaseType)) {
 				if (itemInSlot == null) {
-					//GD.Print("Equip - slot empty");
 					SetItem(InventoryReference.SelectedItem);
 					EmitSignal(SignalName.ItemEquipped, this, itemInSlot);
 				}
 				else {
-					//GD.Print("Equip - slot not empty");
 					InventoryItem temp = InventoryReference.SelectedItem;
 					EmitSignal(SignalName.ItemsSwapped, this, itemInSlot, InventoryReference.SelectedItem);
 					SetItem(temp);
 				}
 			}
 			else if (!InventoryReference.IsAnItemSelected && itemInSlot != null) {
-				//GD.Print("Unequip - slot now empty");
 				RemoveHighlight();
 				EmitSignal(SignalName.ItemUnequipped, this, itemInSlot);
 				SetItem(null);

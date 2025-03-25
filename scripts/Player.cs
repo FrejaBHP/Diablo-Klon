@@ -26,15 +26,25 @@ public partial class Player : Actor {
 	public Dictionary<EStatName, double> ItemStatDictionary = new() {
 		{ EStatName.FlatMaxLife, 					0 },
 		{ EStatName.PercentageMaxLife, 				0 },
+		{ EStatName.AddedLifeRegen, 				0 },
+		{ EStatName.PercentageLifeRegen, 			0 },
+
+		{ EStatName.FlatMaxMana, 					0 },
+		{ EStatName.PercentageMaxMana, 				0 },
+		{ EStatName.AddedManaRegen, 				0 },
+		{ EStatName.IncreasedManaRegen, 			0 },
+
 		{ EStatName.FlatMinPhysDamage, 				0 },
 		{ EStatName.FlatMaxPhysDamage, 				0 },
 		{ EStatName.PercentagePhysDamage, 			0 },
+
 		{ EStatName.FlatArmour, 					0 },
 		{ EStatName.PercentageArmour, 				0 },
 		{ EStatName.FlatEvasion, 					0 },
 		{ EStatName.PercentageEvasion, 				0 },
 		{ EStatName.FlatEnergyShield, 				0 },
 		{ EStatName.PercentageEnergyShield, 		0 },
+
 		{ EStatName.FireResistance, 				0 },
 		{ EStatName.ColdResistance, 				0 },
 		{ EStatName.LightningResistance, 			0 },
@@ -46,9 +56,11 @@ public partial class Player : Actor {
 	private double offHandMinPhysDamage;
 	private double offHandMaxPhysDamage;
 
-
 	public Player() {
 		BasicStats.BaseLife = 50;
+		BasicStats.BaseMana = 35;
+		BasicStats.AddedLifeRegen = 1;
+		RefreshLifeMana();
 	}
 
 	public override void _Ready() {
@@ -60,13 +72,30 @@ public partial class Player : Actor {
 		PlayerHUD.PlayerOwner = this;
 		PlayerHUD.PlayerPanel.PlayerOwner = this;
 		PlayerHUD.PlayerInventory.PlayerOwner = this;
+		PlayerHUD.PlayerLowerHUD.PlayerOwner = this;
 		moveTo = GlobalPosition;
 
 		CalculateStats();
 	}
 
-    public override void _Input(InputEvent @event) {
-		if (@event.IsActionPressed("InventoryKey")) {
+    public override void _UnhandledInput(InputEvent @event) {
+		// On left click outside of UI elements
+        if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == MouseButton.Left && mbe.Pressed) {
+			// If an item is currently selected
+			if (PlayerHUD.PlayerInventory.IsAnItemSelected && PlayerHUD.PlayerInventory.SelectedItem != null) {
+                // If click is outside the inventory panel, drop it on the floor
+                if (!PlayerHUD.PlayerInventory.GetGlobalRect().HasPoint(mbe.GlobalPosition) || !PlayerHUD.PlayerInventory.IsOpen) {
+                    PlayerHUD.PlayerInventory.ItemClickDrop(PlayerHUD.PlayerInventory.SelectedItem);
+                }
+            }
+			else {
+				SetDestinationPosition(mbe.GlobalPosition);
+			}
+		}
+    }
+
+    public override void _UnhandledKeyInput(InputEvent @event) {
+        if (@event.IsActionPressed("InventoryKey")) {
 			PlayerHUD.PlayerInventory.ToggleInventory();
 		}
 		else if (@event.IsActionPressed("CharacterPanelKey")) {
@@ -92,22 +121,6 @@ public partial class Player : Actor {
 			Item item = ItemGeneration.GenerateItemFromCategory(EItemCategory.Jewellery);
 			WorldItem worldItem = item.ConvertToWorldItem();
 			DropItem(worldItem);
-		}
-    }
-
-    public override void _UnhandledInput(InputEvent @event) {
-		// On left click outside of UI elements
-        if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == MouseButton.Left && mbe.Pressed) {
-			// If an item is currently selected
-			if (PlayerHUD.PlayerInventory.IsAnItemSelected && PlayerHUD.PlayerInventory.SelectedItem != null) {
-                // If click is outside the inventory panel, drop it on the floor
-                if (!PlayerHUD.PlayerInventory.GetGlobalRect().HasPoint(mbe.GlobalPosition) || !PlayerHUD.PlayerInventory.IsOpen) {
-                    PlayerHUD.PlayerInventory.ItemClickDrop(PlayerHUD.PlayerInventory.SelectedItem);
-                }
-            }
-			else {
-				SetDestinationPosition(mbe.GlobalPosition);
-			}
 		}
     }
 
@@ -142,8 +155,6 @@ public partial class Player : Actor {
 				if (!Mathf.IsZeroApprox(GlobalPosition.DistanceTo(lookAt))) {
 					LookAt(lookAt, null, true);
 				}
-
-				//GD.Print("Moving towards position");
 			}
 		}
 		else {
@@ -154,14 +165,15 @@ public partial class Player : Actor {
 			if (!Mathf.IsZeroApprox(GlobalPosition.DistanceTo(lookAt))) {
 				LookAt(lookAt, null, true);
 			}
-
-			//GD.Print("Moving towards object");
 		}
 
 		newMouseInput = false;
 	}
 
     public override void _PhysicsProcess(double delta) {
+		ApplyRegen();
+		PlayerHUD.PlayerLowerHUD.UpdateOrbs();
+
 		if (newMouseInput) {
 			HandleMouseInput();
 		}
@@ -212,11 +224,6 @@ public partial class Player : Actor {
 			ItemStatDictionary[stat.Key] += stat.Value;
 		}
 		
-		/*
-		if (slot.ItemInSlot != null) {
-			
-		}
-		*/
 		CalculateStats();
 	}
 
@@ -225,11 +232,6 @@ public partial class Player : Actor {
 			ItemStatDictionary[stat.Key] -= stat.Value;
 		}
 
-		/*
-		if (slot.ItemInSlot != null) {
-			
-		}
-		*/
 		CalculateStats();
 	}
 
@@ -251,13 +253,21 @@ public partial class Player : Actor {
 
 	protected void CalculateStats() {
 		BasicStats.AddedLife = (int)ItemStatDictionary[EStatName.FlatMaxLife];
+		BasicStats.IncreasedLife = (int)ItemStatDictionary[EStatName.PercentageMaxLife];
+		BasicStats.AddedMana = (int)ItemStatDictionary[EStatName.FlatMaxMana];
+		BasicStats.IncreasedMana = (int)ItemStatDictionary[EStatName.PercentageMaxMana];
 
-		BasicStats.AddedEvasion = (int)ItemStatDictionary[EStatName.FlatEvasion];
-		BasicStats.IncreasedEvasion = ItemStatDictionary[EStatName.PercentageEvasion];
+		BasicStats.AddedLifeRegen = (int)ItemStatDictionary[EStatName.AddedLifeRegen];
+		BasicStats.PercentageLifeRegen = (int)ItemStatDictionary[EStatName.PercentageLifeRegen];
+		BasicStats.AddedManaRegen = (int)ItemStatDictionary[EStatName.AddedManaRegen];
+		BasicStats.IncreasedManaRegen = (int)ItemStatDictionary[EStatName.IncreasedManaRegen];
 
 		DamageMods.AddedPhysicalMin = (int)ItemStatDictionary[EStatName.FlatMinPhysDamage];
 		DamageMods.AddedPhysicalMax = (int)ItemStatDictionary[EStatName.FlatMaxPhysDamage];
 		DamageMods.IncreasedPhysical = ItemStatDictionary[EStatName.PercentagePhysDamage];
+
+		BasicStats.AddedEvasion = (int)ItemStatDictionary[EStatName.FlatEvasion];
+		BasicStats.IncreasedEvasion = ItemStatDictionary[EStatName.PercentageEvasion];
 
 		Resistances.ResFire = (int)ItemStatDictionary[EStatName.FireResistance];
 		Resistances.ResCold = (int)ItemStatDictionary[EStatName.ColdResistance];
@@ -283,11 +293,6 @@ public partial class Player : Actor {
 			offHandMaxPhysDamage = Math.Round(DamageMods.AddedPhysicalMax * (1 + DamageMods.IncreasedPhysical) * (1 + DamageMods.MorePhysical), 0);
 		}
 
-		//debugLabel.Text = $"Life: {BasicStats.TotalLife}\nEvasion Rating: {BasicStats.TotalEvasion}\n\n" + 
-		//$"MH Physical Damage: {mainHandMinPhysDamage} - {mainHandMaxPhysDamage}\n" +
-		//$"OH Physical Damage: {offHandMinPhysDamage} - {offHandMaxPhysDamage}\n\n" +
-		//$"Fire Res: {Resistances.ResFire}\nCold Res: {Resistances.ResCold}\nLightning Res: {Resistances.ResLightning}";
-
 		UpdateStatsPanel();
 	}
 
@@ -298,6 +303,8 @@ public partial class Player : Actor {
 		PlayerHUD.PlayerPanel.OffenceTabPanel.MainHandPhysDamage.SetValue($"{mainHandMinPhysDamage} - {mainHandMaxPhysDamage}");
 		PlayerHUD.PlayerPanel.OffenceTabPanel.OffHandPhysDamage.SetValue($"{offHandMinPhysDamage} - {offHandMaxPhysDamage}");
 
+		PlayerHUD.PlayerPanel.DefenceTabPanel.LifeRegen.SetValue($"{BasicStats.TotalLifeRegen:F1}");
+		PlayerHUD.PlayerPanel.DefenceTabPanel.ManaRegen.SetValue($"{BasicStats.TotalManaRegen:F1}");
 		PlayerHUD.PlayerPanel.DefenceTabPanel.Armour.SetValue($"{BasicStats.TotalArmour}");
 		PlayerHUD.PlayerPanel.DefenceTabPanel.Evasion.SetValue($"{BasicStats.TotalEvasion}");
 		PlayerHUD.PlayerPanel.DefenceTabPanel.FireRes.SetValue($"{Resistances.ResFire}%");

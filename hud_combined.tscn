@@ -25,5 +25,3 @@ layout_mode = 1
 
 [node name="LowerHUD" parent="." instance=ExtResource("3_ucw7d")]
 layout_mode = 1
-
-[connection signal="gui_input" from="." to="." method="OnGUIInput"]

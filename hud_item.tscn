@@ -23,6 +23,6 @@ mouse_filter = 2
 expand_mode = 1
 stretch_mode = 3
 
-[connection signal="gui_input" from="." to="." method="OnClicked"]
+[connection signal="gui_input" from="." to="." method="GUIInput"]
 [connection signal="mouse_entered" from="." to="." method="OnMouseEntered"]
 [connection signal="mouse_exited" from="." to="." method="OnMouseExited"]

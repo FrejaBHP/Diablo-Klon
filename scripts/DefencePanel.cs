@@ -2,6 +2,8 @@ using Godot;
 using System;
 
 public partial class DefencePanel : StatPanel {
+    public StatTableEntry LifeRegen;
+    public StatTableEntry ManaRegen;
     public StatTableEntry Armour;
     public StatTableEntry Evasion;
     public StatTableEntry FireRes;
@@ -15,6 +17,16 @@ public partial class DefencePanel : StatPanel {
     }
 
     private void BuildTable() {
+        LifeRegen = statEntryScene.Instantiate<StatTableEntry>();
+        statContainer.AddChild(LifeRegen);
+        LifeRegen.SetDescription("Life Regeneration per Second");
+        stats.Add(LifeRegen);
+
+        ManaRegen = statEntryScene.Instantiate<StatTableEntry>();
+        statContainer.AddChild(ManaRegen);
+        ManaRegen.SetDescription("Mana Regeneration per Second");
+        stats.Add(ManaRegen);
+
         Armour = statEntryScene.Instantiate<StatTableEntry>();
         statContainer.AddChild(Armour);
         Armour.SetDescription("Armour");

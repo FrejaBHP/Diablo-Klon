@@ -28,6 +28,6 @@ layout_mode = 2
 mouse_filter = 1
 color = Color(1, 1, 1, 0)
 
-[connection signal="gui_input" from="." to="." method="OnGUIInput"]
+[connection signal="gui_input" from="." to="." method="GUIInput"]
 [connection signal="mouse_entered" from="." to="." method="OnMouseEntered"]
 [connection signal="mouse_exited" from="." to="." method="OnMouseExited"]

@@ -43,10 +43,11 @@ public partial class InventoryItem : PanelContainer {
 		itemTexture.CustomMinimumSize = newMinSize;
 	}
 
-	public void OnClicked(InputEvent @event) {
+	public void GUIInput(InputEvent @event) {
 		if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == MouseButton.Left && mbe.Pressed) {
 			if (!IsClicked) {
 				InventoryReference.ItemClickSelect(this);
+				RemoveTooltip();
 			}
 		}
 	}
@@ -61,11 +62,6 @@ public partial class InventoryItem : PanelContainer {
 		}
 	}
 
-	public void SignalCreateTooltip(Vector2 anchor, Rect2 rect) {
-		InventoryReference.PlayerOwner.PlayerHUD.CreateItemTooltip(GetCustomTooltip(), anchor, rect);
-		hasActiveTooltip = true;
-	}
-
 	public void OnMouseExited() {
 		if (!InventoryReference.IsAnItemSelected) {
 			itemBackground.Color = UILib.ColorItemBackground;
@@ -73,6 +69,11 @@ public partial class InventoryItem : PanelContainer {
 
 			RemoveTooltip();
 		}
+	}
+
+	public void SignalCreateTooltip(Vector2 anchor, Rect2 rect) {
+		InventoryReference.PlayerOwner.PlayerHUD.CreateItemTooltip(GetCustomTooltip(), anchor, rect);
+		hasActiveTooltip = true;
 	}
 
 	public void ToggleBackground() {

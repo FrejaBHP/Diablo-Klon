@@ -148,4 +148,4 @@ size_flags_horizontal = 4
 theme_override_constants/h_separation = 0
 theme_override_constants/v_separation = 0
 
-[connection signal="gui_input" from="." to="." method="OnGUIInput"]
+[connection signal="gui_input" from="." to="." method="GUIInput"]

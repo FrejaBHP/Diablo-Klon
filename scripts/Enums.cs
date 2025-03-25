@@ -5,16 +5,27 @@ public enum EStatName {
 	None,
 	FlatMaxLife,
 	PercentageMaxLife,
+	AddedLifeRegen,
+	PercentageLifeRegen,
+	IncreasedLifeRegen,
+
+	FlatMaxMana,
+	PercentageMaxMana,
+	AddedManaRegen,
+	IncreasedManaRegen,
+
 	FlatMinPhysDamage,
 	FlatMaxPhysDamage,
 	FlatPhysDamage,
 	PercentagePhysDamage,
+
 	FlatArmour,
 	PercentageArmour,
 	FlatEvasion,
 	PercentageEvasion,
 	FlatEnergyShield,
 	PercentageEnergyShield,
+
 	FireResistance,
 	ColdResistance,
 	LightningResistance,
@@ -50,10 +61,22 @@ public enum EAffixPosition {
 
 public enum EAffixFamily {
 	None,
+	
+	// Global
 	FlatMaxLife,
 	PercentageMaxLife,
+	AddedLifeRegen,
+	PercentageLifeRegen,
+	IncreasedLifeRegen,
+
+	FlatMaxMana,
+	PercentageMaxMana,
+	AddedManaRegen,
+	IncreasedManaRegen,
+
 	FlatPhysDamage,
 	PercentagePhysDamage,
+
 	PercentageAttackSpeed,
 	PercentageCritChance,
 	FlatArmour,
@@ -62,14 +85,18 @@ public enum EAffixFamily {
 	PercentageEvasion,
 	FlatEnergyShield,
 	PercentageEnergyShield,
+
 	FireResistance,
 	ColdResistance,
 	LightningResistance,
 
+	// Local
 	LocalFlatPhysDamage,
 	LocalPercentagePhysDamage,
+
 	LocalPercentageAttackSpeed,
 	LocalPercentageCritChance,
+
 	LocalFlatArmour,
 	LocalPercentageArmour,
 	LocalFlatEvasion,

@@ -5,8 +5,6 @@ public partial class ItemTooltipPopup : PopupPanel {
 	public Rect2 ItemRect;
 
 	public override void _Ready() {
-		//GD.Print($"First size check: {Size}");
-		//GD.Print($"First min size check: {GetContentsMinimumSize()}");
 		AdjustPopupPosition();
 	}
 

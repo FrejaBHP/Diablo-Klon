@@ -104,12 +104,12 @@ public partial class Item {
 		return validSuffixes;
 	}
 
-	public void ApplyImplicits(List<Type> implicitTypes) {
+	public void AddImplicits(List<Type> implicitTypes) {
 		foreach (Type type in implicitTypes) {
 			Affix newImplicitAffix = (Affix)Activator.CreateInstance(type);
 			newImplicitAffix.RollAffixValue();
 			Implicits.Add(newImplicitAffix);
-			ApplyAffix(newImplicitAffix, true);
+			ApplyAffixToDictionary(newImplicitAffix, true);
 		}
 	}
 
@@ -154,10 +154,10 @@ public partial class Item {
 			}
 		}
 
-		ApplyAffix(newAffix, true);
+		ApplyAffixToDictionary(newAffix, true);
 	}
 
-	protected virtual void ApplyAffix(Affix affix, bool add) {
+	protected virtual void ApplyAffixToDictionary(Affix affix, bool add) {
 		if (affix.IsLocal) {
 			ApplyLocalAffix(affix, add);
 			return;
