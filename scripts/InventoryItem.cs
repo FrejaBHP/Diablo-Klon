@@ -87,6 +87,7 @@ public partial class InventoryItem : PanelContainer {
 
 	public void RemoveTooltip() {
 		InventoryReference.PlayerOwner.PlayerHUD.RemoveItemTooltip();
+		isHovered = false;
 		hasActiveTooltip = false;
 	}
 

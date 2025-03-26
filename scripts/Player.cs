@@ -9,14 +9,23 @@ public partial class Player : Actor {
 	private const float RayLength = 1000f;
 	public const float Speed = 5.0f;
 
+	public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
+
 	public bool MovingTowardsObject = false;
+
+	private readonly Stat strength = new(10, true);
+	public Stat Strength { get => strength; }
+
+	private readonly Stat dexterity = new(10, true);
+    public Stat Dexterity { get => dexterity; }
+
+	private readonly Stat intelligence = new(10, true);
+    public Stat Intelligence { get => intelligence; }
 
 	private PlayerCamera playerCamera;
 	private Label debugLabel;
 	private bool newMouseInput = false;
 	private bool controlsCamera = true;
-
-	public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 
 	private Vector2 lastMouseInputPos = new(0, 0);
 	private Vector3 moveTo = new(0, 0, 0);
@@ -24,6 +33,10 @@ public partial class Player : Actor {
 	private Node3D targetedNode;
 
 	public Dictionary<EStatName, double> ItemStatDictionary = new() {
+		{ EStatName.FlatStrength, 					0 },
+		{ EStatName.FlatDexterity, 					0 },
+		{ EStatName.FlatIntelligence, 				0 },
+
 		{ EStatName.FlatMaxLife, 					0 },
 		{ EStatName.PercentageMaxLife, 				0 },
 		{ EStatName.AddedLifeRegen, 				0 },
@@ -57,8 +70,8 @@ public partial class Player : Actor {
 	private double offHandMaxPhysDamage;
 
 	public Player() {
-		BasicStats.BaseLife = 50;
-		BasicStats.BaseMana = 35;
+		BasicStats.BaseLife = 40;
+		BasicStats.BaseMana = 30;
 		BasicStats.AddedLifeRegen = 1;
 		RefreshLifeMana();
 	}
@@ -75,6 +88,10 @@ public partial class Player : Actor {
 		PlayerHUD.PlayerLowerHUD.PlayerOwner = this;
 		moveTo = GlobalPosition;
 
+		strength.StatTotalChanged += StrTotalChanged;
+		dexterity.StatTotalChanged += DexTotalChanged;
+		intelligence.StatTotalChanged += IntTotalChanged;
+		
 		CalculateStats();
 	}
 
@@ -252,15 +269,19 @@ public partial class Player : Actor {
 	}
 
 	protected void CalculateStats() {
-		BasicStats.AddedLife = (int)ItemStatDictionary[EStatName.FlatMaxLife];
-		BasicStats.IncreasedLife = (int)ItemStatDictionary[EStatName.PercentageMaxLife];
-		BasicStats.AddedMana = (int)ItemStatDictionary[EStatName.FlatMaxMana];
-		BasicStats.IncreasedMana = (int)ItemStatDictionary[EStatName.PercentageMaxMana];
+		strength.SAdded = ItemStatDictionary[EStatName.FlatStrength];
+		dexterity.SAdded = ItemStatDictionary[EStatName.FlatDexterity];
+		intelligence.SAdded = ItemStatDictionary[EStatName.FlatIntelligence];
 
-		BasicStats.AddedLifeRegen = (int)ItemStatDictionary[EStatName.AddedLifeRegen];
-		BasicStats.PercentageLifeRegen = (int)ItemStatDictionary[EStatName.PercentageLifeRegen];
-		BasicStats.AddedManaRegen = (int)ItemStatDictionary[EStatName.AddedManaRegen];
-		BasicStats.IncreasedManaRegen = (int)ItemStatDictionary[EStatName.IncreasedManaRegen];
+		BasicStats.AddedLife = (int)ItemStatDictionary[EStatName.FlatMaxLife];
+		BasicStats.IncreasedLife = ItemStatDictionary[EStatName.PercentageMaxLife];
+		BasicStats.AddedMana = (int)ItemStatDictionary[EStatName.FlatMaxMana];
+		BasicStats.IncreasedMana = ItemStatDictionary[EStatName.PercentageMaxMana];
+
+		BasicStats.AddedLifeRegen = ItemStatDictionary[EStatName.AddedLifeRegen];
+		BasicStats.PercentageLifeRegen = ItemStatDictionary[EStatName.PercentageLifeRegen];
+		BasicStats.AddedManaRegen = ItemStatDictionary[EStatName.AddedManaRegen];
+		BasicStats.IncreasedManaRegen = ItemStatDictionary[EStatName.IncreasedManaRegen];
 
 		DamageMods.AddedPhysicalMin = (int)ItemStatDictionary[EStatName.FlatMinPhysDamage];
 		DamageMods.AddedPhysicalMax = (int)ItemStatDictionary[EStatName.FlatMaxPhysDamage];
@@ -294,6 +315,18 @@ public partial class Player : Actor {
 		}
 
 		UpdateStatsPanel();
+	}
+
+	protected void StrTotalChanged(object sender, double newStatTotal) {
+		PlayerHUD.PlayerPanel.StrContainer.SetValue($"{newStatTotal}");
+	}
+
+	protected void DexTotalChanged(object sender, double newStatTotal) {
+		PlayerHUD.PlayerPanel.DexContainer.SetValue($"{newStatTotal}");
+	}
+
+	protected void IntTotalChanged(object sender, double newStatTotal) {
+		PlayerHUD.PlayerPanel.IntContainer.SetValue($"{newStatTotal}");
 	}
 
 	protected void UpdateStatsPanel() {

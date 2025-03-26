@@ -65,6 +65,18 @@ public static class AffixDataTables {
 			EAffixItemFlags.Weapon,
 			EItemBaseSpecifierFlags.NoFlags
 		),
+		new(typeof(FlatStrengthAffix), EAffixFamily.AddedStrength,
+			EAffixItemFlags.Jewellery,
+			EItemBaseSpecifierFlags.NoFlags
+		),
+		new(typeof(FlatDexterityAffix), EAffixFamily.AddedDexterity,
+			EAffixItemFlags.Jewellery,
+			EItemBaseSpecifierFlags.NoFlags
+		),
+		new(typeof(FlatIntelligenceAffix), EAffixFamily.AddedIntelligence,
+			EAffixItemFlags.Jewellery,
+			EItemBaseSpecifierFlags.NoFlags
+		),
 		new(typeof(FireResistanceAffix), EAffixFamily.FireResistance,
 			EAffixItemFlags.Armour | EAffixItemFlags.Jewellery,
 			EItemBaseSpecifierFlags.NoFlags

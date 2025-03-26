@@ -291,6 +291,8 @@ public partial class Inventory : Control {
     }
 
     public void UnequipItemInSlot(EquipmentSlot slot, InventoryItem item) {
+        item.RemoveTooltip();
+        
         if (slot.Slot == EItemEquipmentSlot.WeaponLeft) {
             PlayerOwner.AssignMainHand(null);
         }

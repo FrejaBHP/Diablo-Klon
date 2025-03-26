@@ -166,10 +166,22 @@ public partial class Item {
 		// First affix value
 		if (StatDictionary.ContainsKey(affix.StatNameFirst)) {
 			if (add) {
-				StatDictionary[affix.StatNameFirst] += (double)affix.ValueFirst;
+				if (affix.IsMultiplicative) {
+					StatDictionary[affix.StatNameFirst] *= 1 + affix.ValueFirst;
+				}
+				else {
+					StatDictionary[affix.StatNameFirst] += affix.ValueFirst;
+				}
+				
 			}
 			else {
-				StatDictionary[affix.StatNameFirst] -= (double)affix.ValueFirst;
+				if (affix.IsMultiplicative) {
+					StatDictionary[affix.StatNameFirst] /= 1 + affix.ValueFirst;
+				}
+				else {
+					StatDictionary[affix.StatNameFirst] -= affix.ValueFirst;
+				}
+				
 
 				if (StatDictionary[affix.StatNameFirst] == 0) {
 					StatDictionary.Remove(affix.StatNameFirst);
@@ -177,17 +189,29 @@ public partial class Item {
 			}
 		}
 		else {
-			StatDictionary.Add(affix.StatNameFirst, (double)affix.ValueFirst);
+			StatDictionary.Add(affix.StatNameFirst, affix.ValueFirst);
 		}
 
 		// Second affix value, if affix is a range (such as added min and max damage values)
 		if (affix.StatNameSecond != EStatName.None) {
 			if (StatDictionary.ContainsKey(affix.StatNameSecond)) {
 				if (add) {
-					StatDictionary[affix.StatNameSecond] += (double)affix.ValueSecond;
+					if (affix.IsMultiplicative) {
+						StatDictionary[affix.StatNameSecond] *= 1 + affix.ValueSecond;
+					}
+					else {
+						StatDictionary[affix.StatNameSecond] += affix.ValueSecond;
+					}
+					
 				}
 				else {
-					StatDictionary[affix.StatNameSecond] -= (double)affix.ValueSecond;
+					if (affix.IsMultiplicative) {
+						StatDictionary[affix.StatNameSecond] /= 1 + affix.ValueSecond;
+					}
+					else {
+						StatDictionary[affix.StatNameSecond] -= affix.ValueSecond;
+					}
+					
 
 					if (StatDictionary[affix.StatNameSecond] == 0) {
 						StatDictionary.Remove(affix.StatNameSecond);
@@ -195,7 +219,7 @@ public partial class Item {
 				}
 			}
 			else {
-				StatDictionary.Add(affix.StatNameSecond, (double)affix.ValueSecond);
+				StatDictionary.Add(affix.StatNameSecond, affix.ValueSecond);
 			}
 		}
 	}
@@ -221,17 +245,17 @@ public partial class WeaponItem : Item {
 	public int BasePhysicalMaximumDamage;
 	public int AddedPhysicalMinimumDamage = 0;
 	public int AddedPhysicalMaximumDamage = 0;
-	public float PercentageIncreasedPhysicalDamage = 0;
+	public double PercentageIncreasedPhysicalDamage = 0;
 	public int PhysicalMinimumDamage;
 	public int PhysicalMaximumDamage;
 
-	public float BaseAttackSpeed;
-	public float PercentageIncreasedAttackSpeed = 0;
-	public float AttackSpeed;
+	public double BaseAttackSpeed;
+	public double PercentageIncreasedAttackSpeed = 0;
+	public double AttackSpeed;
 
-	public float BaseCriticalStrikeChance;
-	public float PercentageIncreasedCriticalStrikeChance = 0;
-	public float CriticalStrikeChance;
+	public double BaseCriticalStrikeChance;
+	public double PercentageIncreasedCriticalStrikeChance = 0;
+	public double CriticalStrikeChance;
 	
 	public WeaponItem() {
 		
@@ -244,8 +268,8 @@ public partial class WeaponItem : Item {
 	}
 
 	public void CalculatePhysicalDamage() {
-		PhysicalMinimumDamage = (int)MathF.Round((BasePhysicalMinimumDamage + AddedPhysicalMinimumDamage) * (1 + PercentageIncreasedPhysicalDamage), 0);
-		PhysicalMaximumDamage = (int)MathF.Round((BasePhysicalMaximumDamage + AddedPhysicalMaximumDamage) * (1 + PercentageIncreasedPhysicalDamage), 0);
+		PhysicalMinimumDamage = (int)Math.Round((BasePhysicalMinimumDamage + AddedPhysicalMinimumDamage) * (1 + PercentageIncreasedPhysicalDamage), 0);
+		PhysicalMaximumDamage = (int)Math.Round((BasePhysicalMaximumDamage + AddedPhysicalMaximumDamage) * (1 + PercentageIncreasedPhysicalDamage), 0);
 	}
 
 	public void CalculateAttackSpeed() {
@@ -280,30 +304,30 @@ public partial class WeaponItem : Item {
 
 			case EAffixFamily.LocalPercentagePhysDamage:
 				if (add) {
-					PercentageIncreasedPhysicalDamage += (float)affix.ValueFirst;
+					PercentageIncreasedPhysicalDamage += affix.ValueFirst;
 				}
 				else {
-					PercentageIncreasedPhysicalDamage -= (float)affix.ValueFirst;
+					PercentageIncreasedPhysicalDamage -= affix.ValueFirst;
 				}
 				CalculatePhysicalDamage();
 				break;
 
 			case EAffixFamily.LocalPercentageAttackSpeed:
 				if (add) {
-					PercentageIncreasedAttackSpeed += (float)affix.ValueFirst;
+					PercentageIncreasedAttackSpeed += affix.ValueFirst;
 				}
 				else {
-					PercentageIncreasedAttackSpeed -= (float)affix.ValueFirst;
+					PercentageIncreasedAttackSpeed -= affix.ValueFirst;
 				}
 				CalculateAttackSpeed();
 				break;
 
 			case EAffixFamily.LocalPercentageCritChance:
 				if (add) {
-					PercentageIncreasedCriticalStrikeChance += (float)affix.ValueFirst;
+					PercentageIncreasedCriticalStrikeChance += affix.ValueFirst;
 				}
 				else {
-					PercentageIncreasedCriticalStrikeChance -= (float)affix.ValueFirst;
+					PercentageIncreasedCriticalStrikeChance -= affix.ValueFirst;
 				}
 				CalculateCriticalStrikeChance();
 				break;
@@ -320,15 +344,15 @@ public partial class ArmourItem : Item {
 
 	public int BaseArmour;
 	public int AddedArmour;
-	public float IncreasedArmour = 0;
+	public double IncreasedArmour = 0;
 	public int Armour;
 	public int BaseEvasion;
 	public int AddedEvasion;
-	public float IncreasedEvasion = 0;
+	public double IncreasedEvasion = 0;
 	public int Evasion;
 	public int BaseEnergyShield;
 	public int AddedEnergyShield;
-	public float IncreasedEnergyShield = 0;
+	public double IncreasedEnergyShield = 0;
 	public int EnergyShield;
 
 	public ArmourItem() {
@@ -342,9 +366,9 @@ public partial class ArmourItem : Item {
 	}
 
 	public void CalculateDefences() {
-		Armour = (int)MathF.Round((BaseArmour + AddedArmour) * (1 + IncreasedArmour), 0);
-		Evasion = (int)MathF.Round((BaseEvasion + AddedEvasion) * (1 + IncreasedEvasion), 0);
-		EnergyShield = (int)MathF.Round((BaseEnergyShield + AddedEnergyShield) * (1 + IncreasedEnergyShield), 0);
+		Armour = (int)Math.Round((BaseArmour + AddedArmour) * (1 + IncreasedArmour), 0);
+		Evasion = (int)Math.Round((BaseEvasion + AddedEvasion) * (1 + IncreasedEvasion), 0);
+		EnergyShield = (int)Math.Round((BaseEnergyShield + AddedEnergyShield) * (1 + IncreasedEnergyShield), 0);
 
 		StatDictionary[EStatName.FlatArmour] = Armour;
 		StatDictionary[EStatName.FlatEvasion] = Evasion;
@@ -365,10 +389,10 @@ public partial class ArmourItem : Item {
 
 			case EAffixFamily.LocalPercentageArmour:
 				if (add) {
-					IncreasedArmour += (float)affix.ValueFirst;
+					IncreasedArmour += affix.ValueFirst;
 				}
 				else {
-					IncreasedArmour -= (float)affix.ValueFirst;
+					IncreasedArmour -= affix.ValueFirst;
 				}
 				CalculateDefences();
 				break;
@@ -385,10 +409,10 @@ public partial class ArmourItem : Item {
 
 			case EAffixFamily.LocalPercentageEvasion:
 				if (add) {
-					IncreasedEvasion += (float)affix.ValueFirst;
+					IncreasedEvasion += affix.ValueFirst;
 				}
 				else {
-					IncreasedEvasion -= (float)affix.ValueFirst;
+					IncreasedEvasion -= affix.ValueFirst;
 				}
 				CalculateDefences();
 				break;
@@ -405,10 +429,10 @@ public partial class ArmourItem : Item {
 
 			case EAffixFamily.LocalPercentageEnergyShield:
 				if (add) {
-					IncreasedEnergyShield += (float)affix.ValueFirst;
+					IncreasedEnergyShield += affix.ValueFirst;
 				}
 				else {
-					IncreasedEnergyShield -= (float)affix.ValueFirst;
+					IncreasedEnergyShield -= affix.ValueFirst;
 				}
 				CalculateDefences();
 				break;

@@ -24,6 +24,9 @@ public abstract class Affix {
 
 	protected bool isLocal;
 	public bool IsLocal { get => isLocal; }
+	
+	protected bool isMultiplicative;
+	public bool IsMultiplicative { get => isMultiplicative; }
 
 	protected List<AffixData> affixDataTable;
 	public List<AffixData> AffixDataTable  { get => affixDataTable; }
@@ -71,6 +74,7 @@ public class BasicRingLifeImplicit : Affix {
 		affixFamily = EAffixFamily.None;
 		statNameFirst = EStatName.FlatMaxLife;
 		isLocal = false;
+		isMultiplicative = false;
 
 		SetAffixTier(0);
 	}
@@ -98,6 +102,7 @@ public class BasicAmuletPhysImplicit : Affix {
 		statNameFirst = EStatName.FlatMinPhysDamage;
 		statNameSecond = EStatName.FlatMaxPhysDamage;
 		isLocal = false;
+		isMultiplicative = false;
 
 		SetAffixTier(0);
 	}
@@ -138,6 +143,7 @@ public class LocalFlatPhysDamageAffix : Affix {
 		affixDataTable = localFlatPhysDamageAffixData;
 		affixFamily = EAffixFamily.LocalFlatPhysDamage;
 		isLocal = true;
+		isMultiplicative = false;
 	}
 
 	public override void RollAffixValue() {
@@ -172,6 +178,7 @@ public class LocalPercentagePhysDamageAffix : Affix {
 		affixDataTable = localPercentagePhysDamageAffixData;
 		affixFamily = EAffixFamily.LocalPercentagePhysDamage;
 		isLocal = true;
+		isMultiplicative = false;
 	}
 
 	public override void RollAffixValue() {
@@ -205,6 +212,7 @@ public class HealthAffix : Affix {
 		affixDataTable = flatHealthAffixData;
 		affixFamily = EAffixFamily.FlatMaxLife;
 		isLocal = false;
+		isMultiplicative = false;
 		statNameFirst = EStatName.FlatMaxLife;
 	}
 
@@ -239,6 +247,7 @@ public class LocalFlatArmourAffix : Affix {
 		affixDataTable = localFlatArmourAffixData;
 		affixFamily = EAffixFamily.LocalFlatArmour;
 		isLocal = true;
+		isMultiplicative = false;
 	}
 
 	public override void RollAffixValue() {
@@ -272,6 +281,7 @@ public class LocalPercentageArmourAffix : Affix {
 		affixDataTable = localPercentageArmourAffixData;
 		affixFamily = EAffixFamily.LocalPercentageArmour;
 		isLocal = true;
+		isMultiplicative = false;
 	}
 
 	public override void RollAffixValue() {
@@ -306,6 +316,7 @@ public class LocalFlatEvasionAffix : Affix {
 		affixDataTable = localFlatEvasionAffixData;
 		affixFamily = EAffixFamily.LocalFlatEvasion;
 		isLocal = true;
+		isMultiplicative = false;
 	}
 
 	public override void RollAffixValue() {
@@ -339,6 +350,7 @@ public class LocalPercentageEvasionAffix : Affix {
 		affixDataTable = localPercentageEvasionAffixData;
 		affixFamily = EAffixFamily.LocalPercentageEvasion;
 		isLocal = true;
+		isMultiplicative = false;
 	}
 
 	public override void RollAffixValue() {
@@ -372,6 +384,7 @@ public class LocalFlatEnergyShieldAffix : Affix {
 		affixDataTable = localFlatEnergyShieldAffixData;
 		affixFamily = EAffixFamily.LocalFlatEnergyShield;
 		isLocal = true;
+		isMultiplicative = false;
 	}
 
 	public override void RollAffixValue() {
@@ -405,6 +418,7 @@ public class LocalPercentageEnergyShieldAffix : Affix {
 		affixDataTable = localPercentageEnergyShieldAffixData;
 		affixFamily = EAffixFamily.LocalPercentageEnergyShield;
 		isLocal = true;
+		isMultiplicative = false;
 	}
 
 	public override void RollAffixValue() {
@@ -438,6 +452,7 @@ public class LocalPercentageAttackSpeedAffix : Affix {
 		affixDataTable = localPercentageAttackSpeedAffixData;
 		affixFamily = EAffixFamily.LocalPercentageAttackSpeed;
 		isLocal = true;
+		isMultiplicative = false;
 	}
 
 	public override void RollAffixValue() {
@@ -471,6 +486,7 @@ public class LocalPercentageCritChanceAffix : Affix {
 		affixDataTable = localPercentageCritChanceAffixData;
 		affixFamily = EAffixFamily.LocalPercentageCritChance;
 		isLocal = true;
+		isMultiplicative = false;
 	}
 
 	public override void RollAffixValue() {
@@ -481,6 +497,113 @@ public class LocalPercentageCritChanceAffix : Affix {
 
 	public override string GetAffixTooltipText() {
 		return $"{Math.Round(valueFirst * 100, 0)}% increased Critical Strike Chance";
+	}
+}
+
+
+
+public class FlatStrengthAffix : Affix {
+	private static readonly List<AffixData> flatStrAffixData = [
+		new(0, "of Beef", 
+			5, 9, 
+			0, 0
+		),
+		new(0, "of Stronk", 
+			10, 14, 
+			0, 0
+		),
+		new(0, "of Muscle", 
+			15, 19, 
+			0, 0
+		)
+	];
+
+	public FlatStrengthAffix() {
+		affixDataTable = flatStrAffixData;
+		affixFamily = EAffixFamily.AddedStrength;
+		isLocal = false;
+		isMultiplicative = false;
+		statNameFirst = EStatName.FlatStrength;
+	}
+
+	public override void RollAffixValue() {
+		if (tierData != null) {
+			valueFirst = Utilities.RandomDoubleInclusiveToInt(tierData.AffixMinFirst, tierData.AffixMaxFirst);
+		}
+	}
+
+	public override string GetAffixTooltipText() {
+		return $"+{(int)valueFirst} to Strength";
+	}
+}
+
+public class FlatDexterityAffix : Affix {
+	private static readonly List<AffixData> flatDexAffixData = [
+		new(0, "of Pace", 
+			5, 9, 
+			0, 0
+		),
+		new(0, "of Flexibility", 
+			10, 14, 
+			0, 0
+		),
+		new(0, "of Green", 
+			15, 19, 
+			0, 0
+		)
+	];
+
+	public FlatDexterityAffix() {
+		affixDataTable = flatDexAffixData;
+		affixFamily = EAffixFamily.AddedDexterity;
+		isLocal = false;
+		isMultiplicative = false;
+		statNameFirst = EStatName.FlatDexterity;
+	}
+
+	public override void RollAffixValue() {
+		if (tierData != null) {
+			valueFirst = Utilities.RandomDoubleInclusiveToInt(tierData.AffixMinFirst, tierData.AffixMaxFirst);
+		}
+	}
+
+	public override string GetAffixTooltipText() {
+		return $"+{(int)valueFirst} to Dexterity";
+	}
+}
+
+public class FlatIntelligenceAffix : Affix {
+	private static readonly List<AffixData> flatIntAffixData = [
+		new(0, "of Mind", 
+			5, 9, 
+			0, 0
+		),
+		new(0, "of Insight", 
+			10, 14, 
+			0, 0
+		),
+		new(0, "of the Book", 
+			15, 19, 
+			0, 0
+		)
+	];
+
+	public FlatIntelligenceAffix() {
+		affixDataTable = flatIntAffixData;
+		affixFamily = EAffixFamily.AddedIntelligence;
+		isLocal = false;
+		isMultiplicative = false;
+		statNameFirst = EStatName.FlatIntelligence;
+	}
+
+	public override void RollAffixValue() {
+		if (tierData != null) {
+			valueFirst = Utilities.RandomDoubleInclusiveToInt(tierData.AffixMinFirst, tierData.AffixMaxFirst);
+		}
+	}
+
+	public override string GetAffixTooltipText() {
+		return $"+{(int)valueFirst} to Intelligence";
 	}
 }
 
@@ -505,6 +628,7 @@ public class FireResistanceAffix : Affix {
 		affixDataTable = fireResistanceAffixData;
 		affixFamily = EAffixFamily.FireResistance;
 		isLocal = false;
+		isMultiplicative = false;
 		statNameFirst = EStatName.FireResistance;
 	}
 
@@ -539,6 +663,7 @@ public class ColdResistanceAffix : Affix {
 		affixDataTable = coldResistanceAffixData;
 		affixFamily = EAffixFamily.ColdResistance;
 		isLocal = false;
+		isMultiplicative = false;
 		statNameFirst = EStatName.ColdResistance;
 	}
 
@@ -573,6 +698,7 @@ public class LightningResistanceAffix : Affix {
 		affixDataTable = lightningResistanceAffixData;
 		affixFamily = EAffixFamily.LightningResistance;
 		isLocal = false;
+		isMultiplicative = false;
 		statNameFirst = EStatName.LightningResistance;
 	}
 

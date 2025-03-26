@@ -3,6 +3,11 @@ using System;
 
 public enum EStatName {
 	None,
+
+	FlatStrength,
+	FlatDexterity,
+	FlatIntelligence,
+
 	FlatMaxLife,
 	PercentageMaxLife,
 	AddedLifeRegen,
@@ -63,6 +68,10 @@ public enum EAffixFamily {
 	None,
 	
 	// Global
+	AddedStrength,
+	AddedDexterity,
+	AddedIntelligence,
+
 	FlatMaxLife,
 	PercentageMaxLife,
 	AddedLifeRegen,

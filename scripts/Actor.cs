@@ -321,6 +321,8 @@ public class ActorPenetrations {
 }
 
 public partial class Actor : CharacterBody3D {
+    protected int ticksPerSecond = ProjectSettings.GetSetting("physics/common/physics_ticks_per_second").AsInt32();
+
     public ActorBasicStats BasicStats = new();
     public ActorDamageModifiers DamageMods = new();
     public ActorResistances Resistances = new();
@@ -341,11 +343,12 @@ public partial class Actor : CharacterBody3D {
 
     protected void ApplyRegen() {
         double prevLife = BasicStats.CurrentLife;
-        BasicStats.CurrentLife += BasicStats.TotalLifeRegen;
-        BasicStats.CurrentMana += BasicStats.TotalManaRegen;
+        BasicStats.CurrentLife += BasicStats.TotalLifeRegen / ticksPerSecond;
+        BasicStats.CurrentMana += BasicStats.TotalManaRegen / ticksPerSecond;
 
         if (BasicStats.CurrentLife > prevLife) {
             //GD.Print($"+{BasicStats.CurrentLife - prevLife}");
         }
     }
+
 }

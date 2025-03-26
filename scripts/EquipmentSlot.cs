@@ -78,10 +78,14 @@ public partial class EquipmentSlot : PanelContainer {
 
 	public void SetItem(InventoryItem item) {
 		itemInSlot = item;
+
+		if (itemInSlot != null && IsHovered) {
+			Vector2 anchor = GlobalPosition with { X = GlobalPosition.X + Size.X / 2, Y = GlobalPosition.Y };
+			itemInSlot.SignalCreateTooltip(anchor, GetGlobalRect());
+		}
 	}
 
 	public void UnequipItem(InventoryItem item) {
-		//GD.Print("Unequip - slot now empty");
 		EmitSignal(SignalName.ItemUnequipped, this, itemInSlot);
 		SetItem(null);
 	}
