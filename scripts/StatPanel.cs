@@ -16,17 +16,21 @@ public partial class StatPanel : ScrollContainer {
     protected void ApplyAlternatingBackground() {
         StyleBoxFlat styleBoxFlat;
 
+        int statsColoured = 0;
         for (int i = 0; i < stats.Count; i++) {
             styleBoxFlat = stats[i].GetThemeStylebox("panel").Duplicate() as StyleBoxFlat;
 
-            if (i % 2 == 0) {
+            if (stats[i].Visible) {
+                if (statsColoured % 2 == 0) {
                 styleBoxFlat.BgColor = UILib.ColorItemBackgroundHovered;
+                }
+                else {
+                    styleBoxFlat.BgColor = UILib.ColorItemBackground;
+                }
+                
+                stats[i].AddThemeStyleboxOverride("panel", styleBoxFlat);
+                statsColoured++;
             }
-            else {
-                styleBoxFlat.BgColor = UILib.ColorItemBackground;
-            }
-            
-            stats[i].AddThemeStyleboxOverride("panel", styleBoxFlat);
         }
 	}
 }

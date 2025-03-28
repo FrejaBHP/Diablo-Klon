@@ -38,25 +38,28 @@ public partial class Player : Actor {
 		{ EStatName.FlatIntelligence, 				0 },
 
 		{ EStatName.FlatMaxLife, 					0 },
-		{ EStatName.PercentageMaxLife, 				0 },
+		{ EStatName.IncreasedMaxLife, 				0 },
 		{ EStatName.AddedLifeRegen, 				0 },
 		{ EStatName.PercentageLifeRegen, 			0 },
 
 		{ EStatName.FlatMaxMana, 					0 },
-		{ EStatName.PercentageMaxMana, 				0 },
+		{ EStatName.IncreasedMaxMana, 				0 },
 		{ EStatName.AddedManaRegen, 				0 },
 		{ EStatName.IncreasedManaRegen, 			0 },
 
 		{ EStatName.FlatMinPhysDamage, 				0 },
 		{ EStatName.FlatMaxPhysDamage, 				0 },
-		{ EStatName.PercentagePhysDamage, 			0 },
+		{ EStatName.IncreasedPhysDamage, 			0 },
+
+		{ EStatName.IncreasedAttackSpeed, 			0 },
+		{ EStatName.IncreasedCritChance, 			0 },
 
 		{ EStatName.FlatArmour, 					0 },
-		{ EStatName.PercentageArmour, 				0 },
+		{ EStatName.IncreasedArmour, 				0 },
 		{ EStatName.FlatEvasion, 					0 },
-		{ EStatName.PercentageEvasion, 				0 },
+		{ EStatName.IncreasedEvasion, 				0 },
 		{ EStatName.FlatEnergyShield, 				0 },
-		{ EStatName.PercentageEnergyShield, 		0 },
+		{ EStatName.IncreasedEnergyShield, 			0 },
 
 		{ EStatName.FireResistance, 				0 },
 		{ EStatName.ColdResistance, 				0 },
@@ -64,10 +67,10 @@ public partial class Player : Actor {
 	};
 
 	// Skal flyttes et andet sted hen senere
-	private double mainHandMinPhysDamage;
-	private double mainHandMaxPhysDamage;
 	private double offHandMinPhysDamage;
 	private double offHandMaxPhysDamage;
+	private double offHandAS;
+	private double offHandCSC;
 
 	public Player() {
 		BasicStats.BaseLife = 40;
@@ -90,6 +93,8 @@ public partial class Player : Actor {
 		strength.StatTotalChanged += StrTotalChanged;
 		dexterity.StatTotalChanged += DexTotalChanged;
 		intelligence.StatTotalChanged += IntTotalChanged;
+
+		PlayerHUD.PlayerPanel.OffenceTabPanel.SetOffhandVisibility(false);
 		
 		CalculateStats();
 	}
@@ -277,44 +282,55 @@ public partial class Player : Actor {
 		intelligence.SAdded = ItemStatDictionary[EStatName.FlatIntelligence];
 
 		BasicStats.AddedLife = (int)ItemStatDictionary[EStatName.FlatMaxLife];
-		BasicStats.IncreasedLife = ItemStatDictionary[EStatName.PercentageMaxLife];
+		BasicStats.IncreasedLife = ItemStatDictionary[EStatName.IncreasedMaxLife];
 		BasicStats.AddedMana = (int)ItemStatDictionary[EStatName.FlatMaxMana];
-		BasicStats.IncreasedMana = ItemStatDictionary[EStatName.PercentageMaxMana];
+		BasicStats.IncreasedMana = ItemStatDictionary[EStatName.IncreasedMaxMana];
 
 		BasicStats.AddedLifeRegen = ItemStatDictionary[EStatName.AddedLifeRegen] + 1;
 		BasicStats.PercentageLifeRegen = ItemStatDictionary[EStatName.PercentageLifeRegen];
 		BasicStats.AddedManaRegen = ItemStatDictionary[EStatName.AddedManaRegen];
 		BasicStats.IncreasedManaRegen = ItemStatDictionary[EStatName.IncreasedManaRegen];
 
+		AttackSpeedMod.SIncreased = ItemStatDictionary[EStatName.IncreasedAttackSpeed];
+		CritChanceMod.SIncreased = ItemStatDictionary[EStatName.IncreasedCritChance];
+
 		DamageMods.AddedPhysicalMin = (int)ItemStatDictionary[EStatName.FlatMinPhysDamage];
 		DamageMods.AddedPhysicalMax = (int)ItemStatDictionary[EStatName.FlatMaxPhysDamage];
-		DamageMods.IncreasedPhysical = ItemStatDictionary[EStatName.PercentagePhysDamage];
+		DamageMods.IncreasedPhysical = ItemStatDictionary[EStatName.IncreasedPhysDamage];
 
 		BasicStats.AddedEvasion = (int)ItemStatDictionary[EStatName.FlatEvasion];
-		BasicStats.IncreasedEvasion = ItemStatDictionary[EStatName.PercentageEvasion];
+		BasicStats.IncreasedEvasion = ItemStatDictionary[EStatName.IncreasedEvasion];
 
 		Resistances.ResFire = (int)ItemStatDictionary[EStatName.FireResistance];
 		Resistances.ResCold = (int)ItemStatDictionary[EStatName.ColdResistance];
 		Resistances.ResLightning = (int)ItemStatDictionary[EStatName.LightningResistance];
 
 		// TEST
-		if (MainHandWeapon != null) {
-			mainHandMinPhysDamage = Math.Round((MainHandWeapon.PhysicalMinimumDamage + DamageMods.AddedPhysicalMin) * (1 + DamageMods.IncreasedPhysical) * (1 + DamageMods.MorePhysical), 0);
-			mainHandMaxPhysDamage = Math.Round((MainHandWeapon.PhysicalMaximumDamage + DamageMods.AddedPhysicalMax) * (1 + DamageMods.IncreasedPhysical) * (1 + DamageMods.MorePhysical), 0);
+		if (MainHand.Weapon != null) {
+			MainHand.PhysMinDamage = (int)Math.Round((MainHand.Weapon.PhysicalMinimumDamage + DamageMods.AddedPhysicalMin) * (1 + DamageMods.IncreasedPhysical) * (1 + DamageMods.MorePhysical), 0);
+			MainHand.PhysMaxDamage = (int)Math.Round((MainHand.Weapon.PhysicalMaximumDamage + DamageMods.AddedPhysicalMax) * (1 + DamageMods.IncreasedPhysical) * (1 + DamageMods.MorePhysical), 0);
+			MainHand.AttackSpeed = MainHand.Weapon.AttackSpeed / AttackSpeedMod.STotal; // Dårlig løsning. Gør det umuligt at tilføje modifiers senere hen. Split hellere Attack Speed ting op i to
+			MainHand.CritChance = MainHand.Weapon.CriticalStrikeChance * CritChanceMod.STotal; // Dårlig løsning. Gør det umuligt at tilføje modifiers senere hen. Split hellere Crit Chance ting op i to
 		}
 		else {
-			mainHandMinPhysDamage = Math.Round(DamageMods.AddedPhysicalMin * (1 + DamageMods.IncreasedPhysical) * (1 + DamageMods.MorePhysical), 0);
-			mainHandMaxPhysDamage = Math.Round(DamageMods.AddedPhysicalMax * (1 + DamageMods.IncreasedPhysical) * (1 + DamageMods.MorePhysical), 0);
+			MainHand.PhysMinDamage = (int)Math.Round(DamageMods.AddedPhysicalMin * (1 + DamageMods.IncreasedPhysical) * (1 + DamageMods.MorePhysical), 0);
+			MainHand.PhysMaxDamage = (int)Math.Round(DamageMods.AddedPhysicalMax * (1 + DamageMods.IncreasedPhysical) * (1 + DamageMods.MorePhysical), 0);
+			MainHand.AttackSpeed = 1 / AttackSpeedMod.STotal;
+			MainHand.CritChance = 5 * CritChanceMod.STotal;
 		}
 
 		if (OffHandItem != null && IsOffHandAWeapon) {
 			WeaponItem offHandWeapon = (WeaponItem)OffHandItem;
 			offHandMinPhysDamage = Math.Round((offHandWeapon.PhysicalMinimumDamage + DamageMods.AddedPhysicalMin) * (1 + DamageMods.IncreasedPhysical) * (1 + DamageMods.MorePhysical), 0);
 			offHandMaxPhysDamage = Math.Round((offHandWeapon.PhysicalMaximumDamage + DamageMods.AddedPhysicalMax) * (1 + DamageMods.IncreasedPhysical) * (1 + DamageMods.MorePhysical), 0);
+			offHandAS = offHandWeapon.AttackSpeed;
+			offHandCSC = offHandWeapon.CriticalStrikeChance;
 		}
 		else {
 			offHandMinPhysDamage = Math.Round(DamageMods.AddedPhysicalMin * (1 + DamageMods.IncreasedPhysical) * (1 + DamageMods.MorePhysical), 0);
 			offHandMaxPhysDamage = Math.Round(DamageMods.AddedPhysicalMax * (1 + DamageMods.IncreasedPhysical) * (1 + DamageMods.MorePhysical), 0);
+			offHandAS = 0;
+			offHandCSC = 0;
 		}
 
 		UpdateStatsPanel();
@@ -336,8 +352,12 @@ public partial class Player : Actor {
 		PlayerHUD.PlayerPanel.LifeContainer.SetValue($"{BasicStats.TotalLife}");
 		PlayerHUD.PlayerPanel.ManaContainer.SetValue($"{BasicStats.TotalMana}");
 
-		PlayerHUD.PlayerPanel.OffenceTabPanel.MainHandPhysDamage.SetValue($"{mainHandMinPhysDamage} - {mainHandMaxPhysDamage}");
+		PlayerHUD.PlayerPanel.OffenceTabPanel.MainHandPhysDamage.SetValue($"{MainHand.PhysMinDamage} - {MainHand.PhysMaxDamage}");
+		PlayerHUD.PlayerPanel.OffenceTabPanel.MainHandAttackSpeed.SetValue($"{1 / MainHand.AttackSpeed:F2}");
+		PlayerHUD.PlayerPanel.OffenceTabPanel.MainHandCritChance.SetValue($"{MainHand.CritChance:F2}%");
 		PlayerHUD.PlayerPanel.OffenceTabPanel.OffHandPhysDamage.SetValue($"{offHandMinPhysDamage} - {offHandMaxPhysDamage}");
+		PlayerHUD.PlayerPanel.OffenceTabPanel.OffHandAttackSpeed.SetValue($"{1 / offHandAS:F2}");
+		PlayerHUD.PlayerPanel.OffenceTabPanel.OffHandCritChance.SetValue($"{offHandCSC:F2}%");
 
 		PlayerHUD.PlayerPanel.DefenceTabPanel.LifeRegen.SetValue($"{BasicStats.TotalLifeRegen:F1}");
 		PlayerHUD.PlayerPanel.DefenceTabPanel.ManaRegen.SetValue($"{BasicStats.TotalManaRegen:F1}");
@@ -349,22 +369,27 @@ public partial class Player : Actor {
 	}
 
 	public void AssignMainHand(WeaponItem item) {
-		MainHandWeapon = item;
+		MainHand.Weapon = item;
 	}
 
 	public void AssignOffHand(Item item) {
 		if (item == null) {
 			OffHandItem = null;
 			IsOffHandAWeapon = false;
+			PlayerHUD.PlayerPanel.OffenceTabPanel.SetOffhandVisibility(false);
 		}
 		else {
 			OffHandItem = item;
 
 			if (OffHandItem.GetType().IsSubclassOf(typeof(WeaponItem))) {
+				if (!IsOffHandAWeapon) {
+					PlayerHUD.PlayerPanel.OffenceTabPanel.SetOffhandVisibility(true);
+				}
 				IsOffHandAWeapon = true;
 			}
 			else {
 				IsOffHandAWeapon = false;
+				PlayerHUD.PlayerPanel.OffenceTabPanel.SetOffhandVisibility(false);
 			}
 		}
 	}

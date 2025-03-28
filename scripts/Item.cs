@@ -302,7 +302,7 @@ public partial class WeaponItem : Item {
 				CalculatePhysicalDamage();
 				break;
 
-			case EAffixFamily.LocalPercentagePhysDamage:
+			case EAffixFamily.LocalIncreasedPhysDamage:
 				if (add) {
 					PercentageIncreasedPhysicalDamage += affix.ValueFirst;
 				}
@@ -312,7 +312,7 @@ public partial class WeaponItem : Item {
 				CalculatePhysicalDamage();
 				break;
 
-			case EAffixFamily.LocalPercentageAttackSpeed:
+			case EAffixFamily.LocalIncreasedAttackSpeed:
 				if (add) {
 					PercentageIncreasedAttackSpeed += affix.ValueFirst;
 				}
@@ -322,7 +322,7 @@ public partial class WeaponItem : Item {
 				CalculateAttackSpeed();
 				break;
 
-			case EAffixFamily.LocalPercentageCritChance:
+			case EAffixFamily.LocalIncreasedCritChance:
 				if (add) {
 					PercentageIncreasedCriticalStrikeChance += affix.ValueFirst;
 				}
@@ -387,7 +387,7 @@ public partial class ArmourItem : Item {
 				CalculateDefences();
 				break;
 
-			case EAffixFamily.LocalPercentageArmour:
+			case EAffixFamily.LocalIncreasedArmour:
 				if (add) {
 					IncreasedArmour += affix.ValueFirst;
 				}
@@ -407,7 +407,7 @@ public partial class ArmourItem : Item {
 				CalculateDefences();
 				break;
 
-			case EAffixFamily.LocalPercentageEvasion:
+			case EAffixFamily.LocalIncreasedEvasion:
 				if (add) {
 					IncreasedEvasion += affix.ValueFirst;
 				}
@@ -427,7 +427,7 @@ public partial class ArmourItem : Item {
 				CalculateDefences();
 				break;
 
-			case EAffixFamily.LocalPercentageEnergyShield:
+			case EAffixFamily.LocalIncreasedEnergyShield:
 				if (add) {
 					IncreasedEnergyShield += affix.ValueFirst;
 				}

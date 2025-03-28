@@ -158,8 +158,8 @@ public class LocalFlatPhysDamageAffix : Affix {
 	}
 }
 
-public class LocalPercentagePhysDamageAffix : Affix {
-	private static readonly List<AffixData> localPercentagePhysDamageAffixData = [
+public class LocalIncreasedPhysDamageAffix : Affix {
+	private static readonly List<AffixData> localIncreasedPhysDamageAffixData = [
 		new(0, "Upset", 
 			0.20, 0.29, 
 			0, 0
@@ -174,9 +174,9 @@ public class LocalPercentagePhysDamageAffix : Affix {
 		)
 	];
 
-	public LocalPercentagePhysDamageAffix() {
-		affixDataTable = localPercentagePhysDamageAffixData;
-		affixFamily = EAffixFamily.LocalPercentagePhysDamage;
+	public LocalIncreasedPhysDamageAffix() {
+		affixDataTable = localIncreasedPhysDamageAffixData;
+		affixFamily = EAffixFamily.LocalIncreasedPhysDamage;
 		isLocal = true;
 		isMultiplicative = false;
 	}
@@ -192,8 +192,8 @@ public class LocalPercentagePhysDamageAffix : Affix {
 	}
 }
 
-public class HealthAffix : Affix {
-	private static readonly List<AffixData> flatHealthAffixData = [
+public class FlatLifeAffix : Affix {
+	private static readonly List<AffixData> flatLifeAffixData = [
 		new(0, "Healthy", 
 			20, 29, 
 			0, 0
@@ -208,8 +208,8 @@ public class HealthAffix : Affix {
 		)
 	];
 
-	public HealthAffix() {
-		affixDataTable = flatHealthAffixData;
+	public FlatLifeAffix() {
+		affixDataTable = flatLifeAffixData;
 		affixFamily = EAffixFamily.FlatMaxLife;
 		isLocal = false;
 		isMultiplicative = false;
@@ -224,6 +224,41 @@ public class HealthAffix : Affix {
 
 	public override string GetAffixTooltipText() {
 		return $"+{(int)valueFirst} to Maximum Life";
+	}
+}
+
+public class FlatManaAffix : Affix {
+	private static readonly List<AffixData> flatManaAffixData = [
+		new(0, "Bubbling", 
+			20, 29, 
+			0, 0
+		),
+		new(0, "Sage", 
+			30, 39, 
+			0, 0
+		),
+		new(0, "Magical", 
+			40, 49, 
+			0, 0
+		)
+	];
+
+	public FlatManaAffix() {
+		affixDataTable = flatManaAffixData;
+		affixFamily = EAffixFamily.FlatMaxMana;
+		isLocal = false;
+		isMultiplicative = false;
+		statNameFirst = EStatName.FlatMaxMana;
+	}
+
+	public override void RollAffixValue() {
+		if (tierData != null) {
+			valueFirst = Utilities.RandomDoubleInclusiveToInt(tierData.AffixMinFirst, tierData.AffixMaxFirst);
+		}
+	}
+
+	public override string GetAffixTooltipText() {
+		return $"+{(int)valueFirst} to Maximum Mana";
 	}
 }
 
@@ -261,8 +296,8 @@ public class LocalFlatArmourAffix : Affix {
 	}
 }
 
-public class LocalPercentageArmourAffix : Affix {
-	private static readonly List<AffixData> localPercentageArmourAffixData = [
+public class LocalIncreasedArmourAffix : Affix {
+	private static readonly List<AffixData> localIncreasedArmourAffixData = [
 		new(0, "Toughness", 
 			0.20, 0.29, 
 			0, 0
@@ -277,9 +312,9 @@ public class LocalPercentageArmourAffix : Affix {
 		)
 	];
 
-	public LocalPercentageArmourAffix() {
-		affixDataTable = localPercentageArmourAffixData;
-		affixFamily = EAffixFamily.LocalPercentageArmour;
+	public LocalIncreasedArmourAffix() {
+		affixDataTable = localIncreasedArmourAffixData;
+		affixFamily = EAffixFamily.LocalIncreasedArmour;
 		isLocal = true;
 		isMultiplicative = false;
 	}
@@ -330,8 +365,8 @@ public class LocalFlatEvasionAffix : Affix {
 	}
 }
 
-public class LocalPercentageEvasionAffix : Affix {
-	private static readonly List<AffixData> localPercentageEvasionAffixData = [
+public class LocalIncreasedEvasionAffix : Affix {
+	private static readonly List<AffixData> localIncreasedEvasionAffixData = [
 		new(0, "Evasive", 
 			0.20, 0.29, 
 			0, 0
@@ -346,9 +381,9 @@ public class LocalPercentageEvasionAffix : Affix {
 		)
 	];
 
-	public LocalPercentageEvasionAffix() {
-		affixDataTable = localPercentageEvasionAffixData;
-		affixFamily = EAffixFamily.LocalPercentageEvasion;
+	public LocalIncreasedEvasionAffix() {
+		affixDataTable = localIncreasedEvasionAffixData;
+		affixFamily = EAffixFamily.LocalIncreasedEvasion;
 		isLocal = true;
 		isMultiplicative = false;
 	}
@@ -398,8 +433,8 @@ public class LocalFlatEnergyShieldAffix : Affix {
 	}
 }
 
-public class LocalPercentageEnergyShieldAffix : Affix {
-	private static readonly List<AffixData> localPercentageEnergyShieldAffixData = [
+public class LocalIncreasedEnergyShieldAffix : Affix {
+	private static readonly List<AffixData> localIncreasedEnergyShieldAffixData = [
 		new(0, "Shielding", 
 			0.20, 0.29, 
 			0, 0
@@ -414,9 +449,9 @@ public class LocalPercentageEnergyShieldAffix : Affix {
 		)
 	];
 
-	public LocalPercentageEnergyShieldAffix() {
-		affixDataTable = localPercentageEnergyShieldAffixData;
-		affixFamily = EAffixFamily.LocalPercentageEnergyShield;
+	public LocalIncreasedEnergyShieldAffix() {
+		affixDataTable = localIncreasedEnergyShieldAffixData;
+		affixFamily = EAffixFamily.LocalIncreasedEnergyShield;
 		isLocal = true;
 		isMultiplicative = false;
 	}
@@ -432,8 +467,8 @@ public class LocalPercentageEnergyShieldAffix : Affix {
 	}
 }
 
-public class LocalPercentageAttackSpeedAffix : Affix {
-	private static readonly List<AffixData> localPercentageAttackSpeedAffixData = [
+public class LocalIncreasedAttackSpeedAffix : Affix {
+	private static readonly List<AffixData> localIncreasedAttackSpeedAffixData = [
 		new(0, "of AS1", 
 			0.05, 0.08, 
 			0, 0
@@ -448,9 +483,9 @@ public class LocalPercentageAttackSpeedAffix : Affix {
 		)
 	];
 
-	public LocalPercentageAttackSpeedAffix() {
-		affixDataTable = localPercentageAttackSpeedAffixData;
-		affixFamily = EAffixFamily.LocalPercentageAttackSpeed;
+	public LocalIncreasedAttackSpeedAffix() {
+		affixDataTable = localIncreasedAttackSpeedAffixData;
+		affixFamily = EAffixFamily.LocalIncreasedAttackSpeed;
 		isLocal = true;
 		isMultiplicative = false;
 	}
@@ -466,8 +501,8 @@ public class LocalPercentageAttackSpeedAffix : Affix {
 	}
 }
 
-public class LocalPercentageCritChanceAffix : Affix {
-	private static readonly List<AffixData> localPercentageCritChanceAffixData = [
+public class LocalIncreasedCritChanceAffix : Affix {
+	private static readonly List<AffixData> localIncreasedCritChanceAffixData = [
 		new(0, "of CC1", 
 			0.10, 0.13, 
 			0, 0
@@ -482,9 +517,9 @@ public class LocalPercentageCritChanceAffix : Affix {
 		)
 	];
 
-	public LocalPercentageCritChanceAffix() {
-		affixDataTable = localPercentageCritChanceAffixData;
-		affixFamily = EAffixFamily.LocalPercentageCritChance;
+	public LocalIncreasedCritChanceAffix() {
+		affixDataTable = localIncreasedCritChanceAffixData;
+		affixFamily = EAffixFamily.LocalIncreasedCritChance;
 		isLocal = true;
 		isMultiplicative = false;
 	}
@@ -501,6 +536,76 @@ public class LocalPercentageCritChanceAffix : Affix {
 }
 
 
+
+public class GlobalIncreasedAttackSpeedAffix : Affix {
+	private static readonly List<AffixData> globalIncreasedAttackSpeedAffixData = [
+		new(0, "of Global AS1", 
+			0.05, 0.09, 
+			0, 0
+		),
+		new(0, "of Global AS2", 
+			0.1, 0.14, 
+			0, 0
+		),
+		new(0, "of Global AS3", 
+			0.15, 0.19, 
+			0, 0
+		)
+	];
+
+	public GlobalIncreasedAttackSpeedAffix() {
+		affixDataTable = globalIncreasedAttackSpeedAffixData;
+		affixFamily = EAffixFamily.IncreasedAttackSpeed;
+		isLocal = false;
+		isMultiplicative = false;
+		statNameFirst = EStatName.IncreasedAttackSpeed;
+	}
+
+	public override void RollAffixValue() {
+		if (tierData != null) {
+			valueFirst = Utilities.RandomDouble(tierData.AffixMinFirst, tierData.AffixMaxFirst);
+		}
+	}
+
+	public override string GetAffixTooltipText() {
+		return $"{Math.Round(valueFirst * 100, 0)}% increased Global Attack Speed";
+	}
+}
+
+public class GlobalIncreasedCritChanceAffix : Affix {
+	private static readonly List<AffixData> globalIncreasedCritChanceAffixData = [
+		new(0, "of Global CC1", 
+			0.15, 0.19, 
+			0, 0
+		),
+		new(0, "of Global CC2", 
+			0.20, 0.24, 
+			0, 0
+		),
+		new(0, "of Global CC3", 
+			0.35, 0.39, 
+			0, 0
+		)
+	];
+
+	public GlobalIncreasedCritChanceAffix() {
+		affixDataTable = globalIncreasedCritChanceAffixData;
+		affixFamily = EAffixFamily.IncreasedCritChance;
+		isLocal = false;
+		isMultiplicative = false;
+		statNameFirst = EStatName.IncreasedCritChance;
+	}
+
+	public override void RollAffixValue() {
+		if (tierData != null) {
+			valueFirst = Utilities.RandomDouble(tierData.AffixMinFirst, tierData.AffixMaxFirst);
+		}
+	}
+
+	public override string GetAffixTooltipText() {
+		return $"{Math.Round(valueFirst * 100, 0)}% increased Global Critical Strike Chance";
+	}
+}
 
 public class FlatStrengthAffix : Affix {
 	private static readonly List<AffixData> flatStrAffixData = [

@@ -253,6 +253,22 @@ public class ActorBasicStats {
         }
     }
 
+    public void AdjustCurrentMana(int oldTotalMana) {
+        double percentageCurrentMana = currentMana / oldTotalMana;
+        int changeInMana = totalMana - oldTotalMana;
+
+        //GD.Print($"%: {percentageCurrentMana}, Change: {changeInMana}");
+
+        if (changeInMana > 0) {
+            currentMana += changeInMana * percentageCurrentMana;
+            //GD.Print($"Positiv Ændring, +{(double)(changeInMana * percentageCurrentMana)}");
+        }
+        else if (changeInMana < 0 && currentMana > totalMana) {
+            currentMana = totalMana;
+            //GD.Print("Mana sat til fuld");
+        }
+    }
+
     public void CalculateLifeRegen() {
         totalLifeRegen = (totalLife * percentageLifeRegen) + addedLifeRegen * (1 + increasedLifeRegen);
     }
@@ -320,6 +336,25 @@ public class ActorPenetrations {
     public int PenLightning;
 }
 
+public class ActorMainHand {
+    public WeaponItem Weapon = null;
+
+    public int PhysMinDamage;
+    public int PhysMaxDamage;
+    public int FireMinDamage;
+    public int FireMaxDamage;
+    public int ColdMinDamage;
+    public int ColdMaxDamage;
+    public int LightningMinDamage;
+    public int LightningMaxDamage;
+    public int ChaosMinDamage;
+    public int ChaosMaxDamage;
+
+    public double Range;
+    public double AttackSpeed;
+    public double CritChance;
+}
+
 public partial class Actor : CharacterBody3D {
     protected int ticksPerSecond = ProjectSettings.GetSetting("physics/common/physics_ticks_per_second").AsInt32();
 
@@ -328,7 +363,11 @@ public partial class Actor : CharacterBody3D {
     public ActorResistances Resistances = new();
     public ActorPenetrations Penetrations = new();
 
-    protected WeaponItem MainHandWeapon = null;
+    public Stat AttackSpeedMod = new(1, false);
+    public Stat CritChanceMod = new(1, false);
+    public Stat CastSpeedMod = new(1, false);
+
+    protected ActorMainHand MainHand = new();
     protected Item OffHandItem = null;
     protected bool IsOffHandAWeapon = false;
 

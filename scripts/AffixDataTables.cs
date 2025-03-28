@@ -18,7 +18,11 @@ public class AffixTableType {
 
 public static class AffixDataTables {
 	public static readonly List<AffixTableType> PrefixData = [
-		new(typeof(HealthAffix), EAffixFamily.FlatMaxLife,
+		new(typeof(FlatLifeAffix), EAffixFamily.FlatMaxLife,
+			EAffixItemFlags.Armour | EAffixItemFlags.Jewellery,
+			EItemBaseSpecifierFlags.NoFlags
+		),
+		new(typeof(FlatManaAffix), EAffixFamily.FlatMaxMana,
 			EAffixItemFlags.Armour | EAffixItemFlags.Jewellery,
 			EItemBaseSpecifierFlags.NoFlags
 		),
@@ -26,7 +30,7 @@ public static class AffixDataTables {
 			EAffixItemFlags.Weapon,
 			EItemBaseSpecifierFlags.NoFlags
 		),
-		new(typeof(LocalPercentagePhysDamageAffix), EAffixFamily.LocalPercentagePhysDamage,
+		new(typeof(LocalIncreasedPhysDamageAffix), EAffixFamily.LocalIncreasedPhysDamage,
 			EAffixItemFlags.Weapon,
 			EItemBaseSpecifierFlags.NoFlags
 		),
@@ -34,7 +38,7 @@ public static class AffixDataTables {
 			EAffixItemFlags.Armour,
 			EItemBaseSpecifierFlags.AArmour | EItemBaseSpecifierFlags.AArmourEvasion | EItemBaseSpecifierFlags.AEnergyShieldArmour
 		),
-		new(typeof(LocalPercentageArmourAffix), EAffixFamily.LocalPercentageArmour,
+		new(typeof(LocalIncreasedArmourAffix), EAffixFamily.LocalIncreasedArmour,
 			EAffixItemFlags.Armour,
 			EItemBaseSpecifierFlags.AArmour | EItemBaseSpecifierFlags.AArmourEvasion | EItemBaseSpecifierFlags.AEnergyShieldArmour
 		),
@@ -42,7 +46,7 @@ public static class AffixDataTables {
 			EAffixItemFlags.Armour,
 			EItemBaseSpecifierFlags.AEvasion | EItemBaseSpecifierFlags.AArmourEvasion | EItemBaseSpecifierFlags.AEnergyShieldArmour
 		),
-		new(typeof(LocalPercentageEvasionAffix), EAffixFamily.LocalPercentageEvasion,
+		new(typeof(LocalIncreasedEvasionAffix), EAffixFamily.LocalIncreasedEvasion,
 			EAffixItemFlags.Armour,
 			EItemBaseSpecifierFlags.AEvasion | EItemBaseSpecifierFlags.AArmourEvasion | EItemBaseSpecifierFlags.AEnergyShieldArmour
 		),
@@ -50,19 +54,27 @@ public static class AffixDataTables {
 			EAffixItemFlags.Armour,
 			EItemBaseSpecifierFlags.AEnergyShield | EItemBaseSpecifierFlags.AEvasionEnergyShield | EItemBaseSpecifierFlags.AEnergyShieldArmour
 		),
-		new(typeof(LocalPercentageEnergyShieldAffix), EAffixFamily.LocalPercentageEnergyShield,
+		new(typeof(LocalIncreasedEnergyShieldAffix), EAffixFamily.LocalIncreasedEnergyShield,
 			EAffixItemFlags.Armour,
 			EItemBaseSpecifierFlags.AEnergyShield | EItemBaseSpecifierFlags.AEvasionEnergyShield | EItemBaseSpecifierFlags.AEnergyShieldArmour
 		),
 	];
 
 	public static readonly List<AffixTableType> SuffixData = [
-		new(typeof(LocalPercentageAttackSpeedAffix), EAffixFamily.LocalPercentageAttackSpeed,
+		new(typeof(LocalIncreasedAttackSpeedAffix), EAffixFamily.LocalIncreasedAttackSpeed,
 			EAffixItemFlags.Weapon,
 			EItemBaseSpecifierFlags.NoFlags
 		),
-		new(typeof(LocalPercentageCritChanceAffix), EAffixFamily.LocalPercentageCritChance,
+		new(typeof(LocalIncreasedCritChanceAffix), EAffixFamily.LocalIncreasedCritChance,
 			EAffixItemFlags.Weapon,
+			EItemBaseSpecifierFlags.NoFlags
+		),
+		new(typeof(GlobalIncreasedAttackSpeedAffix), EAffixFamily.IncreasedAttackSpeed,
+			EAffixItemFlags.Ring | EAffixItemFlags.Amulet,
+			EItemBaseSpecifierFlags.NoFlags
+		),
+		new(typeof(GlobalIncreasedCritChanceAffix), EAffixFamily.IncreasedCritChance,
+			EAffixItemFlags.Ring | EAffixItemFlags.Amulet,
 			EItemBaseSpecifierFlags.NoFlags
 		),
 		new(typeof(FlatStrengthAffix), EAffixFamily.AddedStrength,

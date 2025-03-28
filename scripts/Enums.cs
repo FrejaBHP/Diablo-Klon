@@ -9,27 +9,30 @@ public enum EStatName {
 	FlatIntelligence,
 
 	FlatMaxLife,
-	PercentageMaxLife,
+	IncreasedMaxLife,
 	AddedLifeRegen,
 	PercentageLifeRegen,
 	IncreasedLifeRegen,
 
 	FlatMaxMana,
-	PercentageMaxMana,
+	IncreasedMaxMana,
 	AddedManaRegen,
 	IncreasedManaRegen,
 
 	FlatMinPhysDamage,
 	FlatMaxPhysDamage,
 	FlatPhysDamage,
-	PercentagePhysDamage,
+	IncreasedPhysDamage,
+
+	IncreasedAttackSpeed,
+	IncreasedCritChance,
 
 	FlatArmour,
-	PercentageArmour,
+	IncreasedArmour,
 	FlatEvasion,
-	PercentageEvasion,
+	IncreasedEvasion,
 	FlatEnergyShield,
-	PercentageEnergyShield,
+	IncreasedEnergyShield,
 
 	FireResistance,
 	ColdResistance,
@@ -73,27 +76,28 @@ public enum EAffixFamily {
 	AddedIntelligence,
 
 	FlatMaxLife,
-	PercentageMaxLife,
+	IncreasedMaxLife,
 	AddedLifeRegen,
 	PercentageLifeRegen,
 	IncreasedLifeRegen,
 
 	FlatMaxMana,
-	PercentageMaxMana,
+	IncreasedMaxMana,
 	AddedManaRegen,
 	IncreasedManaRegen,
 
 	FlatPhysDamage,
-	PercentagePhysDamage,
+	IncreasedPhysDamage,
 
-	PercentageAttackSpeed,
-	PercentageCritChance,
+	IncreasedAttackSpeed,
+	IncreasedCritChance,
+
 	FlatArmour,
-	PercentageArmour,
+	IncreasedArmour,
 	FlatEvasion,
-	PercentageEvasion,
+	IncreasedEvasion,
 	FlatEnergyShield,
-	PercentageEnergyShield,
+	IncreasedEnergyShield,
 
 	FireResistance,
 	ColdResistance,
@@ -101,17 +105,17 @@ public enum EAffixFamily {
 
 	// Local
 	LocalFlatPhysDamage,
-	LocalPercentagePhysDamage,
+	LocalIncreasedPhysDamage,
 
-	LocalPercentageAttackSpeed,
-	LocalPercentageCritChance,
+	LocalIncreasedAttackSpeed,
+	LocalIncreasedCritChance,
 
 	LocalFlatArmour,
-	LocalPercentageArmour,
+	LocalIncreasedArmour,
 	LocalFlatEvasion,
-	LocalPercentageEvasion,
+	LocalIncreasedEvasion,
 	LocalFlatEnergyShield,
-	LocalPercentageEnergyShield,
+	LocalIncreasedEnergyShield,
 }
 
 
