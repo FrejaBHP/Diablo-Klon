@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 
 public partial class Item {
-	PackedScene worldItemScene = GD.Load<PackedScene>("res://worlditem.tscn");
-	PackedScene inventoryItemScene = GD.Load<PackedScene>("res://hud_item.tscn");
+	PackedScene worldItemScene = GD.Load<PackedScene>("res://scenes/worlditem.tscn");
+	PackedScene inventoryItemScene = GD.Load<PackedScene>("res://scenes/gui/hud_item.tscn");
 
 	public Player PlayerOwner = null;
 

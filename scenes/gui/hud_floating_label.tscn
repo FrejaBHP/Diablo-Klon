@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://cm0eq6am2vvt8"]
 
-[ext_resource type="Script" uid="uid://bxdapirrhrjmn" path="res://scripts/FloatingLabel.cs" id="1_m84h6"]
+[ext_resource type="Script" uid="uid://bxdapirrhrjmn" path="res://scripts/FloatingLabel.cs" id="1_kudjt"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -12,7 +12,7 @@ anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-script = ExtResource("1_m84h6")
+script = ExtResource("1_kudjt")
 
 [node name="Container" type="PanelContainer" parent="."]
 layout_mode = 1

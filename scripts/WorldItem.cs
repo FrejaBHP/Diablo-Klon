@@ -2,7 +2,7 @@ using Godot;
 using System;
 
 public partial class WorldItem : StaticBody3D {
-	PackedScene floatingLabelScene = GD.Load<PackedScene>("res://hud_floating_label.tscn");
+	PackedScene floatingLabelScene = GD.Load<PackedScene>("res://scenes/gui/hud_floating_label.tscn");
 
 	public Item ItemReference = null;
 	private RayCast3D floorCast;

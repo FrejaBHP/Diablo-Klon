@@ -2,7 +2,7 @@ using Godot;
 using System;
 
 public partial class HUD : Control {
-	PackedScene itemTooltipPopupScene = GD.Load<PackedScene>("res://hud_item_tooltip_popup.tscn");
+	PackedScene itemTooltipPopupScene = GD.Load<PackedScene>("res://scenes/gui/hud_item_tooltip_popup.tscn");
 	
 	public Player PlayerOwner;
 	public CharacterPanel PlayerPanel;

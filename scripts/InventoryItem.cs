@@ -5,7 +5,7 @@ using System.Numerics;
 using Vector2 = Godot.Vector2;
 
 public partial class InventoryItem : PanelContainer {
-	PackedScene itemTooltipScene = GD.Load<PackedScene>("res://hud_item_tooltip.tscn");
+	PackedScene itemTooltipScene = GD.Load<PackedScene>("res://scenes/gui/hud_item_tooltip.tscn");
 
 	public Inventory InventoryReference;
 	public bool IsClicked = false;

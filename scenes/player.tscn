@@ -2,8 +2,8 @@
 
 [ext_resource type="Texture2D" uid="uid://ci3657tcwp4x4" path="res://textures/fVSI.png" id="1_10g8w"]
 [ext_resource type="Script" uid="uid://pk4sumlpraxb" path="res://scripts/Player.cs" id="1_lgjii"]
-[ext_resource type="PackedScene" uid="uid://bjr2unj1x1myt" path="res://hud_combined.tscn" id="2_nq0pa"]
-[ext_resource type="PackedScene" uid="uid://bvbig2y0lfddq" path="res://player_camera.tscn" id="4_lsgwb"]
+[ext_resource type="PackedScene" uid="uid://bjr2unj1x1myt" path="res://scenes/gui/hud_combined.tscn" id="2_nq0pa"]
+[ext_resource type="PackedScene" uid="uid://bvbig2y0lfddq" path="res://scenes/player_camera.tscn" id="4_lsgwb"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_cvuyr"]
 

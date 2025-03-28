@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://bixft8rqb2x2u"]
 
-[ext_resource type="Script" uid="uid://bhaa7enwdhtbh" path="res://scripts/EquipmentSlot.cs" id="1_mu2n2"]
+[ext_resource type="Script" uid="uid://bhaa7enwdhtbh" path="res://scripts/EquipmentSlot.cs" id="1_wfjjo"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jqxhb"]
 bg_color = Color(0.227451, 0.227451, 0.227451, 1)
@@ -21,7 +21,7 @@ offset_bottom = 6.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_jqxhb")
-script = ExtResource("1_mu2n2")
+script = ExtResource("1_wfjjo")
 
 [node name="Highlight" type="ColorRect" parent="."]
 layout_mode = 2

@@ -72,7 +72,6 @@ public partial class Player : Actor {
 	public Player() {
 		BasicStats.BaseLife = 40;
 		BasicStats.BaseMana = 30;
-		BasicStats.AddedLifeRegen = 1;
 		RefreshLifeMana();
 	}
 
@@ -138,6 +137,10 @@ public partial class Player : Actor {
 			Item item = ItemGeneration.GenerateItemFromCategory(EItemCategory.Jewellery);
 			WorldItem worldItem = item.ConvertToWorldItem();
 			DropItem(worldItem);
+		}
+		else if (@event.IsActionPressed("DebugHalveLifeMana")) {
+			BasicStats.CurrentLife /= 2;
+			BasicStats.CurrentMana /= 2;
 		}
     }
 
@@ -278,7 +281,7 @@ public partial class Player : Actor {
 		BasicStats.AddedMana = (int)ItemStatDictionary[EStatName.FlatMaxMana];
 		BasicStats.IncreasedMana = ItemStatDictionary[EStatName.PercentageMaxMana];
 
-		BasicStats.AddedLifeRegen = ItemStatDictionary[EStatName.AddedLifeRegen];
+		BasicStats.AddedLifeRegen = ItemStatDictionary[EStatName.AddedLifeRegen] + 1;
 		BasicStats.PercentageLifeRegen = ItemStatDictionary[EStatName.PercentageLifeRegen];
 		BasicStats.AddedManaRegen = ItemStatDictionary[EStatName.AddedManaRegen];
 		BasicStats.IncreasedManaRegen = ItemStatDictionary[EStatName.IncreasedManaRegen];

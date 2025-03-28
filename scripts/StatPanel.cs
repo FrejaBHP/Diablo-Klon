@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 
 public partial class StatPanel : ScrollContainer {
-    protected PackedScene statEntryScene = GD.Load<PackedScene>("res://hud_stat_labels_container.tscn");
+    protected PackedScene statEntryScene = GD.Load<PackedScene>("res://scenes/gui/hud_stat_labels_container.tscn");
 
     protected VBoxContainer statContainer;
     

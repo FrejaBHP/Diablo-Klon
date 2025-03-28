@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://bjr2unj1x1myt"]
 
 [ext_resource type="Script" uid="uid://blgot83d4npeq" path="res://scripts/HUD.cs" id="1_k6sm4"]
-[ext_resource type="PackedScene" uid="uid://feaoc135f1ku" path="res://hud_inventory.tscn" id="1_v82wo"]
-[ext_resource type="PackedScene" uid="uid://b7u2byhy4hvye" path="res://hud_player_panel.tscn" id="2_stx8b"]
-[ext_resource type="PackedScene" uid="uid://dn73hlfk77c1y" path="res://hud_lower.tscn" id="3_ucw7d"]
+[ext_resource type="PackedScene" uid="uid://feaoc135f1ku" path="res://scenes/gui/hud_inventory.tscn" id="1_v82wo"]
+[ext_resource type="PackedScene" uid="uid://b7u2byhy4hvye" path="res://scenes/gui/hud_player_panel.tscn" id="2_stx8b"]
+[ext_resource type="PackedScene" uid="uid://dn73hlfk77c1y" path="res://scenes/gui/hud_lower.tscn" id="3_ucw7d"]
 
 [node name="PlayerHUD" type="Control"]
 layout_mode = 3

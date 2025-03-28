@@ -1,8 +1,8 @@
 [gd_scene load_steps=6 format=3 uid="uid://dn73hlfk77c1y"]
 
-[ext_resource type="Texture2D" uid="uid://dw4rlfgcgt3o4" path="res://textures/ui/hud_health.png" id="1_0xjef"]
-[ext_resource type="Script" uid="uid://dj4vk70ft5cgg" path="res://scripts/LowerHUD.cs" id="1_27lpo"]
-[ext_resource type="Texture2D" uid="uid://b2fn70hn06bsu" path="res://textures/ui/hud_mana.png" id="2_op11f"]
+[ext_resource type="Script" uid="uid://dj4vk70ft5cgg" path="res://scripts/LowerHUD.cs" id="1_t1baj"]
+[ext_resource type="Texture2D" uid="uid://dw4rlfgcgt3o4" path="res://textures/ui/hud_health.png" id="2_fxhu6"]
+[ext_resource type="Texture2D" uid="uid://b2fn70hn06bsu" path="res://textures/ui/hud_mana.png" id="3_ah43h"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_froqh"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
@@ -20,7 +20,7 @@ offset_top = -136.0
 grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 2
-script = ExtResource("1_27lpo")
+script = ExtResource("1_t1baj")
 
 [node name="LeftSide" type="PanelContainer" parent="."]
 layout_mode = 1
@@ -67,7 +67,7 @@ layout_mode = 2
 value = 100.0
 fill_mode = 3
 nine_patch_stretch = true
-texture_progress = ExtResource("1_0xjef")
+texture_progress = ExtResource("2_fxhu6")
 
 [node name="RightSide" type="PanelContainer" parent="."]
 layout_mode = 1
@@ -121,7 +121,7 @@ layout_mode = 2
 value = 100.0
 fill_mode = 3
 nine_patch_stretch = true
-texture_progress = ExtResource("2_op11f")
+texture_progress = ExtResource("3_ah43h")
 
 [connection signal="mouse_entered" from="LeftSide/Control/PanelContainer" to="." method="OnLifeOrbEntered"]
 [connection signal="mouse_exited" from="LeftSide/Control/PanelContainer" to="." method="OnLifeOrbExited"]

@@ -3,9 +3,9 @@
 [ext_resource type="Texture2D" uid="uid://byijg62afsl55" path="res://textures/ui/inventoryPanelDecoration2x.png" id="1_dx0lv"]
 [ext_resource type="Script" uid="uid://dxb0ucoiema4" path="res://scripts/CharacterPanel.cs" id="1_mybj1"]
 [ext_resource type="Texture2D" uid="uid://fhobutpfvwf2" path="res://textures/ui/inventoryPanelShort2x.png" id="2_ugd1u"]
-[ext_resource type="PackedScene" uid="uid://rilnotgo0i7c" path="res://hud_stat_labels_container.tscn" id="4_keu0t"]
-[ext_resource type="PackedScene" uid="uid://clhmn52gysdy5" path="res://hud_offence_stat_container.tscn" id="4_ugd1u"]
-[ext_resource type="PackedScene" uid="uid://ics6toyv4umb" path="res://hud_defence_stat_container.tscn" id="5_keu0t"]
+[ext_resource type="PackedScene" uid="uid://rilnotgo0i7c" path="res://scenes/gui/hud_stat_labels_container.tscn" id="4_keu0t"]
+[ext_resource type="PackedScene" uid="uid://clhmn52gysdy5" path="res://scenes/gui/hud_offence_stat_container.tscn" id="4_ugd1u"]
+[ext_resource type="PackedScene" uid="uid://ics6toyv4umb" path="res://scenes/gui/hud_defence_stat_container.tscn" id="5_keu0t"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_keu0t"]
 bg_color = Color(0, 0, 0, 0.705882)
