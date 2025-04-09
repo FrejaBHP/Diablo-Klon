@@ -1,6 +1,11 @@
 using Godot;
 using System;
 
+public enum EMovementInputMethod {
+	Mouse,
+	Keyboard
+}
+
 public enum EStatName {
 	None,
 
@@ -26,6 +31,8 @@ public enum EStatName {
 
 	IncreasedAttackSpeed,
 	IncreasedCritChance,
+
+	IncreasedMovementSpeed,
 
 	FlatArmour,
 	IncreasedArmour,
@@ -91,6 +98,8 @@ public enum EAffixFamily {
 
 	IncreasedAttackSpeed,
 	IncreasedCritChance,
+
+	IncreasedMovementSpeed,
 
 	FlatArmour,
 	IncreasedArmour,

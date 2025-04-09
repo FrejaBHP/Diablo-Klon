@@ -3,8 +3,9 @@
 [ext_resource type="Script" uid="uid://desfpowtat07f" path="res://scripts/PlayerCamera.cs" id="1_a703t"]
 
 [node name="PlayerCamera" type="Camera3D"]
-transform = Transform3D(0.707107, -0.40558, 0.579228, 0, 0.819152, 0.573576, -0.707107, -0.40558, 0.579228, 3, 3, 3)
+transform = Transform3D(0.707107, -0.40558, 0.579228, 0, 0.819152, 0.573576, -0.707107, -0.40558, 0.579228, 10, 10, 10)
 projection = 1
 current = true
-size = 10.0
+fov = 37.8493
+size = 12.0
 script = ExtResource("1_a703t")

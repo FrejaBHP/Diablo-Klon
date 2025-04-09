@@ -58,6 +58,10 @@ public static class AffixDataTables {
 			EAffixItemFlags.Armour,
 			EItemBaseSpecifierFlags.AEnergyShield | EItemBaseSpecifierFlags.AEvasionEnergyShield | EItemBaseSpecifierFlags.AEnergyShieldArmour
 		),
+		new(typeof(IncreasedMovementSpeedAffix), EAffixFamily.IncreasedMovementSpeed,
+			EAffixItemFlags.Boots,
+			EItemBaseSpecifierFlags.NoFlags
+		),
 	];
 
 	public static readonly List<AffixTableType> SuffixData = [

@@ -1,0 +1,321 @@
+[gd_scene load_steps=33 format=4 uid="uid://d2xd34fgf22vd"]
+
+[ext_resource type="PackedScene" uid="uid://btdyjtsk2j8aw" path="res://scenes/map_transition.tscn" id="1_dm2gb"]
+[ext_resource type="Script" uid="uid://dd0nmn1ut8mlk" path="res://addons/func_godot/src/map/func_godot_map.gd" id="1_hi2by"]
+[ext_resource type="Resource" uid="uid://vw6ckbf02x4g" path="res://maps/map_settings.tres" id="2_cwkjp"]
+[ext_resource type="Texture2D" uid="uid://drln6w5f1g28c" path="res://textures/world/stone_brick.jpg" id="2_q7u6e"]
+[ext_resource type="Material" uid="uid://by4gy6xsypuw5" path="res://textures/world/town/grass.tres" id="4_cwkjp"]
+[ext_resource type="Material" uid="uid://36aribvxlbvk" path="res://textures/world/town/dirt.tres" id="4_dm2gb"]
+[ext_resource type="Material" uid="uid://bp04ct06jlqsw" path="res://textures/world/town/stonepavement.tres" id="5_cwkjp"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_q7u6e"]
+size = Vector3(1, 2, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_q7u6e"]
+size = Vector3(1, 2, 2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2ie1u"]
+resource_local_to_scene = true
+albedo_texture = ExtResource("2_q7u6e")
+anisotropy = 1.0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_q7u6e"]
+_surfaces = [{
+"aabb": AABB(-0.528867, -1.02887, -1.02887, 1.05773, 2.05773, 2.05773),
+"attribute_data": PackedByteArray("AAAAAAAAAACrqio/AAAAAKuqqj4AAAAAAACAPwAAAAAAAAAAAAAAP6uqKj8AAAA/q6qqPgAAAD8AAIA/AAAAP6uqqj4AAAAAAAAAAAAAAD+rqio/AAAAAKuqqj4AAAA/q6qqPgAAAD8AAAAAAACAP6uqKj8AAAA/q6qqPgAAgD+rqqo+AAAAP6uqKj8AAAA/q6oqPwAAAD8AAIA/AAAAP6uqqj4AAIA/q6oqPwAAgD+rqio/AACAPwAAgD8AAIA/"),
+"format": 34359742487,
+"index_count": 36,
+"index_data": PackedByteArray("AAAEAAIAAgAEAAYAAQAFAAMAAwAFAAcACAAMAAoACgAMAA4ACQANAAsACwANAA8AEAAUABIAEgAUABYAEQAVABMAEwAVABcA"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 24,
+"vertex_data": PackedByteArray("3GMHv+6xgz/usYM/3GMHP+6xgz/usYO/3GMHP+6xgz/usYM/3GMHv+6xgz/usYO/3GMHv+6xg7/usYM/3GMHP+6xg7/usYO/3GMHP+6xg7/usYM/3GMHv+6xg7/usYO/3GMHP+6xgz/usYM/3GMHv+6xgz/usYO/3GMHP+6xgz/usYO/3GMHv+6xgz/usYM/3GMHP+6xg7/usYM/3GMHv+6xg7/usYO/3GMHP+6xg7/usYO/3GMHv+6xg7/usYM/3GMHP+6xgz/usYM/3GMHv+6xg7/usYM/3GMHv+6xgz/usYM/3GMHP+6xg7/usYM/3GMHP+6xgz/usYO/3GMHv+6xg7/usYO/3GMHv+6xgz/usYO/3GMHP+6xg7/usYO//3//f////7//////AAD/v/9//3////+//////wAA/7//f/9/////v/////8AAP+//3//f////7//////AAD/v///AID/////AAAAgP9//7///wCA/////wAAAID/f/+///8AgP////8AAACA/3//v///AID/////AAAAgP9//78AgP//AAD/vwCAAAD///+/AID//wAA/78AgAAA////vwCA//8AAP+/AIAAAP///78AgP//AAD/vwCAAAD///+/")
+}]
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_cwkjp"]
+_surfaces = [{
+"aabb": AABB(-6, 0.25, -3, 12, 1e-05, 6),
+"attribute_data": PackedByteArray("AACQQAAAQMAAAMBAAABAwAAAwEAAAAAAAACQQAAAAAA="),
+"format": 34359742487,
+"index_count": 6,
+"index_data": PackedByteArray("AAABAAIAAAACAAMA"),
+"material": ExtResource("4_cwkjp"),
+"name": "world/town/grass",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 4,
+"vertex_data": PackedByteArray("AADAQAAAgD4AAEDAAADAQAAAgD4AAEBAAADAwAAAgD4AAEBAAADAwAAAgD4AAEDA/3////9//7//f////3//v/9/////f/+//3////9//78=")
+}]
+
+[sub_resource type="ArrayOccluder3D" id="ArrayOccluder3D_dm2gb"]
+vertices = PackedVector3Array(6, 0.25, -3, 6, 0.25, 3, -6, 0.25, 3, -6, 0.25, -3)
+indices = PackedInt32Array(0, 1, 2, 0, 2, 3)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_q7u6e"]
+points = PackedVector3Array(-6, 0.25, -3, -6, -0.25, -3, 6, -0.25, -3, 6, 0.25, -3, -6, 0.25, 3, -6, -0.25, 3, 6, -0.25, 3, 6, 0.25, 3)
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_2ie1u"]
+_surfaces = [{
+"aabb": AABB(-6, 0.25, -1, 12, 1e-05, 2),
+"attribute_data": PackedByteArray("AABAQAAAgEAAAEBAAACQQADWniUAAJBAADCNJQAAgEA="),
+"format": 34359742487,
+"index_count": 6,
+"index_data": PackedByteArray("AAABAAIAAAACAAMA"),
+"material": ExtResource("4_dm2gb"),
+"name": "world/town/dirt",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 4,
+"vertex_data": PackedByteArray("AADAQAAAgD4AAIC/AADAQAAAgD4AAIA/AADAwAAAgD4AAIA/AADAwAAAgD4AAIC//3///wAA/7//f///AAD/v/9///8AAP+//3///wAA/78=")
+}]
+
+[sub_resource type="ArrayOccluder3D" id="ArrayOccluder3D_pnv55"]
+vertices = PackedVector3Array(6, 0.25, -1, 6, 0.25, 1, -6, 0.25, 1, -6, 0.25, -1)
+indices = PackedInt32Array(0, 1, 2, 0, 2, 3)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_drw7y"]
+points = PackedVector3Array(-6, 0.25, -1, -6, -0.25, -1, 6, -0.25, -1, 6, 0.25, -1, -6, 0.25, 1, -6, -0.25, 1, 6, -0.25, 1, 6, 0.25, 1)
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_s1yyi"]
+_surfaces = [{
+"aabb": AABB(-6, 0.25, -3, 12, 1e-05, 6),
+"attribute_data": PackedByteArray("AAAgQAAAQMAAAIBAAABAwAAAgEAAAAAAAAAgQAAAAAA="),
+"format": 34359742487,
+"index_count": 6,
+"index_data": PackedByteArray("AAABAAIAAAACAAMA"),
+"material": ExtResource("4_cwkjp"),
+"name": "world/town/grass",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 4,
+"vertex_data": PackedByteArray("AADAQAAAgD4AAEDAAADAQAAAgD4AAEBAAADAwAAAgD4AAEBAAADAwAAAgD4AAEDA/3////9//7//f////3//v/9/////f/+//3////9//78=")
+}]
+
+[sub_resource type="ArrayOccluder3D" id="ArrayOccluder3D_q7f4k"]
+vertices = PackedVector3Array(6, 0.25, -3, 6, 0.25, 3, -6, 0.25, 3, -6, 0.25, -3)
+indices = PackedInt32Array(0, 1, 2, 0, 2, 3)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_t36bt"]
+points = PackedVector3Array(-6, 0.25, -3, -6, -0.25, -3, 6, -0.25, -3, 6, 0.25, -3, -6, 0.25, 3, -6, -0.25, 3, 6, -0.25, 3, 6, 0.25, 3)
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_fm1qx"]
+_surfaces = [{
+"aabb": AABB(-7, 0.25, -7, 14, 1e-05, 14),
+"attribute_data": PackedByteArray("AAAgQAAA0MAAAMBAAADQwAAAwEAAAEDAAAAgQAAAQMA="),
+"format": 34359742487,
+"index_count": 6,
+"index_data": PackedByteArray("AAABAAIAAAACAAMA"),
+"material": ExtResource("5_cwkjp"),
+"name": "world/town/stonepavement",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 4,
+"vertex_data": PackedByteArray("AADgQAAAgD4AAODAAADgQAAAgD4AAOBAAADgwAAAgD4AAOBAAADgwAAAgD4AAODA/3////9//7//f////3//v/9/////f/+//3////9//78=")
+}]
+
+[sub_resource type="ArrayOccluder3D" id="ArrayOccluder3D_5jdb6"]
+vertices = PackedVector3Array(7, 0.25, -7, 7, 0.25, 7, -7, 0.25, 7, -7, 0.25, -7)
+indices = PackedInt32Array(0, 1, 2, 0, 2, 3)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_d0mt1"]
+points = PackedVector3Array(-7, 0.25, -7, -7, -0.25, -7, 7, -0.25, -7, 7, 0.25, -7, -7, 0.25, 7, -7, -0.25, 7, 7, -0.25, 7, 7, 0.25, 7)
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_dcgdg"]
+_surfaces = [{
+"aabb": AABB(-19, 0.25, -5, 38, 1e-05, 10),
+"attribute_data": PackedByteArray("AADAQAAAGMEAAAhBAAAYwQAACEEAAAAAAADAQAAAAAA="),
+"format": 34359742487,
+"index_count": 6,
+"index_data": PackedByteArray("AAABAAIAAAACAAMA"),
+"material": ExtResource("4_cwkjp"),
+"name": "world/town/grass",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 4,
+"vertex_data": PackedByteArray("AACYQQAAgD4AAKDAAACYQQAAgD4AAKBAAACYwQAAgD4AAKBAAACYwQAAgD4AAKDA/3////9//7//f////3//v/9/////f/+//3////9//78=")
+}]
+
+[sub_resource type="ArrayOccluder3D" id="ArrayOccluder3D_iyukm"]
+vertices = PackedVector3Array(19, 0.25, -5, 19, 0.25, 5, -19, 0.25, 5, -19, 0.25, -5)
+indices = PackedInt32Array(0, 1, 2, 0, 2, 3)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_p3qhv"]
+points = PackedVector3Array(-19, 0.25, -5, -19, -0.25, -5, 19, -0.25, -5, 19, 0.25, -5, -19, 0.25, 5, -19, -0.25, 5, 19, -0.25, 5, 19, 0.25, 5)
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_jmpt1"]
+_surfaces = [{
+"aabb": AABB(-19, 0.25, -5, 38, 1e-05, 10),
+"attribute_data": PackedByteArray("AAAAAAAAGMEAACBAAAAYwQAAIEAAAAAAAAAAAAAAAAA="),
+"format": 34359742487,
+"index_count": 6,
+"index_data": PackedByteArray("AAABAAIAAAACAAMA"),
+"material": ExtResource("4_cwkjp"),
+"name": "world/town/grass",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 4,
+"vertex_data": PackedByteArray("AACYQQAAgD4AAKDAAACYQQAAgD4AAKBAAACYwQAAgD4AAKBAAACYwQAAgD4AAKDA/3////9//7//f////3//v/9/////f/+//3////9//78=")
+}]
+
+[sub_resource type="ArrayOccluder3D" id="ArrayOccluder3D_i13ae"]
+vertices = PackedVector3Array(19, 0.25, -5, 19, 0.25, 5, -19, 0.25, 5, -19, 0.25, -5)
+indices = PackedInt32Array(0, 1, 2, 0, 2, 3)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_oqlea"]
+points = PackedVector3Array(-19, 0.25, -5, -19, -0.25, -5, 19, -0.25, -5, 19, 0.25, -5, -19, 0.25, 5, -19, -0.25, 5, 19, -0.25, 5, 19, 0.25, 5)
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_hduvd"]
+_surfaces = [{
+"aabb": AABB(-6, 0.25, -7, 12, 1e-05, 14),
+"attribute_data": PackedByteArray("AAAgQAAAGMEAAMBAAAAYwQAAwEAAANDAAAAgQAAA0MA="),
+"format": 34359742487,
+"index_count": 6,
+"index_data": PackedByteArray("AAABAAIAAAACAAMA"),
+"material": ExtResource("4_cwkjp"),
+"name": "world/town/grass",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 4,
+"vertex_data": PackedByteArray("AADAQAAAgD4AAODAAADAQAAAgD4AAOBAAADAwAAAgD4AAOBAAADAwAAAgD4AAODA/3////9//7//f////3//v/9/////f/+//3////9//78=")
+}]
+
+[sub_resource type="ArrayOccluder3D" id="ArrayOccluder3D_0dll0"]
+vertices = PackedVector3Array(6, 0.25, -7, 6, 0.25, 7, -6, 0.25, 7, -6, 0.25, -7)
+indices = PackedInt32Array(0, 1, 2, 0, 2, 3)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_r0uq8"]
+points = PackedVector3Array(-6, 0.25, -7, -6, -0.25, -7, 6, -0.25, -7, 6, 0.25, -7, -6, 0.25, 7, -6, -0.25, 7, 6, -0.25, 7, 6, 0.25, 7)
+
+[node name="MapTown" type="Node3D"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, -0.286788, 0.409576, 0, 0.819152, 0.573576, -0.5, 0.496732, -0.709406, 0, 18.5, 0)
+layers = 64
+light_cull_mask = 4293918783
+shadow_enabled = true
+shadow_caster_mask = 4293918735
+directional_shadow_mode = 1
+
+[node name="LevelTransition" parent="." instance=ExtResource("1_dm2gb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 0.5, 17)
+
+[node name="CollisionShape3D" parent="LevelTransition" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("BoxShape3D_q7u6e")
+
+[node name="Mesh" parent="LevelTransition" index="1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("BoxMesh_q7u6e")
+surface_material_override/0 = SubResource("StandardMaterial3D_2ie1u")
+
+[node name="MeshOutline" parent="LevelTransition/Mesh" index="0"]
+mesh = SubResource("ArrayMesh_q7u6e")
+
+[node name="FuncGodotMap" type="Node3D" parent="."]
+script = ExtResource("1_hi2by")
+global_map_file = "F:/GitHub/Diablo-Klon/maps/town.map"
+map_settings = ExtResource("2_cwkjp")
+metadata/_custom_type_script = "uid://dd0nmn1ut8mlk"
+
+[node name="entity_0_worldspawn" type="StaticBody3D" parent="FuncGodotMap"]
+collision_mask = 0
+
+[node name="entity_1_func_worldgeo" type="StaticBody3D" parent="FuncGodotMap"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, -0.25, 21)
+collision_layer = 2
+collision_mask = 0
+
+[node name="entity_1_mesh_instance" type="MeshInstance3D" parent="FuncGodotMap/entity_1_func_worldgeo"]
+mesh = SubResource("ArrayMesh_cwkjp")
+
+[node name="entity_1_occluder_instance" type="OccluderInstance3D" parent="FuncGodotMap/entity_1_func_worldgeo"]
+occluder = SubResource("ArrayOccluder3D_dm2gb")
+
+[node name="entity_1_brush_0_collision_shape" type="CollisionShape3D" parent="FuncGodotMap/entity_1_func_worldgeo"]
+shape = SubResource("ConvexPolygonShape3D_q7u6e")
+
+[node name="entity_2_func_worldgeo" type="StaticBody3D" parent="FuncGodotMap"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, -0.25, 17)
+collision_layer = 2
+collision_mask = 0
+
+[node name="entity_2_mesh_instance" type="MeshInstance3D" parent="FuncGodotMap/entity_2_func_worldgeo"]
+mesh = SubResource("ArrayMesh_2ie1u")
+
+[node name="entity_2_occluder_instance" type="OccluderInstance3D" parent="FuncGodotMap/entity_2_func_worldgeo"]
+occluder = SubResource("ArrayOccluder3D_pnv55")
+
+[node name="entity_2_brush_0_collision_shape" type="CollisionShape3D" parent="FuncGodotMap/entity_2_func_worldgeo"]
+shape = SubResource("ConvexPolygonShape3D_drw7y")
+
+[node name="entity_3_func_worldgeo" type="StaticBody3D" parent="FuncGodotMap"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, -0.25, 13)
+collision_layer = 2
+collision_mask = 0
+
+[node name="entity_3_mesh_instance" type="MeshInstance3D" parent="FuncGodotMap/entity_3_func_worldgeo"]
+mesh = SubResource("ArrayMesh_s1yyi")
+
+[node name="entity_3_occluder_instance" type="OccluderInstance3D" parent="FuncGodotMap/entity_3_func_worldgeo"]
+occluder = SubResource("ArrayOccluder3D_q7f4k")
+
+[node name="entity_3_brush_0_collision_shape" type="CollisionShape3D" parent="FuncGodotMap/entity_3_func_worldgeo"]
+shape = SubResource("ConvexPolygonShape3D_t36bt")
+
+[node name="entity_4_func_worldgeo" type="StaticBody3D" parent="FuncGodotMap"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, -0.25, 17)
+collision_layer = 2
+collision_mask = 0
+
+[node name="entity_4_mesh_instance" type="MeshInstance3D" parent="FuncGodotMap/entity_4_func_worldgeo"]
+mesh = SubResource("ArrayMesh_fm1qx")
+
+[node name="entity_4_occluder_instance" type="OccluderInstance3D" parent="FuncGodotMap/entity_4_func_worldgeo"]
+occluder = SubResource("ArrayOccluder3D_5jdb6")
+
+[node name="entity_4_brush_0_collision_shape" type="CollisionShape3D" parent="FuncGodotMap/entity_4_func_worldgeo"]
+shape = SubResource("ConvexPolygonShape3D_d0mt1")
+
+[node name="entity_5_func_worldgeo" type="StaticBody3D" parent="FuncGodotMap"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, -0.25, 29)
+collision_layer = 2
+collision_mask = 0
+
+[node name="entity_5_mesh_instance" type="MeshInstance3D" parent="FuncGodotMap/entity_5_func_worldgeo"]
+mesh = SubResource("ArrayMesh_dcgdg")
+
+[node name="entity_5_occluder_instance" type="OccluderInstance3D" parent="FuncGodotMap/entity_5_func_worldgeo"]
+occluder = SubResource("ArrayOccluder3D_iyukm")
+
+[node name="entity_5_brush_0_collision_shape" type="CollisionShape3D" parent="FuncGodotMap/entity_5_func_worldgeo"]
+shape = SubResource("ConvexPolygonShape3D_p3qhv")
+
+[node name="entity_6_func_worldgeo" type="StaticBody3D" parent="FuncGodotMap"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, -0.25, 5)
+collision_layer = 2
+collision_mask = 0
+
+[node name="entity_6_mesh_instance" type="MeshInstance3D" parent="FuncGodotMap/entity_6_func_worldgeo"]
+mesh = SubResource("ArrayMesh_jmpt1")
+
+[node name="entity_6_occluder_instance" type="OccluderInstance3D" parent="FuncGodotMap/entity_6_func_worldgeo"]
+occluder = SubResource("ArrayOccluder3D_i13ae")
+
+[node name="entity_6_brush_0_collision_shape" type="CollisionShape3D" parent="FuncGodotMap/entity_6_func_worldgeo"]
+shape = SubResource("ConvexPolygonShape3D_oqlea")
+
+[node name="entity_7_func_worldgeo" type="StaticBody3D" parent="FuncGodotMap"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32, -0.25, 17)
+collision_layer = 2
+collision_mask = 0
+
+[node name="entity_7_mesh_instance" type="MeshInstance3D" parent="FuncGodotMap/entity_7_func_worldgeo"]
+mesh = SubResource("ArrayMesh_hduvd")
+
+[node name="entity_7_occluder_instance" type="OccluderInstance3D" parent="FuncGodotMap/entity_7_func_worldgeo"]
+occluder = SubResource("ArrayOccluder3D_0dll0")
+
+[node name="entity_7_brush_0_collision_shape" type="CollisionShape3D" parent="FuncGodotMap/entity_7_func_worldgeo"]
+shape = SubResource("ConvexPolygonShape3D_r0uq8")
+
+[editable path="LevelTransition"]

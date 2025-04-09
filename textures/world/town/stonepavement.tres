@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://bp04ct06jlqsw"]
+
+[ext_resource type="Texture2D" uid="uid://dnhfifc76riji" path="res://textures/world/town/stonepavement.png" id="1_yefat"]
+
+[resource]
+albedo_texture = ExtResource("1_yefat")
+metallic_specular = 0.0
+texture_filter = 2

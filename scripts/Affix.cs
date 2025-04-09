@@ -64,7 +64,7 @@ public class AffixData(int minLvl, string name, double affixMinF, double affixMa
 public class BasicRingLifeImplicit : Affix {
 	private static readonly List<AffixData> basicRingLifeAffixData = [
 		new(0, "",
-			20, 29,
+			20, 30,
 			0, 0
 		)
 	];
@@ -183,7 +183,7 @@ public class LocalIncreasedPhysDamageAffix : Affix {
 
 	public override void RollAffixValue() {
 		if (tierData != null) {
-			valueFirst = Utilities.RandomDouble(tierData.AffixMinFirst, tierData.AffixMaxFirst);
+			valueFirst = Math.Round(Utilities.RandomDouble(tierData.AffixMinFirst, tierData.AffixMaxFirst), 2);
 		}
 	}
 
@@ -321,7 +321,7 @@ public class LocalIncreasedArmourAffix : Affix {
 
 	public override void RollAffixValue() {
 		if (tierData != null) {
-			valueFirst = Utilities.RandomDouble(tierData.AffixMinFirst, tierData.AffixMaxFirst);
+			valueFirst = Math.Round(Utilities.RandomDouble(tierData.AffixMinFirst, tierData.AffixMaxFirst), 2);
 		}
 	}
 
@@ -390,7 +390,7 @@ public class LocalIncreasedEvasionAffix : Affix {
 
 	public override void RollAffixValue() {
 		if (tierData != null) {
-			valueFirst = Utilities.RandomDouble(tierData.AffixMinFirst, tierData.AffixMaxFirst);
+			valueFirst = Math.Round(Utilities.RandomDouble(tierData.AffixMinFirst, tierData.AffixMaxFirst), 2);
 		}
 	}
 
@@ -467,6 +467,42 @@ public class LocalIncreasedEnergyShieldAffix : Affix {
 	}
 }
 
+public class IncreasedMovementSpeedAffix : Affix {
+	private static readonly List<AffixData> increasedMovementSpeedAffixData = [
+		new(0, "MS1", 
+			0.05, 0.09, 
+			0, 0
+		),
+		new(0, "MS2", 
+			0.10, 0.14, 
+			0, 0
+		),
+		new(0, "MS3", 
+			0.15, 0.19, 
+			0, 0
+		)
+	];
+
+	public IncreasedMovementSpeedAffix() {
+		affixDataTable = increasedMovementSpeedAffixData;
+		affixFamily = EAffixFamily.IncreasedMovementSpeed;
+		isLocal = false;
+		isMultiplicative = false;
+		statNameFirst = EStatName.IncreasedMovementSpeed;
+	}
+
+	public override void RollAffixValue() {
+		if (tierData != null) {
+			valueFirst = Math.Round(Utilities.RandomDouble(tierData.AffixMinFirst, tierData.AffixMaxFirst), 2);
+		}
+	}
+
+	public override string GetAffixTooltipText() {
+		return $"{Math.Round(valueFirst * 100, 0)}% increased Movement Speed";
+	}
+}
+
+
 public class LocalIncreasedAttackSpeedAffix : Affix {
 	private static readonly List<AffixData> localIncreasedAttackSpeedAffixData = [
 		new(0, "of AS1", 
@@ -492,7 +528,7 @@ public class LocalIncreasedAttackSpeedAffix : Affix {
 
 	public override void RollAffixValue() {
 		if (tierData != null) {
-			valueFirst = Utilities.RandomDouble(tierData.AffixMinFirst, tierData.AffixMaxFirst);
+			valueFirst = Math.Round(Utilities.RandomDouble(tierData.AffixMinFirst, tierData.AffixMaxFirst), 2);
 		}
 	}
 
@@ -526,7 +562,7 @@ public class LocalIncreasedCritChanceAffix : Affix {
 
 	public override void RollAffixValue() {
 		if (tierData != null) {
-			valueFirst = Utilities.RandomDouble(tierData.AffixMinFirst, tierData.AffixMaxFirst);
+			valueFirst = Math.Round(Utilities.RandomDouble(tierData.AffixMinFirst, tierData.AffixMaxFirst), 2);
 		}
 	}
 
@@ -563,7 +599,7 @@ public class GlobalIncreasedAttackSpeedAffix : Affix {
 
 	public override void RollAffixValue() {
 		if (tierData != null) {
-			valueFirst = Utilities.RandomDouble(tierData.AffixMinFirst, tierData.AffixMaxFirst);
+			valueFirst = Math.Round(Utilities.RandomDouble(tierData.AffixMinFirst, tierData.AffixMaxFirst), 2);
 		}
 	}
 
@@ -598,7 +634,7 @@ public class GlobalIncreasedCritChanceAffix : Affix {
 
 	public override void RollAffixValue() {
 		if (tierData != null) {
-			valueFirst = Utilities.RandomDouble(tierData.AffixMinFirst, tierData.AffixMaxFirst);
+			valueFirst = Math.Round(Utilities.RandomDouble(tierData.AffixMinFirst, tierData.AffixMaxFirst), 2);
 		}
 	}
 

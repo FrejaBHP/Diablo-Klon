@@ -1,16 +1,17 @@
 [gd_scene load_steps=4 format=3 uid="uid://c8yfhqa8akoeb"]
 
-[ext_resource type="PackedScene" uid="uid://byrbkmdth7i0l" path="res://scenes/level_01.tscn" id="1_76jp2"]
 [ext_resource type="Script" uid="uid://bjmdkp447b2se" path="res://scripts/Game.cs" id="1_rw8dc"]
 [ext_resource type="PackedScene" uid="uid://dqhy454qpbnlg" path="res://scenes/player.tscn" id="2_51cil"]
+[ext_resource type="PackedScene" uid="uid://d2xd34fgf22vd" path="res://scenes/world/map_town.tscn" id="2_lnu2h"]
 
 [node name="Game" type="Node3D"]
 script = ExtResource("1_rw8dc")
 
-[node name="Level01" parent="." instance=ExtResource("1_76jp2")]
+[node name="MapTown" parent="." instance=ExtResource("2_lnu2h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, -10)
 
 [node name="WorldObjects" type="CanvasLayer" parent="."]
 layer = 0
 
 [node name="Player" parent="." instance=ExtResource("2_51cil")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.125929, -1)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 12.5, 0, 7)

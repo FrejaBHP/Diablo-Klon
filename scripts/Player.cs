@@ -7,9 +7,9 @@ public partial class Player : Actor {
 	public HUD PlayerHUD;
 
 	private const float RayLength = 1000f;
-	public const float Speed = 5.0f;
 
 	public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
+	private EMovementInputMethod movementInputMethod = EMovementInputMethod.Keyboard;
 
 	public bool MovingTowardsObject = false;
 
@@ -22,15 +22,27 @@ public partial class Player : Actor {
 	private readonly Stat intelligence = new(10, true);
     public Stat Intelligence { get => intelligence; }
 
+	private readonly Stat movementSpeed = new(5, false);
+    public Stat MovementSpeed { get => movementSpeed; }
+
+	private Node3D targetedNode;
+	public Node3D TargetedNode { get => targetedNode; }
+
+	private Timer attackTimer;
+	private bool isAttacking = false;
+	private bool isAttackHeld = false;
+
+	//private Node3D testSwordNode;
+	//private AnimationPlayer animPlayer;
+
 	private PlayerCamera playerCamera;
 	private Label debugLabel;
-	private bool newMouseInput = false;
+	private bool newMouseButtonInput = false;
 	private bool controlsCamera = true;
 
 	private Vector2 lastMouseInputPos = new(0, 0);
 	private Vector3 moveTo = new(0, 0, 0);
 	private float remainingDist = 0f;
-	private Node3D targetedNode;
 
 	public Dictionary<EStatName, double> ItemStatDictionary = new() {
 		{ EStatName.FlatStrength, 					0 },
@@ -53,6 +65,8 @@ public partial class Player : Actor {
 
 		{ EStatName.IncreasedAttackSpeed, 			0 },
 		{ EStatName.IncreasedCritChance, 			0 },
+
+		{ EStatName.IncreasedMovementSpeed, 		0 },
 
 		{ EStatName.FlatArmour, 					0 },
 		{ EStatName.IncreasedArmour, 				0 },
@@ -97,20 +111,35 @@ public partial class Player : Actor {
 		PlayerHUD.PlayerPanel.OffenceTabPanel.SetOffhandVisibility(false);
 		
 		CalculateStats();
+
+		attackTimer = GetNode<Timer>("AttackTimer");
+
+		//testSwordNode = GetNode<Node3D>("TestSwordNode");
+		//animPlayer = testSwordNode.GetNode<AnimationPlayer>("AnimationPlayer");
 	}
 
     public override void _UnhandledInput(InputEvent @event) {
-		// On left click outside of UI elements
-        if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == MouseButton.Left && mbe.Pressed) {
-			// If an item is currently selected
-			if (PlayerHUD.PlayerInventory.IsAnItemSelected && PlayerHUD.PlayerInventory.SelectedItem != null) {
-                // If click is outside the inventory panel, drop it on the floor
-                if (!PlayerHUD.PlayerInventory.GetGlobalRect().HasPoint(mbe.GlobalPosition) || !PlayerHUD.PlayerInventory.IsOpen) {
-                    PlayerHUD.PlayerInventory.ItemClickDrop(PlayerHUD.PlayerInventory.SelectedItem);
-                }
-            }
-			else {
-				SetDestinationPosition(mbe.GlobalPosition);
+        if (@event is InputEventMouseButton mbe) {
+			// On left click outside of UI elements
+			if (mbe.ButtonIndex == MouseButton.Left && mbe.Pressed) {
+				// If an item is currently selected
+				if (PlayerHUD.PlayerInventory.IsAnItemSelected && PlayerHUD.PlayerInventory.SelectedItem != null) {
+					// If click is outside the inventory panel, drop it on the floor
+					if (!PlayerHUD.PlayerInventory.GetGlobalRect().HasPoint(mbe.GlobalPosition) || !PlayerHUD.PlayerInventory.IsOpen) {
+						PlayerHUD.PlayerInventory.ItemClickDrop(PlayerHUD.PlayerInventory.SelectedItem);
+					}
+				}
+				else {
+					if (movementInputMethod == EMovementInputMethod.Mouse) {
+						SetDestinationPosition(mbe.GlobalPosition);
+					}
+				}
+			}
+			else if (mbe.ButtonIndex == MouseButton.Right && mbe.IsPressed()) {
+				isAttackHeld = true;
+			}
+			else if (mbe.ButtonIndex == MouseButton.Right && mbe.IsReleased()) {
+				isAttackHeld = false;
 			}
 		}
     }
@@ -153,17 +182,17 @@ public partial class Player : Actor {
 		MovingTowardsObject = false;
 		targetedNode = null;
 		lastMouseInputPos = position;
-		newMouseInput = true;
+		newMouseButtonInput = true;
 	}
 
 	public void SetDestinationNode(Node3D node) {
 		MovingTowardsObject = true;
 		targetedNode = node;
 		moveTo = node.GlobalPosition;
-		newMouseInput = true;
+		newMouseButtonInput = true;
 	}
 
-	private void HandleMouseInput() {
+	private void HandleMouseMovementInput() {
 		if (!MovingTowardsObject) {
 			Vector3 from = playerCamera.ProjectRayOrigin(lastMouseInputPos);
 			Vector3 to = from + playerCamera.ProjectRayNormal(lastMouseInputPos) * RayLength;
@@ -174,7 +203,8 @@ public partial class Player : Actor {
 			if (result.Count > 0) {
 				moveTo = result["position"].AsVector3();
 				Vector3 direction = GlobalPosition.DirectionTo(moveTo);
-				Velocity = direction * Speed;
+				ApplyGroundedVelocity(direction.X, direction.Z);
+				//Velocity = direction * (float)movementSpeed.STotal;
 
 				Vector3 lookAt = moveTo with { Y = GlobalPosition.Y };
 				if (!Mathf.IsZeroApprox(GlobalPosition.DistanceTo(lookAt))) {
@@ -184,7 +214,8 @@ public partial class Player : Actor {
 		}
 		else {
 			Vector3 direction = GlobalPosition.DirectionTo(moveTo);
-			Velocity = direction * Speed;
+			ApplyGroundedVelocity(direction.X, direction.Z);
+			//Velocity = direction * (float)movementSpeed.STotal;
 
 			Vector3 lookAt = moveTo with { Y = GlobalPosition.Y };
 			if (!Mathf.IsZeroApprox(GlobalPosition.DistanceTo(lookAt))) {
@@ -192,44 +223,116 @@ public partial class Player : Actor {
 			}
 		}
 
-		newMouseInput = false;
+		newMouseButtonInput = false;
+	}
+
+	public void ProcessMovementKeyInput() {
+		Vector2 inputDirection = Input.GetVector("MoveLeftKey", "MoveRightKey", "MoveUpKey", "MoveDownKey");
+		Vector3 moveDirection = new(inputDirection.X, 0, inputDirection.Y);
+		moveDirection = moveDirection.Rotated(Vector3.Up, (float)Math.PI / 4);
+
+		//debugLabel.Text = $"Move Input Vector\nX = {moveDirection.X}\nY = {moveDirection.Y}\nZ = {moveDirection.Z}\nLength: {moveDirection.Length()}";
+
+		if (MovingTowardsObject && moveDirection == Vector3.Zero) {
+			return;
+		}
+		else {
+			ApplyGroundedVelocity(moveDirection.X, moveDirection.Z);
+			ResetNodeTarget();
+		}
+    }
+
+	public void FaceMouse() {
+		Vector2 mousePosition = GetViewport().GetMousePosition();
+		Vector2I windowSize = GetTree().Root.GetViewport().GetWindow().Size;
+
+		float lookX = mousePosition.X - (windowSize.X / 2);
+		float lookZ = mousePosition.Y - (windowSize.Y / 2);
+
+		Vector3 diffVector = new(lookX, 0, lookZ);
+		diffVector = diffVector.Normalized();
+
+		if (diffVector != Vector3.Zero) {
+			diffVector = diffVector.Rotated(Vector3.Up, (float)Math.PI / 4);
+
+			Vector3 lookVector = GlobalPosition + (diffVector * 100);
+			LookAt(lookVector, null, true);
+		}
 	}
 
     public override void _PhysicsProcess(double delta) {
 		ApplyRegen();
 		PlayerHUD.PlayerLowerHUD.UpdateOrbs();
 
-		if (newMouseInput) {
-			HandleMouseInput();
+		if (movementInputMethod == EMovementInputMethod.Keyboard) {
+			ProcessMovementKeyInput();
+			FaceMouse();
 		}
 
-		remainingDist = (GlobalPosition with { Y = 0f }).DistanceTo(moveTo with { Y = 0f });
+		if (newMouseButtonInput) {
+			HandleMouseMovementInput();
+		}
 
-		if (remainingDist <= Speed / 100f) {
-			Velocity = Vector3.Zero;
+		if (isAttackHeld) {
+			TestAttack();
+		}
 
-			if (MovingTowardsObject && targetedNode != null) {
-				if (targetedNode.IsInGroup("WorldItem")) {
-					WorldItem wi = (WorldItem)targetedNode;
-					PickupItem(ref wi);
+		if (movementInputMethod == EMovementInputMethod.Mouse || MovingTowardsObject) {
+			remainingDist = (GlobalPosition with { Y = 0f }).DistanceTo(moveTo with { Y = 0f });
+
+			if (remainingDist <= (float)movementSpeed.STotal / 100f) {
+				ApplyGroundedVelocity(0f, 0f);
+				//Velocity = Vector3.Zero;
+
+				if (targetedNode != null) {
+					if (targetedNode.IsInGroup("WorldItem")) {
+						WorldItem wi = (WorldItem)targetedNode;
+						PickupItem(ref wi);
+					}
+					
+					ResetNodeTarget();
 				}
-				MovingTowardsObject = false;
 			}
-		}
-		else {
-			if (Velocity.Length() < Speed - 0.01f) {
-				float diff = Speed / Velocity.Length();
-				Velocity *= diff;
+			else {
+				Vector3 vecGrounded = Velocity with { Y = 0f };
+				if (vecGrounded.Length() < (float)movementSpeed.STotal - 0.01f) {
+					float diff = (float)movementSpeed.STotal / Velocity.Length();
+					Velocity *= diff;
+				}
 			}
 		}
 
 		MoveAndSlide();
 
-		//debugLabel.Text = $"Velocity: {Velocity}\nVel Length: {Velocity.Length()}\nRem. Dist: {remainingDist}\nRotation: {RotationDegrees.Y}";
+		debugLabel.Text = $"\n\nVelocity: {Velocity}\nVel Length: {Velocity.Length()}\nRem. Dist: {remainingDist}\nRotation: {RotationDegrees.Y}";
+	}
+
+	public void TestAttack() {
+		if (!isAttacking) {
+			isAttacking = true;
+			attackTimer.Start(MainHand.AttackSpeed);
+			GD.Print($"Started attack timer with duration {MainHand.AttackSpeed:F2} seconds");
+		}
+	}
+
+	public void OnAttackTimerTimeout() {
+		isAttacking = false;
+	}
+
+	public void ResetNodeTarget() {
+		targetedNode = null;
+		MovingTowardsObject = false;
+		remainingDist = 0f;
+	}
+
+	public void ApplyGroundedVelocity(float velX, float velZ) {
+		Vector3 velocity = Velocity;
+		velocity.X = velX * (float)movementSpeed.STotal;
+		velocity.Z = velZ * (float)movementSpeed.STotal;
+		Velocity = velocity;
 	}
 
 	public bool PickupItem(ref WorldItem item) {
-		targetedNode = null;
 		item.ItemReference.ConvertToInventoryItem(this);
 
 		return true;
@@ -293,6 +396,8 @@ public partial class Player : Actor {
 
 		AttackSpeedMod.SIncreased = ItemStatDictionary[EStatName.IncreasedAttackSpeed];
 		CritChanceMod.SIncreased = ItemStatDictionary[EStatName.IncreasedCritChance];
+
+		MovementSpeed.SIncreased = ItemStatDictionary[EStatName.IncreasedMovementSpeed];
 
 		DamageMods.AddedPhysicalMin = (int)ItemStatDictionary[EStatName.FlatMinPhysDamage];
 		DamageMods.AddedPhysicalMax = (int)ItemStatDictionary[EStatName.FlatMaxPhysDamage];

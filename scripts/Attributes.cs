@@ -7,6 +7,11 @@ public partial class Stat(double baseValue, bool shouldRound) {
 
     public readonly bool ShouldRoundToWholeNumber = shouldRound;
 
+    private bool isMinCapped = false;
+    private bool isMaxCapped = false;
+    private double minValueCap = 0;
+    private double maxValueCap = 0;
+
     private double sBase = baseValue;
 	public double SBase {
 		get => sBase;
@@ -57,19 +62,48 @@ public partial class Stat(double baseValue, bool shouldRound) {
 	public double STotal {
 		get => sTotal;
 		set {
-			if (ShouldRoundToWholeNumber) {
-                sTotal = Math.Round(value, 0);
+            double incValue;
+
+            if (isMinCapped && value < minValueCap) {
+                incValue = minValueCap;
+            }
+            else if (isMaxCapped && value > maxValueCap) {
+                incValue = maxValueCap;
             }
             else {
-                sTotal = value;
+                incValue = value;
             }
-            
+
+			if (ShouldRoundToWholeNumber) {
+                sTotal = Math.Round(incValue, 0);
+            }
+            else {
+                sTotal = incValue;
+            }
 		}
 	}
 
     private void CalculateStats() {
         sTotal = (sBase + sAdded) * (1 + sIncreased) * (1 + sMore);
         StatTotalChanged?.Invoke(this, sTotal);
+    }
+
+    public void SetMinCap(double min) {
+        minValueCap = min;
+        isMinCapped = true;
+    }
+
+    public void RemoveMinCap() {
+        isMinCapped = false;
+    }
+
+    public void SetMaxCap(double max) {
+        maxValueCap = max;
+        isMaxCapped = true;
+    }
+
+    public void RemoveMaxCap() {
+        isMaxCapped = false;
     }
 }
 

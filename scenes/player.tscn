@@ -1,11 +1,27 @@
-[gd_scene load_steps=8 format=3 uid="uid://dqhy454qpbnlg"]
+[gd_scene load_steps=11 format=3 uid="uid://dqhy454qpbnlg"]
 
-[ext_resource type="Texture2D" uid="uid://ci3657tcwp4x4" path="res://textures/fVSI.png" id="1_10g8w"]
 [ext_resource type="Script" uid="uid://pk4sumlpraxb" path="res://scripts/Player.cs" id="1_lgjii"]
 [ext_resource type="PackedScene" uid="uid://bjr2unj1x1myt" path="res://scenes/gui/hud_combined.tscn" id="2_nq0pa"]
 [ext_resource type="PackedScene" uid="uid://bvbig2y0lfddq" path="res://scenes/player_camera.tscn" id="4_lsgwb"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_cvuyr"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dqkch"]
+albedo_color = Color(0.647059, 0.611765, 1, 1)
+metallic_specular = 0.0
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 0.03
+backlight = Color(0.647059, 0.611765, 1, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_dqkch"]
+material = SubResource("StandardMaterial3D_dqkch")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qlg0r"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_qlg0r"]
+material = SubResource("StandardMaterial3D_qlg0r")
+size = Vector3(0.25, 0.25, 0.5)
 
 [sub_resource type="Animation" id="Animation_lv0no"]
 resource_name = "new_animation"
@@ -26,10 +42,15 @@ script = ExtResource("1_lgjii")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_cvuyr")
 
-[node name="Sprite3D" type="Sprite3D" parent="."]
+[node name="CapsuleMesh" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-pixel_size = 0.005
-texture = ExtResource("1_10g8w")
+layers = 4
+mesh = SubResource("CapsuleMesh_dqkch")
+
+[node name="DirectionMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0.7)
+layers = 4
+mesh = SubResource("BoxMesh_qlg0r")
 
 [node name="DebugLabel" type="Label" parent="."]
 offset_right = 40.0
@@ -40,11 +61,53 @@ libraries = {
 &"": SubResource("AnimationLibrary_my3p0")
 }
 
+[node name="AttackTimer" type="Timer" parent="."]
+process_callback = 0
+one_shot = true
+
 [node name="PlayerCamera" parent="." instance=ExtResource("4_lsgwb")]
-transform = Transform3D(0.707107, -0.40558, 0.579228, 0, 0.819152, 0.573577, -0.707107, -0.40558, 0.579228, 3, 3, 3)
+transform = Transform3D(0.707107, -0.40558, 0.579228, 0, 0.819152, 0.573577, -0.707107, -0.40558, 0.579228, 10, 10, 10)
 top_level = true
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+layers = 64
+light_energy = 0.7
+light_indirect_energy = 0.7
+light_size = 1.0
+light_cull_mask = 4293918747
+omni_range = 25.0
+omni_attenuation = 1.25
+
+[node name="SpotLight3D" type="SpotLight3D" parent="."]
+transform = Transform3D(0.939693, -1.49502e-08, 0.34202, -0.34202, -4.10753e-08, 0.939693, 0, -1, -4.37114e-08, 1.25, 3.5, 0)
+layers = 64
+light_energy = 0.12
+light_indirect_energy = 0.1
+light_size = 5.0
+light_specular = 0.0
+light_bake_mode = 0
+light_cull_mask = 4293918724
+spot_range = 6.0
+spot_attenuation = 0.0
+spot_angle = 40.0
+
+[node name="SpotLight3D2" type="SpotLight3D" parent="."]
+transform = Transform3D(-0.939693, 8.46203e-08, -0.34202, -0.34202, 1.87599e-08, 0.939693, 8.59334e-08, 1, 1.13133e-08, -1.25, 3.5, 0)
+layers = 64
+light_energy = 0.12
+light_indirect_energy = 0.1
+light_size = 5.0
+light_specular = 0.0
+light_bake_mode = 0
+light_cull_mask = 4293918724
+spot_range = 6.0
+spot_attenuation = 0.0
+spot_angle = 40.0
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 follow_viewport_enabled = true
 
 [node name="PlayerHUD" parent="CanvasLayer" instance=ExtResource("2_nq0pa")]
+
+[connection signal="timeout" from="AttackTimer" to="." method="OnAttackTimerTimeout"]

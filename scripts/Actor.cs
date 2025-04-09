@@ -274,7 +274,13 @@ public class ActorBasicStats {
     }
 
     public void CalculateMaxMana() {
+        int oldTotalMana = totalMana;
         totalMana = (int)((baseMana + addedMana) * (1 + increasedMana) * (1 + moreMana));
+
+        if (oldTotalMana != 0) {
+            AdjustCurrentMana(oldTotalMana);
+        }
+
         CalculateManaRegen();
     }
 
