@@ -1,5 +1,6 @@
-[gd_scene load_steps=33 format=4 uid="uid://d2xd34fgf22vd"]
+[gd_scene load_steps=34 format=4 uid="uid://d2xd34fgf22vd"]
 
+[ext_resource type="PackedScene" uid="uid://csru05s4nyrfq" path="res://scenes/enemy_test.tscn" id="1_2ie1u"]
 [ext_resource type="PackedScene" uid="uid://btdyjtsk2j8aw" path="res://scenes/map_transition.tscn" id="1_dm2gb"]
 [ext_resource type="Script" uid="uid://dd0nmn1ut8mlk" path="res://addons/func_godot/src/map/func_godot_map.gd" id="1_hi2by"]
 [ext_resource type="Resource" uid="uid://vw6ckbf02x4g" path="res://maps/map_settings.tres" id="2_cwkjp"]
@@ -195,6 +196,11 @@ light_cull_mask = 4293918783
 shadow_enabled = true
 shadow_caster_mask = 4293918735
 directional_shadow_mode = 1
+
+[node name="Enemies" type="Node3D" parent="."]
+
+[node name="TestEnemy" parent="Enemies" instance=ExtResource("1_2ie1u")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, 12)
 
 [node name="LevelTransition" parent="." instance=ExtResource("1_dm2gb")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 0.5, 17)

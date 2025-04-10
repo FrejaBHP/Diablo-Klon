@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 
 public partial class Player : Actor {
+	PackedScene testAttackScene = GD.Load<PackedScene>("res://scenes/test_attack_tween.tscn");
+
 	public HUD PlayerHUD;
 
 	private const float RayLength = 1000f;
@@ -31,6 +33,7 @@ public partial class Player : Actor {
 	private Timer attackTimer;
 	private bool isAttacking = false;
 	private bool isAttackHeld = false;
+	private float outgoingEffectAttachmentHeight = 1f;
 
 	//private Node3D testSwordNode;
 	//private AnimationPlayer animPlayer;
@@ -113,9 +116,6 @@ public partial class Player : Actor {
 		CalculateStats();
 
 		attackTimer = GetNode<Timer>("AttackTimer");
-
-		//testSwordNode = GetNode<Node3D>("TestSwordNode");
-		//animPlayer = testSwordNode.GetNode<AnimationPlayer>("AnimationPlayer");
 	}
 
     public override void _UnhandledInput(InputEvent @event) {
@@ -192,6 +192,7 @@ public partial class Player : Actor {
 		newMouseButtonInput = true;
 	}
 
+	// Logic for mouse movement
 	private void HandleMouseMovementInput() {
 		if (!MovingTowardsObject) {
 			Vector3 from = playerCamera.ProjectRayOrigin(lastMouseInputPos);
@@ -204,7 +205,6 @@ public partial class Player : Actor {
 				moveTo = result["position"].AsVector3();
 				Vector3 direction = GlobalPosition.DirectionTo(moveTo);
 				ApplyGroundedVelocity(direction.X, direction.Z);
-				//Velocity = direction * (float)movementSpeed.STotal;
 
 				Vector3 lookAt = moveTo with { Y = GlobalPosition.Y };
 				if (!Mathf.IsZeroApprox(GlobalPosition.DistanceTo(lookAt))) {
@@ -215,7 +215,6 @@ public partial class Player : Actor {
 		else {
 			Vector3 direction = GlobalPosition.DirectionTo(moveTo);
 			ApplyGroundedVelocity(direction.X, direction.Z);
-			//Velocity = direction * (float)movementSpeed.STotal;
 
 			Vector3 lookAt = moveTo with { Y = GlobalPosition.Y };
 			if (!Mathf.IsZeroApprox(GlobalPosition.DistanceTo(lookAt))) {
@@ -226,13 +225,16 @@ public partial class Player : Actor {
 		newMouseButtonInput = false;
 	}
 
+	// Logic for WASD movement
 	public void ProcessMovementKeyInput() {
 		Vector2 inputDirection = Input.GetVector("MoveLeftKey", "MoveRightKey", "MoveUpKey", "MoveDownKey");
 		Vector3 moveDirection = new(inputDirection.X, 0, inputDirection.Y);
+		// Since the perspective is isometric, input is applied at a 45 degree angle to align with what you'd expect from the camera
 		moveDirection = moveDirection.Rotated(Vector3.Up, (float)Math.PI / 4);
 
 		//debugLabel.Text = $"Move Input Vector\nX = {moveDirection.X}\nY = {moveDirection.Y}\nZ = {moveDirection.Z}\nLength: {moveDirection.Length()}";
 
+		// If targeting and moving towards a node, but not pressing anything - otherwise the movement would be interrupted immediately
 		if (MovingTowardsObject && moveDirection == Vector3.Zero) {
 			return;
 		}
@@ -242,6 +244,7 @@ public partial class Player : Actor {
 		}
     }
 
+	// Makes the player character face the mouse pointer
 	public void FaceMouse() {
 		Vector2 mousePosition = GetViewport().GetMousePosition();
 		Vector2I windowSize = GetTree().Root.GetViewport().GetWindow().Size;
@@ -253,9 +256,11 @@ public partial class Player : Actor {
 		diffVector = diffVector.Normalized();
 
 		if (diffVector != Vector3.Zero) {
+			// Since the perspective is isometric, input is applied at a 45 degree angle to align with what you'd expect from the camera
 			diffVector = diffVector.Rotated(Vector3.Up, (float)Math.PI / 4);
 
-			Vector3 lookVector = GlobalPosition + (diffVector * 100);
+			// Projects a relative position from the player to rotate towards
+			Vector3 lookVector = GlobalPosition + (diffVector * 10);
 			LookAt(lookVector, null, true);
 		}
 	}
@@ -282,7 +287,6 @@ public partial class Player : Actor {
 
 			if (remainingDist <= (float)movementSpeed.STotal / 100f) {
 				ApplyGroundedVelocity(0f, 0f);
-				//Velocity = Vector3.Zero;
 
 				if (targetedNode != null) {
 					if (targetedNode.IsInGroup("WorldItem")) {
@@ -304,7 +308,7 @@ public partial class Player : Actor {
 
 		MoveAndSlide();
 
-		debugLabel.Text = $"\n\nVelocity: {Velocity}\nVel Length: {Velocity.Length()}\nRem. Dist: {remainingDist}\nRotation: {RotationDegrees.Y}";
+		//debugLabel.Text = $"\n\nVelocity: {Velocity}\nVel Length: {Velocity.Length()}\nRem. Dist: {remainingDist}\nRotation: {RotationDegrees.Y}";
 	}
 
 	public void TestAttack() {
@@ -312,6 +316,18 @@ public partial class Player : Actor {
 			isAttacking = true;
 			attackTimer.Start(MainHand.AttackSpeed);
 			GD.Print($"Started attack timer with duration {MainHand.AttackSpeed:F2} seconds");
+
+			TestAttack testAttack = testAttackScene.Instantiate() as TestAttack;
+			GetTree().Root.GetChild(0).AddChild(testAttack);
+
+			testAttack.GlobalPosition = testAttack.Position with { 
+				X = GlobalPosition.X, 
+				Y = GlobalPosition.Y + outgoingEffectAttachmentHeight, 
+				Z = GlobalPosition.Z 
+			};
+			testAttack.GlobalRotation = GlobalRotation;
+
+			testAttack.StartAttack(2f, 2.5f, 25f);
 		}
 	}
 
@@ -325,6 +341,7 @@ public partial class Player : Actor {
 		remainingDist = 0f;
 	}
 
+	// Sets velocity for the X and Z axes (grounded) to avoid accidentally setting or changing Y (vertical) velocity
 	public void ApplyGroundedVelocity(float velX, float velZ) {
 		Vector3 velocity = Velocity;
 		velocity.X = velX * (float)movementSpeed.STotal;

@@ -21,7 +21,7 @@ material = SubResource("StandardMaterial3D_dqkch")
 
 [sub_resource type="BoxMesh" id="BoxMesh_qlg0r"]
 material = SubResource("StandardMaterial3D_qlg0r")
-size = Vector3(0.25, 0.25, 0.5)
+size = Vector3(0.1, 0.1, 0.3)
 
 [sub_resource type="Animation" id="Animation_lv0no"]
 resource_name = "new_animation"
@@ -48,7 +48,7 @@ layers = 4
 mesh = SubResource("CapsuleMesh_dqkch")
 
 [node name="DirectionMesh" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0.7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0.6)
 layers = 4
 mesh = SubResource("BoxMesh_qlg0r")
 

@@ -1,4 +1,6 @@
-[gd_scene load_steps=6 format=3 uid="uid://ctw6e5lim1ji"]
+[gd_scene load_steps=7 format=3 uid="uid://ctw6e5lim1ji"]
+
+[ext_resource type="Script" uid="uid://bggk1hqv04l1" path="res://scripts/enemies/EnemyBase.cs" id="1_fr7lv"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tlqyv"]
 
@@ -17,9 +19,12 @@ material = SubResource("StandardMaterial3D_dqkch")
 
 [sub_resource type="BoxMesh" id="BoxMesh_sw0xa"]
 material = SubResource("StandardMaterial3D_qlg0r")
-size = Vector3(0.25, 0.25, 0.5)
+size = Vector3(0.1, 0.1, 0.3)
 
 [node name="EnemyBase" type="CharacterBody3D"]
+collision_layer = 32
+collision_mask = 7
+script = ExtResource("1_fr7lv")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -31,6 +36,9 @@ layers = 4
 mesh = SubResource("CapsuleMesh_fr7lv")
 
 [node name="DirectionMesh" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0.7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0.6)
 layers = 4
 mesh = SubResource("BoxMesh_sw0xa")
+
+[node name="ResBarAnchor" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0)

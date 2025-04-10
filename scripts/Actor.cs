@@ -41,6 +41,9 @@ public class ActorBasicStats {
     private int totalLife;
     public int TotalLife { get => totalLife; }
 
+    public delegate void CurrentLifeChangedEventHandler(object sender, double newCurrentLife);
+    public event CurrentLifeChangedEventHandler CurrentLifeChanged;
+
     private double currentLife;
     public double CurrentLife {
         get => currentLife;
@@ -51,6 +54,8 @@ public class ActorBasicStats {
             else {
                 currentLife = value;
             }
+
+            CurrentLifeChanged?.Invoke(this, currentLife);
         }
     }
 
@@ -362,6 +367,8 @@ public class ActorMainHand {
 }
 
 public partial class Actor : CharacterBody3D {
+    protected PackedScene floatingResourceBarsScene = GD.Load<PackedScene>("res://scenes/gui/actor_floating_resource_bars.tscn");
+
     protected int ticksPerSecond = ProjectSettings.GetSetting("physics/common/physics_ticks_per_second").AsInt32();
 
     public ActorBasicStats BasicStats = new();
@@ -373,9 +380,39 @@ public partial class Actor : CharacterBody3D {
     public Stat CritChanceMod = new(1, false);
     public Stat CastSpeedMod = new(1, false);
 
+    protected FloatingResourceBars fResBars;
+
     protected ActorMainHand MainHand = new();
     protected Item OffHandItem = null;
     protected bool IsOffHandAWeapon = false;
+
+    public override void _Ready() {
+        BasicStats.CurrentLifeChanged += OnCurrentLifeChanged;
+    }
+
+    protected void AddFloatingBars(Node3D anchor) {
+        fResBars = floatingResourceBarsScene.Instantiate<FloatingResourceBars>();
+        anchor.AddChild(fResBars);
+
+        fResBars.SetLifePercentage(BasicStats.CurrentLife / BasicStats.TotalLife);
+
+        if (BasicStats.TotalMana != 0) {
+            fResBars.SetManaPercentage(BasicStats.CurrentMana / BasicStats.TotalMana);
+        }
+        else {
+            fResBars.SetManaPercentage(0);
+            fResBars.SetManaBarVisibility(false);
+        }
+        
+    }
+
+    protected void OnCurrentLifeChanged(object sender, double newCurrentLife) {
+        if (fResBars != null) {
+            fResBars.SetLifePercentage(newCurrentLife / BasicStats.TotalLife);
+        }
+    }
+
+    
 
     public void CalculateHit() {
         HitDamageInstance damageInstance = new HitDamageInstance(0f, 0f, 0f, 0f, 0f);
@@ -394,6 +431,11 @@ public partial class Actor : CharacterBody3D {
         if (BasicStats.CurrentLife > prevLife) {
             //GD.Print($"+{BasicStats.CurrentLife - prevLife}");
         }
+    }
+
+    // Skal laves om senere til at bruge hit calc
+    public void TakeDamage(double damage) {
+        BasicStats.CurrentLife -= damage;
     }
 
 }

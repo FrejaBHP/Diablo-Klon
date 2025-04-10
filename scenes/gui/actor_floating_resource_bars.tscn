@@ -1,0 +1,63 @@
+[gd_scene load_steps=10 format=3 uid="uid://csvhq1u43ybl3"]
+
+[ext_resource type="Script" uid="uid://dmnobj3wdx2by" path="res://scripts/FloatingResourceBars.cs" id="1_soq5p"]
+
+[sub_resource type="Gradient" id="Gradient_26veb"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0.313726, 0.313726, 0.313726, 0.784314)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_33mjm"]
+gradient = SubResource("Gradient_26veb")
+width = 72
+height = 8
+
+[sub_resource type="Gradient" id="Gradient_soq5p"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(1, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_v3duh"]
+gradient = SubResource("Gradient_soq5p")
+width = 72
+height = 8
+
+[sub_resource type="Gradient" id="Gradient_33mjm"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0.313726, 0.313726, 0.313726, 0.784314)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_inwid"]
+gradient = SubResource("Gradient_33mjm")
+width = 72
+height = 8
+
+[sub_resource type="Gradient" id="Gradient_v3duh"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0, 0, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_26veb"]
+gradient = SubResource("Gradient_v3duh")
+width = 72
+height = 8
+fill_to = Vector2(0, 0)
+
+[node name="BarContainer" type="VBoxContainer"]
+offset_right = 72.0
+offset_bottom = 16.0
+mouse_filter = 2
+theme_override_constants/separation = 0
+script = ExtResource("1_soq5p")
+
+[node name="LifeBar" type="TextureProgressBar" parent="."]
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+mouse_filter = 2
+nine_patch_stretch = true
+texture_under = SubResource("GradientTexture2D_33mjm")
+texture_progress = SubResource("GradientTexture2D_v3duh")
+
+[node name="ManaBar" type="TextureProgressBar" parent="."]
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+mouse_filter = 2
+nine_patch_stretch = true
+texture_under = SubResource("GradientTexture2D_inwid")
+texture_progress = SubResource("GradientTexture2D_26veb")

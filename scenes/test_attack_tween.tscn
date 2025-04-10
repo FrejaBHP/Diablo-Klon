@@ -1,0 +1,31 @@
+[gd_scene load_steps=4 format=3 uid="uid://cyg0q6yqe4cex"]
+
+[ext_resource type="Texture2D" uid="uid://b3f5qtrgqlepk" path="res://textures/effects/sword_thrust.png" id="1_080fp"]
+[ext_resource type="Script" uid="uid://duqmrlujbi8vm" path="res://scripts/skills/TestAttack.cs" id="1_xifco"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_xifco"]
+radius = 0.175
+height = 1.2
+
+[node name="Node3D" type="Node3D"]
+script = ExtResource("1_xifco")
+
+[node name="Hitbox" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0.6)
+collision_layer = 0
+collision_mask = 32
+input_ray_pickable = false
+monitorable = false
+
+[node name="HitCollision" type="CollisionShape3D" parent="Hitbox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4.9738e-14)
+shape = SubResource("CapsuleShape3D_xifco")
+
+[node name="EffectSprite" type="Sprite3D" parent="Hitbox"]
+transform = Transform3D(1.75, 0, 0, 0, 0.71, 0, 0, 0, 1, 0, 5.96046e-08, 0)
+layers = 16
+texture_filter = 0
+texture = ExtResource("1_080fp")
+
+[connection signal="body_entered" from="Hitbox" to="." method="OnBodyEntered"]
+[connection signal="body_exited" from="Hitbox" to="." method="OnBodyExited"]
