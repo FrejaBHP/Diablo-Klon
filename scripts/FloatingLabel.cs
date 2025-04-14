@@ -1,19 +1,6 @@
 using Godot;
 using System;
 
-public enum ELabelColourSet {
-	Default,
-	Item
-}
-
-public enum ETextColour {
-	Default,
-	Common,
-	Magic,
-	Rare,
-	Unique
-}
-
 public partial class FloatingLabel : Control {
 	public bool IsSticky = false;
 
@@ -227,6 +214,10 @@ public partial class FloatingLabel : Control {
 			case ETextColour.Unique:
 				textColour = UILib.ColorUnique;
 				//typeLabel.Visible = true;
+				break;
+
+			case ETextColour.Skill:
+				textColour = UILib.ColorSkill;
 				break;
 			
 			default:

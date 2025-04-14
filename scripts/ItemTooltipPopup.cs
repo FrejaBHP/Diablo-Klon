@@ -3,6 +3,7 @@ using System;
 
 public partial class ItemTooltipPopup : PopupPanel {
 	public Rect2 ItemRect;
+	public bool RightSide;
 
 	public override void _Ready() {
 		AdjustPopupPosition();
@@ -30,10 +31,18 @@ public partial class ItemTooltipPopup : PopupPanel {
 		if (correctedPosition.Y < 0) {
 			correctedPosition.Y -= correctedPosition.Y;
 
-			// If tooltip would now cover the hovered item, move it to the left
+			// If tooltip would now cover the hovered item
 			if (correctedPosition.Y + GetContentsMinimumSize().Y > ItemRect.Position.Y) {
 				float distanceToMove = ItemRect.Size.X - (correctedPosition.X - ItemRect.Position.X);
-				correctedPosition.X -= distanceToMove;
+
+				// If part of the right side of the window, such as the inventory panel, move it to the left
+				if (RightSide) {
+					correctedPosition.X -= distanceToMove;
+				}
+				// Otherwise, move it to the right
+				else {
+					correctedPosition.X += distanceToMove;
+				}
 			}
 		}
 		// If tooltip would extend below the window

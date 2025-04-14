@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Godot;
 
 public class ActorBasicStats {
@@ -371,6 +372,8 @@ public partial class Actor : CharacterBody3D {
 
     protected int ticksPerSecond = ProjectSettings.GetSetting("physics/common/physics_ticks_per_second").AsInt32();
 
+    public List<Skill> Skills = new List<Skill>();
+
     public ActorBasicStats BasicStats = new();
     public ActorDamageModifiers DamageMods = new();
     public ActorResistances Resistances = new();
@@ -379,6 +382,8 @@ public partial class Actor : CharacterBody3D {
     public Stat AttackSpeedMod = new(1, false);
     public Stat CritChanceMod = new(1, false);
     public Stat CastSpeedMod = new(1, false);
+
+    public float OutgoingEffectAttachmentHeight { get; protected set; } = 1f;
 
     protected FloatingResourceBars fResBars;
 
@@ -411,8 +416,6 @@ public partial class Actor : CharacterBody3D {
             fResBars.SetLifePercentage(newCurrentLife / BasicStats.TotalLife);
         }
     }
-
-    
 
     public void CalculateHit() {
         HitDamageInstance damageInstance = new HitDamageInstance(0f, 0f, 0f, 0f, 0f);

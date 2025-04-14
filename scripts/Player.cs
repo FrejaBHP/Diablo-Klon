@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 
 public partial class Player : Actor {
-	PackedScene testAttackScene = GD.Load<PackedScene>("res://scenes/test_attack_tween.tscn");
-
 	public HUD PlayerHUD;
 
 	private const float RayLength = 1000f;
@@ -33,7 +31,6 @@ public partial class Player : Actor {
 	private Timer attackTimer;
 	private bool isAttacking = false;
 	private bool isAttackHeld = false;
-	private float outgoingEffectAttachmentHeight = 1f;
 
 	//private Node3D testSwordNode;
 	//private AnimationPlayer animPlayer;
@@ -101,10 +98,7 @@ public partial class Player : Actor {
 
 		debugLabel = GetNode<Label>("DebugLabel");
 		PlayerHUD = GetNode<HUD>("CanvasLayer/PlayerHUD");
-		PlayerHUD.PlayerOwner = this;
-		PlayerHUD.PlayerPanel.PlayerOwner = this;
-		PlayerHUD.PlayerInventory.PlayerOwner = this;
-		PlayerHUD.PlayerLowerHUD.PlayerOwner = this;
+		PlayerHUD.AssignPlayer(this);
 		moveTo = GlobalPosition;
 
 		strength.StatTotalChanged += StrTotalChanged;
@@ -146,10 +140,13 @@ public partial class Player : Actor {
 
     public override void _UnhandledKeyInput(InputEvent @event) {
         if (@event.IsActionPressed("InventoryKey")) {
-			PlayerHUD.PlayerInventory.ToggleInventory();
+			PlayerHUD.ToggleInventory();
 		}
 		else if (@event.IsActionPressed("CharacterPanelKey")) {
-			PlayerHUD.PlayerPanel.TogglePanel();
+			PlayerHUD.TogglePlayerPanel();
+		}
+		else if (@event.IsActionPressed("SkillPanelKey")) {
+			PlayerHUD.ToggleSkillPanel();
 		}
 		// logik for at spawne items skal flyttes til en mere generel klasse som fx Combat eller Game
 		else if (@event.IsActionPressed("DebugSpawnRandomItem")) {
@@ -169,6 +166,11 @@ public partial class Player : Actor {
 		}
 		else if (@event.IsActionPressed("DebugSpawnRandomJewellery")) {
 			Item item = ItemGeneration.GenerateItemFromCategory(EItemCategory.Jewellery);
+			WorldItem worldItem = item.ConvertToWorldItem();
+			DropItem(worldItem);
+		}
+		else if (@event.IsActionPressed("DebugSpawnSkillItem")) {
+			Item item = ItemGeneration.GenerateRandomSkillItem();
 			WorldItem worldItem = item.ConvertToWorldItem();
 			DropItem(worldItem);
 		}
@@ -317,6 +319,11 @@ public partial class Player : Actor {
 			attackTimer.Start(MainHand.AttackSpeed);
 			GD.Print($"Started attack timer with duration {MainHand.AttackSpeed:F2} seconds");
 
+			if (Skills.Count > 0) {
+				Skills[0].UseSkill();
+			}
+
+			/*
 			TestAttack testAttack = testAttackScene.Instantiate() as TestAttack;
 			GetTree().Root.GetChild(0).AddChild(testAttack);
 
@@ -328,6 +335,7 @@ public partial class Player : Actor {
 			testAttack.GlobalRotation = GlobalRotation;
 
 			testAttack.StartAttack(2f, 2.5f, 25f);
+			*/
 		}
 	}
 
@@ -360,7 +368,7 @@ public partial class Player : Actor {
 		CanvasLayer gameObjectLayer = game.GetNode<CanvasLayer>("WorldObjects");
 
 		gameObjectLayer.AddChild(worldItem);
-		worldItem.Position = Position;
+		worldItem.GlobalPosition = GlobalPosition with { Y = GlobalPosition.Y + 0.25f };
 		worldItem.PostSpawn();
 	}
 

@@ -10,7 +10,6 @@ public partial class TestEnemy : EnemyBase {
 
     public override void _Ready() {
         base._Ready();
-        GD.Print("TestEnemy _Ready() executed");
     }
 
 

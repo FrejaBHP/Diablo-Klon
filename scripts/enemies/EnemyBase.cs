@@ -11,7 +11,5 @@ public partial class EnemyBase : Actor {
         AddFloatingBars(resBarAnchor);
 
         AddToGroup("Enemy");
-
-        GD.Print("EnemyBase _Ready() executed");
     }
 }

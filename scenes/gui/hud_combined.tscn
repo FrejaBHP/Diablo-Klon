@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://bjr2unj1x1myt"]
+[gd_scene load_steps=6 format=3 uid="uid://bjr2unj1x1myt"]
 
 [ext_resource type="Script" uid="uid://blgot83d4npeq" path="res://scripts/HUD.cs" id="1_k6sm4"]
 [ext_resource type="PackedScene" uid="uid://feaoc135f1ku" path="res://scenes/gui/hud_inventory.tscn" id="1_v82wo"]
 [ext_resource type="PackedScene" uid="uid://b7u2byhy4hvye" path="res://scenes/gui/hud_player_panel.tscn" id="2_stx8b"]
+[ext_resource type="PackedScene" uid="uid://com0l155ax0xj" path="res://scenes/gui/hud_skill_panel.tscn" id="3_psy8l"]
 [ext_resource type="PackedScene" uid="uid://dn73hlfk77c1y" path="res://scenes/gui/hud_lower.tscn" id="3_ucw7d"]
 
 [node name="PlayerHUD" type="Control"]
@@ -18,6 +19,11 @@ script = ExtResource("1_k6sm4")
 [node name="PlayerPanel" parent="." instance=ExtResource("2_stx8b")]
 visible = false
 layout_mode = 1
+
+[node name="SkillPanel" parent="." instance=ExtResource("3_psy8l")]
+visible = false
+layout_mode = 1
+offset_right = 512.0
 
 [node name="Inventory" parent="." instance=ExtResource("1_v82wo")]
 visible = false

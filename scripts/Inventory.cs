@@ -171,6 +171,21 @@ public partial class Inventory : Control {
         return true;
     }
 
+    public void ClearSelectedItem() {
+        if (selectedItem != null) {
+            selectedItem.Position = Vector2.Zero;
+
+            selectedItem.IsClicked = false;
+            selectedItem.ToggleBackground();
+            selectedItem.ZIndex = 1;
+            //selectedItem.ToggleClickable();
+            selectedItem.ClearOccupiedSlots();
+
+            IsAnItemSelected = false;
+            selectedItem = null;
+        }
+    }
+
     public void ItemClickSelect(InventoryItem item) {
         if (!IsAnItemSelected && selectedItem == null) {
             selectedItem = item;

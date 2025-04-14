@@ -52,6 +52,10 @@ public partial class WorldItem : StaticBody3D {
 				floatingLabel.ApplyTextColour(ETextColour.Unique);
 				break;
 
+			case EItemRarity.Skill:
+				floatingLabel.ApplyTextColour(ETextColour.Skill);
+				break;
+
 			default:
 				floatingLabel.ApplyTextColour(ETextColour.Default);
 				break;

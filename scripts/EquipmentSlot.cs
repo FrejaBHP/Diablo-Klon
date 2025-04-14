@@ -62,7 +62,7 @@ public partial class EquipmentSlot : PanelContainer {
 		if (itemInSlot != null) {
 			HighlightSlot();
 			Vector2 anchor = GlobalPosition with { X = GlobalPosition.X + Size.X / 2, Y = GlobalPosition.Y };
-			itemInSlot.SignalCreateTooltip(anchor, GetGlobalRect());
+			itemInSlot.SignalCreateEquipmentTooltip(anchor, GetGlobalRect(), true);
 		}
 	}
 
@@ -81,7 +81,7 @@ public partial class EquipmentSlot : PanelContainer {
 
 		if (itemInSlot != null && IsHovered) {
 			Vector2 anchor = GlobalPosition with { X = GlobalPosition.X + Size.X / 2, Y = GlobalPosition.Y };
-			itemInSlot.SignalCreateTooltip(anchor, GetGlobalRect());
+			itemInSlot.SignalCreateEquipmentTooltip(anchor, GetGlobalRect(), true);
 		}
 	}
 

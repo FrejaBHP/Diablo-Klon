@@ -24,6 +24,12 @@ public class ArmourItemData : ItemData {
 	public int BaseEnergyShield;
 }
 
+public class SkillItemData : ItemData {
+	public ESkillName SkillName;
+	public Type SkillType;
+	public Skill SkillReference;
+}
+
 public static class ItemDataTables {
 	public static readonly List<WeaponItemData> OHSwordWeaponData = [
 		new WeaponItemData {
@@ -153,6 +159,18 @@ public static class ItemDataTables {
 			BaseArmour = 0,
 			BaseEvasion = 20,
 			BaseEnergyShield = 0,
+			ImplicitTypes = []
+		}
+	];
+
+	public static readonly List<SkillItemData> SkillData = [
+		new SkillItemData {
+			BaseName = "Skill Gem",
+			SkillName = ESkillName.BasicThrust,
+			SkillType = typeof(SkillThrust),
+			ItemSpecifierFlags = EItemBaseSpecifierFlags.NONE,
+			Texture = UILib.TextureItemD2JewelWhite,
+			MinimumLevel = 0,
 			ImplicitTypes = []
 		}
 	];

@@ -127,6 +127,21 @@ public enum EAffixFamily {
 	LocalIncreasedEnergyShield,
 }
 
+// ======== LABELS =======
+
+public enum ELabelColourSet {
+	Default,
+	Item
+}
+
+public enum ETextColour {
+	Default,
+	Common,
+	Magic,
+	Rare,
+	Unique,
+	Skill
+}
 
 // ======== ITEMS ========
 public enum EItemRarity {
@@ -134,7 +149,7 @@ public enum EItemRarity {
 	Magic,
 	Rare,
 	Unique,
-	What
+	Skill
 }
 
 public enum EItemEquipmentSlot {
@@ -148,6 +163,8 @@ public enum EItemEquipmentSlot {
 	Amulet,
 	WeaponLeft,
 	WeaponRight,
+	SkillActive,
+	SkillSupport,
 	COUNT
 }
 
@@ -163,6 +180,8 @@ public enum EItemAllBaseType {
 	Weapon1H,
 	Weapon2H,
 	Shield,
+	SkillActive,
+	SkillSupport,
 	COUNT
 }
 
@@ -224,4 +243,45 @@ public enum EItemDefences {
 	EnergyShieldArmour = EnergyShield | Armour,
 
 	All = Armour | Evasion | EnergyShield
+}
+
+
+
+public enum ESkillName {
+	BasicThrust,
+	COUNT
+}
+
+public enum ESkillType {
+    Attack,
+    Spell
+}
+
+[Flags]
+public enum ESkillTags {
+    None = 0,
+    Melee = 1 << 0,
+    Projectile = 1 << 1,
+    Area = 1 << 2,
+    Spell = 1 << 3
+}
+
+[Flags]
+public enum ESkillWeapons {
+    None = 0,
+    Sword = 1 << 0,
+    Axe = 1 << 1,
+    Mace = 1 << 2,
+    Dagger = 1 << 3,
+    Sword2H = 1 << 4,
+    Axe2H = 1 << 5,
+    Mace2H = 1 << 6,
+    Staff = 1 << 7,
+    Bow = 1 << 8,
+    Wand = 1 << 9,
+
+    AllMeleeOneHand = Sword | Axe | Mace | Dagger,
+    AllMeleeTwoHand = Sword2H | Axe2H | Mace2H | Staff,
+    AllMeleeWeapons = Sword | Axe | Mace | Dagger | Sword2H | Axe2H | Mace2H | Staff,
+    AllRangedWeapons = Bow | Wand
 }

@@ -1,11 +1,13 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using Vector2 = Godot.Vector2;
 
 public partial class InventoryItem : PanelContainer {
 	PackedScene itemTooltipScene = GD.Load<PackedScene>("res://scenes/gui/hud_item_tooltip.tscn");
+	PackedScene skillTooltipScene = GD.Load<PackedScene>("res://scenes/gui/hud_skillitem_tooltip.tscn");
 
 	public Inventory InventoryReference;
 	public bool IsClicked = false;
@@ -58,7 +60,12 @@ public partial class InventoryItem : PanelContainer {
 			isHovered = true;
 
 			Vector2 anchor = GlobalPosition with { X = GlobalPosition.X + Size.X / 2, Y = GlobalPosition.Y };
-			SignalCreateTooltip(anchor, GetGlobalRect());
+			if (ItemReference.GetType().IsSubclassOf(typeof(WeaponItem)) || ItemReference.GetType().IsSubclassOf(typeof(ArmourItem)) || ItemReference.GetType().IsSubclassOf(typeof(JewelleryItem))) {
+				SignalCreateEquipmentTooltip(anchor, GetGlobalRect(), true);
+			}
+			else if (ItemReference.GetType() == typeof(SkillItem)) {
+				SignalCreateSkillItemTooltip(anchor, GetGlobalRect(), true);
+			}
 		}
 	}
 
@@ -71,8 +78,13 @@ public partial class InventoryItem : PanelContainer {
 		}
 	}
 
-	public void SignalCreateTooltip(Vector2 anchor, Rect2 rect) {
-		InventoryReference.PlayerOwner.PlayerHUD.CreateItemTooltip(GetCustomTooltip(), anchor, rect);
+	public void SignalCreateEquipmentTooltip(Vector2 anchor, Rect2 rect, bool rightSide) {
+		InventoryReference.PlayerOwner.PlayerHUD.CreateItemTooltip(GetCustomEquipmentTooltip(), anchor, rect, rightSide);
+		hasActiveTooltip = true;
+	}
+
+	public void SignalCreateSkillItemTooltip(Vector2 anchor, Rect2 rect, bool rightSide) {
+		InventoryReference.PlayerOwner.PlayerHUD.CreateItemTooltip(GetCustomSkillTooltip(), anchor, rect, rightSide);
 		hasActiveTooltip = true;
 	}
 
@@ -195,7 +207,7 @@ public partial class InventoryItem : PanelContainer {
 		}
 	}
 
-	public Control GetCustomTooltip() {
+	public Control GetCustomEquipmentTooltip() {
 		ItemTooltip tooltipContent = itemTooltipScene.Instantiate<ItemTooltip>();
 
 		tooltipContent.NameLabel.Text = ItemReference.ItemName;
@@ -279,7 +291,53 @@ public partial class InventoryItem : PanelContainer {
 		return tooltipContent;
 	}
 
-	private HBoxContainer GenerateBaseStatLabel(string statName, string statValue, bool highlight) {
+	public Control GetCustomSkillTooltip() {
+		SkillItem skillItem = ItemReference as SkillItem;
+
+		ItemSkillTooltip tooltipContent = skillTooltipScene.Instantiate<ItemSkillTooltip>();
+
+		tooltipContent.NameLabel.Text = ItemReference.ItemName;
+		tooltipContent.NameLabel.AddThemeColorOverride("font_color", UILib.ColorSkill);
+
+        List<string> tagList = Enum.GetValues(typeof(ESkillTags)).Cast<ESkillTags>().Where(t => (skillItem.SkillReference.Tags & t) == t).Select(t => t.ToString()).ToList();
+		string tags = "";
+
+		for (int i = 1; i < tagList.Count; i++) {
+			if (i == 1) {
+				tags = tagList[1];
+			}
+			else {
+				tags += $", {tagList[i]}";
+			}
+		}
+
+		Label tagsLabel = GenerateGreyLabel(tags);
+		tooltipContent.StatsContainer.AddChild(tagsLabel);
+
+		HBoxContainer costLabel = GenerateBaseStatLabel("Cost:", skillItem.SkillReference.ManaCost.ToString() + " Mana", false);
+		tooltipContent.StatsContainer.AddChild(costLabel);
+
+		if (skillItem.SkillReference.Type == ESkillType.Attack) {
+			HBoxContainer asLabel = GenerateBaseStatLabel("Attack Speed:", skillItem.SkillReference.GetAttackSpeedModifier() + "%", false);
+			tooltipContent.StatsContainer.AddChild(asLabel);
+
+			HBoxContainer dmgLabel = GenerateBaseStatLabel("Attack Damage:", skillItem.SkillReference.GetDamageModifier() + "%", false);
+			tooltipContent.StatsContainer.AddChild(dmgLabel);
+		}
+
+
+		Label descriptionLabel = GenerateDescriptionLabel(skillItem.SkillReference.Description);
+		tooltipContent.DescriptionContainer.AddChild(descriptionLabel);
+
+		// Indtil der tilføjes synlige effekter/scaling
+		tooltipContent.EffectSeparator.Visible = false;
+		tooltipContent.EffectContainer.Visible = false;
+		
+		return tooltipContent;
+	}
+
+
+	protected HBoxContainer GenerateBaseStatLabel(string statName, string statValue, bool highlight) {
 		HBoxContainer labelContainer = new HBoxContainer();
 		labelContainer.SizeFlagsHorizontal = SizeFlags.ShrinkCenter;
 		labelContainer.MouseFilter = MouseFilterEnum.Ignore;
@@ -301,7 +359,18 @@ public partial class InventoryItem : PanelContainer {
 		return labelContainer;
 	}
 
-	private Label GenerateAffixLabel(string affixText) {
+	protected Label GenerateGreyLabel(string text) {
+		Label greyTextLabel = new Label();
+
+		greyTextLabel.Text = text;
+		greyTextLabel.AddThemeFontSizeOverride("font_size", 15);
+		greyTextLabel.AddThemeColorOverride("font_color", UILib.ColorGrey);
+		greyTextLabel.HorizontalAlignment = HorizontalAlignment.Center;
+
+		return greyTextLabel;
+	}
+
+	protected Label GenerateAffixLabel(string affixText) {
 		Label affixTextLabel = new Label();
 
 		affixTextLabel.Text = affixText;
@@ -310,5 +379,18 @@ public partial class InventoryItem : PanelContainer {
 		affixTextLabel.HorizontalAlignment = HorizontalAlignment.Center;
 
 		return affixTextLabel;
+	}
+
+	protected Label GenerateDescriptionLabel(string descriptionText) {
+		Label descriptionTextLabel = new Label();
+
+		descriptionTextLabel.CustomMinimumSize = new Vector2(350, 0);
+		descriptionTextLabel.AutowrapMode = TextServer.AutowrapMode.Word;
+		descriptionTextLabel.Text = descriptionText;
+		descriptionTextLabel.AddThemeFontSizeOverride("font_size", 15);
+		descriptionTextLabel.AddThemeColorOverride("font_color", UILib.ColorSkill);
+		descriptionTextLabel.HorizontalAlignment = HorizontalAlignment.Center;
+		
+		return descriptionTextLabel;
 	}
 }

@@ -17,6 +17,7 @@ public partial class Item {
 	public EAffixItemFlags ItemAffixFlags;
 	public int MinimumLevel = 0;
 	public int ItemLevel = 0;
+	public bool CanRarityChange = true;
 
 	public int MagicMaxPrefixes = 1;
 	public int MagicMaxSuffixes = 1;
@@ -234,6 +235,24 @@ public partial class Item {
 
 	public virtual void PostGenCalculation() {
 
+	}
+}
+
+public partial class SkillItem : Item {
+	public ESkillName SkillName;
+	public Type SkillType;
+	public Skill SkillReference;
+
+	public SkillItem() {
+		ItemAllBaseType = EItemAllBaseType.SkillActive;
+		CanRarityChange = false;
+		MagicMaxPrefixes = 0;
+		MagicMaxSuffixes = 0;
+		RareMaxPrefixes = 0;
+		RareMaxSuffixes = 0;
+
+		gridSizeX = 1;
+		gridSizeY = 1;
 	}
 }
 

@@ -361,4 +361,27 @@ public static class ItemGeneration {
 				break;
 		}
 	}
+
+	public static SkillItem GenerateRandomSkillItem() {
+		SkillItem item = new();
+		SkillItemData data;
+
+		List<SkillItemData> legalSkillItemData = new List<SkillItemData>();
+		legalSkillItemData = ItemDataTables.SkillData.ToList();
+		data = legalSkillItemData[Utilities.RNG.Next(legalSkillItemData.Count)];
+
+		item.ItemRarity = EItemRarity.Skill;
+
+		item.ItemBase = data.BaseName;
+		item.SkillName = data.SkillName;
+		item.ItemTexture = data.Texture;
+		item.SkillType = data.SkillType;
+
+		Skill newSkill = (Skill)Activator.CreateInstance(item.SkillType);
+		item.SkillReference = newSkill;
+
+		item.ItemName = item.SkillReference.Name;
+
+		return item;
+	}
 }
