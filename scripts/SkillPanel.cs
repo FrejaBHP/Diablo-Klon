@@ -65,7 +65,7 @@ public partial class SkillPanel : Control {
         SkillItem skillItem = (SkillItem)item.ItemReference;
 
         skillItem.SkillReference.ActorOwner = PlayerOwner;
-        PlayerOwner.Skills.Add(skillItem.SkillReference);
+        PlayerOwner.AddSkill(skillItem.SkillReference);
     }
 
     public void OnSkillUnequipped(Control slot, InventoryItem item) {
@@ -83,10 +83,8 @@ public partial class SkillPanel : Control {
         SkillItem skillItem = (SkillItem)item.ItemReference;
 
         skillItem.SkillReference.ActorOwner = null;
-        PlayerOwner.Skills.Remove(skillItem.SkillReference);
+        PlayerOwner.RemoveSkill(skillItem.SkillReference);
     }
-
-
 
     public void EquipSkillInCluster(SkillSlotCluster cluster, SkillSlotActive slot) {
 

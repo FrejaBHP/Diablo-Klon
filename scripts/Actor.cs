@@ -379,6 +379,8 @@ public partial class Actor : CharacterBody3D {
     public ActorResistances Resistances = new();
     public ActorPenetrations Penetrations = new();
 
+    public EActorState ActorState = EActorState.Actionable;
+
     public Stat AttackSpeedMod = new(1, false);
     public Stat CritChanceMod = new(1, false);
     public Stat CastSpeedMod = new(1, false);

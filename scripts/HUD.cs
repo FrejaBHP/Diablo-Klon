@@ -24,9 +24,9 @@ public partial class HUD : Control {
 
 		PlayerPanel.PlayerOwner = PlayerOwner;
 		PlayerInventory.PlayerOwner = PlayerOwner;
-		PlayerLowerHUD.PlayerOwner = PlayerOwner;
 
 		PlayerSkillPanel.AssignPlayer(PlayerOwner);
+		PlayerLowerHUD.AssignPlayer(PlayerOwner);
 	}
 
 	public void TogglePlayerPanel() {

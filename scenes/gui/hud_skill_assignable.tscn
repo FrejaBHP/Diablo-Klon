@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://hy83amuko8sl"]
+
+[ext_resource type="Script" uid="uid://cn5xgaq1x6uyn" path="res://scripts/SkillAssignable.cs" id="1_0yo73"]
+
+[node name="SkillAssignable" type="TextureRect"]
+custom_minimum_size = Vector2(48, 48)
+offset_right = 48.0
+offset_bottom = 48.0
+mouse_filter = 0
+expand_mode = 1
+stretch_mode = 4
+script = ExtResource("1_0yo73")
+
+[connection signal="gui_input" from="." to="." method="GUIInput"]

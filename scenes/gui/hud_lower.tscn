@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://dn73hlfk77c1y"]
+[gd_scene load_steps=7 format=3 uid="uid://dn73hlfk77c1y"]
 
 [ext_resource type="Script" uid="uid://dj4vk70ft5cgg" path="res://scripts/LowerHUD.cs" id="1_t1baj"]
 [ext_resource type="Texture2D" uid="uid://dw4rlfgcgt3o4" path="res://textures/ui/hud_health.png" id="2_fxhu6"]
 [ext_resource type="Texture2D" uid="uid://b2fn70hn06bsu" path="res://textures/ui/hud_mana.png" id="3_ah43h"]
+[ext_resource type="PackedScene" uid="uid://bbdwncxip1fvn" path="res://scenes/gui/hud_skill_hotbar.tscn" id="3_fxhu6"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_froqh"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
@@ -80,10 +81,17 @@ grow_horizontal = 0
 grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_froqh")
 
-[node name="Control" type="Control" parent="RightSide"]
+[node name="HBoxContainer" type="HBoxContainer" parent="RightSide"]
 layout_mode = 2
 
-[node name="ManaLabel" type="Label" parent="RightSide/Control"]
+[node name="SkillHotbar" parent="RightSide/HBoxContainer" instance=ExtResource("3_fxhu6")]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="RightSide/HBoxContainer"]
+custom_minimum_size = Vector2(136, 136)
+layout_mode = 2
+
+[node name="ManaLabel" type="Label" parent="RightSide/HBoxContainer/Control"]
 visible = false
 layout_mode = 1
 anchors_preset = 3
@@ -100,7 +108,7 @@ theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 5
 horizontal_alignment = 1
 
-[node name="PanelContainer" type="PanelContainer" parent="RightSide/Control"]
+[node name="PanelContainer" type="PanelContainer" parent="RightSide/HBoxContainer/Control"]
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 1
 anchors_preset = -1
@@ -116,7 +124,7 @@ grow_horizontal = 0
 grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_37rsg")
 
-[node name="ManaOrb" type="TextureProgressBar" parent="RightSide/Control/PanelContainer"]
+[node name="ManaOrb" type="TextureProgressBar" parent="RightSide/HBoxContainer/Control/PanelContainer"]
 layout_mode = 2
 value = 100.0
 fill_mode = 3
@@ -125,5 +133,5 @@ texture_progress = ExtResource("3_ah43h")
 
 [connection signal="mouse_entered" from="LeftSide/Control/PanelContainer" to="." method="OnLifeOrbEntered"]
 [connection signal="mouse_exited" from="LeftSide/Control/PanelContainer" to="." method="OnLifeOrbExited"]
-[connection signal="mouse_entered" from="RightSide/Control/PanelContainer" to="." method="OnManaOrbEntered"]
-[connection signal="mouse_exited" from="RightSide/Control/PanelContainer" to="." method="OnManaOrbExited"]
+[connection signal="mouse_entered" from="RightSide/HBoxContainer/Control/PanelContainer" to="." method="OnManaOrbEntered"]
+[connection signal="mouse_exited" from="RightSide/HBoxContainer/Control/PanelContainer" to="." method="OnManaOrbExited"]

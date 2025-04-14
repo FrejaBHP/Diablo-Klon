@@ -29,8 +29,10 @@ public partial class Player : Actor {
 	public Node3D TargetedNode { get => targetedNode; }
 
 	private Timer attackTimer;
-	private bool isAttacking = false;
-	private bool isAttackHeld = false;
+	private bool isLeftClickHeld = false;
+	private bool isRightClickHeld = false;
+	private bool isSkillInput3Held = false;
+	private bool isSkillInput4Held = false;
 
 	//private Node3D testSwordNode;
 	//private AnimationPlayer animPlayer;
@@ -124,16 +126,24 @@ public partial class Player : Actor {
 					}
 				}
 				else {
+					isLeftClickHeld = true;
+
 					if (movementInputMethod == EMovementInputMethod.Mouse) {
 						SetDestinationPosition(mbe.GlobalPosition);
 					}
+					//else if (movementInputMethod == EMovementInputMethod.Keyboard) {
+					//	UseSkill(0);
+					//}
 				}
 			}
+			else if (mbe.ButtonIndex == MouseButton.Left && mbe.IsReleased()) {
+				isLeftClickHeld = false;
+			}
 			else if (mbe.ButtonIndex == MouseButton.Right && mbe.IsPressed()) {
-				isAttackHeld = true;
+				isRightClickHeld = true;
 			}
 			else if (mbe.ButtonIndex == MouseButton.Right && mbe.IsReleased()) {
-				isAttackHeld = false;
+				isRightClickHeld = false;
 			}
 		}
     }
@@ -147,6 +157,18 @@ public partial class Player : Actor {
 		}
 		else if (@event.IsActionPressed("SkillPanelKey")) {
 			PlayerHUD.ToggleSkillPanel();
+		}
+		else if (@event.IsActionPressed("SkillInput3")) {
+			isSkillInput3Held = true;
+		}
+		else if (@event.IsActionReleased("SkillInput3")) {
+			isSkillInput3Held = false;
+		}
+		else if (@event.IsActionPressed("SkillInput4")) {
+			isSkillInput4Held = true;
+		}
+		else if (@event.IsActionReleased("SkillInput4")) {
+			isSkillInput4Held = false;
 		}
 		// logik for at spawne items skal flyttes til en mere generel klasse som fx Combat eller Game
 		else if (@event.IsActionPressed("DebugSpawnRandomItem")) {
@@ -280,8 +302,17 @@ public partial class Player : Actor {
 			HandleMouseMovementInput();
 		}
 
-		if (isAttackHeld) {
-			TestAttack();
+		if (isLeftClickHeld && movementInputMethod == EMovementInputMethod.Keyboard) {
+			UseSkill(0);
+		}
+		else if (isRightClickHeld) {
+			UseSkill(1);
+		}
+		else if (isSkillInput3Held) {
+			UseSkill(2);
+		}
+		else if (isSkillInput4Held) {
+			UseSkill(3);
 		}
 
 		if (movementInputMethod == EMovementInputMethod.Mouse || MovingTowardsObject) {
@@ -313,35 +344,69 @@ public partial class Player : Actor {
 		//debugLabel.Text = $"\n\nVelocity: {Velocity}\nVel Length: {Velocity.Length()}\nRem. Dist: {remainingDist}\nRotation: {RotationDegrees.Y}";
 	}
 
-	public void TestAttack() {
-		if (!isAttacking) {
-			isAttacking = true;
+	public void AddSkill(Skill skill) {
+		Skills.Add(skill);
+	}
+
+	public void RemoveSkill(Skill skill) {
+		PlayerHUD.PlayerLowerHUD.GetSkillHotbar().ClearInvalidSkills(skill.SkillName);
+		Skills.Remove(skill);
+	}
+
+	public void UseSkill(int skillNo) {
+		if (ActorState == EActorState.Actionable) {
+			ActorState = EActorState.Attacking;
 			attackTimer.Start(MainHand.AttackSpeed);
-			GD.Print($"Started attack timer with duration {MainHand.AttackSpeed:F2} seconds");
 
-			if (Skills.Count > 0) {
-				Skills[0].UseSkill();
+			switch (skillNo) {
+				case 0:
+					PlayerHUD.PlayerLowerHUD.GetSkillHotbar().SkillHotbarSlot1.TryUseSkill();
+					break;
+				case 1:
+					PlayerHUD.PlayerLowerHUD.GetSkillHotbar().SkillHotbarSlot2.TryUseSkill();
+					break;
+				case 2:
+					PlayerHUD.PlayerLowerHUD.GetSkillHotbar().SkillHotbarSlot3.TryUseSkill();
+					break;
+				case 3: 
+					PlayerHUD.PlayerLowerHUD.GetSkillHotbar().SkillHotbarSlot4.TryUseSkill();
+					break;
 			}
+		}
+	}
 
-			/*
-			TestAttack testAttack = testAttackScene.Instantiate() as TestAttack;
-			GetTree().Root.GetChild(0).AddChild(testAttack);
+	public void TestAttack() {
+		if (ActorState == EActorState.Actionable) {
+			if (Skills.Count > 0) {
+				ActorState = EActorState.Attacking;
+				attackTimer.Start(MainHand.AttackSpeed);
+				Skills[0].UseSkill();
 
-			testAttack.GlobalPosition = testAttack.Position with { 
-				X = GlobalPosition.X, 
-				Y = GlobalPosition.Y + outgoingEffectAttachmentHeight, 
-				Z = GlobalPosition.Z 
-			};
-			testAttack.GlobalRotation = GlobalRotation;
-
-			testAttack.StartAttack(2f, 2.5f, 25f);
-			*/
+				GD.Print($"Started attack timer with duration {MainHand.AttackSpeed:F2} seconds");
+			}
 		}
 	}
 
 	public void OnAttackTimerTimeout() {
-		isAttacking = false;
+		if (ActorState != EActorState.Stunned) {
+			ActorState = EActorState.Actionable;
+		}
 	}
+
+	// For later
+	public void OnStunned() {
+		if (ActorState == EActorState.Attacking) {
+			
+		}
+
+		ActorState = EActorState.Stunned;
+	}
+
+	// Ditto
+	public void OnStunnedTimeout() {
+		ActorState = EActorState.Actionable;
+	}
+
 
 	public void ResetNodeTarget() {
 		targetedNode = null;

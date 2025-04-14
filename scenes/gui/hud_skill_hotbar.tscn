@@ -1,0 +1,35 @@
+[gd_scene load_steps=3 format=3 uid="uid://bbdwncxip1fvn"]
+
+[ext_resource type="Script" uid="uid://cepw7vhqxkyvd" path="res://scripts/SkillHotbar.cs" id="1_beojg"]
+[ext_resource type="PackedScene" uid="uid://ddmq2hsbxqs2f" path="res://scenes/gui/hud_skill_hotbar_slot.tscn" id="1_piif7"]
+
+[node name="HotbarContainer" type="VBoxContainer"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -74.0
+offset_right = 292.0
+grow_vertical = 0
+alignment = 2
+script = ExtResource("1_beojg")
+
+[node name="SkillAssignmentGrid" type="GridContainer" parent="."]
+layout_mode = 2
+columns = 4
+
+[node name="SkillHotbar" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 4
+alignment = 1
+
+[node name="SkillHotbarSlot1" parent="SkillHotbar" instance=ExtResource("1_piif7")]
+layout_mode = 2
+
+[node name="SkillHotbarSlot2" parent="SkillHotbar" instance=ExtResource("1_piif7")]
+layout_mode = 2
+
+[node name="SkillHotbarSlot3" parent="SkillHotbar" instance=ExtResource("1_piif7")]
+layout_mode = 2
+
+[node name="SkillHotbarSlot4" parent="SkillHotbar" instance=ExtResource("1_piif7")]
+layout_mode = 2

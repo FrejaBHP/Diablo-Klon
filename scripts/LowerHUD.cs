@@ -2,17 +2,30 @@ using Godot;
 using System;
 
 public partial class LowerHUD : Control {
-    public Player PlayerOwner;
+    public Player PlayerOwner { get; protected set; }
     private Label lifeLabel;
     private Label manaLabel;
     private TextureProgressBar lifeOrb;
     private TextureProgressBar manaOrb;
 
+    private SkillHotbar skillHotbar;
+
     public override void _Ready() {
         lifeLabel = GetNode<Label>("LeftSide/Control/LifeLabel");
-        manaLabel = GetNode<Label>("RightSide/Control/ManaLabel");
+        manaLabel = GetNode<Label>("RightSide/HBoxContainer/Control/ManaLabel");
         lifeOrb = GetNode<TextureProgressBar>("LeftSide/Control/PanelContainer/LifeOrb");
-        manaOrb = GetNode<TextureProgressBar>("RightSide/Control/PanelContainer/ManaOrb");
+        manaOrb = GetNode<TextureProgressBar>("RightSide/HBoxContainer/Control/PanelContainer/ManaOrb");
+
+        skillHotbar = GetNode<SkillHotbar>("RightSide/HBoxContainer/SkillHotbar");
+    }
+
+    public void AssignPlayer(Player player) {
+        PlayerOwner = player;
+        skillHotbar.PlayerOwner = PlayerOwner;
+    }
+
+    public SkillHotbar GetSkillHotbar() {
+        return skillHotbar;
     }
 
     public void UpdateOrbs() {

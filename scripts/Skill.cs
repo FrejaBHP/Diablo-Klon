@@ -4,18 +4,20 @@ using Godot;
 public abstract class Skill {
     protected static readonly PackedScene thrustAttackScene = GD.Load<PackedScene>("res://scenes/test_attack_tween.tscn");
 
-
     public Actor ActorOwner { get; set; }
 
     public string Name { get; protected set; }
     public string Description { get; protected set; }
 
+    public ESkillName SkillName { get; protected set; }
     public ESkillType Type { get; protected set; }
     public ESkillTags Tags { get; protected set; }
+    public Texture2D Texture { get; protected set; }
 
     public int ManaCost { get; protected set; }
     public double AddedDamageModifier { get; protected set; }
     public double SpeedModifier { get; protected set; }
+    public double Cooldown { get; protected set; }
 
     public abstract void UseSkill();
 
@@ -55,12 +57,15 @@ public class SkillThrust : Skill, IAttack, IMeleeSkill {
         Name = "Thrust";
         Description = "Attacks in a straight line with a melee weapon.";
 
+        SkillName = ESkillName.BasicThrust;
         Type = ESkillType.Attack;
         Tags = ESkillTags.Melee;
+        Texture = UILib.TextureSkillThrust;
 
         ManaCost = 0;
         AddedDamageModifier = 1;
         SpeedModifier = 1;
+        Cooldown = 0;
     }
 
     public ESkillWeapons Weapons { get; set; } = ESkillWeapons.AllMeleeWeapons;
@@ -96,6 +101,7 @@ public class SkillDefaultProjectileAttack : Skill, IAttack, IProjectileSkill {
         ManaCost = 0;
         AddedDamageModifier = 1;
         SpeedModifier = 1;
+        Cooldown = 0;
     }
 
     public ESkillWeapons Weapons { get; set; } = ESkillWeapons.AllRangedWeapons;

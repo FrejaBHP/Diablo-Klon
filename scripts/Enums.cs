@@ -285,3 +285,10 @@ public enum ESkillWeapons {
     AllMeleeWeapons = Sword | Axe | Mace | Dagger | Sword2H | Axe2H | Mace2H | Staff,
     AllRangedWeapons = Bow | Wand
 }
+
+
+public enum EActorState {
+	Actionable,
+	Attacking,
+	Stunned
+}
