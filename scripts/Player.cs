@@ -118,6 +118,9 @@ public partial class Player : Actor {
         if (@event is InputEventMouseButton mbe) {
 			// On left click outside of UI elements
 			if (mbe.ButtonIndex == MouseButton.Left && mbe.Pressed) {
+				if (PlayerHUD.PlayerLowerHUD.GetSkillHotbar().IsSkillBeingSelected) {
+					PlayerHUD.PlayerLowerHUD.GetSkillHotbar().DestroySkillAssignmentMenu();
+				}
 				// If an item is currently selected
 				if (PlayerHUD.PlayerInventory.IsAnItemSelected && PlayerHUD.PlayerInventory.SelectedItem != null) {
 					// If click is outside the inventory panel, drop it on the floor

@@ -1,27 +1,36 @@
-[gd_scene load_steps=4 format=3 uid="uid://ddmq2hsbxqs2f"]
+[gd_scene load_steps=3 format=3 uid="uid://ddmq2hsbxqs2f"]
 
 [ext_resource type="Script" uid="uid://dbshqw66su4mx" path="res://scripts/SkillHotbarSlot.cs" id="1_gl8jw"]
+[ext_resource type="Texture2D" uid="uid://rhlv3xv12kyp" path="res://textures/skills/skill_none.png" id="2_ywhgx"]
 
-[sub_resource type="Gradient" id="Gradient_gl8jw"]
+[node name="SkillHotbarSlot" type="VBoxContainer"]
+offset_left = 3.0
+offset_top = 3.0
+offset_right = 51.0
+offset_bottom = 51.0
+theme_override_constants/separation = 0
+script = ExtResource("1_gl8jw")
 
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_ywhgx"]
-gradient = SubResource("Gradient_gl8jw")
+[node name="SkillHotbarHint" type="Label" parent="."]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 14
+horizontal_alignment = 1
 
-[node name="SkillHotbarSlot" type="MarginContainer"]
-offset_right = 54.0
-offset_bottom = 54.0
+[node name="SkillHotbarContainer" type="MarginContainer" parent="."]
+layout_mode = 2
 mouse_filter = 0
 theme_override_constants/margin_left = 3
 theme_override_constants/margin_top = 3
 theme_override_constants/margin_right = 3
 theme_override_constants/margin_bottom = 3
-script = ExtResource("1_gl8jw")
 
-[node name="SkillTexture" type="TextureRect" parent="."]
+[node name="SkillTexture" type="TextureRect" parent="SkillHotbarContainer"]
 custom_minimum_size = Vector2(48, 48)
 layout_mode = 2
-texture = SubResource("GradientTexture2D_ywhgx")
+texture = ExtResource("2_ywhgx")
 expand_mode = 1
 stretch_mode = 4
 
-[connection signal="gui_input" from="." to="." method="GUIInput"]
+[connection signal="gui_input" from="SkillHotbarContainer" to="." method="GUIInput"]

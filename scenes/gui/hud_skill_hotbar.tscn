@@ -13,9 +13,15 @@ grow_vertical = 0
 alignment = 2
 script = ExtResource("1_beojg")
 
-[node name="SkillAssignmentGrid" type="GridContainer" parent="."]
+[node name="SkillAssignmentContainer" type="VBoxContainer" parent="."]
+visible = false
 layout_mode = 2
-columns = 4
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="SkillsContainer" type="HBoxContainer" parent="SkillAssignmentContainer"]
+layout_mode = 2
+alignment = 1
 
 [node name="SkillHotbar" type="HBoxContainer" parent="."]
 layout_mode = 2

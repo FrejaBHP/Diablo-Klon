@@ -6,23 +6,31 @@ public partial class SkillHotbarSlot : Control {
     public delegate void SkillSlotClickedEventHandler(SkillHotbarSlot slot);
 
     public Skill AssignedSkill { get; protected set; } = null;
+
+    protected Label skillHotkeyHint;
     protected TextureRect skillTextureRect;
 
     public override void _Ready() {
-        skillTextureRect = GetNode<TextureRect>("SkillTexture");
+        skillHotkeyHint = GetNode<Label>("SkillHotbarHint");
+        skillTextureRect = GetNode<TextureRect>("SkillHotbarContainer/SkillTexture");
     }
 
     public ESkillName GetSkillName() {
         return AssignedSkill.SkillName;
     }
 
+    public void UpdateHint(string newHint) {
+        skillHotkeyHint.Text = newHint;
+    }
+
     public void AssignSkillToSlot(Skill skill) {
         AssignedSkill = skill;
+        
         if (skill != null) {
             skillTextureRect.Texture = AssignedSkill.Texture;
         }
         else {
-            skillTextureRect.Texture = null;
+            skillTextureRect.Texture = UILib.TextureSkillNONE;
         }
     }
 

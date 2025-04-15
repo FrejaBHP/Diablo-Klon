@@ -8,8 +8,14 @@ public partial class SkillAssignable : TextureRect {
     private Skill assignableSkill;
 
     public void SetAssignableSkill(Skill skill) {
-        assignableSkill = skill;
-        Texture = skill.Texture;
+        if (skill != null) {
+            assignableSkill = skill;
+            Texture = skill.Texture;
+        }
+        else {
+            assignableSkill = null;
+            Texture = UILib.TextureRemoveSkill;
+        }
     }
 
     public void GUIInput(InputEvent @event) {

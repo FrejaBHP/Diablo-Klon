@@ -31,6 +31,7 @@ anchor_bottom = 1.0
 offset_top = -128.0
 offset_bottom = -128.0
 grow_vertical = 0
+mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_froqh")
 
 [node name="Control" type="Control" parent="LeftSide"]
@@ -79,10 +80,12 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 0
 grow_vertical = 0
+mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_froqh")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="RightSide"]
 layout_mode = 2
+theme_override_constants/separation = 20
 
 [node name="SkillHotbar" parent="RightSide/HBoxContainer" instance=ExtResource("3_fxhu6")]
 layout_mode = 2

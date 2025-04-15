@@ -6,17 +6,19 @@ public partial class SkillHotbar : Control {
 
     public Player PlayerOwner;
 
-    protected GridContainer skillAssignmentContainer;
+    protected VBoxContainer skillAssignmentContainer;
+    protected HBoxContainer skillsContainer;
     public SkillHotbarSlot SkillHotbarSlot1 { get; protected set; }
     public SkillHotbarSlot SkillHotbarSlot2 { get; protected set; }
     public SkillHotbarSlot SkillHotbarSlot3 { get; protected set; }
     public SkillHotbarSlot SkillHotbarSlot4 { get; protected set; }
     
-    protected bool isSkillBeingSelected = false;
+    public bool IsSkillBeingSelected = false;
     protected SkillHotbarSlot selectedSlot;
     
     public override void _Ready() {
-        skillAssignmentContainer = GetNode<GridContainer>("SkillAssignmentGrid");
+        skillAssignmentContainer = GetNode<VBoxContainer>("SkillAssignmentContainer");
+        skillsContainer = skillAssignmentContainer.GetNode<HBoxContainer>("SkillsContainer");
         SkillHotbarSlot1 = GetNode<SkillHotbarSlot>("SkillHotbar/SkillHotbarSlot1");
         SkillHotbarSlot2 = GetNode<SkillHotbarSlot>("SkillHotbar/SkillHotbarSlot2");
         SkillHotbarSlot3 = GetNode<SkillHotbarSlot>("SkillHotbar/SkillHotbarSlot3");
@@ -26,6 +28,17 @@ public partial class SkillHotbar : Control {
         SkillHotbarSlot2.SkillSlotClicked += SkillSlotClicked;
         SkillHotbarSlot3.SkillSlotClicked += SkillSlotClicked;
         SkillHotbarSlot4.SkillSlotClicked += SkillSlotClicked;
+
+        SkillHotbarSlot1.UpdateHint("LMB");
+        SkillHotbarSlot2.UpdateHint("RMB");
+        SkillHotbarSlot3.UpdateHint("Q");
+        SkillHotbarSlot4.UpdateHint("E");
+
+        SkillAssignable removeSkill = skillAssignableScene.Instantiate<SkillAssignable>();
+        removeSkill.SizeFlagsHorizontal = SizeFlags.ShrinkCenter;
+        removeSkill.SetAssignableSkill(null);
+        removeSkill.SkillSelected += AssignableSkillSelected;
+        skillAssignmentContainer.AddChild(removeSkill);
     }
 
     public void ClearInvalidSkills(ESkillName skillName) {
@@ -47,7 +60,7 @@ public partial class SkillHotbar : Control {
     }
 
     public void SkillSlotClicked(SkillHotbarSlot slot) {
-        isSkillBeingSelected = true;
+        IsSkillBeingSelected = true;
         selectedSlot = slot;
         BuildSkillAssignmentMenu();
     }
@@ -60,9 +73,9 @@ public partial class SkillHotbar : Control {
     }
 
     public void BuildSkillAssignmentMenu() {
-        if (skillAssignmentContainer.GetChildCount() > 0) {
-            foreach (var item in skillAssignmentContainer.GetChildren()) {
-                skillAssignmentContainer.RemoveChild(item);
+        if (skillsContainer.GetChildCount() > 0) {
+            foreach (var item in skillsContainer.GetChildren()) {
+                skillsContainer.RemoveChild(item);
                 item.QueueFree();
             }
         }
@@ -73,17 +86,25 @@ public partial class SkillHotbar : Control {
 
             assignableSkill.SkillSelected += AssignableSkillSelected;
 
-            skillAssignmentContainer.AddChild(assignableSkill);
+            skillsContainer.AddChild(assignableSkill);
         }
+
+        skillAssignmentContainer.Visible = true;
     }
 
-    protected void DestroySkillAssignmentMenu() {
-        isSkillBeingSelected = false;
+    public void HideSkillAssignmentMenu() {
+        skillAssignmentContainer.Visible = false;
+    }
+
+    public void DestroySkillAssignmentMenu() {
+        IsSkillBeingSelected = false;
         selectedSlot = null;
 
-        foreach (var item in skillAssignmentContainer.GetChildren()) {
-            skillAssignmentContainer.RemoveChild(item);
+        foreach (var item in skillsContainer.GetChildren()) {
+            skillsContainer.RemoveChild(item);
             item.QueueFree();
         }
+
+        skillAssignmentContainer.Visible = false;
     }
 }

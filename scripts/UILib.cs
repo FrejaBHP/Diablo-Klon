@@ -21,6 +21,8 @@ public static class UILib {
 	public static readonly Texture2D TextureItemD2JewelBlue = GD.Load<Texture2D>("res://textures/items/d2_Jewel_blue.png");
 	public static readonly Texture2D TextureItemD2JewelWhite = GD.Load<Texture2D>("res://textures/items/d2_Jewel_white_flip.png");
 
+	public static readonly Texture2D TextureRemoveSkill = GD.Load<Texture2D>("res://textures/skills/remove_skill.png");
+	public static readonly Texture2D TextureSkillNONE = GD.Load<Texture2D>("res://textures/skills/skill_none.png");
 	public static readonly Texture2D TextureSkillThrust = GD.Load<Texture2D>("res://textures/skills/skill_thrust.png");
 
 	public static readonly Color ColorWhite = Color.Color8(255, 255, 255, 255);
