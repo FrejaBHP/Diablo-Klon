@@ -6,6 +6,9 @@ public abstract class Skill {
 
     public Actor ActorOwner { get; set; }
 
+    public DamageModifiers BaseDamageModifiers { get; protected set; } = new();
+    public DamageModifiers ActiveDamageModifiers { get; protected set; } = new();
+
     public string Name { get; protected set; }
     public string Description { get; protected set; }
 
@@ -28,15 +31,86 @@ public abstract class Skill {
     public string GetDamageModifier() {
         return Math.Round(AddedDamageModifier * 100, 0).ToString();
     }
+
+    public SkillDamage RollForDamage() {
+        double physical = Utilities.RandomDouble(ActiveDamageModifiers.Physical.SMinTotal, ActiveDamageModifiers.Physical.SMaxTotal);
+        double fire = Utilities.RandomDouble(ActiveDamageModifiers.Fire.SMinTotal, ActiveDamageModifiers.Fire.SMaxTotal);
+        double cold = Utilities.RandomDouble(ActiveDamageModifiers.Cold.SMinTotal, ActiveDamageModifiers.Cold.SMaxTotal);
+        double lightning = Utilities.RandomDouble(ActiveDamageModifiers.Lightning.SMinTotal, ActiveDamageModifiers.Lightning.SMaxTotal);
+        double chaos = Utilities.RandomDouble(ActiveDamageModifiers.Chaos.SMinTotal, ActiveDamageModifiers.Chaos.SMaxTotal);
+
+        return new SkillDamage(physical, fire, cold, lightning, chaos);
+    }
+
+    public virtual void UpdateSkillValues() {
+        if (ActorOwner != null) {
+            ActiveDamageModifiers = ActorOwner.DamageMods + BaseDamageModifiers;
+
+            IAttack attack = this as IAttack;
+            if (attack != null) {
+                attack.UpdateAttackSpeedValues(ActorOwner.AttackSpeedMod);
+                return;
+            }
+
+            ISpell spell = this as ISpell;
+            if (spell != null) {
+                spell.UpdateCastSpeedValues(ActorOwner.CastSpeedMod);
+                return;
+            }
+        }
+    }
+
+    public void DebugPrint() {
+        GD.Print("Player Damage:");
+        GD.Print($"P: {ActorOwner.DamageMods.Physical}");
+        GD.Print($"F: {ActorOwner.DamageMods.Fire}");
+        GD.Print($"C: {ActorOwner.DamageMods.Cold}");
+        GD.Print($"L: {ActorOwner.DamageMods.Lightning}");
+        GD.Print($"Ch: {ActorOwner.DamageMods.Chaos}");
+
+        GD.Print("Base Damage:");
+        GD.Print($"P: {BaseDamageModifiers.Physical}");
+        GD.Print($"F: {BaseDamageModifiers.Fire}");
+        GD.Print($"C: {BaseDamageModifiers.Cold}");
+        GD.Print($"L: {BaseDamageModifiers.Lightning}");
+        GD.Print($"Ch: {BaseDamageModifiers.Chaos}");
+
+        GD.Print("Active Damage:");
+        GD.Print($"P: {ActiveDamageModifiers.Physical}");
+        GD.Print($"F: {ActiveDamageModifiers.Fire}");
+        GD.Print($"C: {ActiveDamageModifiers.Cold}");
+        GD.Print($"L: {ActiveDamageModifiers.Lightning}");
+        GD.Print($"Ch: {ActiveDamageModifiers.Chaos}");
+    }
 }
 
 public interface IAttack {
     ESkillWeapons Weapons { get; protected set; }
+    Stat BaseAttackSpeedModifiers { get; protected set; }
+    Stat ActiveAttackSpeedModifiers { get; protected set; }
     bool CanDualWield { get; protected set; }
+
+    public void UpdateAttackSpeedValues(Stat actorAS) {
+        ActiveAttackSpeedModifiers = actorAS + BaseAttackSpeedModifiers;
+    }
+
+    public string GetAttackSpeedModifier() {
+        return Math.Round(ActiveAttackSpeedModifiers.STotal * 100, 0).ToString();
+    }
 }
 
 public interface ISpell {
     float BaseCastTime { get; protected set; }
+    Stat BaseCastSpeedModifiers { get; protected set; }
+    Stat ActiveCastSpeedModifiers { get; protected set; }
+
+    public void UpdateCastSpeedValues(Stat actorCS) {
+        ActiveCastSpeedModifiers = actorCS + BaseCastSpeedModifiers;
+    }
+
+    public string GetCastSpeedModifier() {
+        return Math.Round(ActiveCastSpeedModifiers.STotal * 100, 0).ToString();
+    }
 }
 
 public interface IMeleeSkill {
@@ -71,6 +145,9 @@ public class SkillThrust : Skill, IAttack, IMeleeSkill {
     public ESkillWeapons Weapons { get; set; } = ESkillWeapons.AllMeleeWeapons;
     public bool CanDualWield { get; set; } = true;
 
+    public Stat BaseAttackSpeedModifiers { get; set; } = new(0, false);
+    public Stat ActiveAttackSpeedModifiers { get; set; } = new(0, false);
+
     public float BaseAttackRange { get; set; } = 3f;
 
     public override void UseSkill() {
@@ -85,7 +162,7 @@ public class SkillThrust : Skill, IAttack, IMeleeSkill {
             };
             testAttack.GlobalRotation = ActorOwner.GlobalRotation;
 
-            testAttack.StartAttack(2f, 2.5f, 25f);
+            testAttack.StartAttack(RollForDamage(), 2f, 2.5f, 25f);
         }
     }
 }
@@ -106,6 +183,9 @@ public class SkillDefaultProjectileAttack : Skill, IAttack, IProjectileSkill {
 
     public ESkillWeapons Weapons { get; set; } = ESkillWeapons.AllRangedWeapons;
     public bool CanDualWield { get; set; } = true;
+
+    public Stat BaseAttackSpeedModifiers { get; set; } = new(0, false);
+    public Stat ActiveAttackSpeedModifiers { get; set; } = new(0, false);
 
     public float BaseProjectileSpeed { get; set; } = 6f;
     public float BaseProjectileLifetime { get; set; } = 2f;

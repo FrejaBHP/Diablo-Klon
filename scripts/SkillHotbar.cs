@@ -3,6 +3,7 @@ using System;
 
 public partial class SkillHotbar : Control {
     protected readonly PackedScene skillAssignableScene = GD.Load<PackedScene>("res://scenes/gui/hud_skill_assignable.tscn");
+    protected readonly PackedScene skillTooltipScene = GD.Load<PackedScene>("res://scenes/gui/hud_skill_tooltip.tscn");
 
     public Player PlayerOwner;
 
@@ -15,6 +16,7 @@ public partial class SkillHotbar : Control {
     
     public bool IsSkillBeingSelected = false;
     protected SkillHotbarSlot selectedSlot;
+    protected bool hasActiveTooltip = false;
     
     public override void _Ready() {
         skillAssignmentContainer = GetNode<VBoxContainer>("SkillAssignmentContainer");
@@ -28,6 +30,16 @@ public partial class SkillHotbar : Control {
         SkillHotbarSlot2.SkillSlotClicked += SkillSlotClicked;
         SkillHotbarSlot3.SkillSlotClicked += SkillSlotClicked;
         SkillHotbarSlot4.SkillSlotClicked += SkillSlotClicked;
+
+        SkillHotbarSlot1.SkillSlotEntered += SkillSlotMouseEntered;
+        SkillHotbarSlot2.SkillSlotEntered += SkillSlotMouseEntered;
+        SkillHotbarSlot3.SkillSlotEntered += SkillSlotMouseEntered;
+        SkillHotbarSlot4.SkillSlotEntered += SkillSlotMouseEntered;
+
+        SkillHotbarSlot1.SkillSlotExited += SkillSlotMouseExited;
+        SkillHotbarSlot2.SkillSlotExited += SkillSlotMouseExited;
+        SkillHotbarSlot3.SkillSlotExited += SkillSlotMouseExited;
+        SkillHotbarSlot4.SkillSlotExited += SkillSlotMouseExited;
 
         SkillHotbarSlot1.UpdateHint("LMB");
         SkillHotbarSlot2.UpdateHint("RMB");
@@ -56,6 +68,19 @@ public partial class SkillHotbar : Control {
 
         if (SkillHotbarSlot4.AssignedSkill != null && SkillHotbarSlot4.GetSkillName() == skillName) {
             SkillHotbarSlot4.AssignSkillToSlot(null);
+        }
+    }
+
+    public void SkillSlotMouseEntered(SkillHotbarSlot skillSlot) {
+        Vector2 anchor = skillSlot.GlobalPosition with { X = skillSlot.GlobalPosition.X + skillSlot.Size.X / 2, Y = skillSlot.GlobalPosition.Y };
+        hasActiveTooltip = true;
+        PlayerOwner.PlayerHUD.CreateItemTooltip(GetCustomSkillTooltip(skillSlot), anchor, skillSlot.GetGlobalRect(), true);
+        //skillSlot.AssignedSkill.DebugPrint();
+    }
+
+    public void SkillSlotMouseExited(SkillHotbarSlot skillSlot) {
+        if (hasActiveTooltip) {
+            PlayerOwner.PlayerHUD.RemoveItemTooltip();
         }
     }
 
@@ -107,4 +132,65 @@ public partial class SkillHotbar : Control {
 
         skillAssignmentContainer.Visible = false;
     }
+
+    public Control GetCustomSkillTooltip(SkillHotbarSlot skillSlot) {
+		Skill skill = skillSlot.AssignedSkill;
+
+		SkillTooltip tooltipContent = skillTooltipScene.Instantiate<SkillTooltip>();
+
+		tooltipContent.NameLabel.Text = skill.Name;
+		tooltipContent.NameLabel.AddThemeColorOverride("font_color", UILib.ColorSkill);
+
+		tooltipContent.CostLabel.Text = $"{skill.ManaCost}";
+
+		if (skill.Type == ESkillType.Attack) {
+			IAttack attack = skill as IAttack;
+            // Giver nullptr uden et våben i hånden!
+            tooltipContent.TimeLabel.Text = $"{PlayerOwner.MainHand.Weapon.AttackSpeed / attack.ActiveAttackSpeedModifiers.STotal:F2}";
+		}
+        else if (skill.Type == ESkillType.Spell) {
+			ISpell spell = skill as ISpell;
+            tooltipContent.TimeLabel.Text = $"{spell.BaseCastTime / spell.ActiveCastSpeedModifiers.STotal:F2}";
+		}
+
+        if (skill.ActiveDamageModifiers.Physical.SMinTotal > 0) {
+            Label physLabel = GenerateAffixLabel($"Deals {skill.ActiveDamageModifiers.Physical.SMinTotal} - {skill.ActiveDamageModifiers.Physical.SMaxTotal} Physical Damage");
+            tooltipContent.DamageContainer.AddChild(physLabel);
+        }
+        if (skill.ActiveDamageModifiers.Fire.SMinTotal > 0) {
+            Label fireLabel = GenerateAffixLabel($"Deals {skill.ActiveDamageModifiers.Fire.SMinTotal} - {skill.ActiveDamageModifiers.Fire.SMaxTotal} Fire Damage");
+            tooltipContent.DamageContainer.AddChild(fireLabel);
+        }
+        if (skill.ActiveDamageModifiers.Cold.SMinTotal > 0) {
+            Label coldLabel = GenerateAffixLabel($"Deals {skill.ActiveDamageModifiers.Cold.SMinTotal} - {skill.ActiveDamageModifiers.Cold.SMaxTotal} Cold Damage");
+            tooltipContent.DamageContainer.AddChild(coldLabel);
+        }
+        if (skill.ActiveDamageModifiers.Lightning.SMinTotal > 0) {
+            Label lightningLabel = GenerateAffixLabel($"Deals {skill.ActiveDamageModifiers.Lightning.SMinTotal} - {skill.ActiveDamageModifiers.Lightning.SMaxTotal} Lightning Damage");
+            tooltipContent.DamageContainer.AddChild(lightningLabel);
+        }
+        if (skill.ActiveDamageModifiers.Chaos.SMinTotal > 0) {
+            Label chaosLabel = GenerateAffixLabel($"Deals {skill.ActiveDamageModifiers.Chaos.SMinTotal} - {skill.ActiveDamageModifiers.Chaos.SMaxTotal} Chaos Damage");
+            tooltipContent.DamageContainer.AddChild(chaosLabel);
+        }
+		//Label descriptionLabel = GenerateDescriptionLabel(skillItem.SkillReference.Description);
+		//tooltipContent.DescriptionContainer.AddChild(descriptionLabel);
+
+		// Indtil der tilføjes synlige effekter/scaling
+		//tooltipContent.EffectSeparator.Visible = false;
+		//tooltipContent.EffectContainer.Visible = false;
+		
+		return tooltipContent;
+	}
+
+    protected Label GenerateAffixLabel(string affixText) {
+		Label affixTextLabel = new Label();
+
+		affixTextLabel.Text = affixText;
+		affixTextLabel.AddThemeFontSizeOverride("font_size", 15);
+		affixTextLabel.AddThemeColorOverride("font_color", UILib.ColorBlurple);
+		affixTextLabel.HorizontalAlignment = HorizontalAlignment.Center;
+
+		return affixTextLabel;
+	}
 }

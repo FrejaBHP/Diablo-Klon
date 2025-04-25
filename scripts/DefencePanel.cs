@@ -9,6 +9,7 @@ public partial class DefencePanel : StatPanel {
     public StatTableEntry FireRes;
     public StatTableEntry ColdRes;
     public StatTableEntry LightningRes;
+    public StatTableEntry ChaosRes;
 
     public override void _Ready() {
         base._Ready();
@@ -17,39 +18,13 @@ public partial class DefencePanel : StatPanel {
     }
 
     private void BuildTable() {
-        LifeRegen = statEntryScene.Instantiate<StatTableEntry>();
-        statContainer.AddChild(LifeRegen);
-        LifeRegen.SetDescription("Life Regeneration per Second");
-        stats.Add(LifeRegen);
-
-        ManaRegen = statEntryScene.Instantiate<StatTableEntry>();
-        statContainer.AddChild(ManaRegen);
-        ManaRegen.SetDescription("Mana Regeneration per Second");
-        stats.Add(ManaRegen);
-
-        Armour = statEntryScene.Instantiate<StatTableEntry>();
-        statContainer.AddChild(Armour);
-        Armour.SetDescription("Armour");
-        stats.Add(Armour);
-
-        Evasion = statEntryScene.Instantiate<StatTableEntry>();
-        statContainer.AddChild(Evasion);
-        Evasion.SetDescription("Evasion Rating");
-        stats.Add(Evasion);
-
-        FireRes = statEntryScene.Instantiate<StatTableEntry>();
-        statContainer.AddChild(FireRes);
-        FireRes.SetDescription("Fire Resistance");
-        stats.Add(FireRes);
-
-        ColdRes = statEntryScene.Instantiate<StatTableEntry>();
-        statContainer.AddChild(ColdRes);
-        ColdRes.SetDescription("Cold Resistance");
-        stats.Add(ColdRes);
-
-        LightningRes = statEntryScene.Instantiate<StatTableEntry>();
-        statContainer.AddChild(LightningRes);
-        LightningRes.SetDescription("Lightning Resistance");
-        stats.Add(LightningRes);
+        AddEntry(ref LifeRegen, "Life Regeneration per Second");
+        AddEntry(ref ManaRegen, "Mana Regeneration per Second");
+        AddEntry(ref Armour, "Armour");
+        AddEntry(ref Evasion, "Evasion");
+        AddEntry(ref FireRes, "Fire Resistance");
+        AddEntry(ref ColdRes, "Cold Resistance");
+        AddEntry(ref LightningRes, "Lightning Resistance");
+        AddEntry(ref ChaosRes, "Chaos Resistance");
     }
 }

@@ -492,12 +492,23 @@ public partial class Player : Actor {
 
 		MovementSpeed.SIncreased = ItemStatDictionary[EStatName.IncreasedMovementSpeed];
 
-		DamageMods.AddedPhysicalMin = (int)ItemStatDictionary[EStatName.FlatMinPhysDamage];
-		DamageMods.AddedPhysicalMax = (int)ItemStatDictionary[EStatName.FlatMaxPhysDamage];
-		DamageMods.IncreasedPhysical = ItemStatDictionary[EStatName.IncreasedPhysDamage];
+		if (MainHand.Weapon != null) {
+			DamageMods.Physical.SMinBase = MainHand.Weapon.PhysicalMinimumDamage;
+			DamageMods.Physical.SMaxBase = MainHand.Weapon.PhysicalMaximumDamage;
+		}
+		else {
+			DamageMods.Physical.SMinBase = 3;
+			DamageMods.Physical.SMaxBase = 6;
+		}
+		
+		DamageMods.Physical.SMinAdded = (int)ItemStatDictionary[EStatName.FlatMinPhysDamage];
+		DamageMods.Physical.SMaxAdded = (int)ItemStatDictionary[EStatName.FlatMaxPhysDamage];
+		DamageMods.Physical.SIncreased = ItemStatDictionary[EStatName.IncreasedPhysDamage];
 
-		BasicStats.AddedEvasion = (int)ItemStatDictionary[EStatName.FlatEvasion];
-		BasicStats.IncreasedEvasion = ItemStatDictionary[EStatName.IncreasedEvasion];
+		Armour.SAdded = (int)ItemStatDictionary[EStatName.FlatArmour];
+		Armour.SIncreased = ItemStatDictionary[EStatName.IncreasedArmour];
+		Evasion.SAdded = (int)ItemStatDictionary[EStatName.FlatEvasion];
+		Evasion.SIncreased = ItemStatDictionary[EStatName.IncreasedEvasion];
 
 		Resistances.ResFire = (int)ItemStatDictionary[EStatName.FireResistance];
 		Resistances.ResCold = (int)ItemStatDictionary[EStatName.ColdResistance];
@@ -505,44 +516,45 @@ public partial class Player : Actor {
 
 		// TEST
 		if (MainHand.Weapon != null) {
-			MainHand.PhysMinDamage = (int)Math.Round((MainHand.Weapon.PhysicalMinimumDamage + DamageMods.AddedPhysicalMin) * (1 + DamageMods.IncreasedPhysical) * (1 + DamageMods.MorePhysical), 0);
-			MainHand.PhysMaxDamage = (int)Math.Round((MainHand.Weapon.PhysicalMaximumDamage + DamageMods.AddedPhysicalMax) * (1 + DamageMods.IncreasedPhysical) * (1 + DamageMods.MorePhysical), 0);
+			MainHand.PhysMinDamage = (int)Math.Round((MainHand.Weapon.PhysicalMinimumDamage + DamageMods.Physical.SMinAdded) * (1 + DamageMods.Physical.SIncreased) * (1 + DamageMods.Physical.SMore), 0);
+			MainHand.PhysMaxDamage = (int)Math.Round((MainHand.Weapon.PhysicalMaximumDamage + DamageMods.Physical.SMaxAdded) * (1 + DamageMods.Physical.SIncreased) * (1 + DamageMods.Physical.SMore), 0);
 			MainHand.AttackSpeed = MainHand.Weapon.AttackSpeed / AttackSpeedMod.STotal; // Dårlig løsning. Gør det umuligt at tilføje modifiers senere hen. Split hellere Attack Speed ting op i to
 			MainHand.CritChance = MainHand.Weapon.CriticalStrikeChance * CritChanceMod.STotal; // Dårlig løsning. Gør det umuligt at tilføje modifiers senere hen. Split hellere Crit Chance ting op i to
 		}
 		else {
-			MainHand.PhysMinDamage = (int)Math.Round(DamageMods.AddedPhysicalMin * (1 + DamageMods.IncreasedPhysical) * (1 + DamageMods.MorePhysical), 0);
-			MainHand.PhysMaxDamage = (int)Math.Round(DamageMods.AddedPhysicalMax * (1 + DamageMods.IncreasedPhysical) * (1 + DamageMods.MorePhysical), 0);
+			MainHand.PhysMinDamage = (int)Math.Round(DamageMods.Physical.SMinAdded * (1 + DamageMods.Physical.SIncreased) * (1 + DamageMods.Physical.SMore), 0);
+			MainHand.PhysMaxDamage = (int)Math.Round(DamageMods.Physical.SMinAdded * (1 + DamageMods.Physical.SIncreased) * (1 + DamageMods.Physical.SMore), 0);
 			MainHand.AttackSpeed = 1 / AttackSpeedMod.STotal;
 			MainHand.CritChance = 5 * CritChanceMod.STotal;
 		}
 
 		if (OffHandItem != null && IsOffHandAWeapon) {
 			WeaponItem offHandWeapon = (WeaponItem)OffHandItem;
-			offHandMinPhysDamage = Math.Round((offHandWeapon.PhysicalMinimumDamage + DamageMods.AddedPhysicalMin) * (1 + DamageMods.IncreasedPhysical) * (1 + DamageMods.MorePhysical), 0);
-			offHandMaxPhysDamage = Math.Round((offHandWeapon.PhysicalMaximumDamage + DamageMods.AddedPhysicalMax) * (1 + DamageMods.IncreasedPhysical) * (1 + DamageMods.MorePhysical), 0);
+			offHandMinPhysDamage = Math.Round((offHandWeapon.PhysicalMinimumDamage + DamageMods.Physical.SMinAdded) * (1 + DamageMods.Physical.SIncreased) * (1 + DamageMods.Physical.SMore), 0);
+			offHandMaxPhysDamage = Math.Round((offHandWeapon.PhysicalMaximumDamage + DamageMods.Physical.SMinAdded) * (1 + DamageMods.Physical.SIncreased) * (1 + DamageMods.Physical.SMore), 0);
 			offHandAS = offHandWeapon.AttackSpeed;
 			offHandCSC = offHandWeapon.CriticalStrikeChance;
 		}
 		else {
-			offHandMinPhysDamage = Math.Round(DamageMods.AddedPhysicalMin * (1 + DamageMods.IncreasedPhysical) * (1 + DamageMods.MorePhysical), 0);
-			offHandMaxPhysDamage = Math.Round(DamageMods.AddedPhysicalMax * (1 + DamageMods.IncreasedPhysical) * (1 + DamageMods.MorePhysical), 0);
+			offHandMinPhysDamage = Math.Round(DamageMods.Physical.SMinAdded * (1 + DamageMods.Physical.SIncreased) * (1 + DamageMods.Physical.SMore), 0);
+			offHandMaxPhysDamage = Math.Round(DamageMods.Physical.SMinAdded * (1 + DamageMods.Physical.SIncreased) * (1 + DamageMods.Physical.SMore), 0);
 			offHandAS = 0;
 			offHandCSC = 0;
 		}
 
 		UpdateStatsPanel();
+		UpdateSkillValues();
 	}
 
-	protected void StrTotalChanged(object sender, double newStatTotal) {
+	protected void StrTotalChanged(double newStatTotal) {
 		PlayerHUD.PlayerPanel.StrContainer.SetValue($"{newStatTotal}");
 	}
 
-	protected void DexTotalChanged(object sender, double newStatTotal) {
+	protected void DexTotalChanged(double newStatTotal) {
 		PlayerHUD.PlayerPanel.DexContainer.SetValue($"{newStatTotal}");
 	}
 
-	protected void IntTotalChanged(object sender, double newStatTotal) {
+	protected void IntTotalChanged(double newStatTotal) {
 		PlayerHUD.PlayerPanel.IntContainer.SetValue($"{newStatTotal}");
 	}
 
@@ -559,11 +571,18 @@ public partial class Player : Actor {
 
 		PlayerHUD.PlayerPanel.DefenceTabPanel.LifeRegen.SetValue($"{BasicStats.TotalLifeRegen:F1}");
 		PlayerHUD.PlayerPanel.DefenceTabPanel.ManaRegen.SetValue($"{BasicStats.TotalManaRegen:F1}");
-		PlayerHUD.PlayerPanel.DefenceTabPanel.Armour.SetValue($"{BasicStats.TotalArmour}");
-		PlayerHUD.PlayerPanel.DefenceTabPanel.Evasion.SetValue($"{BasicStats.TotalEvasion}");
+		PlayerHUD.PlayerPanel.DefenceTabPanel.Armour.SetValue($"{Armour.STotal}");
+		PlayerHUD.PlayerPanel.DefenceTabPanel.Evasion.SetValue($"{Evasion.STotal}");
 		PlayerHUD.PlayerPanel.DefenceTabPanel.FireRes.SetValue($"{Resistances.ResFire}%");
 		PlayerHUD.PlayerPanel.DefenceTabPanel.ColdRes.SetValue($"{Resistances.ResCold}%");
 		PlayerHUD.PlayerPanel.DefenceTabPanel.LightningRes.SetValue($"{Resistances.ResLightning}%");
+		PlayerHUD.PlayerPanel.DefenceTabPanel.ChaosRes.SetValue($"{Resistances.ResChaos}%");
+	}
+
+	public void UpdateSkillValues() {
+		for (int i = 0; i < Skills.Count; i++) {
+			Skills[i].UpdateSkillValues();
+		}
 	}
 
 	public void AssignMainHand(WeaponItem item) {

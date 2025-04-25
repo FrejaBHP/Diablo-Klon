@@ -33,4 +33,11 @@ public partial class StatPanel : ScrollContainer {
             }
         }
 	}
+
+    protected void AddEntry(ref StatTableEntry entry, string description) {
+        entry = statEntryScene.Instantiate<StatTableEntry>();
+        statContainer.AddChild(entry);
+        entry.SetDescription(description);
+        stats.Add(entry);
+    }
 }

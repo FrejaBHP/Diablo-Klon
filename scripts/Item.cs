@@ -264,16 +264,16 @@ public partial class WeaponItem : Item {
 	public int BasePhysicalMaximumDamage;
 	public int AddedPhysicalMinimumDamage = 0;
 	public int AddedPhysicalMaximumDamage = 0;
-	public double PercentageIncreasedPhysicalDamage = 0;
+	public double PercentageIncreasedPhysicalDamage = 1;
 	public int PhysicalMinimumDamage;
 	public int PhysicalMaximumDamage;
 
 	public double BaseAttackSpeed;
-	public double PercentageIncreasedAttackSpeed = 0;
+	public double PercentageIncreasedAttackSpeed = 1;
 	public double AttackSpeed;
 
 	public double BaseCriticalStrikeChance;
-	public double PercentageIncreasedCriticalStrikeChance = 0;
+	public double PercentageIncreasedCriticalStrikeChance = 1;
 	public double CriticalStrikeChance;
 	
 	public WeaponItem() {
@@ -287,12 +287,12 @@ public partial class WeaponItem : Item {
 	}
 
 	public void CalculatePhysicalDamage() {
-		PhysicalMinimumDamage = (int)Math.Round((BasePhysicalMinimumDamage + AddedPhysicalMinimumDamage) * (1 + PercentageIncreasedPhysicalDamage), 0);
-		PhysicalMaximumDamage = (int)Math.Round((BasePhysicalMaximumDamage + AddedPhysicalMaximumDamage) * (1 + PercentageIncreasedPhysicalDamage), 0);
+		PhysicalMinimumDamage = (int)Math.Round((BasePhysicalMinimumDamage + AddedPhysicalMinimumDamage) * PercentageIncreasedPhysicalDamage, 0);
+		PhysicalMaximumDamage = (int)Math.Round((BasePhysicalMaximumDamage + AddedPhysicalMaximumDamage) * PercentageIncreasedPhysicalDamage, 0);
 	}
 
 	public void CalculateAttackSpeed() {
-		AttackSpeed = BaseAttackSpeed / (1 + PercentageIncreasedAttackSpeed);
+		AttackSpeed = BaseAttackSpeed / PercentageIncreasedAttackSpeed;
 	}
 
 	public string GetAttackSpeed() {
@@ -300,7 +300,7 @@ public partial class WeaponItem : Item {
 	}
 
 	public void CalculateCriticalStrikeChance() {
-		CriticalStrikeChance = BaseCriticalStrikeChance * (1 + PercentageIncreasedCriticalStrikeChance);
+		CriticalStrikeChance = BaseCriticalStrikeChance * PercentageIncreasedCriticalStrikeChance;
 	}
 
 	public string GetCritChance() {
@@ -363,15 +363,15 @@ public partial class ArmourItem : Item {
 
 	public int BaseArmour;
 	public int AddedArmour;
-	public double IncreasedArmour = 0;
+	public double IncreasedArmour = 1;
 	public int Armour;
 	public int BaseEvasion;
 	public int AddedEvasion;
-	public double IncreasedEvasion = 0;
+	public double IncreasedEvasion = 1;
 	public int Evasion;
 	public int BaseEnergyShield;
 	public int AddedEnergyShield;
-	public double IncreasedEnergyShield = 0;
+	public double IncreasedEnergyShield = 1;
 	public int EnergyShield;
 
 	public ArmourItem() {
@@ -385,9 +385,9 @@ public partial class ArmourItem : Item {
 	}
 
 	public void CalculateDefences() {
-		Armour = (int)Math.Round((BaseArmour + AddedArmour) * (1 + IncreasedArmour), 0);
-		Evasion = (int)Math.Round((BaseEvasion + AddedEvasion) * (1 + IncreasedEvasion), 0);
-		EnergyShield = (int)Math.Round((BaseEnergyShield + AddedEnergyShield) * (1 + IncreasedEnergyShield), 0);
+		Armour = (int)Math.Round((BaseArmour + AddedArmour) * IncreasedArmour, 0);
+		Evasion = (int)Math.Round((BaseEvasion + AddedEvasion) * IncreasedEvasion, 0);
+		EnergyShield = (int)Math.Round((BaseEnergyShield + AddedEnergyShield) * IncreasedEnergyShield, 0);
 
 		StatDictionary[EStatName.FlatArmour] = Armour;
 		StatDictionary[EStatName.FlatEvasion] = Evasion;

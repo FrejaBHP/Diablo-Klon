@@ -33,34 +33,11 @@ public partial class OffencePanel : StatPanel {
     }
 
     private void BuildTable() {
-        MainHandPhysDamage = statEntryScene.Instantiate<StatTableEntry>();
-        statContainer.AddChild(MainHandPhysDamage);
-        MainHandPhysDamage.SetDescription("Main Hand Physical Damage");
-        stats.Add(MainHandPhysDamage);
-
-        MainHandAttackSpeed = statEntryScene.Instantiate<StatTableEntry>();
-        statContainer.AddChild(MainHandAttackSpeed);
-        MainHandAttackSpeed.SetDescription("Main Hand Attacks per Second");
-        stats.Add(MainHandAttackSpeed);
-
-        MainHandCritChance = statEntryScene.Instantiate<StatTableEntry>();
-        statContainer.AddChild(MainHandCritChance);
-        MainHandCritChance.SetDescription("Main Hand Critical Strike Chance");
-        stats.Add(MainHandCritChance);
-
-        OffHandPhysDamage = statEntryScene.Instantiate<StatTableEntry>();
-        statContainer.AddChild(OffHandPhysDamage);
-        OffHandPhysDamage.SetDescription("Off Hand Physical Damage");
-        stats.Add(OffHandPhysDamage);
-
-        OffHandAttackSpeed = statEntryScene.Instantiate<StatTableEntry>();
-        statContainer.AddChild(OffHandAttackSpeed);
-        OffHandAttackSpeed.SetDescription("Off Hand Attacks per Second");
-        stats.Add(OffHandAttackSpeed);
-
-        OffHandCritChance = statEntryScene.Instantiate<StatTableEntry>();
-        statContainer.AddChild(OffHandCritChance);
-        OffHandCritChance.SetDescription("Off Hand Critical Strike Chance");
-        stats.Add(OffHandCritChance);
+        AddEntry(ref MainHandPhysDamage, "MH Physical Damage");
+        AddEntry(ref MainHandAttackSpeed, "MH Attacks per Second");
+        AddEntry(ref MainHandCritChance, "MH Critical Strike Chance");
+        AddEntry(ref OffHandPhysDamage, "OH Physical Damage");
+        AddEntry(ref OffHandAttackSpeed, "OH Attacks per Second");
+        AddEntry(ref OffHandCritChance, "OH Critical Strike Chance");
     }
 }

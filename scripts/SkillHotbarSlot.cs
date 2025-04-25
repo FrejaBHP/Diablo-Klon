@@ -5,10 +5,18 @@ public partial class SkillHotbarSlot : Control {
     [Signal]
     public delegate void SkillSlotClickedEventHandler(SkillHotbarSlot slot);
 
+    [Signal]
+    public delegate void SkillSlotEnteredEventHandler(SkillHotbarSlot slot);
+
+    [Signal]
+    public delegate void SkillSlotExitedEventHandler(SkillHotbarSlot slot);
+
     public Skill AssignedSkill { get; protected set; } = null;
 
     protected Label skillHotkeyHint;
     protected TextureRect skillTextureRect;
+
+    protected bool isHovered = false;
 
     public override void _Ready() {
         skillHotkeyHint = GetNode<Label>("SkillHotbarHint");
@@ -25,6 +33,7 @@ public partial class SkillHotbarSlot : Control {
 
     public void AssignSkillToSlot(Skill skill) {
         AssignedSkill = skill;
+        AssignedSkill.UpdateSkillValues();
         
         if (skill != null) {
             skillTextureRect.Texture = AssignedSkill.Texture;
@@ -37,6 +46,18 @@ public partial class SkillHotbarSlot : Control {
     public void GUIInput(InputEvent @event) {
         if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == MouseButton.Left && mbe.Pressed) {
             EmitSignal(SignalName.SkillSlotClicked, this);
+        }
+    }
+
+    public void OnMouseEntered() {
+        if (AssignedSkill != null) {
+            EmitSignal(SignalName.SkillSlotEntered, this);
+        }
+    }
+
+    public void OnMouseExited() {
+        if (AssignedSkill != null) {
+            EmitSignal(SignalName.SkillSlotExited, this);
         }
     }
 

@@ -34,3 +34,5 @@ expand_mode = 1
 stretch_mode = 4
 
 [connection signal="gui_input" from="SkillHotbarContainer" to="." method="GUIInput"]
+[connection signal="mouse_entered" from="SkillHotbarContainer" to="." method="OnMouseEntered"]
+[connection signal="mouse_exited" from="SkillHotbarContainer" to="." method="OnMouseExited"]

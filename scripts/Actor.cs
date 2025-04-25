@@ -165,71 +165,6 @@ public class ActorBasicStats {
     private double totalManaRegen;
     public double TotalManaRegen { get => totalManaRegen; }
 
-
-    // ======== ARMOUR ========
-    private int addedArmour;
-    public int AddedArmour {
-        get { return addedArmour; }
-        set { 
-            addedArmour = value;
-            CalculateArmour();
-        }
-    }
-
-    private double increasedArmour;
-    public double IncreasedArmour {
-        get { return increasedArmour; }
-        set { 
-            increasedArmour = value;
-            CalculateArmour();
-        }
-    }
-
-    private double moreArmour;
-    public double MoreArmour {
-        get { return moreArmour; }
-        set { 
-            moreArmour = value;
-            CalculateArmour();
-        }
-    }
-
-    private int totalArmour;
-    public int TotalArmour { get => totalArmour; }
-
-
-    // ======== EVASION ========
-    private int addedEvasion;
-    public int AddedEvasion {
-        get { return addedEvasion; }
-        set { 
-            addedEvasion = value;
-            CalculateEvasion();
-        }
-    }
-
-    private double increasedEvasion;
-    public double IncreasedEvasion {
-        get { return increasedEvasion; }
-        set { 
-            increasedEvasion = value;
-            CalculateEvasion();
-        }
-    }
-
-    private double moreEvasion;
-    public double MoreEvasion {
-        get { return moreEvasion; }
-        set { 
-            moreEvasion = value;
-            CalculateEvasion();
-        }
-    }
-
-    private int totalEvasion;
-    public int TotalEvasion { get => totalEvasion; }
-
-
     // ======== CALC ========
 
     public void CalculateMaxLife() {
@@ -293,45 +228,62 @@ public class ActorBasicStats {
     public void CalculateManaRegen() {
         totalManaRegen = ((totalMana * 0.02) + addedManaRegen) * (1 + increasedManaRegen);
     }
-
-    public void CalculateArmour() {
-        totalArmour = (int)(addedArmour * (1 + increasedArmour) * (1 + moreArmour));
-    }
-
-    public void CalculateEvasion() {
-        totalEvasion = (int)(addedEvasion * (1 + increasedEvasion) * (1 + moreEvasion));
-    }
 }
 
-public class ActorDamageModifiers {
-    public int AddedPhysicalMin;
-    public int AddedPhysicalMax;
-    public int AddedFireMin;
-    public int AddedFireMax;
-    public int AddedColdMin;
-    public int AddedColdMax;
-    public int AddedLightningMin;
-    public int AddedLightningMax;
+public class DamageModifiers {
+    public DamageStat Physical { get; protected set; } = new();
+    public DamageStat Fire { get; protected set; } = new();
+    public DamageStat Cold { get; protected set; } = new();
+    public DamageStat Lightning { get; protected set; } = new();
+    public DamageStat Chaos { get; protected set; } = new();
 
-    public double IncreasedMelee;
-    public double IncreasedProjectile;
-    public double IncreasedArea;
-    public double IncreasedSpell;
-    public double IncreasedPhysical;
+    public double IncreasedMelee = 0;
+    public double IncreasedRanged = 0;
+    public double IncreasedSpell = 0;
 
-    public double IncreasedFire;
-    public double IncreasedCold;
-    public double IncreasedLightning;
+    public double MoreMelee = 0;
+    public double MoreRanged = 0;
+    public double MoreSpell = 0;
 
-    public double MoreMelee;
-    public double MoreProjectile;
-    public double MoreArea;
-    public double MoreSpell;
+    public static DamageModifiers operator +(DamageModifiers a, DamageModifiers b) {
+        DamageModifiers c = new DamageModifiers();
 
-    public double MorePhysical;
-    public double MoreFire;
-    public double MoreCold;
-    public double MoreLightning;
+        c.Physical = a.Physical + b.Physical;
+        c.Fire = a.Fire + b.Fire;
+        c.Cold = a.Cold + b.Cold;
+        c.Lightning = a.Lightning + b.Lightning;
+        c.Chaos = a.Chaos + b.Chaos;
+
+        c.IncreasedMelee = a.IncreasedMelee + b.IncreasedMelee;
+        c.IncreasedRanged = a.IncreasedRanged + b.IncreasedRanged;
+        c.IncreasedSpell = a.IncreasedSpell + b.IncreasedSpell;
+
+        c.MoreMelee = a.MoreMelee * (1 + b.MoreMelee);
+        c.MoreRanged = a.MoreRanged * (1 + b.MoreRanged);
+        c.MoreSpell = a.MoreSpell * (1 + b.MoreSpell);
+        
+        return c;
+    }
+
+    public static DamageModifiers operator -(DamageModifiers a, DamageModifiers b) {
+        DamageModifiers c = new DamageModifiers();
+
+        c.Physical = a.Physical - b.Physical;
+        c.Fire = a.Fire - b.Fire;
+        c.Cold = a.Cold - b.Cold;
+        c.Lightning = a.Lightning - b.Lightning;
+        c.Chaos = a.Chaos - b.Chaos;
+
+        c.IncreasedMelee = a.IncreasedMelee - b.IncreasedMelee;
+        c.IncreasedRanged = a.IncreasedRanged - b.IncreasedRanged;
+        c.IncreasedSpell = a.IncreasedSpell - b.IncreasedSpell;
+
+        c.MoreMelee = a.MoreMelee / (1 + b.MoreMelee);
+        c.MoreRanged = a.MoreRanged / (1 + b.MoreRanged);
+        c.MoreSpell = a.MoreSpell / (1 + b.MoreSpell);
+        
+        return c;
+    }
 }
 
 public class ActorResistances {
@@ -339,6 +291,7 @@ public class ActorResistances {
     public int ResFire;
     public int ResCold;
     public int ResLightning;
+    public int ResChaos;
 }
 
 public class ActorPenetrations {
@@ -346,6 +299,7 @@ public class ActorPenetrations {
     public int PenFire;
     public int PenCold;
     public int PenLightning;
+    public int PenChaos;
 }
 
 public class ActorMainHand {
@@ -374,8 +328,11 @@ public partial class Actor : CharacterBody3D {
 
     public List<Skill> Skills = new List<Skill>();
 
+    public Stat Armour = new(0, true);
+    public Stat Evasion = new(0, true);
+
     public ActorBasicStats BasicStats = new();
-    public ActorDamageModifiers DamageMods = new();
+    public DamageModifiers DamageMods = new();
     public ActorResistances Resistances = new();
     public ActorPenetrations Penetrations = new();
 
@@ -389,8 +346,8 @@ public partial class Actor : CharacterBody3D {
 
     protected FloatingResourceBars fResBars;
 
-    protected ActorMainHand MainHand = new();
-    protected Item OffHandItem = null;
+    public ActorMainHand MainHand { get; protected set; } = new();
+    public Item OffHandItem { get; protected set; } = null;
     protected bool IsOffHandAWeapon = false;
 
     public override void _Ready() {
@@ -442,5 +399,4 @@ public partial class Actor : CharacterBody3D {
     public void TakeDamage(double damage) {
         BasicStats.CurrentLife -= damage;
     }
-
 }
