@@ -4,8 +4,9 @@ using System.Numerics;
 using Vector2 = Godot.Vector2;
 
 public partial class SkillTooltip : Control {
-	public Label NameLabel;
 	public HBoxContainer TopContainer;
+	public Label NameLabel;
+	public HBoxContainer InfoContainer;
 	public TextureRect CostTexture;
 	public Label CostLabel;
 	public TextureRect TimeTexture;
@@ -25,10 +26,11 @@ public partial class SkillTooltip : Control {
 		if (what == NotificationSceneInstantiated) {
 			TopContainer = GetNode<HBoxContainer>("VBoxContainer/TopContainer");
 			NameLabel = TopContainer.GetNode<Label>("NameLabel");
-			CostTexture = TopContainer.GetNode<TextureRect>("CostContainer/CostTexture");
-			CostLabel = TopContainer.GetNode<Label>("CostContainer/CostLabel");
-			TimeTexture = TopContainer.GetNode<TextureRect>("TimeContainer/TimeTexture");
-			TimeLabel = TopContainer.GetNode<Label>("TimeContainer/TimeLabel");
+			InfoContainer = TopContainer.GetNode<HBoxContainer>("InfoContainer");
+			CostTexture = InfoContainer.GetNode<TextureRect>("CostContainer/CostTexture");
+			CostLabel = InfoContainer.GetNode<Label>("CostContainer/CostLabel");
+			TimeTexture = InfoContainer.GetNode<TextureRect>("TimeContainer/TimeTexture");
+			TimeLabel = InfoContainer.GetNode<Label>("TimeContainer/TimeLabel");
 
 			DamageContainer = GetNode<VBoxContainer>("VBoxContainer/DamageContainer");
 

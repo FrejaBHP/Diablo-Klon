@@ -2,6 +2,8 @@ using Godot;
 using System;
 
 public static class Utilities {
+	private static readonly PackedScene damageTextScene = GD.Load<PackedScene>("res://scenes/damage_text.tscn");
+
 	public readonly static Random RNG = new Random();
 	
 	public static int RandomDoubleInclusiveToInt(double minimum, double maximum) {
@@ -15,4 +17,9 @@ public static class Utilities {
 	public static bool HasAnyFlags(this Enum input, Enum comparison) {
         return (Convert.ToInt32(input) & Convert.ToInt32(comparison)) != 0;
     }
+
+	public static DamageText CreateDamageNumber() {
+		DamageText damageLabel = damageTextScene.Instantiate<DamageText>();
+		return damageLabel;
+	}
 }

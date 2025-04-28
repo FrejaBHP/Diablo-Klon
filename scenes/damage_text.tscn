@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://d2gxos406f7p0"]
+
+[ext_resource type="Script" uid="uid://s017tx4yjr21" path="res://scripts/DamageText.cs" id="1_0x2rp"]
+
+[node name="DamageText" type="Label3D"]
+billboard = 2
+font_size = 60
+script = ExtResource("1_0x2rp")

@@ -322,6 +322,9 @@ public class ActorMainHand {
 }
 
 public partial class Actor : CharacterBody3D {
+    [Signal]
+    public delegate void DamageTakenEventHandler(double damage);
+
     protected PackedScene floatingResourceBarsScene = GD.Load<PackedScene>("res://scenes/gui/actor_floating_resource_bars.tscn");
 
     protected int ticksPerSecond = ProjectSettings.GetSetting("physics/common/physics_ticks_per_second").AsInt32();
@@ -398,5 +401,7 @@ public partial class Actor : CharacterBody3D {
     // Skal laves om senere til at bruge hit calc
     public void TakeDamage(double damage) {
         BasicStats.CurrentLife -= damage;
+        
+        EmitSignal(SignalName.DamageTaken, damage);
     }
 }
