@@ -61,10 +61,10 @@ public abstract class Skill {
         double critRoll = Utilities.RNG.NextDouble();
 
         if (chance >= critRoll) {
-            GD.Print($"Crit: {chance:F2} / {critRoll:F2}, True");
+            //GD.Print($"Crit: {chance:F2} / {critRoll:F2}, True");
             return true;
         }
-        GD.Print($"Crit: {chance:F2} / {critRoll:F2}, False");
+        //GD.Print($"Crit: {chance:F2} / {critRoll:F2}, False");
         return false;
     }
 
