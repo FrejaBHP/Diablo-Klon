@@ -33,10 +33,10 @@ public partial class SkillHotbarSlot : Control {
 
     public void AssignSkillToSlot(Skill skill) {
         AssignedSkill = skill;
-        AssignedSkill.UpdateSkillValues();
         
         if (skill != null) {
             skillTextureRect.Texture = AssignedSkill.Texture;
+            AssignedSkill.UpdateSkillValues();
         }
         else {
             skillTextureRect.Texture = UILib.TextureSkillNONE;

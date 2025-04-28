@@ -30,7 +30,7 @@ public partial class TestAttack : Node3D {
         tween.Finished += OnTweenFinished;
 
         tween.SetEase(Tween.EaseType.Out);
-        tween.TweenProperty(hitbox, "position", new Vector3(0f, 0f, travelDistance), travelTime);
+        tween.TweenProperty(hitbox, "position", new Vector3(0f, 0f, travelDistance), travelTime).AsRelative();
 
         AnimateTween();
     }
@@ -42,7 +42,7 @@ public partial class TestAttack : Node3D {
     protected void OnBodyEntered(Node3D body) {
         if (body.IsInGroup("Enemy")) {
             Actor enemy = body as Actor;
-            enemy.TakeDamage(damage.Physical); // Giv støtte til alle typer senere!!
+            enemy.TakeDamage(damage.Physical, damage.IsCritical, true); // Giv støtte til alle typer senere!!
         }
     }
 

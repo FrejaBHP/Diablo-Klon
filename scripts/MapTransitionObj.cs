@@ -10,6 +10,10 @@ public partial class MapTransitionObj : Area3D {
         AddToGroup("MapTransition");
     }
 
+    // This executes in the last Input step, namely the Physics Picking step, and therefore will not prevent propagating any input to the Unhandled steps
+    // A workaround to avoid left clicking on this also causing an attack would be to not detect this Area3D through its own input event, but rather through a raycast from the camera
+    // https://docs.godotengine.org/en/4.3/tutorials/inputs/inputevent.html
+    // https://stackoverflow.com/questions/78464266/how-to-implement-move-to-click-with-interactable-objects-event-order-is-breakin
     public void OnInputEvent(Node camera, InputEvent @event, Vector3 eventPosition, Vector3 normal, int shapeidx) {
         if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == MouseButton.Left && mbe.Pressed) {
 			Player player = camera.GetParent<Player>();
@@ -33,5 +37,4 @@ public partial class MapTransitionObj : Area3D {
             GD.Print("Slay");
         }
     }
-
 }

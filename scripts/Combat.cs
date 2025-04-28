@@ -7,12 +7,13 @@ public enum DamageType {
     Chaos       // DoT: Poison
 }
 
-public class SkillDamage(double phys, double fire, double cold, double lightning, double chaos) {
+public class SkillDamage(double phys, double fire, double cold, double lightning, double chaos, bool isCritical) {
     public readonly double Physical = phys;
     public readonly double Fire = fire;
     public readonly double Cold = cold;
     public readonly double Lightning = lightning;
     public readonly double Chaos = chaos;
+    public readonly bool IsCritical = isCritical;
 }
 
 public class HitDamageInstance(float phys, float fire, float cold, float lightning, float chaos) {

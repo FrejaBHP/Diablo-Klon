@@ -145,11 +145,17 @@ public partial class SkillHotbar : Control {
 
 		if (skill.Type == ESkillType.Attack) {
 			IAttack attack = skill as IAttack;
-            // Giver nullptr uden et våben i hånden!
-            tooltipContent.TimeLabel.Text = $"{PlayerOwner.MainHand.Weapon.AttackSpeed / attack.ActiveAttackSpeedModifiers.STotal:F2}";
+
+            if (PlayerOwner.MainHand.Weapon != null) {
+                tooltipContent.TimeLabel.Text = $"{PlayerOwner.MainHand.Weapon.AttackSpeed / attack.ActiveAttackSpeedModifiers.STotal:F2}";
+            }
+            else {
+                tooltipContent.TimeLabel.Text = $"{1 / attack.ActiveAttackSpeedModifiers.STotal:F2}";
+            }
 		}
         else if (skill.Type == ESkillType.Spell) {
 			ISpell spell = skill as ISpell;
+
             tooltipContent.TimeLabel.Text = $"{spell.BaseCastTime / spell.ActiveCastSpeedModifiers.STotal:F2}";
 		}
 
@@ -173,12 +179,6 @@ public partial class SkillHotbar : Control {
             Label chaosLabel = GenerateAffixLabel($"Deals {skill.ActiveDamageModifiers.Chaos.SMinTotal} - {skill.ActiveDamageModifiers.Chaos.SMaxTotal} Chaos Damage");
             tooltipContent.DamageContainer.AddChild(chaosLabel);
         }
-		//Label descriptionLabel = GenerateDescriptionLabel(skillItem.SkillReference.Description);
-		//tooltipContent.DescriptionContainer.AddChild(descriptionLabel);
-
-		// Indtil der tilføjes synlige effekter/scaling
-		//tooltipContent.EffectSeparator.Visible = false;
-		//tooltipContent.EffectContainer.Visible = false;
 		
 		return tooltipContent;
 	}

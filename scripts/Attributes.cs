@@ -12,6 +12,15 @@ public partial class Stat(double baseValue, bool shouldRound) {
     private double minValueCap = 0;
     private double maxValueCap = 0;
 
+    public Stat(double baseValue, bool shouldRound, double minCap) : this(baseValue, shouldRound) {
+        SetMinCap(minCap);
+    }
+
+    public Stat(double baseValue, bool shouldRound, double minCap, double maxCap) : this(baseValue, shouldRound) {
+        SetMinCap(minCap);
+        SetMaxCap(maxCap);
+    }
+
     private double sBase = baseValue;
 	public double SBase {
 		get => sBase;

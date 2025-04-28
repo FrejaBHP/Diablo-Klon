@@ -6,8 +6,10 @@ public abstract class Skill {
 
     public Actor ActorOwner { get; set; }
 
-    public DamageModifiers BaseDamageModifiers { get; protected set; } = new();
-    public DamageModifiers ActiveDamageModifiers { get; protected set; } = new();
+    public DamageModifiers BaseDamageModifiers { get; protected set; } = new(); // Kan måske erstattes med nogle mere simple værdier
+    public DamageModifiers ActiveDamageModifiers { get; protected set; } = new(); // Som fx bare have en double der hedder "IncreasedPhys" og lægge det til i det relevante sted i et skill
+    public double CriticalStrikeChance;
+    public double CriticalStrikeMulti;
 
     public string Name { get; protected set; }
     public string Description { get; protected set; }
@@ -32,19 +34,45 @@ public abstract class Skill {
         return Math.Round(AddedDamageModifier * 100, 0).ToString();
     }
 
-    public SkillDamage RollForDamage() {
+    public SkillDamage RollForDamage(bool canCrit) {
+        bool isCritical = false;
+        if (canCrit) {
+            isCritical = RollForCritical(CriticalStrikeChance);
+        }
+
         double physical = Utilities.RandomDouble(ActiveDamageModifiers.Physical.SMinTotal, ActiveDamageModifiers.Physical.SMaxTotal);
         double fire = Utilities.RandomDouble(ActiveDamageModifiers.Fire.SMinTotal, ActiveDamageModifiers.Fire.SMaxTotal);
         double cold = Utilities.RandomDouble(ActiveDamageModifiers.Cold.SMinTotal, ActiveDamageModifiers.Cold.SMaxTotal);
         double lightning = Utilities.RandomDouble(ActiveDamageModifiers.Lightning.SMinTotal, ActiveDamageModifiers.Lightning.SMaxTotal);
         double chaos = Utilities.RandomDouble(ActiveDamageModifiers.Chaos.SMinTotal, ActiveDamageModifiers.Chaos.SMaxTotal);
 
-        return new SkillDamage(physical, fire, cold, lightning, chaos);
+        if (isCritical) {
+            physical *= CriticalStrikeMulti;
+            fire *= CriticalStrikeMulti;
+            cold *= CriticalStrikeMulti;
+            lightning *= CriticalStrikeMulti;
+            chaos *= CriticalStrikeMulti;
+        }
+
+        return new SkillDamage(physical, fire, cold, lightning, chaos, isCritical);
+    }
+
+    public bool RollForCritical(double chance) {
+        double critRoll = Utilities.RNG.NextDouble();
+
+        if (chance >= critRoll) {
+            GD.Print($"Crit: {chance:F2} / {critRoll:F2}, True");
+            return true;
+        }
+        GD.Print($"Crit: {chance:F2} / {critRoll:F2}, False");
+        return false;
     }
 
     public virtual void UpdateSkillValues() {
         if (ActorOwner != null) {
             ActiveDamageModifiers = ActorOwner.DamageMods + BaseDamageModifiers;
+            CriticalStrikeChance = ActorOwner.MainHand.CritChance * ActorOwner.CritChanceMod.STotal;
+            CriticalStrikeMulti = ActorOwner.CritDamage.STotal;
 
             IAttack attack = this as IAttack;
             if (attack != null) {
@@ -162,7 +190,7 @@ public class SkillThrust : Skill, IAttack, IMeleeSkill {
             };
             testAttack.GlobalRotation = ActorOwner.GlobalRotation;
 
-            testAttack.StartAttack(RollForDamage(), 2f, 2.5f, 25f);
+            testAttack.StartAttack(RollForDamage(true), 2f, 2.5f, 25f);
         }
     }
 }

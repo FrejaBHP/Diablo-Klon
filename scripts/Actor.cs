@@ -323,7 +323,7 @@ public class ActorMainHand {
 
 public partial class Actor : CharacterBody3D {
     [Signal]
-    public delegate void DamageTakenEventHandler(double damage);
+    public delegate void DamageTakenEventHandler(double damage, bool isCritical, bool showDamageText);
 
     protected PackedScene floatingResourceBarsScene = GD.Load<PackedScene>("res://scenes/gui/actor_floating_resource_bars.tscn");
 
@@ -343,7 +343,10 @@ public partial class Actor : CharacterBody3D {
 
     public Stat AttackSpeedMod = new(1, false);
     public Stat CritChanceMod = new(1, false);
+    public Stat CritDamage = new(1.5, false, 0);
     public Stat CastSpeedMod = new(1, false);
+
+    public Stat MovementSpeed = new(0, false, 0);
 
     public float OutgoingEffectAttachmentHeight { get; protected set; } = 1f;
 
@@ -353,8 +356,14 @@ public partial class Actor : CharacterBody3D {
     public Item OffHandItem { get; protected set; } = null;
     protected bool IsOffHandAWeapon = false;
 
+    public int UnarmedMinDamage { get; protected set; }
+    public int UnarmedMaxDamage { get; protected set; }
+    public double UnarmedAttackSpeed { get; protected set; }
+    public double UnarmedCritChance { get; protected set; } = 0.05;
+
     public override void _Ready() {
         BasicStats.CurrentLifeChanged += OnCurrentLifeChanged;
+        DamageTaken += OnDamageTaken;
     }
 
     protected void AddFloatingBars(Node3D anchor) {
@@ -370,7 +379,6 @@ public partial class Actor : CharacterBody3D {
             fResBars.SetManaPercentage(0);
             fResBars.SetManaBarVisibility(false);
         }
-        
     }
 
     protected void OnCurrentLifeChanged(object sender, double newCurrentLife) {
@@ -399,9 +407,13 @@ public partial class Actor : CharacterBody3D {
     }
 
     // Skal laves om senere til at bruge hit calc
-    public void TakeDamage(double damage) {
+    public void TakeDamage(double damage, bool isCritical, bool createDamageText) {
         BasicStats.CurrentLife -= damage;
-        
-        EmitSignal(SignalName.DamageTaken, damage);
+
+        EmitSignal(SignalName.DamageTaken, damage, isCritical, createDamageText);
+    }
+
+    public virtual void OnDamageTaken(double damage, bool isCritical, bool createDamageText) {
+
     }
 }

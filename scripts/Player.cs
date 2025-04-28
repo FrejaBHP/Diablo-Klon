@@ -22,9 +22,6 @@ public partial class Player : Actor {
 	private readonly Stat intelligence = new(10, true);
     public Stat Intelligence { get => intelligence; }
 
-	private readonly Stat movementSpeed = new(5, false);
-    public Stat MovementSpeed { get => movementSpeed; }
-
 	private Node3D targetedNode;
 	public Node3D TargetedNode { get => targetedNode; }
 
@@ -67,6 +64,7 @@ public partial class Player : Actor {
 
 		{ EStatName.IncreasedAttackSpeed, 			0 },
 		{ EStatName.IncreasedCritChance, 			0 },
+		{ EStatName.AddedCritMulti, 				0 },
 
 		{ EStatName.IncreasedMovementSpeed, 		0 },
 
@@ -91,6 +89,12 @@ public partial class Player : Actor {
 	public Player() {
 		BasicStats.BaseLife = 40;
 		BasicStats.BaseMana = 30;
+		MovementSpeed.SBase = 5;
+
+		UnarmedMinDamage = 3;
+		UnarmedMaxDamage = 6;
+		UnarmedAttackSpeed = 1;
+
 		RefreshLifeMana();
 	}
 
@@ -321,7 +325,7 @@ public partial class Player : Actor {
 		if (movementInputMethod == EMovementInputMethod.Mouse || MovingTowardsObject) {
 			remainingDist = (GlobalPosition with { Y = 0f }).DistanceTo(moveTo with { Y = 0f });
 
-			if (remainingDist <= (float)movementSpeed.STotal / 100f) {
+			if (remainingDist <= (float)MovementSpeed.STotal / 100f) {
 				ApplyGroundedVelocity(0f, 0f);
 
 				if (targetedNode != null) {
@@ -335,8 +339,8 @@ public partial class Player : Actor {
 			}
 			else {
 				Vector3 vecGrounded = Velocity with { Y = 0f };
-				if (vecGrounded.Length() < (float)movementSpeed.STotal - 0.01f) {
-					float diff = (float)movementSpeed.STotal / Velocity.Length();
+				if (vecGrounded.Length() < (float)MovementSpeed.STotal - 0.01f) {
+					float diff = (float)MovementSpeed.STotal / Velocity.Length();
 					Velocity *= diff;
 				}
 			}
@@ -420,8 +424,8 @@ public partial class Player : Actor {
 	// Sets velocity for the X and Z axes (grounded) to avoid accidentally setting or changing Y (vertical) velocity
 	public void ApplyGroundedVelocity(float velX, float velZ) {
 		Vector3 velocity = Velocity;
-		velocity.X = velX * (float)movementSpeed.STotal;
-		velocity.Z = velZ * (float)movementSpeed.STotal;
+		velocity.X = velX * (float)MovementSpeed.STotal;
+		velocity.Z = velZ * (float)MovementSpeed.STotal;
 		Velocity = velocity;
 	}
 
@@ -489,16 +493,18 @@ public partial class Player : Actor {
 
 		AttackSpeedMod.SIncreased = ItemStatDictionary[EStatName.IncreasedAttackSpeed];
 		CritChanceMod.SIncreased = ItemStatDictionary[EStatName.IncreasedCritChance];
+		CritDamage.SAdded = ItemStatDictionary[EStatName.AddedCritMulti];
 
 		MovementSpeed.SIncreased = ItemStatDictionary[EStatName.IncreasedMovementSpeed];
 
 		if (MainHand.Weapon != null) {
+			// Skal laves om, så våben ikke giver skade til begge hænder
 			DamageMods.Physical.SMinBase = MainHand.Weapon.PhysicalMinimumDamage;
 			DamageMods.Physical.SMaxBase = MainHand.Weapon.PhysicalMaximumDamage;
 		}
 		else {
-			DamageMods.Physical.SMinBase = 3;
-			DamageMods.Physical.SMaxBase = 6;
+			DamageMods.Physical.SMinBase = UnarmedMinDamage;
+			DamageMods.Physical.SMaxBase = UnarmedMaxDamage;
 		}
 		
 		DamageMods.Physical.SMinAdded = (int)ItemStatDictionary[EStatName.FlatMinPhysDamage];
@@ -522,10 +528,10 @@ public partial class Player : Actor {
 			MainHand.CritChance = MainHand.Weapon.CriticalStrikeChance * CritChanceMod.STotal; // Dårlig løsning. Gør det umuligt at tilføje modifiers senere hen. Split hellere Crit Chance ting op i to
 		}
 		else {
-			MainHand.PhysMinDamage = (int)Math.Round(DamageMods.Physical.SMinAdded * (1 + DamageMods.Physical.SIncreased) * (1 + DamageMods.Physical.SMore), 0);
-			MainHand.PhysMaxDamage = (int)Math.Round(DamageMods.Physical.SMinAdded * (1 + DamageMods.Physical.SIncreased) * (1 + DamageMods.Physical.SMore), 0);
-			MainHand.AttackSpeed = 1 / AttackSpeedMod.STotal;
-			MainHand.CritChance = 5 * CritChanceMod.STotal;
+			MainHand.PhysMinDamage = (int)Math.Round((UnarmedMinDamage + DamageMods.Physical.SMinAdded) * (1 + DamageMods.Physical.SIncreased) * (1 + DamageMods.Physical.SMore), 0);
+			MainHand.PhysMaxDamage = (int)Math.Round((UnarmedMaxDamage + DamageMods.Physical.SMaxAdded) * (1 + DamageMods.Physical.SIncreased) * (1 + DamageMods.Physical.SMore), 0);
+			MainHand.AttackSpeed = UnarmedAttackSpeed / AttackSpeedMod.STotal;
+			MainHand.CritChance = UnarmedCritChance * CritChanceMod.STotal;
 		}
 
 		if (OffHandItem != null && IsOffHandAWeapon) {
@@ -564,10 +570,11 @@ public partial class Player : Actor {
 
 		PlayerHUD.PlayerPanel.OffenceTabPanel.MainHandPhysDamage.SetValue($"{MainHand.PhysMinDamage} - {MainHand.PhysMaxDamage}");
 		PlayerHUD.PlayerPanel.OffenceTabPanel.MainHandAttackSpeed.SetValue($"{1 / MainHand.AttackSpeed:F2}");
-		PlayerHUD.PlayerPanel.OffenceTabPanel.MainHandCritChance.SetValue($"{MainHand.CritChance:F2}%");
+		PlayerHUD.PlayerPanel.OffenceTabPanel.MainHandCritChance.SetValue($"{MainHand.CritChance * 100:F2}%");
 		PlayerHUD.PlayerPanel.OffenceTabPanel.OffHandPhysDamage.SetValue($"{offHandMinPhysDamage} - {offHandMaxPhysDamage}");
 		PlayerHUD.PlayerPanel.OffenceTabPanel.OffHandAttackSpeed.SetValue($"{1 / offHandAS:F2}");
-		PlayerHUD.PlayerPanel.OffenceTabPanel.OffHandCritChance.SetValue($"{offHandCSC:F2}%");
+		PlayerHUD.PlayerPanel.OffenceTabPanel.OffHandCritChance.SetValue($"{offHandCSC * 100:F2}%");
+		PlayerHUD.PlayerPanel.OffenceTabPanel.CritMulti.SetValue($"{Math.Round(CritDamage.STotal, 2) * 100}%");
 
 		PlayerHUD.PlayerPanel.DefenceTabPanel.LifeRegen.SetValue($"{BasicStats.TotalLifeRegen:F1}");
 		PlayerHUD.PlayerPanel.DefenceTabPanel.ManaRegen.SetValue($"{BasicStats.TotalManaRegen:F1}");

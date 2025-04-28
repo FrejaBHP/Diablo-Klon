@@ -40,7 +40,7 @@ public static class ItemDataTables {
 			BasePhysicalMinimumDamage = 5,
 			BasePhysicalMaximumDamage = 9,
 			BaseAttackSpeed = 0.714f,
-			BaseCritChance = 5f,
+			BaseCritChance = 0.05f,
 			ImplicitTypes = []
 		}
 	];
@@ -54,7 +54,7 @@ public static class ItemDataTables {
 			BasePhysicalMinimumDamage = 7,
 			BasePhysicalMaximumDamage = 11,
 			BaseAttackSpeed = 0.769f,
-			BaseCritChance = 5f,
+			BaseCritChance = 0.05f,
 			ImplicitTypes = []
 		}
 	];

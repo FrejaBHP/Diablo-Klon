@@ -10,6 +10,8 @@ public partial class OffencePanel : StatPanel {
     public StatTableEntry OffHandAttackSpeed;
     public StatTableEntry OffHandCritChance;
 
+    public StatTableEntry CritMulti;
+
     protected bool isOHEquipped;
     
     public override void _Ready() {
@@ -39,5 +41,6 @@ public partial class OffencePanel : StatPanel {
         AddEntry(ref OffHandPhysDamage, "OH Physical Damage");
         AddEntry(ref OffHandAttackSpeed, "OH Attacks per Second");
         AddEntry(ref OffHandCritChance, "OH Critical Strike Chance");
+        AddEntry(ref CritMulti, "Critical Strike Multiplier");
     }
 }

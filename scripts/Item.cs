@@ -304,7 +304,7 @@ public partial class WeaponItem : Item {
 	}
 
 	public string GetCritChance() {
-		return $"{CriticalStrikeChance:F2}%";
+		return $"{CriticalStrikeChance * 100:F2}%";
 	}
 
 	protected override void ApplyLocalAffix(Affix affix, bool add) {

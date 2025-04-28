@@ -31,6 +31,7 @@ public enum EStatName {
 
 	IncreasedAttackSpeed,
 	IncreasedCritChance,
+	AddedCritMulti,
 
 	IncreasedMovementSpeed,
 
@@ -98,6 +99,7 @@ public enum EAffixFamily {
 
 	IncreasedAttackSpeed,
 	IncreasedCritChance,
+	AddedCritMulti,
 
 	IncreasedMovementSpeed,
 
