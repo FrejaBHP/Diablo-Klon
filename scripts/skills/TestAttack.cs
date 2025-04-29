@@ -10,6 +10,8 @@ public partial class TestAttack : Node3D {
     private Tween tween;
 
     private SkillDamage damage;
+    private ActorPenetrations pens;
+    private EDamageCategory dmgCategory;
 
     public override void _Ready() {
         hitbox = GetNode<Area3D>("Hitbox");
@@ -18,8 +20,10 @@ public partial class TestAttack : Node3D {
         effectSprite = hitbox.GetNode<Sprite3D>("EffectSprite");
     }
 
-    public void StartAttack(SkillDamage sDamage, float scale, float range, float speed) {
+    public void StartAttack(EDamageCategory dmgCat, SkillDamage sDamage, ActorPenetrations sPens, float scale, float range, float speed) {
         damage = sDamage;
+        pens = sPens;
+        dmgCategory = dmgCat;
 
         hitbox.Scale = new Vector3(scale, scale, scale);
         hitbox.Position = hitbox.Position with { Z = hitbox.Position.Z + (collisionCapsule.Height / 2) * (scale - 1) };
@@ -42,7 +46,7 @@ public partial class TestAttack : Node3D {
     protected void OnBodyEntered(Node3D body) {
         if (body.IsInGroup("Enemy")) {
             Actor enemy = body as Actor;
-            enemy.TakeDamage(damage.Physical, damage.IsCritical, true); // Giv støtte til alle typer senere!!
+            enemy.TakeDamage(dmgCategory, damage, pens, true, damage.IsCritical, true); // Giv støtte til alle typer senere!!
         }
     }
 

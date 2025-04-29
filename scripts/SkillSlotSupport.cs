@@ -29,33 +29,8 @@ public partial class SkillSlotSupport : Control {
 		highlight = GetNode<ColorRect>("Highlight");
 	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta) {
-		
-	}
-
 	public void GUIInput(InputEvent @event) {
-		/*
-		// On left-click
-		if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == MouseButton.Left && mbe.Pressed) {
-			if (InventoryReference.IsAnItemSelected && InventoryReference.CanEquipItemInSlot(this, InventoryReference.SelectedItem) && CanEquipItem(InventoryReference.SelectedItem.ItemReference.ItemAllBaseType)) {
-				if (itemInSlot == null) {
-					SetItem(InventoryReference.SelectedItem);
-					EmitSignal(SignalName.ItemEquipped, this, itemInSlot);
-				}
-				else {
-					InventoryItem temp = InventoryReference.SelectedItem;
-					EmitSignal(SignalName.ItemsSwapped, this, itemInSlot, InventoryReference.SelectedItem);
-					SetItem(temp);
-				}
-			}
-			else if (!InventoryReference.IsAnItemSelected && itemInSlot != null) {
-				RemoveHighlight();
-				EmitSignal(SignalName.ItemUnequipped, this, itemInSlot);
-				SetItem(null);
-			}
-		}
-		*/
+
 	}
 
 	public void OnMouseEntered() {

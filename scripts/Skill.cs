@@ -17,6 +17,7 @@ public abstract class Skill {
     public ESkillName SkillName { get; protected set; }
     public ESkillType Type { get; protected set; }
     public ESkillTags Tags { get; protected set; }
+    public EDamageCategory DamageCategory { get; protected set; }
     public Texture2D Texture { get; protected set; }
 
     public int ManaCost { get; protected set; }
@@ -57,14 +58,14 @@ public abstract class Skill {
         return new SkillDamage(physical, fire, cold, lightning, chaos, isCritical);
     }
 
-    public bool RollForCritical(double chance) {
+    public static bool RollForCritical(double chance) {
         double critRoll = Utilities.RNG.NextDouble();
 
         if (chance >= critRoll) {
-            //GD.Print($"Crit: {chance:F2} / {critRoll:F2}, True");
+            //GD.Print($"Crit: {chance:F3} / {critRoll:F3}, True");
             return true;
         }
-        //GD.Print($"Crit: {chance:F2} / {critRoll:F2}, False");
+        //GD.Print($"Crit: {chance:F3} / {critRoll:F3}, False");
         return false;
     }
 
@@ -72,7 +73,7 @@ public abstract class Skill {
         if (ActorOwner != null) {
             ActiveDamageModifiers = ActorOwner.DamageMods + BaseDamageModifiers;
             CriticalStrikeChance = ActorOwner.MainHand.CritChance * ActorOwner.CritChanceMod.STotal;
-            CriticalStrikeMulti = ActorOwner.CritDamage.STotal;
+            CriticalStrikeMulti = ActorOwner.CritMultiplier.STotal;
 
             IAttack attack = this as IAttack;
             if (attack != null) {
@@ -162,6 +163,7 @@ public class SkillThrust : Skill, IAttack, IMeleeSkill {
         SkillName = ESkillName.BasicThrust;
         Type = ESkillType.Attack;
         Tags = ESkillTags.Melee;
+        DamageCategory = EDamageCategory.Melee;
         Texture = UILib.TextureSkillThrust;
 
         ManaCost = 0;
@@ -190,7 +192,7 @@ public class SkillThrust : Skill, IAttack, IMeleeSkill {
             };
             testAttack.GlobalRotation = ActorOwner.GlobalRotation;
 
-            testAttack.StartAttack(RollForDamage(true), 2f, 2.5f, 25f);
+            testAttack.StartAttack(DamageCategory, RollForDamage(true), ActorOwner.Penetrations, 2f, 2.5f, 25f);
         }
     }
 }
@@ -201,7 +203,8 @@ public class SkillDefaultProjectileAttack : Skill, IAttack, IProjectileSkill {
         Description = "A default Attack";
 
         Type = ESkillType.Attack;
-        Tags = ESkillTags.Projectile;
+        Tags = ESkillTags.Ranged | ESkillTags.Projectile;
+        DamageCategory = EDamageCategory.Ranged;
         
         ManaCost = 0;
         AddedDamageModifier = 1;

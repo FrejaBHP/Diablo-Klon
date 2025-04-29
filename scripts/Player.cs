@@ -13,14 +13,9 @@ public partial class Player : Actor {
 
 	public bool MovingTowardsObject = false;
 
-	private readonly Stat strength = new(10, true);
-	public Stat Strength { get => strength; }
-
-	private readonly Stat dexterity = new(10, true);
-    public Stat Dexterity { get => dexterity; }
-
-	private readonly Stat intelligence = new(10, true);
-    public Stat Intelligence { get => intelligence; }
+	public Stat Strength { get; protected set; } = new(0, true);
+    public Stat Dexterity { get; protected set; } = new(0, true);
+    public Stat Intelligence { get; protected set; } = new(0, true);
 
 	private Node3D targetedNode;
 	public Node3D TargetedNode { get => targetedNode; }
@@ -75,10 +70,19 @@ public partial class Player : Actor {
 		{ EStatName.FlatEnergyShield, 				0 },
 		{ EStatName.IncreasedEnergyShield, 			0 },
 
+		{ EStatName.PhysicalResistance, 			0 },
 		{ EStatName.FireResistance, 				0 },
 		{ EStatName.ColdResistance, 				0 },
 		{ EStatName.LightningResistance, 			0 },
+		{ EStatName.ChaosResistance, 				0 },
 	};
+
+	protected double StrLifeBonus;
+	protected double StrMeleeBonus;
+	protected double DexASBonus;
+	protected double DexEvasionBonus;
+	protected double IntManaBonus;
+	protected double IntSpellBonus;
 
 	// Skal flyttes et andet sted hen senere
 	private double offHandMinPhysDamage;
@@ -107,11 +111,12 @@ public partial class Player : Actor {
 		PlayerHUD.AssignPlayer(this);
 		moveTo = GlobalPosition;
 
-		strength.StatTotalChanged += StrTotalChanged;
-		dexterity.StatTotalChanged += DexTotalChanged;
-		intelligence.StatTotalChanged += IntTotalChanged;
+		Strength.StatTotalChanged += StrTotalChanged;
+		Dexterity.StatTotalChanged += DexTotalChanged;
+		Intelligence.StatTotalChanged += IntTotalChanged;
 
 		PlayerHUD.PlayerPanel.OffenceTabPanel.SetOffhandVisibility(false);
+		PlayerHUD.PlayerPanel.CharacterLevelLabel.Text = $"Level {ActorLevel} Creature";
 		
 		CalculateStats();
 
@@ -206,6 +211,10 @@ public partial class Player : Actor {
 		else if (@event.IsActionPressed("DebugHalveLifeMana")) {
 			BasicStats.CurrentLife /= 2;
 			BasicStats.CurrentMana /= 2;
+		}
+		else if (@event.IsActionPressed("DebugRemoveWorlditems")) {
+			Game game = (Game)GetParent();
+			game.RemoveAllWorldItems();
 		}
     }
 
@@ -437,11 +446,7 @@ public partial class Player : Actor {
 
 	public void DropItem(WorldItem worldItem) {
 		Game game = (Game)GetParent();
-		CanvasLayer gameObjectLayer = game.GetNode<CanvasLayer>("WorldObjects");
-
-		gameObjectLayer.AddChild(worldItem);
-		worldItem.GlobalPosition = GlobalPosition with { Y = GlobalPosition.Y + 0.25f };
-		worldItem.PostSpawn();
+		game.DropItem(worldItem, GlobalPosition);
 	}
 
 	public void ApplyItemStats(EquipmentSlot slot, Item item) {
@@ -476,14 +481,56 @@ public partial class Player : Actor {
 		CalculateStats();
 	}
 
-	protected void CalculateStats() {
-		strength.SAdded = ItemStatDictionary[EStatName.FlatStrength];
-		dexterity.SAdded = ItemStatDictionary[EStatName.FlatDexterity];
-		intelligence.SAdded = ItemStatDictionary[EStatName.FlatIntelligence];
+	protected void StrTotalChanged(double newStatTotal) {
+		PlayerHUD.PlayerPanel.StrContainer.SetValue($"{newStatTotal}");
+		//UpdateStrBonuses();
+	}
 
-		BasicStats.AddedLife = (int)ItemStatDictionary[EStatName.FlatMaxLife];
+	protected void UpdateStrBonuses() {
+		StrLifeBonus = Strength.STotal * 3;
+		StrMeleeBonus = Strength.STotal * 0.5 / 100;
+		
+		//BasicStats.AddedLife = (int)ItemStatDictionary[EStatName.FlatMaxLife] + (int)StrLifeBonus;
+		//DamageMods.IncreasedMelee = StrMeleeBonus;
+	}
+
+	protected void DexTotalChanged(double newStatTotal) {
+		PlayerHUD.PlayerPanel.DexContainer.SetValue($"{newStatTotal}");
+		//UpdateDexBonuses();
+	}
+
+	protected void UpdateDexBonuses() {
+		DexASBonus = Dexterity.STotal * 0.5 / 100;
+		DexEvasionBonus = Dexterity.STotal / 100;
+
+		//AttackSpeedMod.SIncreased = ItemStatDictionary[EStatName.IncreasedAttackSpeed] + DexASBonus;
+		//Evasion.SIncreased = ItemStatDictionary[EStatName.IncreasedEvasion] + DexEvasionBonus;
+	}
+
+	protected void IntTotalChanged(double newStatTotal) {
+		PlayerHUD.PlayerPanel.IntContainer.SetValue($"{newStatTotal}");
+		//UpdateIntBonuses();
+	}
+
+	protected void UpdateIntBonuses() {
+		IntManaBonus = Intelligence.STotal * 2;
+		IntSpellBonus = Intelligence.STotal * 0.5 / 100;
+
+		//BasicStats.AddedMana = (int)ItemStatDictionary[EStatName.FlatMaxMana] + (int)IntManaBonus;
+		//DamageMods.IncreasedSpell = IntSpellBonus;
+	}
+
+	protected void CalculateStats() {
+		Strength.SAdded = ItemStatDictionary[EStatName.FlatStrength];
+		UpdateStrBonuses();
+		Dexterity.SAdded = ItemStatDictionary[EStatName.FlatDexterity];
+		UpdateDexBonuses();
+		Intelligence.SAdded = ItemStatDictionary[EStatName.FlatIntelligence];
+		UpdateIntBonuses();
+
+		BasicStats.AddedLife = (int)ItemStatDictionary[EStatName.FlatMaxLife] + (int)StrLifeBonus;
 		BasicStats.IncreasedLife = ItemStatDictionary[EStatName.IncreasedMaxLife];
-		BasicStats.AddedMana = (int)ItemStatDictionary[EStatName.FlatMaxMana];
+		BasicStats.AddedMana = (int)ItemStatDictionary[EStatName.FlatMaxMana] + (int)IntManaBonus;
 		BasicStats.IncreasedMana = ItemStatDictionary[EStatName.IncreasedMaxMana];
 
 		BasicStats.AddedLifeRegen = ItemStatDictionary[EStatName.AddedLifeRegen] + 1;
@@ -491,9 +538,9 @@ public partial class Player : Actor {
 		BasicStats.AddedManaRegen = ItemStatDictionary[EStatName.AddedManaRegen];
 		BasicStats.IncreasedManaRegen = ItemStatDictionary[EStatName.IncreasedManaRegen];
 
-		AttackSpeedMod.SIncreased = ItemStatDictionary[EStatName.IncreasedAttackSpeed];
+		AttackSpeedMod.SIncreased = ItemStatDictionary[EStatName.IncreasedAttackSpeed] + DexASBonus;
 		CritChanceMod.SIncreased = ItemStatDictionary[EStatName.IncreasedCritChance];
-		CritDamage.SAdded = ItemStatDictionary[EStatName.AddedCritMulti];
+		CritMultiplier.SAdded = ItemStatDictionary[EStatName.AddedCritMulti];
 
 		MovementSpeed.SIncreased = ItemStatDictionary[EStatName.IncreasedMovementSpeed];
 
@@ -510,15 +557,19 @@ public partial class Player : Actor {
 		DamageMods.Physical.SMinAdded = (int)ItemStatDictionary[EStatName.FlatMinPhysDamage];
 		DamageMods.Physical.SMaxAdded = (int)ItemStatDictionary[EStatName.FlatMaxPhysDamage];
 		DamageMods.Physical.SIncreased = ItemStatDictionary[EStatName.IncreasedPhysDamage];
+		DamageMods.IncreasedMelee = StrMeleeBonus;
+		DamageMods.IncreasedSpell = IntSpellBonus;
 
 		Armour.SAdded = (int)ItemStatDictionary[EStatName.FlatArmour];
 		Armour.SIncreased = ItemStatDictionary[EStatName.IncreasedArmour];
 		Evasion.SAdded = (int)ItemStatDictionary[EStatName.FlatEvasion];
-		Evasion.SIncreased = ItemStatDictionary[EStatName.IncreasedEvasion];
+		Evasion.SIncreased = ItemStatDictionary[EStatName.IncreasedEvasion] + DexEvasionBonus;
 
+		Resistances.ResPhysical = (int)ItemStatDictionary[EStatName.PhysicalResistance];
 		Resistances.ResFire = (int)ItemStatDictionary[EStatName.FireResistance];
 		Resistances.ResCold = (int)ItemStatDictionary[EStatName.ColdResistance];
 		Resistances.ResLightning = (int)ItemStatDictionary[EStatName.LightningResistance];
+		Resistances.ResChaos = (int)ItemStatDictionary[EStatName.ChaosResistance];
 
 		// TEST
 		if (MainHand.Weapon != null) {
@@ -552,18 +603,6 @@ public partial class Player : Actor {
 		UpdateSkillValues();
 	}
 
-	protected void StrTotalChanged(double newStatTotal) {
-		PlayerHUD.PlayerPanel.StrContainer.SetValue($"{newStatTotal}");
-	}
-
-	protected void DexTotalChanged(double newStatTotal) {
-		PlayerHUD.PlayerPanel.DexContainer.SetValue($"{newStatTotal}");
-	}
-
-	protected void IntTotalChanged(double newStatTotal) {
-		PlayerHUD.PlayerPanel.IntContainer.SetValue($"{newStatTotal}");
-	}
-
 	protected void UpdateStatsPanel() {
 		PlayerHUD.PlayerPanel.LifeContainer.SetValue($"{BasicStats.TotalLife}");
 		PlayerHUD.PlayerPanel.ManaContainer.SetValue($"{BasicStats.TotalMana}");
@@ -574,12 +613,13 @@ public partial class Player : Actor {
 		PlayerHUD.PlayerPanel.OffenceTabPanel.OffHandPhysDamage.SetValue($"{offHandMinPhysDamage} - {offHandMaxPhysDamage}");
 		PlayerHUD.PlayerPanel.OffenceTabPanel.OffHandAttackSpeed.SetValue($"{1 / offHandAS:F2}");
 		PlayerHUD.PlayerPanel.OffenceTabPanel.OffHandCritChance.SetValue($"{offHandCSC * 100:F2}%");
-		PlayerHUD.PlayerPanel.OffenceTabPanel.CritMulti.SetValue($"{Math.Round(CritDamage.STotal, 2) * 100}%");
+		PlayerHUD.PlayerPanel.OffenceTabPanel.CritMulti.SetValue($"{Math.Round(CritMultiplier.STotal, 2) * 100}%");
 
 		PlayerHUD.PlayerPanel.DefenceTabPanel.LifeRegen.SetValue($"{BasicStats.TotalLifeRegen:F1}");
 		PlayerHUD.PlayerPanel.DefenceTabPanel.ManaRegen.SetValue($"{BasicStats.TotalManaRegen:F1}");
-		PlayerHUD.PlayerPanel.DefenceTabPanel.Armour.SetValue($"{Armour.STotal}");
-		PlayerHUD.PlayerPanel.DefenceTabPanel.Evasion.SetValue($"{Evasion.STotal}");
+		PlayerHUD.PlayerPanel.DefenceTabPanel.Armour.SetValue($"{Math.Round(Armour.STotal, 0)} / {(1 - GetArmourMitigation(Armour.STotal, ActorLevel)) * 100:F0}%");
+		PlayerHUD.PlayerPanel.DefenceTabPanel.Evasion.SetValue($"{Math.Round(Evasion.STotal, 0)} / {GetEvasionChance(Evasion.STotal, ActorLevel) * 100:F0}%");
+		PlayerHUD.PlayerPanel.DefenceTabPanel.PhysRes.SetValue($"{Resistances.ResPhysical}%");
 		PlayerHUD.PlayerPanel.DefenceTabPanel.FireRes.SetValue($"{Resistances.ResFire}%");
 		PlayerHUD.PlayerPanel.DefenceTabPanel.ColdRes.SetValue($"{Resistances.ResCold}%");
 		PlayerHUD.PlayerPanel.DefenceTabPanel.LightningRes.SetValue($"{Resistances.ResLightning}%");

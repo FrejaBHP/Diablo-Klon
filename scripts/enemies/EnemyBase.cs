@@ -19,21 +19,32 @@ public partial class EnemyBase : Actor {
         }
     }
 
-    protected void ShowDamageText(double damage, bool isCritical) {
+    public override void OnDamageEvaded() {
         Vector3 attachedPosition = resBarAnchor.GlobalPosition;
         attachedPosition.Y += 0.25f;
 
-        DamageText damageLabel = Utilities.CreateDamageNumber();
+        DamageText damageLabel = Utilities.CreateDamageNumber("Evaded!");
         GetTree().Root.GetChild(0).AddChild(damageLabel);
+        damageLabel.GlobalPosition = attachedPosition;
 
+        damageLabel.Start();
+    }
+
+    protected void ShowDamageText(double damage, bool isCritical) {
+        string labelText;
         if (isCritical) {
-            damageLabel.Text = $"{Math.Round(damage, 0)}!";
+            labelText = $"{Math.Round(damage, 0)}!";
         }
         else {
-            damageLabel.Text = $"{Math.Round(damage, 0)}";
+            labelText = $"{Math.Round(damage, 0)}";
         }
 
-		damageLabel.GlobalPosition = attachedPosition;
+        Vector3 attachedPosition = resBarAnchor.GlobalPosition;
+        attachedPosition.Y += 0.25f;
+
+        DamageText damageLabel = Utilities.CreateDamageNumber(labelText);
+        GetTree().Root.GetChild(0).AddChild(damageLabel);
+        damageLabel.GlobalPosition = attachedPosition;
 
         damageLabel.Start();
     }

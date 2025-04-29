@@ -11,6 +11,7 @@ public partial class TestEnemy : EnemyBase {
     public override void _Ready() {
         base._Ready();
         MovementSpeed.SBase = 5;
+        Evasion.SBase = 200;
     }
 
     public override void _PhysicsProcess(double delta) {

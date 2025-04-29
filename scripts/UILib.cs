@@ -6,14 +6,26 @@ public static class UILib {
 	public static readonly Texture2D InventoryGridSlot = GD.Load<Texture2D>("res://textures/ui/inventoryGridSlot.png");
 
 	public static readonly Texture2D TextureItemD2Cap = GD.Load<Texture2D>("res://textures/items/d2_Cap.png");
+	public static readonly Texture2D TextureItemD2SkullCap = GD.Load<Texture2D>("res://textures/items/d2_SkullCap.png");
+
 	public static readonly Texture2D TextureItemD2LeatherArmour = GD.Load<Texture2D>("res://textures/items/d2_LeatherArmour.png");
+	public static readonly Texture2D TextureItemD2PlateMail = GD.Load<Texture2D>("res://textures/items/d2_PlateMail.png");
+
 	public static readonly Texture2D TextureItemD2LeatherGloves = GD.Load<Texture2D>("res://textures/items/d2_LeatherGloves.png");
+	public static readonly Texture2D TextureItemD2ChainGloves = GD.Load<Texture2D>("res://textures/items/d2_ChainGloves.png");
+
 	public static readonly Texture2D TextureItemD2Boots = GD.Load<Texture2D>("res://textures/items/d2_Boots.png");
+	public static readonly Texture2D TextureItemD2LightPlatedBoots = GD.Load<Texture2D>("res://textures/items/d2_LightPlatedBoots.png");
+
 	public static readonly Texture2D TextureItemD2Sash = GD.Load<Texture2D>("res://textures/items/d2_Sash.png");
+
 	public static readonly Texture2D TextureItemD2Ring0 = GD.Load<Texture2D>("res://textures/items/d2_Ring0.png");
+
 	public static readonly Texture2D TextureItemD2Amulet0 = GD.Load<Texture2D>("res://textures/items/d2_Amulet0.png");
+
 	public static readonly Texture2D TextureItemD2ShortSword = GD.Load<Texture2D>("res://textures/items/d2_ShortSword.png");
 	public static readonly Texture2D TextureItemD2LongSword = GD.Load<Texture2D>("res://textures/items/d2_LongSword.png");
+
 	public static readonly Texture2D TextureItemD2SmallShield = GD.Load<Texture2D>("res://textures/items/d2_SmallShield.png");
 
 	public static readonly Texture2D TextureItemD2JewelRed = GD.Load<Texture2D>("res://textures/items/d2_Jewel_red_flip.png");
@@ -40,8 +52,4 @@ public static class UILib {
 
 	public static readonly Color ColorItemBackground = Color.Color8(0, 65, 180, 55);
 	public static readonly Color ColorItemBackgroundHovered = Color.Color8(0, 100, 255, 65);
-
-	static UILib() {
-
-	}
 }

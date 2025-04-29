@@ -326,7 +326,3 @@ public partial class DamageStat() {
         return $"MinBase: {SMinBase}\nMaxBase: {SMaxBase}\nMinAdded: {SMinAdded}\nMaxAdded: {sMaxAdded}\nInc: {SIncreased}\nMore: {SMore}";
     }
 }
-
-public partial class Attributes {
-    
-}

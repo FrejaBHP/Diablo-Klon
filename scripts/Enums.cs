@@ -42,9 +42,11 @@ public enum EStatName {
 	FlatEnergyShield,
 	IncreasedEnergyShield,
 
+	PhysicalResistance,
 	FireResistance,
 	ColdResistance,
 	LightningResistance,
+	ChaosResistance,
 }
 
 
@@ -110,9 +112,11 @@ public enum EAffixFamily {
 	FlatEnergyShield,
 	IncreasedEnergyShield,
 
+	PhysicalResistance,
 	FireResistance,
 	ColdResistance,
 	LightningResistance,
+	ChaosResistance,
 
 	// Local
 	LocalFlatPhysDamage,
@@ -249,6 +253,12 @@ public enum EItemDefences {
 
 
 
+public enum EDamageCategory {
+	Melee,
+	Ranged,
+	Spell
+}
+
 public enum ESkillName {
 	BasicThrust,
 	COUNT
@@ -263,9 +273,17 @@ public enum ESkillType {
 public enum ESkillTags {
     None = 0,
     Melee = 1 << 0,
-    Projectile = 1 << 1,
-    Area = 1 << 2,
-    Spell = 1 << 3
+    Ranged = 1 << 1,
+    Spell = 1 << 2,
+
+	Projectile = 1 << 3,
+    Area = 1 << 4,
+
+	Physical = 1 << 5,
+	Fire = 1 << 6,
+	Cold = 1 << 7,
+	Lightning = 1 << 8,
+	Chaos = 1 << 9
 }
 
 [Flags]

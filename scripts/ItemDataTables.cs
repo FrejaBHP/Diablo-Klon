@@ -70,6 +70,18 @@ public static class ItemDataTables {
 			BaseEvasion = 15,
 			BaseEnergyShield = 0,
 			ImplicitTypes = []
+		},
+
+		new ArmourItemData {
+			BaseName = "Skull Cap",
+			ItemSpecifierFlags = EItemBaseSpecifierFlags.AArmour,
+			Texture = UILib.TextureItemD2SkullCap,
+			MinimumLevel = 0,
+			ItemDefences = EItemDefences.Armour,
+			BaseArmour = 15,
+			BaseEvasion = 0,
+			BaseEnergyShield = 0,
+			ImplicitTypes = []
 		}
 	];
 
@@ -82,6 +94,18 @@ public static class ItemDataTables {
 			ItemDefences = EItemDefences.Evasion,
 			BaseArmour = 0,
 			BaseEvasion = 25,
+			BaseEnergyShield = 0,
+			ImplicitTypes = []
+		},
+
+		new ArmourItemData {
+			BaseName = "Plate Armour",
+			ItemSpecifierFlags = EItemBaseSpecifierFlags.AArmour,
+			Texture = UILib.TextureItemD2PlateMail,
+			MinimumLevel = 0,
+			ItemDefences = EItemDefences.Armour,
+			BaseArmour = 25,
+			BaseEvasion = 0,
 			BaseEnergyShield = 0,
 			ImplicitTypes = []
 		}
@@ -98,6 +122,18 @@ public static class ItemDataTables {
 			BaseEvasion = 15,
 			BaseEnergyShield = 0,
 			ImplicitTypes = []
+		},
+
+		new ArmourItemData {
+			BaseName = "Chain Gloves",
+			ItemSpecifierFlags = EItemBaseSpecifierFlags.AArmour,
+			Texture = UILib.TextureItemD2ChainGloves,
+			MinimumLevel = 0,
+			ItemDefences = EItemDefences.Armour,
+			BaseArmour = 15,
+			BaseEvasion = 0,
+			BaseEnergyShield = 0,
+			ImplicitTypes = []
 		}
 	];
 
@@ -110,6 +146,18 @@ public static class ItemDataTables {
 			ItemDefences = EItemDefences.Evasion,
 			BaseArmour = 0,
 			BaseEvasion = 15,
+			BaseEnergyShield = 0,
+			ImplicitTypes = []
+		},
+
+		new ArmourItemData {
+			BaseName = "Plated Boots",
+			ItemSpecifierFlags = EItemBaseSpecifierFlags.AArmour,
+			Texture = UILib.TextureItemD2LightPlatedBoots,
+			MinimumLevel = 0,
+			ItemDefences = EItemDefences.Armour,
+			BaseArmour = 15,
+			BaseEvasion = 0,
 			BaseEnergyShield = 0,
 			ImplicitTypes = []
 		}

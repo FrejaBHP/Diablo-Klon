@@ -325,14 +325,18 @@ public partial class Actor : CharacterBody3D {
     [Signal]
     public delegate void DamageTakenEventHandler(double damage, bool isCritical, bool showDamageText);
 
+    [Signal]
+    public delegate void DamageEvadedEventHandler();
+
     protected PackedScene floatingResourceBarsScene = GD.Load<PackedScene>("res://scenes/gui/actor_floating_resource_bars.tscn");
 
     protected int ticksPerSecond = ProjectSettings.GetSetting("physics/common/physics_ticks_per_second").AsInt32();
 
     public List<Skill> Skills = new List<Skill>();
 
-    public Stat Armour = new(0, true);
-    public Stat Evasion = new(0, true);
+    public int ActorLevel = 1;
+    public Stat Armour = new(0, true, 0);
+    public Stat Evasion = new(0, true, 0);
 
     public ActorBasicStats BasicStats = new();
     public DamageModifiers DamageMods = new();
@@ -343,7 +347,7 @@ public partial class Actor : CharacterBody3D {
 
     public Stat AttackSpeedMod = new(1, false);
     public Stat CritChanceMod = new(1, false);
-    public Stat CritDamage = new(1.5, false, 0);
+    public Stat CritMultiplier = new(1.5, false, 0);
     public Stat CastSpeedMod = new(1, false);
 
     public Stat MovementSpeed = new(0, false, 0);
@@ -364,6 +368,7 @@ public partial class Actor : CharacterBody3D {
     public override void _Ready() {
         BasicStats.CurrentLifeChanged += OnCurrentLifeChanged;
         DamageTaken += OnDamageTaken;
+        DamageEvaded += OnDamageEvaded;
     }
 
     protected void AddFloatingBars(Node3D anchor) {
@@ -406,14 +411,65 @@ public partial class Actor : CharacterBody3D {
         }
     }
 
-    // Skal laves om senere til at bruge hit calc
-    public void TakeDamage(double damage, bool isCritical, bool createDamageText) {
-        BasicStats.CurrentLife -= damage;
+    public void TakeDamage(EDamageCategory dmgCategory, SkillDamage damage, ActorPenetrations pens, bool isAHit, bool isCritical, bool createDamageText) {
+        double physDamage = damage.Physical;
+        double fireDamage = damage.Fire;
+        double coldDamage = damage.Cold;
+        double lightningDamage = damage.Lightning;
+        double chaosDamage = damage.Chaos;
+        double totalDamage;
 
-        EmitSignal(SignalName.DamageTaken, damage, isCritical, createDamageText);
+        if (isAHit) {
+            if (dmgCategory != EDamageCategory.Spell) {
+                if (RollForEvade(GetEvasionChance(Evasion.STotal, ActorLevel))) {
+                    EmitSignal(SignalName.DamageEvaded);
+                    return;
+                }
+            }
+
+            physDamage *= GetArmourMitigation(Armour.STotal, ActorLevel);
+            fireDamage *= GetArmourMitigation(Armour.STotal, ActorLevel);
+            coldDamage *= GetArmourMitigation(Armour.STotal, ActorLevel);
+            lightningDamage *= GetArmourMitigation(Armour.STotal, ActorLevel);
+            chaosDamage *= GetArmourMitigation(Armour.STotal, ActorLevel);
+        }
+
+        physDamage *= 1 - ((Resistances.ResPhysical - Penetrations.PenPhysical) / 100);
+        fireDamage *= 1 - ((Resistances.ResFire - Penetrations.PenFire) / 100);
+        coldDamage *= 1 - ((Resistances.ResCold - Penetrations.PenCold) / 100);
+        lightningDamage *= 1 - ((Resistances.ResLightning - Penetrations.PenLightning) / 100);
+        chaosDamage *= 1 - ((Resistances.ResChaos - Penetrations.PenChaos) / 100);
+
+        totalDamage = physDamage + fireDamage + coldDamage + lightningDamage + chaosDamage;
+
+        BasicStats.CurrentLife -= totalDamage;
+
+        EmitSignal(SignalName.DamageTaken, totalDamage, isCritical, createDamageText);
     }
 
     public virtual void OnDamageTaken(double damage, bool isCritical, bool createDamageText) {
 
+    }
+
+    public virtual void OnDamageEvaded() {
+
+    }
+
+    public static double GetArmourMitigation(double armour, int level) {
+        return 200 / (200 + armour - (20 * (level - 1)));
+    }
+
+    public static double GetEvasionChance(double evasion, int level) {
+        return 1 - (200 / (200 + evasion - (20 * (level - 1))));
+    }
+
+    public static bool RollForEvade(double chance) {
+        double evasionRoll = Utilities.RNG.NextDouble();
+
+        if (chance >= evasionRoll) {
+            return true;
+        }
+
+        return false;
     }
 }

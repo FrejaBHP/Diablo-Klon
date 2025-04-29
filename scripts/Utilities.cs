@@ -18,8 +18,10 @@ public static class Utilities {
         return (Convert.ToInt32(input) & Convert.ToInt32(comparison)) != 0;
     }
 
-	public static DamageText CreateDamageNumber() {
+	public static DamageText CreateDamageNumber(string text) {
 		DamageText damageLabel = damageTextScene.Instantiate<DamageText>();
+		damageLabel.Text = text;
+
 		return damageLabel;
 	}
 }

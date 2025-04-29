@@ -17,11 +17,6 @@ public partial class WorldItem : StaticBody3D {
 		AddToGroup("WorldItem");
 	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta) {
-		
-	}
-
 	public void SetItemReference(Item item) {
 		ItemReference = item;
 	}

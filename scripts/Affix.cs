@@ -298,7 +298,7 @@ public class LocalFlatArmourAffix : Affix {
 
 public class LocalIncreasedArmourAffix : Affix {
 	private static readonly List<AffixData> localIncreasedArmourAffixData = [
-		new(0, "Toughness", 
+		new(0, "Tough", 
 			0.20, 0.29, 
 			0, 0
 		),

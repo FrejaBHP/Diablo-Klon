@@ -29,11 +29,6 @@ public partial class EquipmentSlot : PanelContainer {
 		highlight = GetNode<ColorRect>("Highlight");
 	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta) {
-		
-	}
-
 	public void GUIInput(InputEvent @event) {
 		// On left-click
 		if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == MouseButton.Left && mbe.Pressed) {
