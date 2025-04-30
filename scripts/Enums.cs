@@ -201,9 +201,12 @@ public enum EItemArmourBaseType {
 }
 
 public enum EItemWeaponBaseType {
-	Weapon1H,
-	Weapon2H,
-	COUNT
+	WeaponMelee1H,
+	WeaponMelee2H,
+	WeaponRanged1H,
+	WeaponRanged2H,
+	COUNT, // Used for item generation, and there's no need to roll for unarmed weapons
+	Unarmed
 }
 
 public enum EItemJewelleryBaseType {
@@ -289,21 +292,16 @@ public enum ESkillTags {
 [Flags]
 public enum ESkillWeapons {
     None = 0,
-    Sword = 1 << 0,
-    Axe = 1 << 1,
-    Mace = 1 << 2,
-    Dagger = 1 << 3,
-    Sword2H = 1 << 4,
-    Axe2H = 1 << 5,
-    Mace2H = 1 << 6,
-    Staff = 1 << 7,
-    Bow = 1 << 8,
-    Wand = 1 << 9,
+    Unarmed = 1 << 0,
+    Melee1H = 1 << 1,
+    Melee2H = 1 << 2,
+    MeleeDW = 1 << 3,
+    Ranged1H = 1 << 4,
+    Ranged2H = 1 << 5,
 
-    AllMeleeOneHand = Sword | Axe | Mace | Dagger,
-    AllMeleeTwoHand = Sword2H | Axe2H | Mace2H | Staff,
-    AllMeleeWeapons = Sword | Axe | Mace | Dagger | Sword2H | Axe2H | Mace2H | Staff,
-    AllRangedWeapons = Bow | Wand
+    AllMelee = Unarmed | Melee1H | Melee2H | MeleeDW,
+	AllMeleeWeapons = Melee1H | Melee2H | MeleeDW,
+    AllRangedWeapons = Ranged1H | Ranged2H
 }
 
 

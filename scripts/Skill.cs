@@ -25,6 +25,19 @@ public abstract class Skill {
     public double SpeedModifier { get; protected set; }
     public double Cooldown { get; protected set; }
 
+    public virtual bool CanUseSkill() {
+        if (ActorOwner.BasicStats.CurrentMana < ManaCost) {
+            return false;
+        }
+        // Indsæt tjek for cooldowns når de bliver implementeret
+
+        if (this is IAttack attack) {
+            return attack.AreActorWeaponsCompatible(ActorOwner.MainHand.Weapon, ActorOwner.OffHandItem);
+        }
+
+        return true;
+    }
+
     public abstract void UseSkill();
 
     public string GetAttackSpeedModifier() {
@@ -75,14 +88,12 @@ public abstract class Skill {
             CriticalStrikeChance = ActorOwner.MainHand.CritChance * ActorOwner.CritChanceMod.STotal;
             CriticalStrikeMulti = ActorOwner.CritMultiplier.STotal;
 
-            IAttack attack = this as IAttack;
-            if (attack != null) {
+            if (this is IAttack attack) {
                 attack.UpdateAttackSpeedValues(ActorOwner.AttackSpeedMod);
                 return;
             }
 
-            ISpell spell = this as ISpell;
-            if (spell != null) {
+            if (this is ISpell spell) {
                 spell.UpdateCastSpeedValues(ActorOwner.CastSpeedMod);
                 return;
             }
@@ -125,6 +136,42 @@ public interface IAttack {
 
     public string GetAttackSpeedModifier() {
         return Math.Round(ActiveAttackSpeedModifiers.STotal * 100, 0).ToString();
+    }
+
+    public bool AreActorWeaponsCompatible(WeaponItem mhWeapon, Item ohItem) {
+        EItemWeaponBaseType mhWeaponType = mhWeapon != null ? mhWeapon.ItemWeaponBaseType : EItemWeaponBaseType.Unarmed;
+        EItemWeaponBaseType ohWeaponType;
+
+        if (ohItem != null && ohItem.GetType().IsSubclassOf(typeof(WeaponItem))) {
+            WeaponItem ohWeapon = ohItem as WeaponItem;
+            ohWeaponType = ohWeapon.ItemWeaponBaseType;
+        }
+        else {
+            ohWeaponType = EItemWeaponBaseType.Unarmed;
+        }
+
+        switch (mhWeaponType) {
+            case EItemWeaponBaseType.Unarmed: 
+                return Weapons.HasFlag(ESkillWeapons.Unarmed);
+            
+            case EItemWeaponBaseType.WeaponMelee1H:
+                if (Weapons == ESkillWeapons.MeleeDW && ohWeaponType == EItemWeaponBaseType.Unarmed) {
+                    return false;
+                }
+                return Weapons.HasFlag(ESkillWeapons.Melee1H);
+
+            case EItemWeaponBaseType.WeaponMelee2H:
+                return Weapons.HasFlag(ESkillWeapons.Melee2H);
+            
+            case EItemWeaponBaseType.WeaponRanged1H:
+                return Weapons.HasFlag(ESkillWeapons.Ranged1H);
+                
+            case EItemWeaponBaseType.WeaponRanged2H:
+                return Weapons.HasFlag(ESkillWeapons.Ranged2H);
+
+            default:
+                return false;
+        }
     }
 }
 
@@ -192,7 +239,7 @@ public class SkillThrust : Skill, IAttack, IMeleeSkill {
             };
             testAttack.GlobalRotation = ActorOwner.GlobalRotation;
 
-            testAttack.StartAttack(DamageCategory, RollForDamage(true), ActorOwner.Penetrations, 2f, 2.5f, 25f);
+            testAttack.StartAttack(DamageCategory, RollForDamage(true), ActorOwner.Penetrations, 2f, BaseAttackRange, 25f);
         }
     }
 }
@@ -218,7 +265,7 @@ public class SkillDefaultProjectileAttack : Skill, IAttack, IProjectileSkill {
     public Stat BaseAttackSpeedModifiers { get; set; } = new(0, false);
     public Stat ActiveAttackSpeedModifiers { get; set; } = new(0, false);
 
-    public float BaseProjectileSpeed { get; set; } = 6f;
+    public float BaseProjectileSpeed { get; set; } = 15f;
     public float BaseProjectileLifetime { get; set; } = 2f;
 
     public override void UseSkill() {

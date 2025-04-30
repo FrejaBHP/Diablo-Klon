@@ -358,7 +358,7 @@ public partial class Actor : CharacterBody3D {
 
     public ActorMainHand MainHand { get; protected set; } = new();
     public Item OffHandItem { get; protected set; } = null;
-    protected bool IsOffHandAWeapon = false;
+    public bool IsOffHandAWeapon { get; protected set; } = false;
 
     public int UnarmedMinDamage { get; protected set; }
     public int UnarmedMaxDamage { get; protected set; }
@@ -428,10 +428,10 @@ public partial class Actor : CharacterBody3D {
             }
 
             physDamage *= GetArmourMitigation(Armour.STotal, ActorLevel);
-            fireDamage *= GetArmourMitigation(Armour.STotal, ActorLevel);
-            coldDamage *= GetArmourMitigation(Armour.STotal, ActorLevel);
-            lightningDamage *= GetArmourMitigation(Armour.STotal, ActorLevel);
-            chaosDamage *= GetArmourMitigation(Armour.STotal, ActorLevel);
+            fireDamage *= GetArmourMitigation(Armour.STotal, ActorLevel) / 2;
+            coldDamage *= GetArmourMitigation(Armour.STotal, ActorLevel) / 2;
+            lightningDamage *= GetArmourMitigation(Armour.STotal, ActorLevel) / 2;
+            chaosDamage *= GetArmourMitigation(Armour.STotal, ActorLevel) / 2;
         }
 
         physDamage *= 1 - ((Resistances.ResPhysical - Penetrations.PenPhysical) / 100);
@@ -443,7 +443,6 @@ public partial class Actor : CharacterBody3D {
         totalDamage = physDamage + fireDamage + coldDamage + lightningDamage + chaosDamage;
 
         BasicStats.CurrentLife -= totalDamage;
-
         EmitSignal(SignalName.DamageTaken, totalDamage, isCritical, createDamageText);
     }
 

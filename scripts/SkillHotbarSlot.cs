@@ -62,11 +62,10 @@ public partial class SkillHotbarSlot : Control {
     }
 
     public bool TryUseSkill() {
-        if (AssignedSkill != null) {
+        if (AssignedSkill != null && AssignedSkill.CanUseSkill()) {
             UseSkill();
             return true;
         }
-
         return false;
     }
 

@@ -24,7 +24,7 @@ public static class ItemGeneration {
 
 		switch (category) {
 			case EItemCategory.Weapon:
-				EItemWeaponBaseType weaponType = (EItemWeaponBaseType)Utilities.RNG.Next((int)EItemWeaponBaseType.COUNT);
+				EItemWeaponBaseType weaponType = (EItemWeaponBaseType)Utilities.RNG.Next((int)EItemWeaponBaseType.COUNT - 2); // Fjern -2 senere, når Ranged våben introduceres ordentligt
 				item = GenerateWeaponItem(weaponType, rarity);
 				break;
 
@@ -41,7 +41,6 @@ public static class ItemGeneration {
 		}
 
 		ApplyRarityAndAffixes(item);
-
 		return item;
 	}
 
@@ -57,7 +56,7 @@ public static class ItemGeneration {
 		WeaponItem weaponItem;
 
 		switch (weaponType) {
-			case EItemWeaponBaseType.Weapon1H:
+			case EItemWeaponBaseType.WeaponMelee1H:
 				OneHandedSwordItem ohSwordItem = new();
 				GetBaseFromTable(ref ohSwordItem, 0);
 
@@ -162,7 +161,6 @@ public static class ItemGeneration {
 		if (String.IsNullOrEmpty(jewelleryItem.ItemBase)) {
 			jewelleryItem.ItemBase = jewelleryItem.ItemJewelleryBaseType.ToString();
 		}
-		
 
 		return jewelleryItem;
 	}
@@ -194,7 +192,7 @@ public static class ItemGeneration {
 			List<WeaponItemData> legalWeaponData = new List<WeaponItemData>();
 
 			switch (weaponItem.ItemWeaponBaseType) {
-				case EItemWeaponBaseType.Weapon1H:
+				case EItemWeaponBaseType.WeaponMelee1H:
 					legalWeaponData = ItemDataTables.OHSwordWeaponData.Where(i => i.MinimumLevel >= minLevel).ToList();
 					data = legalWeaponData[Utilities.RNG.Next(legalWeaponData.Count)];
 					break;

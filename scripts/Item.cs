@@ -570,7 +570,7 @@ public partial class OneHandedSwordItem : WeaponItem {
 		gridSizeX = 1;
 		gridSizeY = 3;
 		ItemAllBaseType = EItemAllBaseType.Weapon1H;
-		ItemWeaponBaseType = EItemWeaponBaseType.Weapon1H;
+		ItemWeaponBaseType = EItemWeaponBaseType.WeaponMelee1H;
 		ItemAffixFlags = EAffixItemFlags.OHWeapon | EAffixItemFlags.Weapon;
 		WeaponClass = "One Handed Sword";
 	}
@@ -581,7 +581,7 @@ public partial class TwoHandedSwordItem : WeaponItem {
 		gridSizeX = 2;
 		gridSizeY = 4;
 		ItemAllBaseType = EItemAllBaseType.Weapon2H;
-		ItemWeaponBaseType = EItemWeaponBaseType.Weapon2H;
+		ItemWeaponBaseType = EItemWeaponBaseType.WeaponMelee2H;
 		ItemAffixFlags = EAffixItemFlags.THWeapon | EAffixItemFlags.Weapon;
 		WeaponClass = "Two Handed Sword";
 	}
