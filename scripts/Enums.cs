@@ -259,7 +259,8 @@ public enum EItemDefences {
 public enum EDamageCategory {
 	Melee,
 	Ranged,
-	Spell
+	Spell,
+	Untyped
 }
 
 public enum ESkillName {

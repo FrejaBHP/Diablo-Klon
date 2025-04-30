@@ -58,7 +58,7 @@ public partial class Stat(double baseValue, bool shouldRound) {
 		}
 	}
 
-    private double sMore = 0;
+    private double sMore = 1;
 	public double SMore {
 		get => sMore;
 		set {
@@ -93,7 +93,7 @@ public partial class Stat(double baseValue, bool shouldRound) {
 	}
 
     private void CalculateStats() {
-        sTotal = (sBase + sAdded) * (1 + sIncreased) * (1 + sMore);
+        sTotal = (sBase + sAdded) * (1 + sIncreased) * sMore;
         StatTotalChanged?.Invoke(sTotal);
     }
 
@@ -130,7 +130,7 @@ public partial class Stat(double baseValue, bool shouldRound) {
 
         c.sAdded = a.sAdded + b.sAdded;
         c.sIncreased = a.sIncreased + b.sIncreased;
-        c.SMore = a.SMore * (1 + b.SMore);
+        c.SMore = a.SMore * b.SMore;
         
         return c;
     }
@@ -150,7 +150,7 @@ public partial class Stat(double baseValue, bool shouldRound) {
 
         c.sAdded = a.sAdded - b.sAdded;
         c.sIncreased = a.sIncreased - b.sIncreased;
-        c.SMore = a.SMore / (1 + b.SMore);
+        c.SMore = a.SMore / b.SMore;
 
         return c;
     }
@@ -227,7 +227,7 @@ public partial class DamageStat() {
 		}
 	}
 
-    private double sMore = 0;
+    private double sMore = 1;
 	public double SMore {
 		get => sMore;
 		set {
@@ -281,8 +281,8 @@ public partial class DamageStat() {
 	}
 
     private void CalculateStats() {
-        sMinTotal = (sMinBase + sMinAdded) * (1 + sIncreased) * (1 + sMore);
-        sMaxTotal = (sMaxBase + sMaxAdded) * (1 + sIncreased) * (1 + sMore);
+        sMinTotal = (sMinBase + sMinAdded) * (1 + sIncreased) * sMore;
+        sMaxTotal = (sMaxBase + sMaxAdded) * (1 + sIncreased) * sMore;
         DamageStatsTotalChanged?.Invoke(sMinTotal, sMaxTotal);
     }
 
@@ -294,7 +294,7 @@ public partial class DamageStat() {
         c.sMinAdded = a.sMinAdded + b.sMinAdded;
         c.sMaxAdded = a.sMaxAdded + b.sMaxAdded;
         c.sIncreased = a.sIncreased + b.sIncreased;
-        c.SMore = a.SMore * (1 + b.SMore);
+        c.SMore = a.SMore * b.SMore;
 
         /*
         GD.Print($"MinB: {a.sMinBase} + {b.sMinBase} = {c.sMinBase}");
@@ -317,7 +317,7 @@ public partial class DamageStat() {
         c.sMinAdded = a.sMinAdded - b.sMinAdded;
         c.sMaxAdded = a.sMaxAdded - b.sMaxAdded;
         c.sIncreased = a.sIncreased - b.sIncreased;
-        c.SMore = a.SMore / (1 + b.SMore);
+        c.SMore = a.SMore / b.SMore;
         
         return c;
     }

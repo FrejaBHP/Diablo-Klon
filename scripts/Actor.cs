@@ -241,9 +241,9 @@ public class DamageModifiers {
     public double IncreasedRanged = 0;
     public double IncreasedSpell = 0;
 
-    public double MoreMelee = 0;
-    public double MoreRanged = 0;
-    public double MoreSpell = 0;
+    public double MoreMelee = 1;
+    public double MoreRanged = 1;
+    public double MoreSpell = 1;
 
     public static DamageModifiers operator +(DamageModifiers a, DamageModifiers b) {
         DamageModifiers c = new DamageModifiers();
@@ -258,9 +258,9 @@ public class DamageModifiers {
         c.IncreasedRanged = a.IncreasedRanged + b.IncreasedRanged;
         c.IncreasedSpell = a.IncreasedSpell + b.IncreasedSpell;
 
-        c.MoreMelee = a.MoreMelee * (1 + b.MoreMelee);
-        c.MoreRanged = a.MoreRanged * (1 + b.MoreRanged);
-        c.MoreSpell = a.MoreSpell * (1 + b.MoreSpell);
+        c.MoreMelee = a.MoreMelee * b.MoreMelee;
+        c.MoreRanged = a.MoreRanged * b.MoreRanged;
+        c.MoreSpell = a.MoreSpell * b.MoreSpell;
         
         return c;
     }
@@ -278,9 +278,9 @@ public class DamageModifiers {
         c.IncreasedRanged = a.IncreasedRanged - b.IncreasedRanged;
         c.IncreasedSpell = a.IncreasedSpell - b.IncreasedSpell;
 
-        c.MoreMelee = a.MoreMelee / (1 + b.MoreMelee);
-        c.MoreRanged = a.MoreRanged / (1 + b.MoreRanged);
-        c.MoreSpell = a.MoreSpell / (1 + b.MoreSpell);
+        c.MoreMelee = a.MoreMelee / b.MoreMelee;
+        c.MoreRanged = a.MoreRanged / b.MoreRanged;
+        c.MoreSpell = a.MoreSpell / b.MoreSpell;
         
         return c;
     }

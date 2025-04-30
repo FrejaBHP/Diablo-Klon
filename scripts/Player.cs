@@ -573,28 +573,28 @@ public partial class Player : Actor {
 
 		// TEST
 		if (MainHand.Weapon != null) {
-			MainHand.PhysMinDamage = (int)Math.Round((MainHand.Weapon.PhysicalMinimumDamage + DamageMods.Physical.SMinAdded) * (1 + DamageMods.Physical.SIncreased) * (1 + DamageMods.Physical.SMore), 0);
-			MainHand.PhysMaxDamage = (int)Math.Round((MainHand.Weapon.PhysicalMaximumDamage + DamageMods.Physical.SMaxAdded) * (1 + DamageMods.Physical.SIncreased) * (1 + DamageMods.Physical.SMore), 0);
+			MainHand.PhysMinDamage = (int)Math.Round((MainHand.Weapon.PhysicalMinimumDamage + DamageMods.Physical.SMinAdded) * (1 + DamageMods.Physical.SIncreased) * DamageMods.Physical.SMore, 0);
+			MainHand.PhysMaxDamage = (int)Math.Round((MainHand.Weapon.PhysicalMaximumDamage + DamageMods.Physical.SMaxAdded) * (1 + DamageMods.Physical.SIncreased) * DamageMods.Physical.SMore, 0);
 			MainHand.AttackSpeed = MainHand.Weapon.AttackSpeed / AttackSpeedMod.STotal; // Dårlig løsning. Gør det umuligt at tilføje modifiers senere hen. Split hellere Attack Speed ting op i to
 			MainHand.CritChance = MainHand.Weapon.CriticalStrikeChance * CritChanceMod.STotal; // Dårlig løsning. Gør det umuligt at tilføje modifiers senere hen. Split hellere Crit Chance ting op i to
 		}
 		else {
-			MainHand.PhysMinDamage = (int)Math.Round((UnarmedMinDamage + DamageMods.Physical.SMinAdded) * (1 + DamageMods.Physical.SIncreased) * (1 + DamageMods.Physical.SMore), 0);
-			MainHand.PhysMaxDamage = (int)Math.Round((UnarmedMaxDamage + DamageMods.Physical.SMaxAdded) * (1 + DamageMods.Physical.SIncreased) * (1 + DamageMods.Physical.SMore), 0);
+			MainHand.PhysMinDamage = (int)Math.Round((UnarmedMinDamage + DamageMods.Physical.SMinAdded) * (1 + DamageMods.Physical.SIncreased) * DamageMods.Physical.SMore, 0);
+			MainHand.PhysMaxDamage = (int)Math.Round((UnarmedMaxDamage + DamageMods.Physical.SMaxAdded) * (1 + DamageMods.Physical.SIncreased) * DamageMods.Physical.SMore, 0);
 			MainHand.AttackSpeed = UnarmedAttackSpeed / AttackSpeedMod.STotal;
 			MainHand.CritChance = UnarmedCritChance * CritChanceMod.STotal;
 		}
 
 		if (OffHandItem != null && IsOffHandAWeapon) {
 			WeaponItem offHandWeapon = (WeaponItem)OffHandItem;
-			offHandMinPhysDamage = Math.Round((offHandWeapon.PhysicalMinimumDamage + DamageMods.Physical.SMinAdded) * (1 + DamageMods.Physical.SIncreased) * (1 + DamageMods.Physical.SMore), 0);
-			offHandMaxPhysDamage = Math.Round((offHandWeapon.PhysicalMaximumDamage + DamageMods.Physical.SMinAdded) * (1 + DamageMods.Physical.SIncreased) * (1 + DamageMods.Physical.SMore), 0);
+			offHandMinPhysDamage = Math.Round((offHandWeapon.PhysicalMinimumDamage + DamageMods.Physical.SMinAdded) * (1 + DamageMods.Physical.SIncreased) * DamageMods.Physical.SMore, 0);
+			offHandMaxPhysDamage = Math.Round((offHandWeapon.PhysicalMaximumDamage + DamageMods.Physical.SMinAdded) * (1 + DamageMods.Physical.SIncreased) * DamageMods.Physical.SMore, 0);
 			offHandAS = offHandWeapon.AttackSpeed;
 			offHandCSC = offHandWeapon.CriticalStrikeChance;
 		}
 		else {
-			offHandMinPhysDamage = Math.Round(DamageMods.Physical.SMinAdded * (1 + DamageMods.Physical.SIncreased) * (1 + DamageMods.Physical.SMore), 0);
-			offHandMaxPhysDamage = Math.Round(DamageMods.Physical.SMinAdded * (1 + DamageMods.Physical.SIncreased) * (1 + DamageMods.Physical.SMore), 0);
+			offHandMinPhysDamage = Math.Round(DamageMods.Physical.SMinAdded * (1 + DamageMods.Physical.SIncreased) * DamageMods.Physical.SMore, 0);
+			offHandMaxPhysDamage = Math.Round(DamageMods.Physical.SMinAdded * (1 + DamageMods.Physical.SIncreased) * DamageMods.Physical.SMore, 0);
 			offHandAS = 0;
 			offHandCSC = 0;
 		}

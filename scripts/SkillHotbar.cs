@@ -160,23 +160,23 @@ public partial class SkillHotbar : Control {
 		}
 
         if (skill.ActiveDamageModifiers.Physical.SMinTotal > 0) {
-            Label physLabel = GenerateAffixLabel($"Deals {skill.ActiveDamageModifiers.Physical.SMinTotal} - {skill.ActiveDamageModifiers.Physical.SMaxTotal} Physical Damage");
+            Label physLabel = GenerateAffixLabel($"Deals {Math.Round(skill.ActiveDamageModifiers.Physical.SMinTotal, 0)} - {Math.Round(skill.ActiveDamageModifiers.Physical.SMaxTotal, 0)} Physical Damage");
             tooltipContent.DamageContainer.AddChild(physLabel);
         }
         if (skill.ActiveDamageModifiers.Fire.SMinTotal > 0) {
-            Label fireLabel = GenerateAffixLabel($"Deals {skill.ActiveDamageModifiers.Fire.SMinTotal} - {skill.ActiveDamageModifiers.Fire.SMaxTotal} Fire Damage");
+            Label fireLabel = GenerateAffixLabel($"Deals {Math.Round(skill.ActiveDamageModifiers.Fire.SMinTotal, 0)} - {Math.Round(skill.ActiveDamageModifiers.Fire.SMaxTotal, 0)} Fire Damage");
             tooltipContent.DamageContainer.AddChild(fireLabel);
         }
         if (skill.ActiveDamageModifiers.Cold.SMinTotal > 0) {
-            Label coldLabel = GenerateAffixLabel($"Deals {skill.ActiveDamageModifiers.Cold.SMinTotal} - {skill.ActiveDamageModifiers.Cold.SMaxTotal} Cold Damage");
+            Label coldLabel = GenerateAffixLabel($"Deals {Math.Round(skill.ActiveDamageModifiers.Cold.SMinTotal, 0)} - {Math.Round(skill.ActiveDamageModifiers.Cold.SMaxTotal, 0)} Cold Damage");
             tooltipContent.DamageContainer.AddChild(coldLabel);
         }
         if (skill.ActiveDamageModifiers.Lightning.SMinTotal > 0) {
-            Label lightningLabel = GenerateAffixLabel($"Deals {skill.ActiveDamageModifiers.Lightning.SMinTotal} - {skill.ActiveDamageModifiers.Lightning.SMaxTotal} Lightning Damage");
+            Label lightningLabel = GenerateAffixLabel($"Deals {Math.Round(skill.ActiveDamageModifiers.Lightning.SMinTotal, 0)} - {Math.Round(skill.ActiveDamageModifiers.Lightning.SMaxTotal, 0)} Lightning Damage");
             tooltipContent.DamageContainer.AddChild(lightningLabel);
         }
         if (skill.ActiveDamageModifiers.Chaos.SMinTotal > 0) {
-            Label chaosLabel = GenerateAffixLabel($"Deals {skill.ActiveDamageModifiers.Chaos.SMinTotal} - {skill.ActiveDamageModifiers.Chaos.SMaxTotal} Chaos Damage");
+            Label chaosLabel = GenerateAffixLabel($"Deals {Math.Round(skill.ActiveDamageModifiers.Chaos.SMinTotal, 0)} - {Math.Round(skill.ActiveDamageModifiers.Chaos.SMaxTotal, 0)} Chaos Damage");
             tooltipContent.DamageContainer.AddChild(chaosLabel);
         }
 		

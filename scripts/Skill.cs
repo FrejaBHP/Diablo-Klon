@@ -88,6 +88,38 @@ public abstract class Skill {
             CriticalStrikeChance = ActorOwner.MainHand.CritChance * ActorOwner.CritChanceMod.STotal;
             CriticalStrikeMulti = ActorOwner.CritMultiplier.STotal;
 
+            double activeIncreasedMod;
+            double activeMoreMod;
+
+            if (DamageCategory == EDamageCategory.Melee) {
+                activeIncreasedMod = ActiveDamageModifiers.IncreasedMelee;
+                activeMoreMod = ActiveDamageModifiers.MoreMelee;
+            }
+            else if (DamageCategory == EDamageCategory.Ranged) {
+                activeIncreasedMod = ActiveDamageModifiers.IncreasedRanged;
+                activeMoreMod = ActiveDamageModifiers.MoreRanged;
+            }
+            else if (DamageCategory == EDamageCategory.Spell) {
+                activeIncreasedMod = ActiveDamageModifiers.IncreasedSpell;
+                activeMoreMod = ActiveDamageModifiers.MoreSpell;
+            }
+            else {
+                activeIncreasedMod = 0;
+                activeMoreMod = 1;
+            }
+
+            ActiveDamageModifiers.Physical.SIncreased += activeIncreasedMod;
+            ActiveDamageModifiers.Fire.SIncreased += activeIncreasedMod;
+            ActiveDamageModifiers.Cold.SIncreased += activeIncreasedMod;
+            ActiveDamageModifiers.Lightning.SIncreased += activeIncreasedMod;
+            ActiveDamageModifiers.Chaos.SIncreased += activeIncreasedMod;
+
+            ActiveDamageModifiers.Physical.SMore *= activeMoreMod;
+            ActiveDamageModifiers.Fire.SMore *= activeMoreMod;
+            ActiveDamageModifiers.Cold.SMore *= activeMoreMod;
+            ActiveDamageModifiers.Lightning.SMore *= activeMoreMod;
+            ActiveDamageModifiers.Chaos.SMore *= activeMoreMod;
+
             if (this is IAttack attack) {
                 attack.UpdateAttackSpeedValues(ActorOwner.AttackSpeedMod);
                 return;
@@ -217,6 +249,9 @@ public class SkillThrust : Skill, IAttack, IMeleeSkill {
         AddedDamageModifier = 1;
         SpeedModifier = 1;
         Cooldown = 0;
+
+        //BaseDamageModifiers.IncreasedMelee = 0.35;
+        //BaseDamageModifiers.MoreMelee = 1.25;
     }
 
     public ESkillWeapons Weapons { get; set; } = ESkillWeapons.AllMeleeWeapons;
