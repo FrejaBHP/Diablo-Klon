@@ -62,6 +62,10 @@ public static class AffixDataTables {
 			EAffixItemFlags.Boots,
 			EItemBaseSpecifierFlags.NoFlags
 		),
+		new(typeof(IncreasedMeleeDamageAffix), EAffixFamily.IncreasedMeleeDamage,
+			EAffixItemFlags.Shield,
+			EItemBaseSpecifierFlags.NoFlags
+		),
 	];
 
 	public static readonly List<AffixTableType> SuffixData = [

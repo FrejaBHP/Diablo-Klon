@@ -57,6 +57,10 @@ public partial class Player : Actor {
 		{ EStatName.FlatMaxPhysDamage, 				0 },
 		{ EStatName.IncreasedPhysDamage, 			0 },
 
+		{ EStatName.IncreasedMeleeDamage, 			0 },
+		{ EStatName.IncreasedRangedDamage, 			0 },
+		{ EStatName.IncreasedSpellDamage, 			0 },
+
 		{ EStatName.IncreasedAttackSpeed, 			0 },
 		{ EStatName.IncreasedCritChance, 			0 },
 		{ EStatName.AddedCritMulti, 				0 },
@@ -483,41 +487,29 @@ public partial class Player : Actor {
 
 	protected void StrTotalChanged(double newStatTotal) {
 		PlayerHUD.PlayerPanel.StrContainer.SetValue($"{newStatTotal}");
-		//UpdateStrBonuses();
 	}
 
 	protected void UpdateStrBonuses() {
 		StrLifeBonus = Strength.STotal * 3;
-		StrMeleeBonus = Strength.STotal * 0.5 / 100;
-		
-		//BasicStats.AddedLife = (int)ItemStatDictionary[EStatName.FlatMaxLife] + (int)StrLifeBonus;
-		//DamageMods.IncreasedMelee = StrMeleeBonus;
+		StrMeleeBonus = Strength.STotal / 100;
 	}
 
 	protected void DexTotalChanged(double newStatTotal) {
 		PlayerHUD.PlayerPanel.DexContainer.SetValue($"{newStatTotal}");
-		//UpdateDexBonuses();
 	}
 
 	protected void UpdateDexBonuses() {
 		DexASBonus = Dexterity.STotal * 0.5 / 100;
 		DexEvasionBonus = Dexterity.STotal / 100;
-
-		//AttackSpeedMod.SIncreased = ItemStatDictionary[EStatName.IncreasedAttackSpeed] + DexASBonus;
-		//Evasion.SIncreased = ItemStatDictionary[EStatName.IncreasedEvasion] + DexEvasionBonus;
 	}
 
 	protected void IntTotalChanged(double newStatTotal) {
 		PlayerHUD.PlayerPanel.IntContainer.SetValue($"{newStatTotal}");
-		//UpdateIntBonuses();
 	}
 
 	protected void UpdateIntBonuses() {
 		IntManaBonus = Intelligence.STotal * 2;
-		IntSpellBonus = Intelligence.STotal * 0.5 / 100;
-
-		//BasicStats.AddedMana = (int)ItemStatDictionary[EStatName.FlatMaxMana] + (int)IntManaBonus;
-		//DamageMods.IncreasedSpell = IntSpellBonus;
+		IntSpellBonus = Intelligence.STotal / 100;
 	}
 
 	protected void CalculateStats() {
@@ -557,8 +549,10 @@ public partial class Player : Actor {
 		DamageMods.Physical.SMinAdded = (int)ItemStatDictionary[EStatName.FlatMinPhysDamage];
 		DamageMods.Physical.SMaxAdded = (int)ItemStatDictionary[EStatName.FlatMaxPhysDamage];
 		DamageMods.Physical.SIncreased = ItemStatDictionary[EStatName.IncreasedPhysDamage];
-		DamageMods.IncreasedMelee = StrMeleeBonus;
-		DamageMods.IncreasedSpell = IntSpellBonus;
+
+		DamageMods.IncreasedMelee = ItemStatDictionary[EStatName.IncreasedMeleeDamage] + StrMeleeBonus;
+		DamageMods.IncreasedRanged = ItemStatDictionary[EStatName.IncreasedRangedDamage];
+		DamageMods.IncreasedSpell = ItemStatDictionary[EStatName.IncreasedSpellDamage] + IntSpellBonus;
 
 		Armour.SAdded = (int)ItemStatDictionary[EStatName.FlatArmour];
 		Armour.SIncreased = ItemStatDictionary[EStatName.IncreasedArmour];

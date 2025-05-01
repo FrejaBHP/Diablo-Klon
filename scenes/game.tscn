@@ -7,7 +7,9 @@
 [node name="Game" type="Node3D"]
 script = ExtResource("1_rw8dc")
 
-[node name="MapTown" parent="." instance=ExtResource("2_lnu2h")]
+[node name="CurrentMap" type="Node3D" parent="."]
+
+[node name="MapTown" parent="CurrentMap" instance=ExtResource("2_lnu2h")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, -10)
 
 [node name="WorldObjects" type="CanvasLayer" parent="."]

@@ -30,4 +30,5 @@ visible = false
 layout_mode = 1
 
 [node name="LowerHUD" parent="." instance=ExtResource("3_ucw7d")]
+z_index = 1
 layout_mode = 1

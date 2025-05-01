@@ -42,3 +42,18 @@ mesh = SubResource("BoxMesh_sw0xa")
 
 [node name="ResBarAnchor" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+target_desired_distance = 0.5
+
+[node name="NavigationUpdateTimer" type="Timer" parent="."]
+process_callback = 0
+wait_time = 0.125
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+visible = false
+billboard = 2
+font_size = 48
+
+[connection signal="timeout" from="NavigationUpdateTimer" to="." method="OnNavigationUpdateTimeout"]

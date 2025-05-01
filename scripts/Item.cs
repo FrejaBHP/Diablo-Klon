@@ -168,7 +168,7 @@ public partial class Item {
 		if (StatDictionary.ContainsKey(affix.StatNameFirst)) {
 			if (add) {
 				if (affix.IsMultiplicative) {
-					StatDictionary[affix.StatNameFirst] *= 1 + affix.ValueFirst;
+					StatDictionary[affix.StatNameFirst] *= affix.ValueFirst;
 				}
 				else {
 					StatDictionary[affix.StatNameFirst] += affix.ValueFirst;
@@ -177,7 +177,7 @@ public partial class Item {
 			}
 			else {
 				if (affix.IsMultiplicative) {
-					StatDictionary[affix.StatNameFirst] /= 1 + affix.ValueFirst;
+					StatDictionary[affix.StatNameFirst] /= affix.ValueFirst;
 				}
 				else {
 					StatDictionary[affix.StatNameFirst] -= affix.ValueFirst;
@@ -198,7 +198,7 @@ public partial class Item {
 			if (StatDictionary.ContainsKey(affix.StatNameSecond)) {
 				if (add) {
 					if (affix.IsMultiplicative) {
-						StatDictionary[affix.StatNameSecond] *= 1 + affix.ValueSecond;
+						StatDictionary[affix.StatNameSecond] *= affix.ValueSecond;
 					}
 					else {
 						StatDictionary[affix.StatNameSecond] += affix.ValueSecond;
@@ -207,7 +207,7 @@ public partial class Item {
 				}
 				else {
 					if (affix.IsMultiplicative) {
-						StatDictionary[affix.StatNameSecond] /= 1 + affix.ValueSecond;
+						StatDictionary[affix.StatNameSecond] /= affix.ValueSecond;
 					}
 					else {
 						StatDictionary[affix.StatNameSecond] -= affix.ValueSecond;

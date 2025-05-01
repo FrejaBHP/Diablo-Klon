@@ -10,11 +10,14 @@ public partial class TestEnemy : EnemyBase {
 
     public override void _Ready() {
         base._Ready();
-        MovementSpeed.SBase = 5;
-        Evasion.SBase = 200;
+        MovementSpeed.SBase = 4;
+        Evasion.SBase = 67;
     }
 
     public override void _PhysicsProcess(double delta) {
+        ProcessNavigation();
         ApplyRegen();
+
+        //debugLabel.Text = $"Next Path Pos: {navAgent.GetNextPathPosition().ToString("F2")}\nTarget Pos: {navAgent.TargetPosition.ToString("F2")}\nVelocity Length: {Velocity.Length():F2}";
     }
 }

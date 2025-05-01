@@ -2,15 +2,93 @@ using Godot;
 using System;
 
 public partial class EnemyBase : Actor {
-    private Marker3D resBarAnchor;
+    protected Marker3D resBarAnchor;
+    protected NavigationAgent3D navAgent;
+    protected Timer navUpdateTimer;
+
+    protected Label3D debugLabel;
+
+    protected Actor actorTarget;
+    protected bool isChasingTarget = false;
 
     public override void _Ready() {
         base._Ready();
+
+        debugLabel = GetNode<Label3D>("Label3D");
+
+        navAgent = GetNode<NavigationAgent3D>("NavigationAgent3D");
+        navAgent.VelocityComputed += OnVelocityComputed;
+
+        navUpdateTimer = GetNode<Timer>("NavigationUpdateTimer");
 
         resBarAnchor = GetNode<Marker3D>("ResBarAnchor");
         AddFloatingBars(resBarAnchor);
 
         AddToGroup("Enemy");
+
+        CallDeferred(MethodName.NavSetup);
+    }
+
+    public void NavSetup() {
+        Game game = (Game)GetTree().Root.GetChild(0);
+        navAgent.SetNavigationMap(GetWorld3D().NavigationMap);
+        
+        // Temp
+        SetActorTarget(game.PlayerActor);
+    }
+
+    public override void _PhysicsProcess(double delta) {
+        
+    }
+
+    public void OnNavigationUpdateTimeout() {
+        if (isChasingTarget && actorTarget != null) {
+            SetNavigationTarget(actorTarget.GlobalPosition);
+        }
+    }
+
+    public void SetActorTarget(Actor target) {
+        actorTarget = target;
+        SetNavigationTarget(target.GlobalPosition);
+        isChasingTarget = true;
+        navUpdateTimer.Start();
+    }
+
+    public void SetNavigationTarget(Vector3 targetPosition) {
+        navAgent.TargetPosition = targetPosition;
+    }
+
+    public void ProcessNavigation() {
+        // Do not query when the map has never synchronized and is empty.
+        if (NavigationServer3D.MapGetIterationId(navAgent.GetNavigationMap()) == 0) {
+            return;
+        }
+
+        if (navAgent.IsNavigationFinished()) {
+            return;
+        }
+
+        Vector3 nextPathPosition = navAgent.GetNextPathPosition();
+        Vector3 newVelocity = GlobalPosition.DirectionTo(nextPathPosition with { Y = GlobalPosition.Y }) * (float)MovementSpeed.STotal;
+        FacePathPosition();
+
+        if (navAgent.AvoidanceEnabled) {
+            navAgent.Velocity = newVelocity;
+        }
+        else {
+            OnVelocityComputed(newVelocity);
+        }
+    }
+
+    public void OnVelocityComputed(Vector3 newVelocity) {
+        Velocity = newVelocity;
+        MoveAndSlide();
+    }
+
+    protected void FacePathPosition() {
+        Vector3 direction = GlobalPosition.DirectionTo(navAgent.GetNextPathPosition() with { Y = GlobalPosition.Y });
+        Basis lookTarget = Basis.LookingAt(direction, null, true);
+        Basis = Basis.Slerp(lookTarget, 0.08f);
     }
 
     public override void OnDamageTaken(double damage, bool isCritical, bool createDamageText) {

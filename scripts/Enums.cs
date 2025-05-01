@@ -29,6 +29,10 @@ public enum EStatName {
 	FlatPhysDamage,
 	IncreasedPhysDamage,
 
+	IncreasedMeleeDamage,
+	IncreasedRangedDamage,
+	IncreasedSpellDamage,
+
 	IncreasedAttackSpeed,
 	IncreasedCritChance,
 	AddedCritMulti,
@@ -98,6 +102,10 @@ public enum EAffixFamily {
 
 	FlatPhysDamage,
 	IncreasedPhysDamage,
+
+	IncreasedMeleeDamage,
+	IncreasedRangedDamage,
+	IncreasedSpellDamage,
 
 	IncreasedAttackSpeed,
 	IncreasedCritChance,

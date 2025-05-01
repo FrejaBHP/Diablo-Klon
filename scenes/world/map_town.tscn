@@ -1,13 +1,24 @@
-[gd_scene load_steps=34 format=4 uid="uid://d2xd34fgf22vd"]
+[gd_scene load_steps=37 format=4 uid="uid://d2xd34fgf22vd"]
 
 [ext_resource type="PackedScene" uid="uid://csru05s4nyrfq" path="res://scenes/enemy_test.tscn" id="1_2ie1u"]
 [ext_resource type="PackedScene" uid="uid://btdyjtsk2j8aw" path="res://scenes/map_transition.tscn" id="1_dm2gb"]
 [ext_resource type="Script" uid="uid://dd0nmn1ut8mlk" path="res://addons/func_godot/src/map/func_godot_map.gd" id="1_hi2by"]
+[ext_resource type="Script" uid="uid://biow08fvexmar" path="res://scripts/maps/MapBase.cs" id="1_pnv55"]
 [ext_resource type="Resource" uid="uid://vw6ckbf02x4g" path="res://maps/map_settings.tres" id="2_cwkjp"]
 [ext_resource type="Texture2D" uid="uid://drln6w5f1g28c" path="res://textures/world/stone_brick.jpg" id="2_q7u6e"]
 [ext_resource type="Material" uid="uid://by4gy6xsypuw5" path="res://textures/world/town/grass.tres" id="4_cwkjp"]
 [ext_resource type="Material" uid="uid://36aribvxlbvk" path="res://textures/world/town/dirt.tres" id="4_dm2gb"]
 [ext_resource type="Material" uid="uid://bp04ct06jlqsw" path="res://textures/world/town/stonepavement.tres" id="5_cwkjp"]
+
+[sub_resource type="NavigationMesh" id="NavigationMesh_2ie1u"]
+vertices = PackedVector3Array(-4.5, 0.55, -4.5, -4.5, 0.55, 28.5, 32.5, 0.55, 28.5, 32.5, 0.55, -4.5)
+polygons = [PackedInt32Array(3, 2, 0), PackedInt32Array(0, 2, 1)]
+geometry_collision_mask = 4294967059
+agent_height = 3.0
+agent_radius = 0.25
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_2ie1u"]
+size = Vector2(38, 34)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_q7u6e"]
 size = Vector3(1, 2, 2)
@@ -188,6 +199,7 @@ indices = PackedInt32Array(0, 1, 2, 0, 2, 3)
 points = PackedVector3Array(-6, 0.25, -7, -6, -0.25, -7, 6, -0.25, -7, 6, 0.25, -7, -6, 0.25, 7, -6, -0.25, 7, 6, -0.25, 7, 6, 0.25, 7)
 
 [node name="MapTown" type="Node3D"]
+script = ExtResource("1_pnv55")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.866025, -0.286788, 0.409576, 0, 0.819152, 0.573576, -0.5, 0.496732, -0.709406, 0, 18.5, 0)
@@ -196,6 +208,15 @@ light_cull_mask = 4293918783
 shadow_enabled = true
 shadow_caster_mask = 4293918735
 directional_shadow_mode = 1
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 5)
+navigation_mesh = SubResource("NavigationMesh_2ie1u")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0.05, 12)
+layers = 0
+mesh = SubResource("PlaneMesh_2ie1u")
 
 [node name="Enemies" type="Node3D" parent="."]
 

@@ -3,13 +3,23 @@ using System;
 using System.Linq;
 
 public partial class Game : Node3D {
-	private Player player;
+	public Player PlayerActor;
 	private PlayerCamera playerCam;
+	private Node3D currentMapNode;
+	public MapBase CurrentMap;
 
 	private CanvasLayer worldObjectsLayer;
 
 	public override void _Ready() {
+		currentMapNode = GetNode<Node3D>("CurrentMap");
 		worldObjectsLayer = GetNode<CanvasLayer>("WorldObjects");
+		PlayerActor = GetNode<Player>("Player");
+
+		SetMap(currentMapNode.GetChild<MapBase>(0));
+	}
+
+	public void SetMap(MapBase map) {
+		CurrentMap = map;
 	}
 
 	public void RemoveAllWorldItems() {

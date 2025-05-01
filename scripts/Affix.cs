@@ -64,7 +64,7 @@ public class AffixData(int minLvl, string name, double affixMinF, double affixMa
 public class BasicRingLifeImplicit : Affix {
 	private static readonly List<AffixData> basicRingLifeAffixData = [
 		new(0, "",
-			20, 30,
+			10, 15,
 			0, 0
 		)
 	];
@@ -92,7 +92,7 @@ public class BasicAmuletPhysImplicit : Affix {
 	private static readonly List<AffixData> basicAmuletPhysAffixData = [
 		new(0, "",
 			1, 1,
-			4, 4
+			3, 3
 		)
 	];
 
@@ -127,7 +127,7 @@ public class LocalFlatPhysDamageAffix : Affix {
 	private static readonly List<AffixData> localFlatPhysDamageAffixData = [
 		new(0, "Pointy", 
 			1, 2, 
-			3, 5
+			3, 4
 		),
 		new(0, "Sharp", 
 			3, 4, 
@@ -135,7 +135,7 @@ public class LocalFlatPhysDamageAffix : Affix {
 		),
 		new(0, "Jagged", 
 			4, 6, 
-			7, 10
+			7, 9
 		)
 	];
 
@@ -154,22 +154,22 @@ public class LocalFlatPhysDamageAffix : Affix {
 	}
 
     public override string GetAffixTooltipText() {
-		return $"Adds {(int)valueFirst} to {(int)valueSecond} Physical Damage";
+		return $"Adds {(int)valueFirst} to {(int)valueSecond} Local Physical Damage";
 	}
 }
 
 public class LocalIncreasedPhysDamageAffix : Affix {
 	private static readonly List<AffixData> localIncreasedPhysDamageAffixData = [
 		new(0, "Upset", 
-			0.20, 0.29, 
+			0.15, 0.24, 
 			0, 0
 		),
 		new(0, "Angry", 
-			0.30, 0.39, 
+			0.25, 0.34, 
 			0, 0
 		),
 		new(0, "Mad", 
-			0.40, 0.49, 
+			0.35, 0.44, 
 			0, 0
 		)
 	];
@@ -188,22 +188,22 @@ public class LocalIncreasedPhysDamageAffix : Affix {
 	}
 
 	public override string GetAffixTooltipText() {
-		return $"{Math.Round(valueFirst * 100, 0)}% increased Physical Damage";
+		return $"{Math.Round(valueFirst * 100, 0)}% increased Local Physical Damage";
 	}
 }
 
 public class FlatLifeAffix : Affix {
 	private static readonly List<AffixData> flatLifeAffixData = [
 		new(0, "Healthy", 
-			20, 29, 
+			10, 19, 
 			0, 0
 		),
 		new(0, "Vital", 
-			30, 39, 
+			20, 29, 
 			0, 0
 		),
 		new(0, "Vibrant", 
-			40, 49, 
+			30, 39, 
 			0, 0
 		)
 	];
@@ -230,15 +230,15 @@ public class FlatLifeAffix : Affix {
 public class FlatManaAffix : Affix {
 	private static readonly List<AffixData> flatManaAffixData = [
 		new(0, "Bubbling", 
-			20, 29, 
+			10, 16, 
 			0, 0
 		),
 		new(0, "Sage", 
-			30, 39, 
+			17, 23, 
 			0, 0
 		),
 		new(0, "Magical", 
-			40, 49, 
+			24, 30, 
 			0, 0
 		)
 	];
@@ -265,15 +265,15 @@ public class FlatManaAffix : Affix {
 public class LocalFlatArmourAffix : Affix {
 	private static readonly List<AffixData> localFlatArmourAffixData = [
 		new(0, "Rough", 
-			20, 29, 
+			15, 24, 
 			0, 0
 		),
 		new(0, "Hard", 
-			30, 39, 
+			25, 34, 
 			0, 0
 		),
 		new(0, "Sturdy", 
-			40, 49, 
+			35, 44, 
 			0, 0
 		)
 	];
@@ -299,15 +299,15 @@ public class LocalFlatArmourAffix : Affix {
 public class LocalIncreasedArmourAffix : Affix {
 	private static readonly List<AffixData> localIncreasedArmourAffixData = [
 		new(0, "Tough", 
-			0.20, 0.29, 
+			0.15, 0.24, 
 			0, 0
 		),
 		new(0, "Stable", 
-			0.30, 0.39, 
+			0.25, 0.34, 
 			0, 0
 		),
 		new(0, "Rocky", 
-			0.40, 0.49, 
+			0.35, 0.44, 
 			0, 0
 		)
 	];
@@ -334,15 +334,15 @@ public class LocalIncreasedArmourAffix : Affix {
 public class LocalFlatEvasionAffix : Affix {
 	private static readonly List<AffixData> localFlatEvasionAffixData = [
 		new(0, "Light", 
-			20, 29, 
+			15, 24, 
 			0, 0
 		),
 		new(0, "Nimble", 
-			30, 39, 
+			25, 34, 
 			0, 0
 		),
 		new(0, "Flexible", 
-			40, 49, 
+			35, 44, 
 			0, 0
 		)
 	];
@@ -368,15 +368,15 @@ public class LocalFlatEvasionAffix : Affix {
 public class LocalIncreasedEvasionAffix : Affix {
 	private static readonly List<AffixData> localIncreasedEvasionAffixData = [
 		new(0, "Evasive", 
-			0.20, 0.29, 
+			0.15, 0.24, 
 			0, 0
 		),
 		new(0, "Fast", 
-			0.30, 0.39, 
+			0.25, 0.34, 
 			0, 0
 		),
 		new(0, "Dodging", 
-			0.40, 0.49, 
+			0.35, 0.44, 
 			0, 0
 		)
 	];
@@ -402,15 +402,15 @@ public class LocalIncreasedEvasionAffix : Affix {
 public class LocalFlatEnergyShieldAffix : Affix {
 	private static readonly List<AffixData> localFlatEnergyShieldAffixData = [
 		new(0, "Energetic", 
-			20, 29, 
+			10, 19, 
 			0, 0
 		),
 		new(0, "Durable", 
-			30, 39, 
+			20, 29, 
 			0, 0
 		),
 		new(0, "Projecting", 
-			40, 49, 
+			30, 39, 
 			0, 0
 		)
 	];
@@ -436,15 +436,15 @@ public class LocalFlatEnergyShieldAffix : Affix {
 public class LocalIncreasedEnergyShieldAffix : Affix {
 	private static readonly List<AffixData> localIncreasedEnergyShieldAffixData = [
 		new(0, "Shielding", 
-			0.20, 0.29, 
+			0.15, 0.24, 
 			0, 0
 		),
 		new(0, "Inner", 
-			0.30, 0.39, 
+			0.25, 0.34, 
 			0, 0
 		),
 		new(9, "Blue", 
-			0.40, 0.49, 
+			0.35, 0.44, 
 			0, 0
 		)
 	];
@@ -464,6 +464,41 @@ public class LocalIncreasedEnergyShieldAffix : Affix {
 
 	public override string GetAffixTooltipText() {
 		return $"{Math.Round(valueFirst * 100, 0)}% increased Energy Shield";
+	}
+}
+
+public class IncreasedMeleeDamageAffix : Affix {
+	private static readonly List<AffixData> increasedMeleeDamageAffixData = [
+		new(0, "Melee1", 
+			0.10, 0.16, 
+			0, 0
+		),
+		new(0, "Melee2", 
+			0.17, 0.23, 
+			0, 0
+		),
+		new(0, "Melee3", 
+			0.24, 0.30, 
+			0, 0
+		)
+	];
+
+	public IncreasedMeleeDamageAffix() {
+		affixDataTable = increasedMeleeDamageAffixData;
+		affixFamily = EAffixFamily.IncreasedMeleeDamage;
+		isLocal = false;
+		isMultiplicative = false;
+		statNameFirst = EStatName.IncreasedMeleeDamage;
+	}
+
+	public override void RollAffixValue() {
+		if (tierData != null) {
+			valueFirst = Math.Round(Utilities.RandomDouble(tierData.AffixMinFirst, tierData.AffixMaxFirst), 2);
+		}
+	}
+
+	public override string GetAffixTooltipText() {
+		return $"{Math.Round(valueFirst * 100, 0)}% increased Melee Damage";
 	}
 }
 
@@ -503,6 +538,8 @@ public class IncreasedMovementSpeedAffix : Affix {
 }
 
 
+
+
 public class LocalIncreasedAttackSpeedAffix : Affix {
 	private static readonly List<AffixData> localIncreasedAttackSpeedAffixData = [
 		new(0, "of AS1", 
@@ -533,7 +570,7 @@ public class LocalIncreasedAttackSpeedAffix : Affix {
 	}
 
 	public override string GetAffixTooltipText() {
-		return $"{Math.Round(valueFirst * 100, 0)}% increased Attack Speed";
+		return $"{Math.Round(valueFirst * 100, 0)}% increased Local Attack Speed";
 	}
 }
 
@@ -567,7 +604,7 @@ public class LocalIncreasedCritChanceAffix : Affix {
 	}
 
 	public override string GetAffixTooltipText() {
-		return $"{Math.Round(valueFirst * 100, 0)}% increased Critical Strike Chance";
+		return $"{Math.Round(valueFirst * 100, 0)}% increased Local Critical Strike Chance";
 	}
 }
 
@@ -576,15 +613,15 @@ public class LocalIncreasedCritChanceAffix : Affix {
 public class GlobalIncreasedAttackSpeedAffix : Affix {
 	private static readonly List<AffixData> globalIncreasedAttackSpeedAffixData = [
 		new(0, "of Global AS1", 
-			0.05, 0.09, 
+			0.05, 0.08, 
 			0, 0
 		),
 		new(0, "of Global AS2", 
-			0.1, 0.14, 
+			0.09, 0.12, 
 			0, 0
 		),
 		new(0, "of Global AS3", 
-			0.15, 0.19, 
+			0.13, 0.17, 
 			0, 0
 		)
 	];
@@ -604,7 +641,7 @@ public class GlobalIncreasedAttackSpeedAffix : Affix {
 	}
 
 	public override string GetAffixTooltipText() {
-		return $"{Math.Round(valueFirst * 100, 0)}% increased Global Attack Speed";
+		return $"{Math.Round(valueFirst * 100, 0)}% increased Attack Speed";
 	}
 }
 
@@ -619,7 +656,7 @@ public class GlobalIncreasedCritChanceAffix : Affix {
 			0, 0
 		),
 		new(0, "of Global CC3", 
-			0.35, 0.39, 
+			0.25, 0.29, 
 			0, 0
 		)
 	];
@@ -639,22 +676,22 @@ public class GlobalIncreasedCritChanceAffix : Affix {
 	}
 
 	public override string GetAffixTooltipText() {
-		return $"{Math.Round(valueFirst * 100, 0)}% increased Global Critical Strike Chance";
+		return $"{Math.Round(valueFirst * 100, 0)}% increased Critical Strike Chance";
 	}
 }
 
 public class FlatStrengthAffix : Affix {
 	private static readonly List<AffixData> flatStrAffixData = [
 		new(0, "of Beef", 
-			5, 9, 
+			2, 4, 
 			0, 0
 		),
 		new(0, "of Stronk", 
-			10, 14, 
+			5, 8, 
 			0, 0
 		),
 		new(0, "of Muscle", 
-			15, 19, 
+			9, 12, 
 			0, 0
 		)
 	];
@@ -681,15 +718,15 @@ public class FlatStrengthAffix : Affix {
 public class FlatDexterityAffix : Affix {
 	private static readonly List<AffixData> flatDexAffixData = [
 		new(0, "of Pace", 
-			5, 9, 
+			2, 4, 
 			0, 0
 		),
 		new(0, "of Flexibility", 
-			10, 14, 
+			5, 8, 
 			0, 0
 		),
 		new(0, "of Green", 
-			15, 19, 
+			9, 12, 
 			0, 0
 		)
 	];
@@ -716,15 +753,15 @@ public class FlatDexterityAffix : Affix {
 public class FlatIntelligenceAffix : Affix {
 	private static readonly List<AffixData> flatIntAffixData = [
 		new(0, "of Mind", 
-			5, 9, 
+			2, 4, 
 			0, 0
 		),
 		new(0, "of Insight", 
-			10, 14, 
+			5, 8, 
 			0, 0
 		),
 		new(0, "of the Book", 
-			15, 19, 
+			9, 12, 
 			0, 0
 		)
 	];
