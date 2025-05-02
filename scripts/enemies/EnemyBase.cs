@@ -86,9 +86,17 @@ public partial class EnemyBase : Actor {
     }
 
     protected void FacePathPosition() {
-        Vector3 direction = GlobalPosition.DirectionTo(navAgent.GetNextPathPosition() with { Y = GlobalPosition.Y });
-        Basis lookTarget = Basis.LookingAt(direction, null, true);
-        Basis = Basis.Slerp(lookTarget, 0.08f);
+        if (isChasingTarget && actorTarget != null) {
+            Vector3 direction = GlobalPosition.DirectionTo(navAgent.GetNextPathPosition() with { Y = GlobalPosition.Y });
+
+            if (direction != Vector3.Zero) {
+                Basis lookTarget = Basis.LookingAt(direction, null, true);
+                Basis slerpTarget = Basis.Slerp(lookTarget, 0.08f);
+                slerpTarget = slerpTarget.Orthonormalized();
+
+                Basis = slerpTarget;
+            }
+        }
     }
 
     public override void OnDamageTaken(double damage, bool isCritical, bool createDamageText) {

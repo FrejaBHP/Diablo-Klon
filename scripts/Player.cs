@@ -273,9 +273,6 @@ public partial class Player : Actor {
 	public void ProcessMovementKeyInput() {
 		Vector2 inputDirection = Input.GetVector("MoveLeftKey", "MoveRightKey", "MoveUpKey", "MoveDownKey");
 		Vector3 moveDirection = new(inputDirection.X, 0, inputDirection.Y);
-		// Since the perspective is isometric, input is applied at a 45 degree angle to align with what you'd expect from the camera
-		moveDirection = moveDirection.Rotated(Vector3.Up, (float)Math.PI / 4);
-
 		//debugLabel.Text = $"Move Input Vector\nX = {moveDirection.X}\nY = {moveDirection.Y}\nZ = {moveDirection.Z}\nLength: {moveDirection.Length()}";
 
 		// If targeting and moving towards a node, but not pressing anything - otherwise the movement would be interrupted immediately
@@ -283,6 +280,9 @@ public partial class Player : Actor {
 			return;
 		}
 		else {
+			// Since the perspective is isometric, input is applied at a 45 degree angle to align with what you'd expect from the camera
+			moveDirection = moveDirection.Rotated(Vector3.Up, (float)Math.PI / 4);
+
 			ApplyGroundedVelocity(moveDirection.X, moveDirection.Z);
 			ResetNodeTarget();
 		}
@@ -291,7 +291,7 @@ public partial class Player : Actor {
 	// Makes the player character face the mouse pointer
 	public void FaceMouse() {
 		Vector2 mousePosition = GetViewport().GetMousePosition();
-		Vector2I windowSize = GetTree().Root.GetViewport().GetWindow().Size;
+		Vector2I windowSize = GetTree().Root.Size;
 
 		float lookX = mousePosition.X - (windowSize.X / 2);
 		float lookZ = mousePosition.Y - (windowSize.Y / 2);
@@ -351,17 +351,24 @@ public partial class Player : Actor {
 				}
 			}
 			else {
+				Vector3 direction = GlobalPosition.DirectionTo(moveTo);
+				ApplyGroundedVelocity(direction.X, direction.Z);
+				
 				Vector3 vecGrounded = Velocity with { Y = 0f };
 				if (vecGrounded.Length() < (float)MovementSpeed.STotal - 0.01f) {
-					float diff = (float)MovementSpeed.STotal / Velocity.Length();
-					Velocity *= diff;
+					if (Velocity.Length() != 0) {
+						float diff = (float)MovementSpeed.STotal / Velocity.Length();
+						Velocity *= diff;
+					}
 				}
 			}
 		}
 
 		MoveAndSlide();
 
-		//debugLabel.Text = $"\n\nVelocity: {Velocity}\nVel Length: {Velocity.Length()}\nRem. Dist: {remainingDist}\nRotation: {RotationDegrees.Y}";
+		//debugLabel.Text = $"Velocity: {Velocity.ToString("F2")}\nVel Length: {Velocity.Length():F2}\nRem. Dist: {remainingDist:F2}\nRotation: {RotationDegrees.Y:F2}";
+		//GD.Print($"Velocity: {Velocity.ToString("F2")}\nVel Length: {Velocity.Length():F2}\nRem. Dist: {remainingDist:F2}\nRotation: {RotationDegrees.ToString("F2")}");
+		//debugLabel.Text += $"\n\nVelocity: {Velocity.ToString("F2")}\nVel Length: {Velocity.Length():F2}\nRem. Dist: {remainingDist:F2}\nRotation: {RotationDegrees.Y:F2}";
 	}
 
 	public void AddSkill(Skill skill) {
@@ -426,7 +433,6 @@ public partial class Player : Actor {
 	public void OnStunnedTimeout() {
 		ActorState = EActorState.Actionable;
 	}
-
 
 	public void ResetNodeTarget() {
 		targetedNode = null;
