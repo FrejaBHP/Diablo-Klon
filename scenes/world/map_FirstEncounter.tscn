@@ -214,7 +214,7 @@ points = PackedVector3Array(-6, 0.25, -6, -6, -0.25, -6, 6, -0.25, -6, 6, 0.25, 
 [node name="MapFE" instance=ExtResource("1_gejkq")]
 
 [node name="PlayerSpawn" parent="." index="1"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 1, 12)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 12)
 
 [node name="NavigationRegion3D" parent="." index="3"]
 navigation_mesh = SubResource("NavigationMesh_yoycs")

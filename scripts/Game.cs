@@ -36,14 +36,20 @@ public partial class Game : Node3D {
 
 	// Changes the map to a non-town scene. Do not use this for loading the town
 	public void ChangeMap(PackedScene scene) {
-		if (mapTown.IsInsideTree()) {
-			UnloadTown();
-		}
+		MapBase oldMap = CurrentMap;
+
 		CurrentMap.ClearEnemies();
 
 		CurrentMap = MapDatabase.GetMap(scene);
 		CurrentMap.MapReady += OnMapLoaded;
 		currentMapNode.AddChild(CurrentMap);
+
+		if (oldMap == mapTown) {
+			UnloadTown();
+		}
+		else {
+			oldMap.QueueFree();
+		}
 	}
 
 	private void OnMapLoaded() {

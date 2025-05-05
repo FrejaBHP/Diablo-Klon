@@ -331,6 +331,7 @@ public partial class Actor : CharacterBody3D {
     protected PackedScene floatingResourceBarsScene = GD.Load<PackedScene>("res://scenes/gui/actor_floating_resource_bars.tscn");
 
     protected int ticksPerSecond = ProjectSettings.GetSetting("physics/common/physics_ticks_per_second").AsInt32();
+    public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 
     public List<Skill> Skills = new List<Skill>();
 
@@ -369,6 +370,14 @@ public partial class Actor : CharacterBody3D {
         BasicStats.CurrentLifeChanged += OnCurrentLifeChanged;
         DamageTaken += OnDamageTaken;
         DamageEvaded += OnDamageEvaded;
+    }
+
+    protected void DoGravity(double delta) {
+        if (!IsOnFloor()) {
+			Vector3 velocity = Velocity;
+			velocity.Y -= gravity * (float)delta;
+			Velocity = velocity;
+		}
     }
 
     protected void AddFloatingBars(Node3D anchor) {

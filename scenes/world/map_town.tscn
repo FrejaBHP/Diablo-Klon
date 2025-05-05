@@ -173,7 +173,7 @@ points = PackedVector3Array(-6, 0.25, -7, -6, -0.25, -7, 6, -0.25, -7, 6, 0.25, 
 [node name="MapTown" instance=ExtResource("1_5ewx1")]
 
 [node name="PlayerSpawn" parent="." index="1"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 1, 17)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 0, 17)
 
 [node name="TestEnemy" parent="Enemies" index="0" instance=ExtResource("1_2ie1u")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 0, 11)

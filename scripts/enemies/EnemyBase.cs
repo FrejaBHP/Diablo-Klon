@@ -82,7 +82,6 @@ public partial class EnemyBase : Actor {
 
     public void OnVelocityComputed(Vector3 newVelocity) {
         Velocity = newVelocity;
-        MoveAndSlide();
     }
 
     protected void FacePathPosition() {

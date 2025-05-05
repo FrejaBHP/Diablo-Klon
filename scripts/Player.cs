@@ -8,7 +8,6 @@ public partial class Player : Actor {
 
 	private const float RayLength = 1000f;
 
-	public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 	private EMovementInputMethod movementInputMethod = EMovementInputMethod.Keyboard;
 
 	public bool MovingTowardsObject = false;
@@ -362,6 +361,10 @@ public partial class Player : Actor {
 					}
 				}
 			}
+		}
+
+		if (!IsOnFloor()) {
+			DoGravity(delta);
 		}
 
 		MoveAndSlide();

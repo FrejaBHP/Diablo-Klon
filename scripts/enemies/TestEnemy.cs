@@ -15,8 +15,11 @@ public partial class TestEnemy : EnemyBase {
     }
 
     public override void _PhysicsProcess(double delta) {
-        ProcessNavigation();
         ApplyRegen();
+
+        ProcessNavigation();
+        DoGravity(delta);
+        MoveAndSlide();
 
         //debugLabel.Text = $"Next Path Pos: {navAgent.GetNextPathPosition().ToString("F2")}\nTarget Pos: {navAgent.TargetPosition.ToString("F2")}\nVelocity Length: {Velocity.Length():F2}";
         //debugLabel.Text = $"Rotation: {GlobalRotationDegrees.ToString("F2")}\nVelocity Length: {Velocity.Length():F2}";
