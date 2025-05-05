@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://cm0eq6am2vvt8"]
 
-[ext_resource type="Script" uid="uid://bxdapirrhrjmn" path="res://scripts/FloatingLabel.cs" id="1_kudjt"]
+[ext_resource type="Script" uid="uid://bxdapirrhrjmn" path="res://scripts/gui/FloatingLabel.cs" id="1_kudjt"]
 
 [node name="Control" type="Control"]
 layout_mode = 3

@@ -4,22 +4,52 @@ using System.Linq;
 
 public partial class Game : Node3D {
 	public Player PlayerActor;
+	public MapBase CurrentMap;
+
 	private PlayerCamera playerCam;
 	private Node3D currentMapNode;
-	public MapBase CurrentMap;
+	private MapBase mapTown; // Husk at lave en speciel klasse til Town
 
 	private CanvasLayer worldObjectsLayer;
 
 	public override void _Ready() {
 		currentMapNode = GetNode<Node3D>("CurrentMap");
+		mapTown = currentMapNode.GetNode<MapBase>("MapTown");
 		worldObjectsLayer = GetNode<CanvasLayer>("WorldObjects");
 		PlayerActor = GetNode<Player>("Player");
-
-		SetMap(currentMapNode.GetChild<MapBase>(0));
+		
+		CurrentMap = mapTown;
 	}
 
-	public void SetMap(MapBase map) {
-		CurrentMap = map;
+	public void LoadAndSetMapToTown() {
+		if (!mapTown.IsInsideTree()) {
+			currentMapNode.AddChild(mapTown);
+			CurrentMap = mapTown;
+		}
+	}
+
+	private void UnloadTown() {
+		if (mapTown.IsInsideTree()) {
+			currentMapNode.CallDeferred(MethodName.RemoveChild, mapTown);
+		}
+	}
+
+	// Changes the map to a non-town scene. Do not use this for loading the town
+	public void ChangeMap(PackedScene scene) {
+		if (mapTown.IsInsideTree()) {
+			UnloadTown();
+		}
+		CurrentMap.ClearEnemies();
+
+		CurrentMap = MapDatabase.GetMap(scene);
+		CurrentMap.MapReady += OnMapLoaded;
+		currentMapNode.AddChild(CurrentMap);
+	}
+
+	private void OnMapLoaded() {
+		PlayerActor.ResetNodeTarget();
+		PlayerActor.Velocity = Vector3.Zero;
+		PlayerActor.GlobalPosition = CurrentMap.PlayerSpawnMarker.GlobalPosition;
 	}
 
 	public void RemoveAllWorldItems() {

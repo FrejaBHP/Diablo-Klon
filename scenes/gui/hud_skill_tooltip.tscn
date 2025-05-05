@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://ebctxp1hgbem"]
 
-[ext_resource type="Script" uid="uid://b25wdqnfq1gx7" path="res://scripts/SkillTooltip.cs" id="1_us5t6"]
+[ext_resource type="Script" uid="uid://b25wdqnfq1gx7" path="res://scripts/gui/SkillTooltip.cs" id="1_us5t6"]
 [ext_resource type="Texture2D" uid="uid://b106gysf02ifa" path="res://textures/ui/hud_manacost.png" id="2_01lr4"]
 [ext_resource type="Texture2D" uid="uid://bkshbvk6gg0vg" path="res://textures/ui/hud_cooldown.png" id="3_us5t6"]
 

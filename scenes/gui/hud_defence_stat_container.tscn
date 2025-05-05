@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://ics6toyv4umb"]
 
 [ext_resource type="PackedScene" uid="uid://dithbuvclx67u" path="res://scenes/gui/hud_stat_scroll_container.tscn" id="1_27fqw"]
-[ext_resource type="Script" uid="uid://dp21h2dxk7n27" path="res://scripts/DefencePanel.cs" id="2_qnyeb"]
+[ext_resource type="Script" uid="uid://dp21h2dxk7n27" path="res://scripts/gui/DefencePanel.cs" id="2_qnyeb"]
 
 [node name="StatScrollContainer" instance=ExtResource("1_27fqw")]
 script = ExtResource("2_qnyeb")

@@ -1,0 +1,193 @@
+// Game: Dibbles
+// Format: Standard
+// entity 0
+{
+"wad" ""
+"classname" "worldspawn"
+"_tb_textures" "textures;textures/editor;textures/world;textures/world/town"
+}
+// entity 1
+{
+"classname" "func_worldgeo"
+// brush 0
+{
+( 192 0 -16 ) ( 192 1 -16 ) ( 192 0 -15 ) editor/skip 0 0 0 1 1
+( 128 0 -16 ) ( 128 0 -15 ) ( 129 0 -16 ) editor/skip 0 0 0 1 1
+( 128 0 -16 ) ( 129 0 -16 ) ( 128 1 -16 ) editor/skip 0 0 0 1 1
+( 256 128 0 ) ( 256 129 0 ) ( 257 128 0 ) world/town/grass 0 0 0 1 1
+( 256 192 16 ) ( 257 192 16 ) ( 256 192 17 ) editor/skip 0 0 0 1 1
+( 576 128 16 ) ( 576 128 17 ) ( 576 129 16 ) editor/skip 0 0 0 1 1
+}
+}
+// entity 2
+{
+"classname" "func_worldgeo"
+// brush 0
+{
+( 0 0 -16 ) ( 0 1 -16 ) ( 0 0 -15 ) editor/skip 0 0 0 1 1
+( 0 0 -16 ) ( 0 0 -15 ) ( 1 0 -16 ) editor/skip 0 0 0 1 1
+( 0 0 -16 ) ( 1 0 -16 ) ( 0 1 -16 ) editor/skip 0 0 0 1 1
+( 128 128 0 ) ( 128 129 0 ) ( 129 128 0 ) world/town/grass 0 0 0 1 1
+( 128 768 16 ) ( 129 768 16 ) ( 128 768 17 ) editor/skip 0 0 0 1 1
+( 192 128 16 ) ( 192 128 17 ) ( 192 129 16 ) editor/skip 0 0 0 1 1
+}
+}
+// entity 3
+{
+"classname" "func_worldgeo"
+// brush 0
+{
+( 192 640 -16 ) ( 192 641 -16 ) ( 192 640 -15 ) editor/skip 0 0 0 1 1
+( 128 576 -16 ) ( 128 576 -15 ) ( 129 576 -16 ) editor/skip 0 0 0 1 1
+( 128 640 -16 ) ( 129 640 -16 ) ( 128 641 -16 ) editor/skip 0 0 0 1 1
+( 256 768 0 ) ( 256 769 0 ) ( 257 768 0 ) world/town/grass 0 0 0 1 1
+( 256 768 16 ) ( 257 768 16 ) ( 256 768 17 ) editor/skip 0 0 0 1 1
+( 576 768 16 ) ( 576 768 17 ) ( 576 769 16 ) editor/skip 0 0 0 1 1
+}
+}
+// entity 4
+{
+"classname" "func_worldgeo"
+// brush 0
+{
+( 576 0 -16 ) ( 576 1 -16 ) ( 576 0 -15 ) editor/skip 0 0 0 1 1
+( 640 0 -16 ) ( 640 0 -15 ) ( 641 0 -16 ) editor/skip 0 0 0 1 1
+( 640 0 -16 ) ( 641 0 -16 ) ( 640 1 -16 ) editor/skip 0 0 0 1 1
+( 768 128 0 ) ( 768 129 0 ) ( 769 128 0 ) world/town/grass 0 0 0 1 1
+( 768 768 16 ) ( 769 768 16 ) ( 768 768 17 ) editor/skip 0 0 0 1 1
+( 768 128 16 ) ( 768 128 17 ) ( 768 129 16 ) editor/skip 0 0 0 1 1
+}
+}
+// entity 5
+{
+"classname" "func_geo"
+// brush 0
+{
+( 512 576 16 ) ( 512 544 16 ) ( 512 544 0 ) world/town/stonepavement 0 0 0 1 1
+( 512 544 16 ) ( 544 512 16 ) ( 544 512 0 ) world/town/stonepavement 106.66666 0 0 1 1
+( 544 608 0 ) ( 544 608 16 ) ( 512 576 16 ) world/town/stonepavement 32 0 0 1 1
+( 544 512 16 ) ( 576 512 16 ) ( 576 512 0 ) world/town/stonepavement 0 0 0 1 1
+( 608 544 0 ) ( 608 576 0 ) ( 576 608 0 ) editor/skip 0 0 0 1 1
+( 576 608 192 ) ( 608 576 192 ) ( 608 544 192 ) world/town/stonepavement 0 0 0 1 1
+( 576 608 0 ) ( 576 608 16 ) ( 544 608 16 ) world/town/stonepavement 0 0 0 1 1
+( 576 512 16 ) ( 608 544 16 ) ( 608 544 0 ) world/town/stonepavement 80 0 0 1 1
+( 608 576 0 ) ( 608 576 16 ) ( 576 608 16 ) world/town/stonepavement -48 0 0 1 1
+( 608 544 16 ) ( 608 576 16 ) ( 608 576 0 ) world/town/stonepavement 0 0 0 1 1
+}
+}
+// entity 6
+{
+"classname" "func_geo"
+// brush 0
+{
+( 512 224 16 ) ( 512 192 16 ) ( 512 192 0 ) world/town/stonepavement 0 0 0 1 1
+( 512 192 16 ) ( 544 160 16 ) ( 544 160 0 ) world/town/stonepavement 106.66666 0 0 1 1
+( 544 256 0 ) ( 544 256 16 ) ( 512 224 16 ) world/town/stonepavement 32 0 0 1 1
+( 544 160 16 ) ( 576 160 16 ) ( 576 160 0 ) world/town/stonepavement 0 0 0 1 1
+( 608 192 0 ) ( 608 224 0 ) ( 576 256 0 ) editor/skip 0 0 0 1 1
+( 576 256 192 ) ( 608 224 192 ) ( 608 192 192 ) world/town/stonepavement 0 0 0 1 1
+( 576 256 0 ) ( 576 256 16 ) ( 544 256 16 ) world/town/stonepavement 0 0 0 1 1
+( 576 160 16 ) ( 608 192 16 ) ( 608 192 0 ) world/town/stonepavement 80 0 0 1 1
+( 608 224 0 ) ( 608 224 16 ) ( 576 256 16 ) world/town/stonepavement -48 0 0 1 1
+( 608 192 16 ) ( 608 224 16 ) ( 608 224 0 ) world/town/stonepavement 0 0 0 1 1
+}
+}
+// entity 7
+{
+"classname" "func_geo"
+// brush 0
+{
+( 160 224 16 ) ( 160 192 16 ) ( 160 192 0 ) world/town/stonepavement 0 0 0 1 1
+( 160 192 16 ) ( 192 160 16 ) ( 192 160 0 ) world/town/stonepavement 106.66666 0 0 1 1
+( 192 256 0 ) ( 192 256 16 ) ( 160 224 16 ) world/town/stonepavement 32 0 0 1 1
+( 192 160 16 ) ( 224 160 16 ) ( 224 160 0 ) world/town/stonepavement 0 0 0 1 1
+( 256 192 0 ) ( 256 224 0 ) ( 224 256 0 ) editor/skip 0 0 0 1 1
+( 224 256 192 ) ( 256 224 192 ) ( 256 192 192 ) world/town/stonepavement 0 0 0 1 1
+( 224 256 0 ) ( 224 256 16 ) ( 192 256 16 ) world/town/stonepavement 0 0 0 1 1
+( 224 160 16 ) ( 256 192 16 ) ( 256 192 0 ) world/town/stonepavement 80 0 0 1 1
+( 256 224 0 ) ( 256 224 16 ) ( 224 256 16 ) world/town/stonepavement -48 0 0 1 1
+( 256 192 16 ) ( 256 224 16 ) ( 256 224 0 ) world/town/stonepavement 0 0 0 1 1
+}
+}
+// entity 8
+{
+"classname" "func_geo"
+// brush 0
+{
+( 160 576 16 ) ( 160 544 16 ) ( 160 544 0 ) world/town/stonepavement 0 0 0 1 1
+( 160 544 16 ) ( 192 512 16 ) ( 192 512 0 ) world/town/stonepavement 106.66666 0 0 1 1
+( 192 608 0 ) ( 192 608 16 ) ( 160 576 16 ) world/town/stonepavement 32 0 0 1 1
+( 192 512 16 ) ( 224 512 16 ) ( 224 512 0 ) world/town/stonepavement 0 0 0 1 1
+( 256 544 0 ) ( 256 576 0 ) ( 224 608 0 ) editor/skip 0 0 0 1 1
+( 224 608 192 ) ( 256 576 192 ) ( 256 544 192 ) world/town/stonepavement 0 0 0 1 1
+( 224 608 0 ) ( 224 608 16 ) ( 192 608 16 ) world/town/stonepavement 0 0 0 1 1
+( 224 512 16 ) ( 256 544 16 ) ( 256 544 0 ) world/town/stonepavement 80 0 0 1 1
+( 256 576 0 ) ( 256 576 16 ) ( 224 608 16 ) world/town/stonepavement -48 0 0 1 1
+( 256 544 16 ) ( 256 576 16 ) ( 256 576 0 ) world/town/stonepavement 0 0 0 1 1
+}
+}
+// entity 9
+{
+"classname" "func_worldgeo"
+// brush 0
+{
+( 192 128 -16 ) ( 192 129 -16 ) ( 192 128 -15 ) editor/skip 0 0 0 1 1
+( 128 192 -16 ) ( 128 192 -15 ) ( 129 192 -16 ) editor/skip 0 0 0 1 1
+( 128 128 -16 ) ( 129 128 -16 ) ( 128 129 -16 ) editor/skip 0 0 0 1 1
+( 256 256 0 ) ( 256 257 0 ) ( 257 256 0 ) world/rock_mosaic 0 0 0 1 1
+( 256 576 16 ) ( 257 576 16 ) ( 256 576 17 ) editor/skip 0 0 0 1 1
+( 576 256 16 ) ( 576 256 17 ) ( 576 257 16 ) editor/skip 0 0 0 1 1
+}
+}
+// entity 10
+{
+"classname" "func_geo"
+// brush 0
+{
+( 0 768 0 ) ( 0 769 0 ) ( 0 768 1 ) editor/skip 0 0 0 1 1
+( 0 768 0 ) ( 0 768 1 ) ( 1 768 0 ) editor/skip 0 0 0 1 1
+( 0 768 0 ) ( 1 768 0 ) ( 0 769 0 ) editor/skip 0 0 0 1 1
+( 496 784 128 ) ( 496 785 128 ) ( 497 784 128 ) editor/skip 0 0 0 1 1
+( 496 784 16 ) ( 497 784 16 ) ( 496 784 17 ) editor/skip 0 0 0 1 1
+( 768 784 16 ) ( 768 784 17 ) ( 768 785 16 ) editor/skip 0 0 0 1 1
+}
+}
+// entity 11
+{
+"classname" "func_geo"
+// brush 0
+{
+( -16 112 0 ) ( -16 113 0 ) ( -16 112 1 ) editor/skip 0 0 0 1 1
+( -16 0 0 ) ( -16 0 1 ) ( -15 0 0 ) editor/skip 0 0 0 1 1
+( -16 112 0 ) ( -15 112 0 ) ( -16 113 0 ) editor/skip 0 0 0 1 1
+( 0 656 128 ) ( 0 657 128 ) ( 1 656 128 ) editor/skip 0 0 0 1 1
+( 0 768 16 ) ( 1 768 16 ) ( 0 768 17 ) editor/skip 0 0 0 1 1
+( 0 656 16 ) ( 0 656 17 ) ( 0 657 16 ) editor/skip 0 0 0 1 1
+}
+}
+// entity 12
+{
+"classname" "func_geo"
+// brush 0
+{
+( 0 -16 0 ) ( 0 -15 0 ) ( 0 -16 1 ) editor/skip 0 0 0 1 1
+( 0 -16 0 ) ( 0 -16 1 ) ( 1 -16 0 ) editor/skip 0 0 0 1 1
+( 0 -16 0 ) ( 1 -16 0 ) ( 0 -15 0 ) editor/skip 0 0 0 1 1
+( 496 0 128 ) ( 496 1 128 ) ( 497 0 128 ) editor/skip 0 0 0 1 1
+( 496 0 16 ) ( 497 0 16 ) ( 496 0 17 ) editor/skip 0 0 0 1 1
+( 768 0 16 ) ( 768 0 17 ) ( 768 1 16 ) editor/skip 0 0 0 1 1
+}
+}
+// entity 13
+{
+"classname" "func_geo"
+// brush 0
+{
+( 768 112 0 ) ( 768 113 0 ) ( 768 112 1 ) editor/skip 0 0 0 1 1
+( 768 0 0 ) ( 768 0 1 ) ( 769 0 0 ) editor/skip 0 0 0 1 1
+( 768 112 0 ) ( 769 112 0 ) ( 768 113 0 ) editor/skip 0 0 0 1 1
+( 784 656 128 ) ( 784 657 128 ) ( 785 656 128 ) editor/skip 0 0 0 1 1
+( 784 768 16 ) ( 785 768 16 ) ( 784 768 17 ) editor/skip 0 0 0 1 1
+( 784 656 16 ) ( 784 656 17 ) ( 784 657 16 ) editor/skip 0 0 0 1 1
+}
+}

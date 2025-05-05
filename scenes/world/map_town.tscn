@@ -1,48 +1,20 @@
-[gd_scene load_steps=37 format=4 uid="uid://d2xd34fgf22vd"]
+[gd_scene load_steps=30 format=4 uid="uid://df1bl15n8wee3"]
 
 [ext_resource type="PackedScene" uid="uid://csru05s4nyrfq" path="res://scenes/enemy_test.tscn" id="1_2ie1u"]
+[ext_resource type="PackedScene" uid="uid://cd3cosrtp6dgb" path="res://scenes/world/map_base.tscn" id="1_5ewx1"]
 [ext_resource type="PackedScene" uid="uid://btdyjtsk2j8aw" path="res://scenes/map_transition.tscn" id="1_dm2gb"]
-[ext_resource type="Script" uid="uid://dd0nmn1ut8mlk" path="res://addons/func_godot/src/map/func_godot_map.gd" id="1_hi2by"]
-[ext_resource type="Script" uid="uid://biow08fvexmar" path="res://scripts/maps/MapBase.cs" id="1_pnv55"]
-[ext_resource type="Resource" uid="uid://vw6ckbf02x4g" path="res://maps/map_settings.tres" id="2_cwkjp"]
-[ext_resource type="Texture2D" uid="uid://drln6w5f1g28c" path="res://textures/world/stone_brick.jpg" id="2_q7u6e"]
 [ext_resource type="Material" uid="uid://by4gy6xsypuw5" path="res://textures/world/town/grass.tres" id="4_cwkjp"]
 [ext_resource type="Material" uid="uid://36aribvxlbvk" path="res://textures/world/town/dirt.tres" id="4_dm2gb"]
 [ext_resource type="Material" uid="uid://bp04ct06jlqsw" path="res://textures/world/town/stonepavement.tres" id="5_cwkjp"]
+[ext_resource type="PackedScene" uid="uid://bpvp03fbnp75y" path="res://scenes/world/map_FirstEncounter.tscn" id="7_q7u6e"]
 
-[sub_resource type="NavigationMesh" id="NavigationMesh_2ie1u"]
-vertices = PackedVector3Array(-4.5, 0.55, -4.5, -4.5, 0.55, 28.5, 32.5, 0.55, 28.5, 32.5, 0.55, -4.5)
+[sub_resource type="NavigationMesh" id="NavigationMesh_q1rmb"]
+resource_local_to_scene = true
+vertices = PackedVector3Array(-4.75, 0.5, -4.75, -4.75, 0.5, 28.75, 32.75, 0.5, 28.75, 32.75, 0.5, -4.75)
 polygons = [PackedInt32Array(3, 2, 0), PackedInt32Array(0, 2, 1)]
 geometry_collision_mask = 4294967059
 agent_height = 3.0
 agent_radius = 0.25
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_2ie1u"]
-size = Vector2(38, 34)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_q7u6e"]
-size = Vector3(1, 2, 2)
-
-[sub_resource type="BoxMesh" id="BoxMesh_q7u6e"]
-size = Vector3(1, 2, 2)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2ie1u"]
-resource_local_to_scene = true
-albedo_texture = ExtResource("2_q7u6e")
-anisotropy = 1.0
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_q7u6e"]
-_surfaces = [{
-"aabb": AABB(-0.528867, -1.02887, -1.02887, 1.05773, 2.05773, 2.05773),
-"attribute_data": PackedByteArray("AAAAAAAAAACrqio/AAAAAKuqqj4AAAAAAACAPwAAAAAAAAAAAAAAP6uqKj8AAAA/q6qqPgAAAD8AAIA/AAAAP6uqqj4AAAAAAAAAAAAAAD+rqio/AAAAAKuqqj4AAAA/q6qqPgAAAD8AAAAAAACAP6uqKj8AAAA/q6qqPgAAgD+rqqo+AAAAP6uqKj8AAAA/q6oqPwAAAD8AAIA/AAAAP6uqqj4AAIA/q6oqPwAAgD+rqio/AACAPwAAgD8AAIA/"),
-"format": 34359742487,
-"index_count": 36,
-"index_data": PackedByteArray("AAAEAAIAAgAEAAYAAQAFAAMAAwAFAAcACAAMAAoACgAMAA4ACQANAAsACwANAA8AEAAUABIAEgAUABYAEQAVABMAEwAVABcA"),
-"primitive": 3,
-"uv_scale": Vector4(0, 0, 0, 0),
-"vertex_count": 24,
-"vertex_data": PackedByteArray("3GMHv+6xgz/usYM/3GMHP+6xgz/usYO/3GMHP+6xgz/usYM/3GMHv+6xgz/usYO/3GMHv+6xg7/usYM/3GMHP+6xg7/usYO/3GMHP+6xg7/usYM/3GMHv+6xg7/usYO/3GMHP+6xgz/usYM/3GMHv+6xgz/usYO/3GMHP+6xgz/usYO/3GMHv+6xgz/usYM/3GMHP+6xg7/usYM/3GMHv+6xg7/usYO/3GMHP+6xg7/usYO/3GMHv+6xg7/usYM/3GMHP+6xgz/usYM/3GMHv+6xg7/usYM/3GMHv+6xgz/usYM/3GMHP+6xg7/usYM/3GMHP+6xgz/usYO/3GMHv+6xg7/usYO/3GMHv+6xgz/usYO/3GMHP+6xg7/usYO//3//f////7//////AAD/v/9//3////+//////wAA/7//f/9/////v/////8AAP+//3//f////7//////AAD/v///AID/////AAAAgP9//7///wCA/////wAAAID/f/+///8AgP////8AAACA/3//v///AID/////AAAAgP9//78AgP//AAD/vwCAAAD///+/AID//wAA/78AgAAA////vwCA//8AAP+/AIAAAP///78AgP//AAD/vwCAAAD///+/")
-}]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_cwkjp"]
 _surfaces = [{
@@ -198,151 +170,121 @@ indices = PackedInt32Array(0, 1, 2, 0, 2, 3)
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_r0uq8"]
 points = PackedVector3Array(-6, 0.25, -7, -6, -0.25, -7, 6, -0.25, -7, 6, 0.25, -7, -6, 0.25, 7, -6, -0.25, 7, 6, -0.25, 7, 6, 0.25, 7)
 
-[node name="MapTown" type="Node3D"]
-script = ExtResource("1_pnv55")
+[node name="MapTown" instance=ExtResource("1_5ewx1")]
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.866025, -0.286788, 0.409576, 0, 0.819152, 0.573576, -0.5, 0.496732, -0.709406, 0, 18.5, 0)
-layers = 64
-light_cull_mask = 4293918783
-shadow_enabled = true
-shadow_caster_mask = 4293918735
-directional_shadow_mode = 1
+[node name="PlayerSpawn" parent="." index="1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 1, 17)
 
-[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 5)
-navigation_mesh = SubResource("NavigationMesh_2ie1u")
+[node name="TestEnemy" parent="Enemies" index="0" instance=ExtResource("1_2ie1u")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 0, 11)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0.05, 12)
-layers = 0
-mesh = SubResource("PlaneMesh_2ie1u")
+[node name="NavigationRegion3D" parent="." index="3"]
+navigation_mesh = SubResource("NavigationMesh_q1rmb")
 
-[node name="Enemies" type="Node3D" parent="."]
-
-[node name="TestEnemy" parent="Enemies" instance=ExtResource("1_2ie1u")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, 12)
-
-[node name="LevelTransition" parent="." instance=ExtResource("1_dm2gb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 0.5, 17)
-
-[node name="CollisionShape3D" parent="LevelTransition" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-shape = SubResource("BoxShape3D_q7u6e")
-
-[node name="Mesh" parent="LevelTransition" index="1"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-mesh = SubResource("BoxMesh_q7u6e")
-surface_material_override/0 = SubResource("StandardMaterial3D_2ie1u")
-
-[node name="MeshOutline" parent="LevelTransition/Mesh" index="0"]
-mesh = SubResource("ArrayMesh_q7u6e")
-
-[node name="FuncGodotMap" type="Node3D" parent="."]
-script = ExtResource("1_hi2by")
+[node name="FuncGodotMap" parent="NavigationRegion3D" index="0"]
 global_map_file = "F:/GitHub/Diablo-Klon/maps/town.map"
-map_settings = ExtResource("2_cwkjp")
-metadata/_custom_type_script = "uid://dd0nmn1ut8mlk"
 
-[node name="entity_0_worldspawn" type="StaticBody3D" parent="FuncGodotMap"]
+[node name="entity_0_worldspawn" type="StaticBody3D" parent="NavigationRegion3D/FuncGodotMap" index="0"]
 collision_mask = 0
 
-[node name="entity_1_func_worldgeo" type="StaticBody3D" parent="FuncGodotMap"]
+[node name="entity_1_func_worldgeo" type="StaticBody3D" parent="NavigationRegion3D/FuncGodotMap" index="1"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, -0.25, 21)
 collision_layer = 2
 collision_mask = 0
 
-[node name="entity_1_mesh_instance" type="MeshInstance3D" parent="FuncGodotMap/entity_1_func_worldgeo"]
+[node name="entity_1_mesh_instance" type="MeshInstance3D" parent="NavigationRegion3D/FuncGodotMap/entity_1_func_worldgeo" index="0"]
 mesh = SubResource("ArrayMesh_cwkjp")
 
-[node name="entity_1_occluder_instance" type="OccluderInstance3D" parent="FuncGodotMap/entity_1_func_worldgeo"]
+[node name="entity_1_occluder_instance" type="OccluderInstance3D" parent="NavigationRegion3D/FuncGodotMap/entity_1_func_worldgeo" index="1"]
 occluder = SubResource("ArrayOccluder3D_dm2gb")
 
-[node name="entity_1_brush_0_collision_shape" type="CollisionShape3D" parent="FuncGodotMap/entity_1_func_worldgeo"]
+[node name="entity_1_brush_0_collision_shape" type="CollisionShape3D" parent="NavigationRegion3D/FuncGodotMap/entity_1_func_worldgeo" index="2"]
 shape = SubResource("ConvexPolygonShape3D_q7u6e")
 
-[node name="entity_2_func_worldgeo" type="StaticBody3D" parent="FuncGodotMap"]
+[node name="entity_2_func_worldgeo" type="StaticBody3D" parent="NavigationRegion3D/FuncGodotMap" index="2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, -0.25, 17)
 collision_layer = 2
 collision_mask = 0
 
-[node name="entity_2_mesh_instance" type="MeshInstance3D" parent="FuncGodotMap/entity_2_func_worldgeo"]
+[node name="entity_2_mesh_instance" type="MeshInstance3D" parent="NavigationRegion3D/FuncGodotMap/entity_2_func_worldgeo" index="0"]
 mesh = SubResource("ArrayMesh_2ie1u")
 
-[node name="entity_2_occluder_instance" type="OccluderInstance3D" parent="FuncGodotMap/entity_2_func_worldgeo"]
+[node name="entity_2_occluder_instance" type="OccluderInstance3D" parent="NavigationRegion3D/FuncGodotMap/entity_2_func_worldgeo" index="1"]
 occluder = SubResource("ArrayOccluder3D_pnv55")
 
-[node name="entity_2_brush_0_collision_shape" type="CollisionShape3D" parent="FuncGodotMap/entity_2_func_worldgeo"]
+[node name="entity_2_brush_0_collision_shape" type="CollisionShape3D" parent="NavigationRegion3D/FuncGodotMap/entity_2_func_worldgeo" index="2"]
 shape = SubResource("ConvexPolygonShape3D_drw7y")
 
-[node name="entity_3_func_worldgeo" type="StaticBody3D" parent="FuncGodotMap"]
+[node name="entity_3_func_worldgeo" type="StaticBody3D" parent="NavigationRegion3D/FuncGodotMap" index="3"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, -0.25, 13)
 collision_layer = 2
 collision_mask = 0
 
-[node name="entity_3_mesh_instance" type="MeshInstance3D" parent="FuncGodotMap/entity_3_func_worldgeo"]
+[node name="entity_3_mesh_instance" type="MeshInstance3D" parent="NavigationRegion3D/FuncGodotMap/entity_3_func_worldgeo" index="0"]
 mesh = SubResource("ArrayMesh_s1yyi")
 
-[node name="entity_3_occluder_instance" type="OccluderInstance3D" parent="FuncGodotMap/entity_3_func_worldgeo"]
+[node name="entity_3_occluder_instance" type="OccluderInstance3D" parent="NavigationRegion3D/FuncGodotMap/entity_3_func_worldgeo" index="1"]
 occluder = SubResource("ArrayOccluder3D_q7f4k")
 
-[node name="entity_3_brush_0_collision_shape" type="CollisionShape3D" parent="FuncGodotMap/entity_3_func_worldgeo"]
+[node name="entity_3_brush_0_collision_shape" type="CollisionShape3D" parent="NavigationRegion3D/FuncGodotMap/entity_3_func_worldgeo" index="2"]
 shape = SubResource("ConvexPolygonShape3D_t36bt")
 
-[node name="entity_4_func_worldgeo" type="StaticBody3D" parent="FuncGodotMap"]
+[node name="entity_4_func_worldgeo" type="StaticBody3D" parent="NavigationRegion3D/FuncGodotMap" index="4"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, -0.25, 17)
 collision_layer = 2
 collision_mask = 0
 
-[node name="entity_4_mesh_instance" type="MeshInstance3D" parent="FuncGodotMap/entity_4_func_worldgeo"]
+[node name="entity_4_mesh_instance" type="MeshInstance3D" parent="NavigationRegion3D/FuncGodotMap/entity_4_func_worldgeo" index="0"]
 mesh = SubResource("ArrayMesh_fm1qx")
 
-[node name="entity_4_occluder_instance" type="OccluderInstance3D" parent="FuncGodotMap/entity_4_func_worldgeo"]
+[node name="entity_4_occluder_instance" type="OccluderInstance3D" parent="NavigationRegion3D/FuncGodotMap/entity_4_func_worldgeo" index="1"]
 occluder = SubResource("ArrayOccluder3D_5jdb6")
 
-[node name="entity_4_brush_0_collision_shape" type="CollisionShape3D" parent="FuncGodotMap/entity_4_func_worldgeo"]
+[node name="entity_4_brush_0_collision_shape" type="CollisionShape3D" parent="NavigationRegion3D/FuncGodotMap/entity_4_func_worldgeo" index="2"]
 shape = SubResource("ConvexPolygonShape3D_d0mt1")
 
-[node name="entity_5_func_worldgeo" type="StaticBody3D" parent="FuncGodotMap"]
+[node name="entity_5_func_worldgeo" type="StaticBody3D" parent="NavigationRegion3D/FuncGodotMap" index="5"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, -0.25, 29)
 collision_layer = 2
 collision_mask = 0
 
-[node name="entity_5_mesh_instance" type="MeshInstance3D" parent="FuncGodotMap/entity_5_func_worldgeo"]
+[node name="entity_5_mesh_instance" type="MeshInstance3D" parent="NavigationRegion3D/FuncGodotMap/entity_5_func_worldgeo" index="0"]
 mesh = SubResource("ArrayMesh_dcgdg")
 
-[node name="entity_5_occluder_instance" type="OccluderInstance3D" parent="FuncGodotMap/entity_5_func_worldgeo"]
+[node name="entity_5_occluder_instance" type="OccluderInstance3D" parent="NavigationRegion3D/FuncGodotMap/entity_5_func_worldgeo" index="1"]
 occluder = SubResource("ArrayOccluder3D_iyukm")
 
-[node name="entity_5_brush_0_collision_shape" type="CollisionShape3D" parent="FuncGodotMap/entity_5_func_worldgeo"]
+[node name="entity_5_brush_0_collision_shape" type="CollisionShape3D" parent="NavigationRegion3D/FuncGodotMap/entity_5_func_worldgeo" index="2"]
 shape = SubResource("ConvexPolygonShape3D_p3qhv")
 
-[node name="entity_6_func_worldgeo" type="StaticBody3D" parent="FuncGodotMap"]
+[node name="entity_6_func_worldgeo" type="StaticBody3D" parent="NavigationRegion3D/FuncGodotMap" index="6"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, -0.25, 5)
 collision_layer = 2
 collision_mask = 0
 
-[node name="entity_6_mesh_instance" type="MeshInstance3D" parent="FuncGodotMap/entity_6_func_worldgeo"]
+[node name="entity_6_mesh_instance" type="MeshInstance3D" parent="NavigationRegion3D/FuncGodotMap/entity_6_func_worldgeo" index="0"]
 mesh = SubResource("ArrayMesh_jmpt1")
 
-[node name="entity_6_occluder_instance" type="OccluderInstance3D" parent="FuncGodotMap/entity_6_func_worldgeo"]
+[node name="entity_6_occluder_instance" type="OccluderInstance3D" parent="NavigationRegion3D/FuncGodotMap/entity_6_func_worldgeo" index="1"]
 occluder = SubResource("ArrayOccluder3D_i13ae")
 
-[node name="entity_6_brush_0_collision_shape" type="CollisionShape3D" parent="FuncGodotMap/entity_6_func_worldgeo"]
+[node name="entity_6_brush_0_collision_shape" type="CollisionShape3D" parent="NavigationRegion3D/FuncGodotMap/entity_6_func_worldgeo" index="2"]
 shape = SubResource("ConvexPolygonShape3D_oqlea")
 
-[node name="entity_7_func_worldgeo" type="StaticBody3D" parent="FuncGodotMap"]
+[node name="entity_7_func_worldgeo" type="StaticBody3D" parent="NavigationRegion3D/FuncGodotMap" index="7"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32, -0.25, 17)
 collision_layer = 2
 collision_mask = 0
 
-[node name="entity_7_mesh_instance" type="MeshInstance3D" parent="FuncGodotMap/entity_7_func_worldgeo"]
+[node name="entity_7_mesh_instance" type="MeshInstance3D" parent="NavigationRegion3D/FuncGodotMap/entity_7_func_worldgeo" index="0"]
 mesh = SubResource("ArrayMesh_hduvd")
 
-[node name="entity_7_occluder_instance" type="OccluderInstance3D" parent="FuncGodotMap/entity_7_func_worldgeo"]
+[node name="entity_7_occluder_instance" type="OccluderInstance3D" parent="NavigationRegion3D/FuncGodotMap/entity_7_func_worldgeo" index="1"]
 occluder = SubResource("ArrayOccluder3D_0dll0")
 
-[node name="entity_7_brush_0_collision_shape" type="CollisionShape3D" parent="FuncGodotMap/entity_7_func_worldgeo"]
+[node name="entity_7_brush_0_collision_shape" type="CollisionShape3D" parent="NavigationRegion3D/FuncGodotMap/entity_7_func_worldgeo" index="2"]
 shape = SubResource("ConvexPolygonShape3D_r0uq8")
 
-[editable path="LevelTransition"]
+[node name="TriggerNode" parent="." index="4" instance=ExtResource("1_dm2gb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.5, 17)
+sceneToTransitionTo = ExtResource("7_q7u6e")

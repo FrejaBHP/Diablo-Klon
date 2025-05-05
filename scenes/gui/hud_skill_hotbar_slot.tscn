@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://ddmq2hsbxqs2f"]
 
-[ext_resource type="Script" uid="uid://dbshqw66su4mx" path="res://scripts/SkillHotbarSlot.cs" id="1_gl8jw"]
+[ext_resource type="Script" uid="uid://dbshqw66su4mx" path="res://scripts/gui/SkillHotbarSlot.cs" id="1_gl8jw"]
 [ext_resource type="Texture2D" uid="uid://rhlv3xv12kyp" path="res://textures/skills/skill_none.png" id="2_ywhgx"]
 
 [node name="SkillHotbarSlot" type="VBoxContainer"]

@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://c55mrlsjhudwq"]
 
-[ext_resource type="Script" uid="uid://ctg6wd5c5riic" path="res://scripts/SkillSlotCluster.cs" id="1_lypup"]
-[ext_resource type="Script" uid="uid://c6vbkh20733sa" path="res://scripts/SkillSlotActive.cs" id="2_y7504"]
-[ext_resource type="Script" uid="uid://cakgcyiqg2ug8" path="res://scripts/SkillSlotSupport.cs" id="3_0i4km"]
+[ext_resource type="Script" uid="uid://ctg6wd5c5riic" path="res://scripts/gui/SkillSlotCluster.cs" id="1_lypup"]
+[ext_resource type="Script" uid="uid://c6vbkh20733sa" path="res://scripts/gui/SkillSlotActive.cs" id="2_y7504"]
+[ext_resource type="Script" uid="uid://cakgcyiqg2ug8" path="res://scripts/gui/SkillSlotSupport.cs" id="3_0i4km"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jqxhb"]
 bg_color = Color(0.227451, 0.227451, 0.227451, 1)

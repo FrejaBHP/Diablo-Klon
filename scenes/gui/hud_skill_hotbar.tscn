@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://bbdwncxip1fvn"]
 
-[ext_resource type="Script" uid="uid://cepw7vhqxkyvd" path="res://scripts/SkillHotbar.cs" id="1_beojg"]
+[ext_resource type="Script" uid="uid://cepw7vhqxkyvd" path="res://scripts/gui/SkillHotbar.cs" id="1_beojg"]
 [ext_resource type="PackedScene" uid="uid://ddmq2hsbxqs2f" path="res://scenes/gui/hud_skill_hotbar_slot.tscn" id="1_piif7"]
 
 [node name="HotbarContainer" type="VBoxContainer"]

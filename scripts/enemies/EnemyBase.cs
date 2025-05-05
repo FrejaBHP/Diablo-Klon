@@ -92,9 +92,7 @@ public partial class EnemyBase : Actor {
             if (direction != Vector3.Zero) {
                 Basis lookTarget = Basis.LookingAt(direction, null, true);
                 Basis slerpTarget = Basis.Slerp(lookTarget, 0.08f);
-                slerpTarget = slerpTarget.Orthonormalized();
-
-                Basis = slerpTarget;
+                Basis = slerpTarget.Orthonormalized();
             }
         }
     }
@@ -102,6 +100,10 @@ public partial class EnemyBase : Actor {
     public override void OnDamageTaken(double damage, bool isCritical, bool createDamageText) {
         if (createDamageText) {
             ShowDamageText(damage, isCritical);
+        }
+
+        if (BasicStats.CurrentLife <= 0) {
+            OnNoLifeLeft();
         }
     }
 
@@ -134,4 +136,9 @@ public partial class EnemyBase : Actor {
 
         damageLabel.Start();
     }
+
+    public override void OnNoLifeLeft() {
+        QueueFree();
+    }
+
 }

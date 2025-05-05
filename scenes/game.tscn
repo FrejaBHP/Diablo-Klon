@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bjmdkp447b2se" path="res://scripts/Game.cs" id="1_rw8dc"]
 [ext_resource type="PackedScene" uid="uid://dqhy454qpbnlg" path="res://scenes/player.tscn" id="2_51cil"]
-[ext_resource type="PackedScene" uid="uid://d2xd34fgf22vd" path="res://scenes/world/map_town.tscn" id="2_lnu2h"]
+[ext_resource type="PackedScene" uid="uid://df1bl15n8wee3" path="res://scenes/world/map_town.tscn" id="2_lnu2h"]
 
 [node name="Game" type="Node3D"]
 script = ExtResource("1_rw8dc")
@@ -10,7 +10,6 @@ script = ExtResource("1_rw8dc")
 [node name="CurrentMap" type="Node3D" parent="."]
 
 [node name="MapTown" parent="CurrentMap" instance=ExtResource("2_lnu2h")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, -10)
 
 [node name="WorldObjects" type="CanvasLayer" parent="."]
 layer = 0

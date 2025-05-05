@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://bjr2unj1x1myt"]
 
-[ext_resource type="Script" uid="uid://blgot83d4npeq" path="res://scripts/HUD.cs" id="1_k6sm4"]
+[ext_resource type="Script" uid="uid://blgot83d4npeq" path="res://scripts/gui/HUD.cs" id="1_k6sm4"]
 [ext_resource type="PackedScene" uid="uid://feaoc135f1ku" path="res://scenes/gui/hud_inventory.tscn" id="1_v82wo"]
 [ext_resource type="PackedScene" uid="uid://b7u2byhy4hvye" path="res://scenes/gui/hud_player_panel.tscn" id="2_stx8b"]
 [ext_resource type="PackedScene" uid="uid://com0l155ax0xj" path="res://scenes/gui/hud_skill_panel.tscn" id="3_psy8l"]

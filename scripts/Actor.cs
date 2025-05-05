@@ -471,4 +471,8 @@ public partial class Actor : CharacterBody3D {
 
         return false;
     }
+
+    public virtual void OnNoLifeLeft() {
+
+    }
 }

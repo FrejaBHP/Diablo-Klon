@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dithbuvclx67u"]
 
-[ext_resource type="Script" uid="uid://dsv1hhf8rtnib" path="res://scripts/StatPanel.cs" id="1_i07qp"]
+[ext_resource type="Script" uid="uid://dsv1hhf8rtnib" path="res://scripts/gui/StatPanel.cs" id="1_i07qp"]
 
 [node name="StatScrollContainer" type="ScrollContainer"]
 grow_horizontal = 2

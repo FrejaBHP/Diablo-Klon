@@ -1,6 +1,6 @@
 [gd_scene load_steps=10 format=3 uid="uid://csvhq1u43ybl3"]
 
-[ext_resource type="Script" uid="uid://dmnobj3wdx2by" path="res://scripts/FloatingResourceBars.cs" id="1_soq5p"]
+[ext_resource type="Script" uid="uid://dmnobj3wdx2by" path="res://scripts/gui/FloatingResourceBars.cs" id="1_soq5p"]
 
 [sub_resource type="Gradient" id="Gradient_26veb"]
 offsets = PackedFloat32Array(0)

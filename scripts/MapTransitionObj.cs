@@ -2,6 +2,9 @@ using Godot;
 using System;
 
 public partial class MapTransitionObj : Area3D {
+    [Export]
+    public PackedScene sceneToTransitionTo;
+
     private MeshInstance3D outlineMesh;
 
     public override void _Ready() {
@@ -34,7 +37,11 @@ public partial class MapTransitionObj : Area3D {
     public void OnBodyEntered(Node3D body) {
         Player player = (Player)body;
         if (player.TargetedNode == this) {
-            GD.Print("Slay");
+            Game game = (Game)GetTree().Root.GetChild(0);
+            if (sceneToTransitionTo != null) {
+                game.ChangeMap(sceneToTransitionTo);
+            }
+            //GD.Print("Slay");
         }
     }
 }

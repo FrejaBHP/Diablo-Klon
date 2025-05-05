@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://dn73hlfk77c1y"]
 
-[ext_resource type="Script" uid="uid://dj4vk70ft5cgg" path="res://scripts/LowerHUD.cs" id="1_t1baj"]
+[ext_resource type="Script" uid="uid://dj4vk70ft5cgg" path="res://scripts/gui/LowerHUD.cs" id="1_t1baj"]
 [ext_resource type="Texture2D" uid="uid://dw4rlfgcgt3o4" path="res://textures/ui/hud_health.png" id="2_fxhu6"]
 [ext_resource type="Texture2D" uid="uid://b2fn70hn06bsu" path="res://textures/ui/hud_mana.png" id="3_ah43h"]
 [ext_resource type="PackedScene" uid="uid://bbdwncxip1fvn" path="res://scenes/gui/hud_skill_hotbar.tscn" id="3_fxhu6"]

@@ -1,0 +1,36 @@
+[gd_scene load_steps=5 format=3 uid="uid://cd3cosrtp6dgb"]
+
+[ext_resource type="Script" uid="uid://biow08fvexmar" path="res://scripts/maps/MapBase.cs" id="1_6k2x2"]
+[ext_resource type="Script" uid="uid://dd0nmn1ut8mlk" path="res://addons/func_godot/src/map/func_godot_map.gd" id="3_ubqxs"]
+[ext_resource type="Resource" uid="uid://vw6ckbf02x4g" path="res://maps/map_settings.tres" id="4_judmk"]
+
+[sub_resource type="NavigationMesh" id="NavigationMesh_2ie1u"]
+resource_local_to_scene = true
+geometry_collision_mask = 4294967059
+agent_height = 3.0
+agent_radius = 0.25
+
+[node name="BaseMap" type="Node3D"]
+script = ExtResource("1_6k2x2")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, -0.286788, 0.409576, 0, 0.819152, 0.573576, -0.5, 0.496732, -0.709406, 0, 18.5, 0)
+layers = 64
+light_cull_mask = 4293918783
+shadow_enabled = true
+shadow_caster_mask = 4293918735
+directional_shadow_mode = 1
+
+[node name="PlayerSpawn" type="Marker3D" parent="."]
+
+[node name="Enemies" type="Node3D" parent="."]
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 5)
+navigation_mesh = SubResource("NavigationMesh_2ie1u")
+
+[node name="FuncGodotMap" type="Node3D" parent="NavigationRegion3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -5)
+script = ExtResource("3_ubqxs")
+map_settings = ExtResource("4_judmk")
+metadata/_custom_type_script = "uid://dd0nmn1ut8mlk"

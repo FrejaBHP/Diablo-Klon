@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://rilnotgo0i7c"]
 
-[ext_resource type="Script" uid="uid://bix5ey2ty0dqq" path="res://scripts/StatTableEntry.cs" id="1_3nbi1"]
+[ext_resource type="Script" uid="uid://bix5ey2ty0dqq" path="res://scripts/gui/StatTableEntry.cs" id="1_3nbi1"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3nbi1"]
 bg_color = Color(0, 0, 0, 0)

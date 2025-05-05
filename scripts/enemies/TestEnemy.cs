@@ -19,6 +19,6 @@ public partial class TestEnemy : EnemyBase {
         ApplyRegen();
 
         //debugLabel.Text = $"Next Path Pos: {navAgent.GetNextPathPosition().ToString("F2")}\nTarget Pos: {navAgent.TargetPosition.ToString("F2")}\nVelocity Length: {Velocity.Length():F2}";
-        debugLabel.Text = $"Rotation: {GlobalRotationDegrees.ToString("F2")}\nVelocity Length: {Velocity.Length():F2}";
+        //debugLabel.Text = $"Rotation: {GlobalRotationDegrees.ToString("F2")}\nVelocity Length: {Velocity.Length():F2}";
     }
 }
