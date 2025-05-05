@@ -111,3 +111,5 @@ follow_viewport_enabled = true
 [node name="PlayerHUD" parent="CanvasLayer" instance=ExtResource("2_nq0pa")]
 
 [connection signal="timeout" from="AttackTimer" to="." method="OnAttackTimerTimeout"]
+
+[editable path="PlayerCamera"]
