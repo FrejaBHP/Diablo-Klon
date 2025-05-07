@@ -177,6 +177,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 0, 17)
 
 [node name="TestEnemy" parent="Enemies" index="0" instance=ExtResource("1_2ie1u")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 0, 11)
+collision_mask = 7
 
 [node name="NavigationRegion3D" parent="." index="3"]
 navigation_mesh = SubResource("NavigationMesh_q1rmb")

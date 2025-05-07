@@ -39,9 +39,22 @@ public partial class LowerHUD : Control {
         }
     }
 
+    public void UpdateLifeOrb(double newValue) {
+        lifeOrb.Value = newValue;
+        if (lifeLabel.Visible) {
+            lifeLabel.Text = $"{PlayerOwner.BasicStats.CurrentLife:F0} / {PlayerOwner.BasicStats.TotalLife}";
+        }
+    }
+
+    public void UpdateManaOrb(double newValue) {
+        manaOrb.Value = newValue;
+        if (manaLabel.Visible) {
+            manaLabel.Text = $"{PlayerOwner.BasicStats.CurrentMana:F0} / {PlayerOwner.BasicStats.TotalMana}";
+        }
+    }
+
     private void OnLifeOrbEntered() {
         lifeLabel.Visible = true;
-        UpdateOrbs();
     }
 
     private void OnLifeOrbExited() {
@@ -50,7 +63,6 @@ public partial class LowerHUD : Control {
 
     private void OnManaOrbEntered() {
         manaLabel.Visible = true;
-        UpdateOrbs();
     }
 
     private void OnManaOrbExited() {

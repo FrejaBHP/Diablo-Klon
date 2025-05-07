@@ -2,6 +2,8 @@ using Godot;
 using System;
 
 public partial class MapBase : Node3D {
+    protected static readonly PackedScene testEnemyScene = GD.Load<PackedScene>("res://scenes/enemy_test.tscn");
+
     [Signal]
     public delegate void MapReadyEventHandler();
 
@@ -19,7 +21,7 @@ public partial class MapBase : Node3D {
     }
 
     public void ClearEnemies() {
-        foreach (EnemyBase enemy in EnemiesNode.GetChildren()) {
+        foreach (Node enemy in EnemiesNode.GetChildren()) {
             enemy.QueueFree();
         }
     }
@@ -30,5 +32,12 @@ public partial class MapBase : Node3D {
 
     protected void OnMapReady() {
         EmitSignal(SignalName.MapReady);
+    }
+
+    public void Test() {
+        Vector3 spawnPos = NavigationServer3D.MapGetRandomPoint(GetWorld3D().NavigationMap, 1, false);
+        TestEnemy testEnemy = testEnemyScene.Instantiate<TestEnemy>();
+        EnemiesNode.AddChild(testEnemy);
+        testEnemy.GlobalPosition = spawnPos;
     }
 }

@@ -2,7 +2,7 @@ using Godot;
 using System;
 
 public partial class TestAttack : Node3D {
-    private Area3D hitbox;
+    public Area3D Hitbox;
     private CollisionShape3D hitboxCollision;
     private CapsuleShape3D collisionCapsule;
     private Sprite3D effectSprite;
@@ -14,10 +14,10 @@ public partial class TestAttack : Node3D {
     private EDamageCategory dmgCategory;
 
     public override void _Ready() {
-        hitbox = GetNode<Area3D>("Hitbox");
-        hitboxCollision = hitbox.GetNode<CollisionShape3D>("HitCollision");
+        Hitbox = GetNode<Area3D>("Hitbox");
+        hitboxCollision = Hitbox.GetNode<CollisionShape3D>("HitCollision");
         collisionCapsule = hitboxCollision.Shape as CapsuleShape3D;
-        effectSprite = hitbox.GetNode<Sprite3D>("EffectSprite");
+        effectSprite = Hitbox.GetNode<Sprite3D>("EffectSprite");
     }
 
     public void StartAttack(EDamageCategory dmgCat, SkillDamage sDamage, ActorPenetrations sPens, float scale, float range, float speed) {
@@ -25,8 +25,8 @@ public partial class TestAttack : Node3D {
         pens = sPens;
         dmgCategory = dmgCat;
 
-        hitbox.Scale = new Vector3(scale, scale, scale);
-        hitbox.Position = hitbox.Position with { Z = hitbox.Position.Z + (collisionCapsule.Height / 2) * (scale - 1) };
+        Hitbox.Scale = new Vector3(scale, scale, scale);
+        Hitbox.Position = Hitbox.Position with { Z = Hitbox.Position.Z + (collisionCapsule.Height / 2) * (scale - 1) };
         float travelTime = range / speed;
         float travelDistance = range - (collisionCapsule.Height / 2) * (scale - 1);
 
@@ -34,7 +34,7 @@ public partial class TestAttack : Node3D {
         tween.Finished += OnTweenFinished;
 
         tween.SetEase(Tween.EaseType.Out);
-        tween.TweenProperty(hitbox, "position", new Vector3(0f, 0f, travelDistance), travelTime).AsRelative();
+        tween.TweenProperty(Hitbox, "position", new Vector3(0f, 0f, travelDistance), travelTime).AsRelative();
 
         AnimateTween();
     }
@@ -44,9 +44,9 @@ public partial class TestAttack : Node3D {
     }
 
     protected void OnBodyEntered(Node3D body) {
-        if (body.IsInGroup("Enemy")) {
-            Actor enemy = body as Actor;
-            enemy.TakeDamage(dmgCategory, damage, pens, true, damage.IsCritical, true); // Giv støtte til alle typer senere!!
+        if (body.IsInGroup("Enemy") || body.IsInGroup("Player")) {
+            Actor target = body as Actor;
+            target.TakeDamage(dmgCategory, damage, pens, true, damage.IsCritical, true); // Giv støtte til alle typer senere!!
         }
     }
 

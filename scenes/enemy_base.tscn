@@ -23,7 +23,7 @@ size = Vector3(0.1, 0.1, 0.3)
 
 [node name="EnemyBase" type="CharacterBody3D"]
 collision_layer = 32
-collision_mask = 7
+collision_mask = 39
 script = ExtResource("1_fr7lv")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
@@ -50,6 +50,20 @@ target_desired_distance = 0.5
 process_callback = 0
 wait_time = 0.125
 
+[node name="SkillTimer" type="Timer" parent="."]
+process_callback = 0
+one_shot = true
+
+[node name="SkillUsePointTimer" type="Timer" parent="."]
+process_callback = 0
+one_shot = true
+
+[node name="LoSCast" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+enabled = false
+target_position = Vector3(0, 0, 25)
+collision_mask = 4
+
 [node name="Label3D" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
 visible = false
@@ -57,3 +71,5 @@ billboard = 2
 font_size = 48
 
 [connection signal="timeout" from="NavigationUpdateTimer" to="." method="OnNavigationUpdateTimeout"]
+[connection signal="timeout" from="SkillTimer" to="." method="OnSkillTimerTimeout"]
+[connection signal="timeout" from="SkillUsePointTimer" to="." method="OnSkillUsePointTimerTimeout"]

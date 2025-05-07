@@ -5,15 +5,24 @@ public partial class EnemyBase : Actor {
     protected Marker3D resBarAnchor;
     protected NavigationAgent3D navAgent;
     protected Timer navUpdateTimer;
+    protected Timer skillTimer;
+    protected Timer skillUsePointTimer;
+    protected RayCast3D lineOfSightCast;
 
     protected Label3D debugLabel;
 
     protected Actor actorTarget;
     protected bool isChasingTarget = false;
 
+    protected Skill currentlyUsedSkill = null;
+
     public override void _Ready() {
         base._Ready();
+        IsIgnoringWeaponRestrictions = true;
 
+        skillTimer = GetNode<Timer>("SkillTimer");
+        skillUsePointTimer = GetNode<Timer>("SkillUsePointTimer");
+        lineOfSightCast = GetNode<RayCast3D>("LoSCast");
         debugLabel = GetNode<Label3D>("Label3D");
 
         navAgent = GetNode<NavigationAgent3D>("NavigationAgent3D");
@@ -30,11 +39,10 @@ public partial class EnemyBase : Actor {
     }
 
     public void NavSetup() {
-        Game game = (Game)GetTree().Root.GetChild(0);
         navAgent.SetNavigationMap(GetWorld3D().NavigationMap);
         
         // Temp
-        SetActorTarget(game.PlayerActor);
+        SetActorTarget(Game.Instance.PlayerActor);
     }
 
     public override void _PhysicsProcess(double delta) {
@@ -45,6 +53,29 @@ public partial class EnemyBase : Actor {
         if (isChasingTarget && actorTarget != null) {
             SetNavigationTarget(actorTarget.GlobalPosition);
         }
+    }
+
+    protected override void UpdateLifeDisplay(double newCurrentLife) {
+        if (fResBars != null) {
+            fResBars.SetLifePercentage(newCurrentLife / BasicStats.TotalLife);
+        }
+    }
+
+    protected override void UpdateManaDisplay(double newCurrentMana) {
+        if (fResBars != null && BasicStats.TotalMana != 0) {
+            fResBars.SetManaPercentage(newCurrentMana / BasicStats.TotalMana);
+        }
+    }
+
+    public virtual void OnSkillTimerTimeout() {
+        if (ActorState == EActorState.Attacking) {
+            ActorState = EActorState.Actionable;
+            currentlyUsedSkill = null;
+        }
+    }
+
+    public virtual void OnSkillUsePointTimerTimeout() {
+
     }
 
     public void SetActorTarget(Actor target) {
@@ -139,5 +170,11 @@ public partial class EnemyBase : Actor {
     public override void OnNoLifeLeft() {
         QueueFree();
     }
+
+    public void AddSkill(Skill skill) {
+		Skills.Add(skill);
+        skill.ActorOwner = this;
+        skill.UpdateSkillValues();
+	}
 
 }

@@ -1,16 +1,23 @@
 using Godot;
 using System;
 
-public partial class Stat(double baseValue, bool shouldRound) {
+public partial class Stat {
     public delegate void StatTotalChangedEventHandler(double newStatTotal);
     public event StatTotalChangedEventHandler StatTotalChanged;
 
-    public readonly bool ShouldRoundToWholeNumber = shouldRound;
+    public readonly bool ShouldRoundToWholeNumber;
 
     private bool isMinCapped = false;
     private bool isMaxCapped = false;
     private double minValueCap = 0;
     private double maxValueCap = 0;
+
+    private Stat() {}
+
+    public Stat(double baseValue, bool shouldRound) : this() {
+        ShouldRoundToWholeNumber = shouldRound;
+        SBase = baseValue;
+    }
 
     public Stat(double baseValue, bool shouldRound, double minCap) : this(baseValue, shouldRound) {
         SetMinCap(minCap);
@@ -21,8 +28,8 @@ public partial class Stat(double baseValue, bool shouldRound) {
         SetMaxCap(maxCap);
     }
 
-    private double sBase = baseValue;
-	public double SBase {
+    private double sBase;
+    public double SBase {
 		get => sBase;
 		set {
             if (ShouldRoundToWholeNumber) {
@@ -153,6 +160,10 @@ public partial class Stat(double baseValue, bool shouldRound) {
         c.SMore = a.SMore / b.SMore;
 
         return c;
+    }
+
+    public override string ToString() {
+        return $"Base: {SBase}\nAdded: {SAdded}\nInc: {SIncreased}% / More: {SMore}%";
     }
 }
 
@@ -323,6 +334,6 @@ public partial class DamageStat() {
     }
 
     public override string ToString() {
-        return $"MinBase: {SMinBase}\nMaxBase: {SMaxBase}\nMinAdded: {SMinAdded}\nMaxAdded: {sMaxAdded}\nInc: {SIncreased}\nMore: {SMore}";
+        return $"Base: {SMinBase} - {SMaxBase}\nAdded: {SMinAdded} - {sMaxAdded}\nInc: {SIncreased}% / More: {SMore}%";
     }
 }

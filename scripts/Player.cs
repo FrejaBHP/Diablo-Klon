@@ -106,10 +106,13 @@ public partial class Player : Actor {
 	}
 
 	public override void _Ready() {
+		base._Ready();
+
 		playerCamera = GetNode<PlayerCamera>("PlayerCamera");
 		playerCamera.AssignPlayer(this);
 
 		debugLabel = GetNode<Label>("DebugLabel");
+		attackTimer = GetNode<Timer>("AttackTimer");
 		PlayerHUD = GetNode<HUD>("CanvasLayer/PlayerHUD");
 		PlayerHUD.AssignPlayer(this);
 		moveTo = GlobalPosition;
@@ -123,7 +126,7 @@ public partial class Player : Actor {
 		
 		CalculateStats();
 
-		attackTimer = GetNode<Timer>("AttackTimer");
+		AddToGroup("Player");
 	}
 
     public override void _UnhandledInput(InputEvent @event) {
@@ -216,8 +219,10 @@ public partial class Player : Actor {
 			BasicStats.CurrentMana /= 2;
 		}
 		else if (@event.IsActionPressed("DebugRemoveWorlditems")) {
-			Game game = (Game)GetParent();
-			game.RemoveAllWorldItems();
+			Game.Instance.RemoveAllWorldItems();
+		}
+		else if (@event.IsActionPressed("DebugSpawnEnemy")) {
+			Game.Instance.CurrentMap.Test();
 		}
     }
 
@@ -310,7 +315,7 @@ public partial class Player : Actor {
 
     public override void _PhysicsProcess(double delta) {
 		ApplyRegen();
-		PlayerHUD.PlayerLowerHUD.UpdateOrbs();
+		//PlayerHUD.PlayerLowerHUD.UpdateManaOrb();
 
 		if (movementInputMethod == EMovementInputMethod.Keyboard) {
 			ProcessMovementKeyInput();
@@ -458,8 +463,7 @@ public partial class Player : Actor {
 	}
 
 	public void DropItem(WorldItem worldItem) {
-		Game game = (Game)GetParent();
-		game.DropItem(worldItem, GlobalPosition);
+		Game.Instance.DropItem(worldItem, GlobalPosition);
 	}
 
 	public void ApplyItemStats(EquipmentSlot slot, Item item) {
@@ -634,6 +638,16 @@ public partial class Player : Actor {
 			Skills[i].UpdateSkillValues();
 		}
 	}
+
+	protected override void UpdateLifeDisplay(double newCurrentLife) {
+		double newValue = newCurrentLife / BasicStats.TotalLife * 100;
+        PlayerHUD.PlayerLowerHUD.UpdateLifeOrb(newValue);
+    }
+
+	protected override void UpdateManaDisplay(double newCurrentMana) {
+		double newValue = newCurrentMana / BasicStats.TotalMana * 100;
+        PlayerHUD.PlayerLowerHUD.UpdateManaOrb(newValue);
+    }
 
 	public void AssignMainHand(WeaponItem item) {
 		MainHand.Weapon = item;

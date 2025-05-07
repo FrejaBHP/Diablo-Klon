@@ -3,6 +3,8 @@ using System;
 using System.Linq;
 
 public partial class Game : Node3D {
+	public static Game Instance { get; private set; }
+
 	public Player PlayerActor;
 	public MapBase CurrentMap;
 
@@ -13,6 +15,8 @@ public partial class Game : Node3D {
 	private CanvasLayer worldObjectsLayer;
 
 	public override void _Ready() {
+		Instance = this;
+		
 		currentMapNode = GetNode<Node3D>("CurrentMap");
 		mapTown = currentMapNode.GetNode<MapBase>("MapTown");
 		worldObjectsLayer = GetNode<CanvasLayer>("WorldObjects");

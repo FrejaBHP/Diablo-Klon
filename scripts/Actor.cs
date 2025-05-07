@@ -42,7 +42,7 @@ public class ActorBasicStats {
     private int totalLife;
     public int TotalLife { get => totalLife; }
 
-    public delegate void CurrentLifeChangedEventHandler(object sender, double newCurrentLife);
+    public delegate void CurrentLifeChangedEventHandler(double newCurrentLife);
     public event CurrentLifeChangedEventHandler CurrentLifeChanged;
 
     private double currentLife;
@@ -51,12 +51,12 @@ public class ActorBasicStats {
         set {
             if (value >= totalLife) {
                 currentLife = totalLife;
+                CurrentLifeChanged?.Invoke(currentLife);
             }
             else {
                 currentLife = value;
+                CurrentLifeChanged?.Invoke(currentLife);
             }
-
-            CurrentLifeChanged?.Invoke(this, currentLife);
         }
     }
 
@@ -130,6 +130,9 @@ public class ActorBasicStats {
 
     private int totalMana;
     public int TotalMana { get => totalMana; }
+
+    public delegate void CurrentManaChangedEventHandler(double newCurrentMana);
+    public event CurrentManaChangedEventHandler CurrentManaChanged;
     
     private double currentMana;
     public double CurrentMana {
@@ -137,9 +140,11 @@ public class ActorBasicStats {
         set {
             if (value >= totalMana) {
                 currentMana = totalMana;
+                CurrentManaChanged?.Invoke(currentMana);
             }
             else {
                 currentMana = value;
+                CurrentManaChanged?.Invoke(currentMana);
             }
         }
     }
@@ -355,8 +360,6 @@ public partial class Actor : CharacterBody3D {
 
     public float OutgoingEffectAttachmentHeight { get; protected set; } = 1f;
 
-    protected FloatingResourceBars fResBars;
-
     public ActorMainHand MainHand { get; protected set; } = new();
     public Item OffHandItem { get; protected set; } = null;
     public bool IsOffHandAWeapon { get; protected set; } = false;
@@ -366,8 +369,13 @@ public partial class Actor : CharacterBody3D {
     public double UnarmedAttackSpeed { get; protected set; }
     public double UnarmedCritChance { get; protected set; } = 0.05;
 
+    public bool IsIgnoringWeaponRestrictions { get; protected set; } = false;
+
+    protected FloatingResourceBars fResBars;
+
     public override void _Ready() {
         BasicStats.CurrentLifeChanged += OnCurrentLifeChanged;
+        BasicStats.CurrentManaChanged += OnCurrentManaChanged;
         DamageTaken += OnDamageTaken;
         DamageEvaded += OnDamageEvaded;
     }
@@ -395,10 +403,20 @@ public partial class Actor : CharacterBody3D {
         }
     }
 
-    protected void OnCurrentLifeChanged(object sender, double newCurrentLife) {
-        if (fResBars != null) {
-            fResBars.SetLifePercentage(newCurrentLife / BasicStats.TotalLife);
-        }
+    protected void OnCurrentLifeChanged(double newCurrentLife) {
+        UpdateLifeDisplay(newCurrentLife);
+    }
+
+    protected void OnCurrentManaChanged(double newCurrentMana) {
+        UpdateManaDisplay(newCurrentMana);
+    }
+
+    protected virtual void UpdateLifeDisplay(double newCurrentLife) {
+        
+    }
+
+    protected virtual void UpdateManaDisplay(double newCurrentMana) {
+        
     }
 
     public void CalculateHit() {

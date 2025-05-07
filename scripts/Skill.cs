@@ -25,6 +25,8 @@ public abstract class Skill {
     public double SpeedModifier { get; protected set; }
     public double Cooldown { get; protected set; }
 
+    public float CastRange { get; set; } // Mainly intended to be used by the AI to help them walk into range first
+
     public virtual bool CanUseSkill() {
         if (ActorOwner.BasicStats.CurrentMana < ManaCost) {
             return false;
@@ -32,6 +34,9 @@ public abstract class Skill {
         // Indsæt tjek for cooldowns når de bliver implementeret
 
         if (this is IAttack attack) {
+            if (ActorOwner.IsIgnoringWeaponRestrictions) {
+                return true;
+            }
             return attack.AreActorWeaponsCompatible(ActorOwner.MainHand.Weapon, ActorOwner.OffHandItem);
         }
 
@@ -129,6 +134,15 @@ public abstract class Skill {
                 spell.UpdateCastSpeedValues(ActorOwner.CastSpeedMod);
                 return;
             }
+        }
+    }
+
+    public void SetSkillCollision(Area3D collisionArea) {
+        if (ActorOwner.IsInGroup("Enemy")) {
+            collisionArea.CollisionMask = 4;
+        }
+        else if (ActorOwner.IsInGroup("Player")) {
+            collisionArea.CollisionMask = 32;
         }
     }
 
@@ -235,6 +249,14 @@ public interface IAreaSkill {
 }
 
 public class SkillThrust : Skill, IAttack, IMeleeSkill {
+    public ESkillWeapons Weapons { get; set; } = ESkillWeapons.AllMeleeWeapons;
+    public bool CanDualWield { get; set; } = true;
+
+    public Stat BaseAttackSpeedModifiers { get; set; } = new(0, false);
+    public Stat ActiveAttackSpeedModifiers { get; set; } = new(0, false);
+
+    public float BaseAttackRange { get; set; } = 3f;
+
     public SkillThrust() {
         Name = "Thrust";
         Description = "Attacks in a straight line with a melee weapon.";
@@ -250,22 +272,17 @@ public class SkillThrust : Skill, IAttack, IMeleeSkill {
         SpeedModifier = 1;
         Cooldown = 0;
 
+        CastRange = BaseAttackRange;
+
         //BaseDamageModifiers.IncreasedMelee = 0.35;
         //BaseDamageModifiers.MoreMelee = 1.25;
     }
-
-    public ESkillWeapons Weapons { get; set; } = ESkillWeapons.AllMeleeWeapons;
-    public bool CanDualWield { get; set; } = true;
-
-    public Stat BaseAttackSpeedModifiers { get; set; } = new(0, false);
-    public Stat ActiveAttackSpeedModifiers { get; set; } = new(0, false);
-
-    public float BaseAttackRange { get; set; } = 3f;
 
     public override void UseSkill() {
         if (ActorOwner != null) {
             TestAttack testAttack = thrustAttackScene.Instantiate() as TestAttack;
             ActorOwner.GetTree().Root.GetChild(0).AddChild(testAttack);
+            SetSkillCollision(testAttack.Hitbox);
 
             testAttack.GlobalPosition = testAttack.Position with { 
                 X = ActorOwner.GlobalPosition.X, 
@@ -280,6 +297,15 @@ public class SkillThrust : Skill, IAttack, IMeleeSkill {
 }
 
 public class SkillDefaultProjectileAttack : Skill, IAttack, IProjectileSkill {
+    public ESkillWeapons Weapons { get; set; } = ESkillWeapons.AllRangedWeapons;
+    public bool CanDualWield { get; set; } = true;
+
+    public Stat BaseAttackSpeedModifiers { get; set; } = new(0, false);
+    public Stat ActiveAttackSpeedModifiers { get; set; } = new(0, false);
+
+    public float BaseProjectileSpeed { get; set; } = 15f;
+    public float BaseProjectileLifetime { get; set; } = 2f;
+
     public SkillDefaultProjectileAttack() {
         Name = "Default Ranged Attack";
         Description = "A default Attack";
@@ -292,16 +318,9 @@ public class SkillDefaultProjectileAttack : Skill, IAttack, IProjectileSkill {
         AddedDamageModifier = 1;
         SpeedModifier = 1;
         Cooldown = 0;
+
+        CastRange = 10f;
     }
-
-    public ESkillWeapons Weapons { get; set; } = ESkillWeapons.AllRangedWeapons;
-    public bool CanDualWield { get; set; } = true;
-
-    public Stat BaseAttackSpeedModifiers { get; set; } = new(0, false);
-    public Stat ActiveAttackSpeedModifiers { get; set; } = new(0, false);
-
-    public float BaseProjectileSpeed { get; set; } = 15f;
-    public float BaseProjectileLifetime { get; set; } = 2f;
 
     public override void UseSkill() {
         
