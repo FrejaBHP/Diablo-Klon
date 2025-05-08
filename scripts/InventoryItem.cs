@@ -73,7 +73,6 @@ public partial class InventoryItem : PanelContainer {
 		if (!InventoryReference.IsAnItemSelected) {
 			itemBackground.Color = UILib.ColorItemBackground;
 			isHovered = false;
-
 			RemoveTooltip();
 		}
 	}
@@ -325,7 +324,6 @@ public partial class InventoryItem : PanelContainer {
 			tooltipContent.StatsContainer.AddChild(dmgLabel);
 		}
 
-
 		Label descriptionLabel = GenerateDescriptionLabel(skillItem.SkillReference.Description);
 		tooltipContent.DescriptionContainer.AddChild(descriptionLabel);
 
@@ -336,8 +334,7 @@ public partial class InventoryItem : PanelContainer {
 		return tooltipContent;
 	}
 
-
-	protected HBoxContainer GenerateBaseStatLabel(string statName, string statValue, bool highlight) {
+	protected static HBoxContainer GenerateBaseStatLabel(string statName, string statValue, bool highlight) {
 		HBoxContainer labelContainer = new HBoxContainer();
 		labelContainer.SizeFlagsHorizontal = SizeFlags.ShrinkCenter;
 		labelContainer.MouseFilter = MouseFilterEnum.Ignore;
@@ -359,7 +356,7 @@ public partial class InventoryItem : PanelContainer {
 		return labelContainer;
 	}
 
-	protected Label GenerateGreyLabel(string text) {
+	protected static Label GenerateGreyLabel(string text) {
 		Label greyTextLabel = new Label();
 
 		greyTextLabel.Text = text;
@@ -370,7 +367,7 @@ public partial class InventoryItem : PanelContainer {
 		return greyTextLabel;
 	}
 
-	protected Label GenerateAffixLabel(string affixText) {
+	protected static Label GenerateAffixLabel(string affixText) {
 		Label affixTextLabel = new Label();
 
 		affixTextLabel.Text = affixText;
@@ -381,7 +378,7 @@ public partial class InventoryItem : PanelContainer {
 		return affixTextLabel;
 	}
 
-	protected Label GenerateDescriptionLabel(string descriptionText) {
+	protected static Label GenerateDescriptionLabel(string descriptionText) {
 		Label descriptionTextLabel = new Label();
 
 		descriptionTextLabel.CustomMinimumSize = new Vector2(350, 0);

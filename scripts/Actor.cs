@@ -235,7 +235,9 @@ public class ActorBasicStats {
     }
 }
 
-public class DamageModifiers {
+public class DamageModifiers() {
+    //private DamageModifiers(DamageModifiers clone) : this() {}
+
     public DamageStat Physical { get; protected set; } = new();
     public DamageStat Fire { get; protected set; } = new();
     public DamageStat Cold { get; protected set; } = new();
@@ -249,6 +251,17 @@ public class DamageModifiers {
     public double MoreMelee = 1;
     public double MoreRanged = 1;
     public double MoreSpell = 1;
+
+    public DamageModifiers ShallowCopy() {
+        DamageModifiers copy = (DamageModifiers)MemberwiseClone();
+        copy.Physical = Physical.ShallowCopy();
+        copy.Fire = Fire.ShallowCopy();
+        copy.Cold = Cold.ShallowCopy();
+        copy.Lightning = Lightning.ShallowCopy();
+        copy.Chaos = Chaos.ShallowCopy();
+
+        return copy;
+    }
 
     public static DamageModifiers operator +(DamageModifiers a, DamageModifiers b) {
         DamageModifiers c = new DamageModifiers();
@@ -370,6 +383,7 @@ public partial class Actor : CharacterBody3D {
     public double UnarmedCritChance { get; protected set; } = 0.05;
 
     public bool IsIgnoringWeaponRestrictions { get; protected set; } = false;
+    public bool IsIgnoringManaCosts { get; protected set; } = false;
 
     protected FloatingResourceBars fResBars;
 

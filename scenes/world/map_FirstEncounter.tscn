@@ -1,10 +1,11 @@
-[gd_scene load_steps=55 format=4 uid="uid://bpvp03fbnp75y"]
+[gd_scene load_steps=56 format=4 uid="uid://bpvp03fbnp75y"]
 
 [ext_resource type="PackedScene" uid="uid://cd3cosrtp6dgb" path="res://scenes/world/map_base.tscn" id="1_gejkq"]
 [ext_resource type="Material" uid="uid://by4gy6xsypuw5" path="res://textures/world/town/grass.tres" id="2_sd5y0"]
 [ext_resource type="Material" uid="uid://bp04ct06jlqsw" path="res://textures/world/town/stonepavement.tres" id="3_ax1i4"]
 [ext_resource type="Material" uid="uid://dnsadmsl3j1i0" path="res://textures/world/rock_mosaic.tres" id="4_78geg"]
 [ext_resource type="Material" uid="uid://mlqqx7pptscx" path="res://textures/world/stone_brick.tres" id="5_ax1i4"]
+[ext_resource type="PackedScene" uid="uid://btdyjtsk2j8aw" path="res://scenes/map_transition.tscn" id="6_78geg"]
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_yoycs"]
 resource_local_to_scene = true
@@ -611,3 +612,7 @@ occluder = SubResource("ArrayOccluder3D_dmid3")
 
 [node name="entity_16_collision_shape" type="CollisionShape3D" parent="NavigationRegion3D/FuncGodotMap/entity_16_func_geo" index="2"]
 shape = SubResource("ConcavePolygonShape3D_ir4o8")
+
+[node name="MapTransition" parent="." index="4" instance=ExtResource("6_78geg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.5, 7)
+GoesToTown = true

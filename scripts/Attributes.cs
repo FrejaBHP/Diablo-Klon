@@ -122,6 +122,10 @@ public partial class Stat {
         isMaxCapped = false;
     }
 
+    public Stat ShallowCopy() {
+        return (Stat)MemberwiseClone();
+    }
+
     public static Stat operator +(Stat a, Stat b) {
         Stat c = new Stat(a.sBase + b.sBase, a.ShouldRoundToWholeNumber);
 
@@ -295,6 +299,10 @@ public partial class DamageStat() {
         sMinTotal = (sMinBase + sMinAdded) * (1 + sIncreased) * sMore;
         sMaxTotal = (sMaxBase + sMaxAdded) * (1 + sIncreased) * sMore;
         DamageStatsTotalChanged?.Invoke(sMinTotal, sMaxTotal);
+    }
+
+    public DamageStat ShallowCopy() {
+        return (DamageStat)MemberwiseClone();
     }
 
     public static DamageStat operator +(DamageStat a, DamageStat b) {

@@ -19,6 +19,7 @@ public partial class EnemyBase : Actor {
     public override void _Ready() {
         base._Ready();
         IsIgnoringWeaponRestrictions = true;
+        IsIgnoringManaCosts = true;
 
         skillTimer = GetNode<Timer>("SkillTimer");
         skillUsePointTimer = GetNode<Timer>("SkillUsePointTimer");

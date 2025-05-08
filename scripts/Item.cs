@@ -47,7 +47,6 @@ public partial class Item {
 		PlayerOwner = null;
 		WorldItem worldItem = worldItemScene.Instantiate<WorldItem>();
 		worldItem.SetItemReference(this);
-
 		worldItemRef = worldItem;
 
 		if (IsPickedUp) {
@@ -173,7 +172,6 @@ public partial class Item {
 				else {
 					StatDictionary[affix.StatNameFirst] += affix.ValueFirst;
 				}
-				
 			}
 			else {
 				if (affix.IsMultiplicative) {
@@ -182,7 +180,6 @@ public partial class Item {
 				else {
 					StatDictionary[affix.StatNameFirst] -= affix.ValueFirst;
 				}
-				
 
 				if (StatDictionary[affix.StatNameFirst] == 0) {
 					StatDictionary.Remove(affix.StatNameFirst);
@@ -203,7 +200,6 @@ public partial class Item {
 					else {
 						StatDictionary[affix.StatNameSecond] += affix.ValueSecond;
 					}
-					
 				}
 				else {
 					if (affix.IsMultiplicative) {
@@ -213,7 +209,6 @@ public partial class Item {
 						StatDictionary[affix.StatNameSecond] -= affix.ValueSecond;
 					}
 					
-
 					if (StatDictionary[affix.StatNameSecond] == 0) {
 						StatDictionary.Remove(affix.StatNameSecond);
 					}
@@ -264,16 +259,16 @@ public partial class WeaponItem : Item {
 	public int BasePhysicalMaximumDamage;
 	public int AddedPhysicalMinimumDamage = 0;
 	public int AddedPhysicalMaximumDamage = 0;
-	public double PercentageIncreasedPhysicalDamage = 1;
+	public double PercentagePhysicalDamage = 1;
 	public int PhysicalMinimumDamage;
 	public int PhysicalMaximumDamage;
 
 	public double BaseAttackSpeed;
-	public double PercentageIncreasedAttackSpeed = 1;
+	public double PercentageAttackSpeed = 1;
 	public double AttackSpeed;
 
 	public double BaseCriticalStrikeChance;
-	public double PercentageIncreasedCriticalStrikeChance = 1;
+	public double PercentageCriticalStrikeChance = 1;
 	public double CriticalStrikeChance;
 	
 	public WeaponItem() {
@@ -287,12 +282,12 @@ public partial class WeaponItem : Item {
 	}
 
 	public void CalculatePhysicalDamage() {
-		PhysicalMinimumDamage = (int)Math.Round((BasePhysicalMinimumDamage + AddedPhysicalMinimumDamage) * PercentageIncreasedPhysicalDamage, 0);
-		PhysicalMaximumDamage = (int)Math.Round((BasePhysicalMaximumDamage + AddedPhysicalMaximumDamage) * PercentageIncreasedPhysicalDamage, 0);
+		PhysicalMinimumDamage = (int)Math.Round((BasePhysicalMinimumDamage + AddedPhysicalMinimumDamage) * PercentagePhysicalDamage, 0);
+		PhysicalMaximumDamage = (int)Math.Round((BasePhysicalMaximumDamage + AddedPhysicalMaximumDamage) * PercentagePhysicalDamage, 0);
 	}
 
 	public void CalculateAttackSpeed() {
-		AttackSpeed = BaseAttackSpeed / PercentageIncreasedAttackSpeed;
+		AttackSpeed = BaseAttackSpeed / PercentageAttackSpeed;
 	}
 
 	public string GetAttackSpeed() {
@@ -300,7 +295,7 @@ public partial class WeaponItem : Item {
 	}
 
 	public void CalculateCriticalStrikeChance() {
-		CriticalStrikeChance = BaseCriticalStrikeChance * PercentageIncreasedCriticalStrikeChance;
+		CriticalStrikeChance = BaseCriticalStrikeChance * PercentageCriticalStrikeChance;
 	}
 
 	public string GetCritChance() {
@@ -323,30 +318,30 @@ public partial class WeaponItem : Item {
 
 			case EAffixFamily.LocalIncreasedPhysDamage:
 				if (add) {
-					PercentageIncreasedPhysicalDamage += affix.ValueFirst;
+					PercentagePhysicalDamage += affix.ValueFirst;
 				}
 				else {
-					PercentageIncreasedPhysicalDamage -= affix.ValueFirst;
+					PercentagePhysicalDamage -= affix.ValueFirst;
 				}
 				CalculatePhysicalDamage();
 				break;
 
 			case EAffixFamily.LocalIncreasedAttackSpeed:
 				if (add) {
-					PercentageIncreasedAttackSpeed += affix.ValueFirst;
+					PercentageAttackSpeed += affix.ValueFirst;
 				}
 				else {
-					PercentageIncreasedAttackSpeed -= affix.ValueFirst;
+					PercentageAttackSpeed -= affix.ValueFirst;
 				}
 				CalculateAttackSpeed();
 				break;
 
 			case EAffixFamily.LocalIncreasedCritChance:
 				if (add) {
-					PercentageIncreasedCriticalStrikeChance += affix.ValueFirst;
+					PercentageCriticalStrikeChance += affix.ValueFirst;
 				}
 				else {
-					PercentageIncreasedCriticalStrikeChance -= affix.ValueFirst;
+					PercentageCriticalStrikeChance -= affix.ValueFirst;
 				}
 				CalculateCriticalStrikeChance();
 				break;
@@ -363,15 +358,15 @@ public partial class ArmourItem : Item {
 
 	public int BaseArmour;
 	public int AddedArmour;
-	public double IncreasedArmour = 1;
+	public double PercentageArmour = 1;
 	public int Armour;
 	public int BaseEvasion;
 	public int AddedEvasion;
-	public double IncreasedEvasion = 1;
+	public double PercentageEvasion = 1;
 	public int Evasion;
 	public int BaseEnergyShield;
 	public int AddedEnergyShield;
-	public double IncreasedEnergyShield = 1;
+	public double PercentageEnergyShield = 1;
 	public int EnergyShield;
 
 	public ArmourItem() {
@@ -385,9 +380,9 @@ public partial class ArmourItem : Item {
 	}
 
 	public void CalculateDefences() {
-		Armour = (int)Math.Round((BaseArmour + AddedArmour) * IncreasedArmour, 0);
-		Evasion = (int)Math.Round((BaseEvasion + AddedEvasion) * IncreasedEvasion, 0);
-		EnergyShield = (int)Math.Round((BaseEnergyShield + AddedEnergyShield) * IncreasedEnergyShield, 0);
+		Armour = (int)Math.Round((BaseArmour + AddedArmour) * PercentageArmour, 0);
+		Evasion = (int)Math.Round((BaseEvasion + AddedEvasion) * PercentageEvasion, 0);
+		EnergyShield = (int)Math.Round((BaseEnergyShield + AddedEnergyShield) * PercentageEnergyShield, 0);
 
 		StatDictionary[EStatName.FlatArmour] = Armour;
 		StatDictionary[EStatName.FlatEvasion] = Evasion;
@@ -408,10 +403,10 @@ public partial class ArmourItem : Item {
 
 			case EAffixFamily.LocalIncreasedArmour:
 				if (add) {
-					IncreasedArmour += affix.ValueFirst;
+					PercentageArmour += affix.ValueFirst;
 				}
 				else {
-					IncreasedArmour -= affix.ValueFirst;
+					PercentageArmour -= affix.ValueFirst;
 				}
 				CalculateDefences();
 				break;
@@ -428,10 +423,10 @@ public partial class ArmourItem : Item {
 
 			case EAffixFamily.LocalIncreasedEvasion:
 				if (add) {
-					IncreasedEvasion += affix.ValueFirst;
+					PercentageEvasion += affix.ValueFirst;
 				}
 				else {
-					IncreasedEvasion -= affix.ValueFirst;
+					PercentageEvasion -= affix.ValueFirst;
 				}
 				CalculateDefences();
 				break;
@@ -448,10 +443,10 @@ public partial class ArmourItem : Item {
 
 			case EAffixFamily.LocalIncreasedEnergyShield:
 				if (add) {
-					IncreasedEnergyShield += affix.ValueFirst;
+					PercentageEnergyShield += affix.ValueFirst;
 				}
 				else {
-					IncreasedEnergyShield -= affix.ValueFirst;
+					PercentageEnergyShield -= affix.ValueFirst;
 				}
 				CalculateDefences();
 				break;

@@ -66,6 +66,14 @@ public static class AffixDataTables {
 			EAffixItemFlags.Shield,
 			EItemBaseSpecifierFlags.NoFlags
 		),
+		new(typeof(IncreasedRangedDamageAffix), EAffixFamily.IncreasedRangedDamage,
+			EAffixItemFlags.None, // Cannot currently roll on anything. In the future, should roll on quivers or other ranged offhand items
+			EItemBaseSpecifierFlags.NoFlags
+		),
+		new(typeof(IncreasedSpellDamageAffix), EAffixFamily.IncreasedSpellDamage,
+			EAffixItemFlags.None, // Cannot currently roll on anything. In the future, should roll on catalysts or other spell weapons or offhand items
+			EItemBaseSpecifierFlags.NoFlags
+		),
 	];
 
 	public static readonly List<AffixTableType> SuffixData = [

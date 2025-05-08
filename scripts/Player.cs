@@ -94,8 +94,8 @@ public partial class Player : Actor {
 	private double offHandCSC;
 
 	public Player() {
-		BasicStats.BaseLife = 40;
-		BasicStats.BaseMana = 30;
+		BasicStats.BaseLife = 50;
+		BasicStats.BaseMana = 40;
 		MovementSpeed.SBase = 5;
 
 		UnarmedMinDamage = 3;
@@ -149,9 +149,6 @@ public partial class Player : Actor {
 					if (movementInputMethod == EMovementInputMethod.Mouse) {
 						SetDestinationPosition(mbe.GlobalPosition);
 					}
-					//else if (movementInputMethod == EMovementInputMethod.Keyboard) {
-					//	UseSkill(0);
-					//}
 				}
 			}
 			else if (mbe.ButtonIndex == MouseButton.Left && mbe.IsReleased()) {
@@ -315,7 +312,6 @@ public partial class Player : Actor {
 
     public override void _PhysicsProcess(double delta) {
 		ApplyRegen();
-		//PlayerHUD.PlayerLowerHUD.UpdateManaOrb();
 
 		if (movementInputMethod == EMovementInputMethod.Keyboard) {
 			ProcessMovementKeyInput();
@@ -406,18 +402,6 @@ public partial class Player : Actor {
 				case 3: 
 					PlayerHUD.PlayerLowerHUD.GetSkillHotbar().SkillHotbarSlot4.TryUseSkill();
 					break;
-			}
-		}
-	}
-
-	public void TestAttack() {
-		if (ActorState == EActorState.Actionable) {
-			if (Skills.Count > 0) {
-				ActorState = EActorState.Attacking;
-				attackTimer.Start(MainHand.AttackSpeed);
-				Skills[0].UseSkill();
-
-				GD.Print($"Started attack timer with duration {MainHand.AttackSpeed:F2} seconds");
 			}
 		}
 	}

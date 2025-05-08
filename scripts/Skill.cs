@@ -20,17 +20,21 @@ public abstract class Skill {
     public EDamageCategory DamageCategory { get; protected set; }
     public Texture2D Texture { get; protected set; }
 
-    public int ManaCost { get; protected set; }
-    public double AddedDamageModifier { get; protected set; }
-    public double SpeedModifier { get; protected set; }
-    public double Cooldown { get; protected set; }
+    public double ManaCost { get; protected set; } = 0;
+    public float ManaCostMultiplier { get; protected set; } = 1f;
+    public double AddedDamageModifier { get; protected set; } = 1;
+    public double SpeedModifier { get; protected set; } = 1;
+    public double Cooldown { get; protected set; } = 0;
 
     public float CastRange { get; set; } // Mainly intended to be used by the AI to help them walk into range first
 
     public virtual bool CanUseSkill() {
-        if (ActorOwner.BasicStats.CurrentMana < ManaCost) {
-            return false;
+        if (!ActorOwner.IsIgnoringManaCosts) {
+            if (ActorOwner.BasicStats.CurrentMana < ManaCost * ManaCostMultiplier) {
+                return false;
+            }
         }
+        
         // Indsæt tjek for cooldowns når de bliver implementeret
 
         if (this is IAttack attack) {
@@ -51,6 +55,12 @@ public abstract class Skill {
 
     public string GetDamageModifier() {
         return Math.Round(AddedDamageModifier * 100, 0).ToString();
+    }
+
+    public void DeductManaFromActor() {
+        if (!ActorOwner.IsIgnoringManaCosts) {
+            ActorOwner.BasicStats.CurrentMana -= ManaCost * ManaCostMultiplier;
+        }
     }
 
     public SkillDamage RollForDamage(bool canCrit) {
@@ -89,7 +99,41 @@ public abstract class Skill {
 
     public virtual void UpdateSkillValues() {
         if (ActorOwner != null) {
+            // In case it's not enough to separate damage into Base = Skill base damage and Added = Player base damage
+            /*
+            DamageModifiers actorDamageMods = ActorOwner.DamageMods.ShallowCopy();
+
+            if (AddedDamageModifier != 1) {
+                actorDamageMods.Physical.SMinAdded *= AddedDamageModifier;
+                actorDamageMods.Physical.SMaxAdded *= AddedDamageModifier;
+                actorDamageMods.Fire.SMinAdded *= AddedDamageModifier;
+                actorDamageMods.Fire.SMaxAdded *= AddedDamageModifier;
+                actorDamageMods.Cold.SMinAdded *= AddedDamageModifier;
+                actorDamageMods.Cold.SMaxAdded *= AddedDamageModifier;
+                actorDamageMods.Lightning.SMinAdded *= AddedDamageModifier;
+                actorDamageMods.Lightning.SMaxAdded *= AddedDamageModifier;
+                actorDamageMods.Chaos.SMinAdded *= AddedDamageModifier;
+                actorDamageMods.Chaos.SMaxAdded *= AddedDamageModifier;
+            }
+
+            ActiveDamageModifiers = actorDamageMods + BaseDamageModifiers;
+            */
+            
             ActiveDamageModifiers = ActorOwner.DamageMods + BaseDamageModifiers;
+
+            if (AddedDamageModifier != 1) {
+                ActiveDamageModifiers.Physical.SMinAdded *= AddedDamageModifier;
+                ActiveDamageModifiers.Physical.SMaxAdded *= AddedDamageModifier;
+                ActiveDamageModifiers.Fire.SMinAdded *= AddedDamageModifier;
+                ActiveDamageModifiers.Fire.SMaxAdded *= AddedDamageModifier;
+                ActiveDamageModifiers.Cold.SMinAdded *= AddedDamageModifier;
+                ActiveDamageModifiers.Cold.SMaxAdded *= AddedDamageModifier;
+                ActiveDamageModifiers.Lightning.SMinAdded *= AddedDamageModifier;
+                ActiveDamageModifiers.Lightning.SMaxAdded *= AddedDamageModifier;
+                ActiveDamageModifiers.Chaos.SMinAdded *= AddedDamageModifier;
+                ActiveDamageModifiers.Chaos.SMaxAdded *= AddedDamageModifier;
+            }
+
             CriticalStrikeChance = ActorOwner.MainHand.CritChance * ActorOwner.CritChanceMod.STotal;
             CriticalStrikeMulti = ActorOwner.CritMultiplier.STotal;
 
@@ -125,11 +169,13 @@ public abstract class Skill {
             ActiveDamageModifiers.Lightning.SMore *= activeMoreMod;
             ActiveDamageModifiers.Chaos.SMore *= activeMoreMod;
 
+            // Does not contain all variables needed
             if (this is IAttack attack) {
                 attack.UpdateAttackSpeedValues(ActorOwner.AttackSpeedMod);
                 return;
             }
 
+            // Ditto
             if (this is ISpell spell) {
                 spell.UpdateCastSpeedValues(ActorOwner.CastSpeedMod);
                 return;
@@ -267,10 +313,7 @@ public class SkillThrust : Skill, IAttack, IMeleeSkill {
         DamageCategory = EDamageCategory.Melee;
         Texture = UILib.TextureSkillThrust;
 
-        ManaCost = 0;
-        AddedDamageModifier = 1;
-        SpeedModifier = 1;
-        Cooldown = 0;
+        ManaCost = 2;
 
         CastRange = BaseAttackRange;
 
@@ -292,6 +335,8 @@ public class SkillThrust : Skill, IAttack, IMeleeSkill {
             testAttack.GlobalRotation = ActorOwner.GlobalRotation;
 
             testAttack.StartAttack(DamageCategory, RollForDamage(true), ActorOwner.Penetrations, 2f, BaseAttackRange, 25f);
+
+            DeductManaFromActor();
         }
     }
 }
@@ -315,9 +360,6 @@ public class SkillDefaultProjectileAttack : Skill, IAttack, IProjectileSkill {
         DamageCategory = EDamageCategory.Ranged;
         
         ManaCost = 0;
-        AddedDamageModifier = 1;
-        SpeedModifier = 1;
-        Cooldown = 0;
 
         CastRange = 10f;
     }

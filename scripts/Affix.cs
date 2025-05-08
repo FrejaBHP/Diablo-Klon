@@ -502,6 +502,76 @@ public class IncreasedMeleeDamageAffix : Affix {
 	}
 }
 
+public class IncreasedRangedDamageAffix : Affix {
+	private static readonly List<AffixData> increasedRangedDamageAffixData = [
+		new(0, "Ranged1", 
+			0.10, 0.16, 
+			0, 0
+		),
+		new(0, "Ranged2", 
+			0.17, 0.23, 
+			0, 0
+		),
+		new(0, "Ranged3", 
+			0.24, 0.30, 
+			0, 0
+		)
+	];
+
+	public IncreasedRangedDamageAffix() {
+		affixDataTable = increasedRangedDamageAffixData;
+		affixFamily = EAffixFamily.IncreasedRangedDamage;
+		isLocal = false;
+		isMultiplicative = false;
+		statNameFirst = EStatName.IncreasedRangedDamage;
+	}
+
+	public override void RollAffixValue() {
+		if (tierData != null) {
+			valueFirst = Math.Round(Utilities.RandomDouble(tierData.AffixMinFirst, tierData.AffixMaxFirst), 2);
+		}
+	}
+
+	public override string GetAffixTooltipText() {
+		return $"{Math.Round(valueFirst * 100, 0)}% increased Ranged Damage";
+	}
+}
+
+public class IncreasedSpellDamageAffix : Affix {
+	private static readonly List<AffixData> increasedSpellDamageAffixData = [
+		new(0, "Spell1", 
+			0.10, 0.16, 
+			0, 0
+		),
+		new(0, "Spell2", 
+			0.17, 0.23, 
+			0, 0
+		),
+		new(0, "Spell3", 
+			0.24, 0.30, 
+			0, 0
+		)
+	];
+
+	public IncreasedSpellDamageAffix() {
+		affixDataTable = increasedSpellDamageAffixData;
+		affixFamily = EAffixFamily.IncreasedSpellDamage;
+		isLocal = false;
+		isMultiplicative = false;
+		statNameFirst = EStatName.IncreasedSpellDamage;
+	}
+
+	public override void RollAffixValue() {
+		if (tierData != null) {
+			valueFirst = Math.Round(Utilities.RandomDouble(tierData.AffixMinFirst, tierData.AffixMaxFirst), 2);
+		}
+	}
+
+	public override string GetAffixTooltipText() {
+		return $"{Math.Round(valueFirst * 100, 0)}% increased Spell Damage";
+	}
+}
+
 public class IncreasedMovementSpeedAffix : Affix {
 	private static readonly List<AffixData> increasedMovementSpeedAffixData = [
 		new(0, "MS1", 

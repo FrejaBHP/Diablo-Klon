@@ -1,6 +1,5 @@
-[gd_scene load_steps=30 format=4 uid="uid://df1bl15n8wee3"]
+[gd_scene load_steps=29 format=4 uid="uid://df1bl15n8wee3"]
 
-[ext_resource type="PackedScene" uid="uid://csru05s4nyrfq" path="res://scenes/enemy_test.tscn" id="1_2ie1u"]
 [ext_resource type="PackedScene" uid="uid://cd3cosrtp6dgb" path="res://scenes/world/map_base.tscn" id="1_5ewx1"]
 [ext_resource type="PackedScene" uid="uid://btdyjtsk2j8aw" path="res://scenes/map_transition.tscn" id="1_dm2gb"]
 [ext_resource type="Material" uid="uid://by4gy6xsypuw5" path="res://textures/world/town/grass.tres" id="4_cwkjp"]
@@ -175,10 +174,6 @@ points = PackedVector3Array(-6, 0.25, -7, -6, -0.25, -7, 6, -0.25, -7, 6, 0.25, 
 [node name="PlayerSpawn" parent="." index="1"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 0, 17)
 
-[node name="TestEnemy" parent="Enemies" index="0" instance=ExtResource("1_2ie1u")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 0, 11)
-collision_mask = 7
-
 [node name="NavigationRegion3D" parent="." index="3"]
 navigation_mesh = SubResource("NavigationMesh_q1rmb")
 
@@ -286,6 +281,6 @@ occluder = SubResource("ArrayOccluder3D_0dll0")
 [node name="entity_7_brush_0_collision_shape" type="CollisionShape3D" parent="NavigationRegion3D/FuncGodotMap/entity_7_func_worldgeo" index="2"]
 shape = SubResource("ConvexPolygonShape3D_r0uq8")
 
-[node name="TriggerNode" parent="." index="4" instance=ExtResource("1_dm2gb")]
+[node name="MapTransition" parent="." index="4" instance=ExtResource("1_dm2gb")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.5, 17)
-sceneToTransitionTo = ExtResource("7_q7u6e")
+SceneToTransitionTo = ExtResource("7_q7u6e")

@@ -15,8 +15,8 @@ public partial class Game : Node3D {
 	private CanvasLayer worldObjectsLayer;
 
 	public override void _Ready() {
-		Instance = this;
-		
+		Instance = this; // There should possibly only ever be 1 Game instance at any time, so if this somehow results in overrides, lord have mercy
+
 		currentMapNode = GetNode<Node3D>("CurrentMap");
 		mapTown = currentMapNode.GetNode<MapBase>("MapTown");
 		worldObjectsLayer = GetNode<CanvasLayer>("WorldObjects");
@@ -27,8 +27,15 @@ public partial class Game : Node3D {
 
 	public void LoadAndSetMapToTown() {
 		if (!mapTown.IsInsideTree()) {
+			MapBase oldMap = CurrentMap;
+			oldMap.ClearEnemies();
+			
 			currentMapNode.AddChild(mapTown);
 			CurrentMap = mapTown;
+			CurrentMap.AddRegionToNav();
+			OnMapLoaded();
+
+			oldMap.QueueFree();
 		}
 	}
 
@@ -38,11 +45,13 @@ public partial class Game : Node3D {
 		}
 	}
 
-	// Changes the map to a non-town scene. Do not use this for loading the town
+	/// <summary>
+	/// Changes the map to a non-town scene. Do not use this for loading the town.
+	/// </summary>
+	/// <param name="scene"></param>
 	public void ChangeMap(PackedScene scene) {
 		MapBase oldMap = CurrentMap;
-
-		CurrentMap.ClearEnemies();
+		oldMap.ClearEnemies();
 
 		CurrentMap = MapDatabase.GetMap(scene);
 		CurrentMap.MapReady += OnMapLoaded;
@@ -56,12 +65,16 @@ public partial class Game : Node3D {
 		}
 	}
 
+	// Potentially add exception for the town? Just to avoid spawning in the same spot every time no matter where you came from?
 	private void OnMapLoaded() {
 		PlayerActor.ResetNodeTarget();
 		PlayerActor.Velocity = Vector3.Zero;
 		PlayerActor.GlobalPosition = CurrentMap.PlayerSpawnMarker.GlobalPosition;
 	}
 
+	/// <summary>
+	/// Clears all nodes in the WorldObjectsLayer. Do note these are currently global and not map-specific.
+	/// </summary>
 	public void RemoveAllWorldItems() {
         System.Collections.Generic.IEnumerable<Node> worldItems = worldObjectsLayer.GetChildren().Where(c => c.IsInGroup("WorldItem"));
 		foreach (Node item in worldItems) {
