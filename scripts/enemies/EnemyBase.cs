@@ -177,5 +177,4 @@ public partial class EnemyBase : Actor {
         skill.ActorOwner = this;
         skill.UpdateSkillValues();
 	}
-
 }

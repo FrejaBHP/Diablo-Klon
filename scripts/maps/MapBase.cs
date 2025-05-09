@@ -36,6 +36,7 @@ public partial class MapBase : Node3D {
 
     public void Test() {
         Vector3 spawnPos = NavigationServer3D.MapGetRandomPoint(GetWorld3D().NavigationMap, 1, false);
+        spawnPos.Y -= 0.5f;
         TestEnemy testEnemy = testEnemyScene.Instantiate<TestEnemy>();
         EnemiesNode.AddChild(testEnemy);
         testEnemy.GlobalPosition = spawnPos;

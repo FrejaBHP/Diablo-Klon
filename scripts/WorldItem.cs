@@ -2,12 +2,12 @@ using Godot;
 using System;
 
 public partial class WorldItem : StaticBody3D {
-	PackedScene floatingLabelScene = GD.Load<PackedScene>("res://scenes/gui/hud_floating_label.tscn");
+	protected static readonly PackedScene floatingLabelScene = GD.Load<PackedScene>("res://scenes/gui/hud_floating_label.tscn");
 
 	public Item ItemReference = null;
-	private RayCast3D floorCast;
-	private Marker3D labelAnchor;
-	private FloatingLabel floatingLabel;
+	protected RayCast3D floorCast;
+	protected Marker3D labelAnchor;
+	protected FloatingLabel floatingLabel;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready() {

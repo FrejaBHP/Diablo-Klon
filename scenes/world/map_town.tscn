@@ -174,7 +174,11 @@ points = PackedVector3Array(-6, 0.25, -7, -6, -0.25, -7, 6, -0.25, -7, 6, 0.25, 
 [node name="PlayerSpawn" parent="." index="1"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 0, 17)
 
-[node name="NavigationRegion3D" parent="." index="3"]
+[node name="MapTransition" parent="." index="3" instance=ExtResource("1_dm2gb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.5, 17)
+SceneToTransitionTo = ExtResource("7_q7u6e")
+
+[node name="NavigationRegion3D" parent="." index="4"]
 navigation_mesh = SubResource("NavigationMesh_q1rmb")
 
 [node name="FuncGodotMap" parent="NavigationRegion3D" index="0"]
@@ -280,7 +284,3 @@ occluder = SubResource("ArrayOccluder3D_0dll0")
 
 [node name="entity_7_brush_0_collision_shape" type="CollisionShape3D" parent="NavigationRegion3D/FuncGodotMap/entity_7_func_worldgeo" index="2"]
 shape = SubResource("ConvexPolygonShape3D_r0uq8")
-
-[node name="MapTransition" parent="." index="4" instance=ExtResource("1_dm2gb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.5, 17)
-SceneToTransitionTo = ExtResource("7_q7u6e")

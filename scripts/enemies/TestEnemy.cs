@@ -45,9 +45,10 @@ public partial class TestEnemy : EnemyBase {
 
         if (ActorState == EActorState.Actionable) {
             ProcessNavigation();
-            DoGravity(delta);
-            MoveAndSlide();
         }
+
+        DoGravity(delta);
+        MoveAndSlide();
 
         //debugLabel.Text = $"Next Path Pos: {navAgent.GetNextPathPosition().ToString("F2")}\nTarget Pos: {navAgent.TargetPosition.ToString("F2")}\nVelocity Length: {Velocity.Length():F2}";
         //debugLabel.Text = $"Rotation: {GlobalRotationDegrees.ToString("F2")}\nVelocity Length: {Velocity.Length():F2}";
@@ -72,5 +73,10 @@ public partial class TestEnemy : EnemyBase {
         if (currentlyUsedSkill != null && ActorState == EActorState.Attacking) {
             currentlyUsedSkill.UseSkill();
         }
+    }
+
+    public override void OnNoLifeLeft() {
+        Game.Instance.DropGold(3, GlobalPosition);
+        QueueFree();
     }
 }

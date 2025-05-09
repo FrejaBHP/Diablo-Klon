@@ -5,10 +5,7 @@ using System.Linq;
 
 public partial class Player : Actor {
 	public HUD PlayerHUD;
-
-	private const float RayLength = 1000f;
-
-	private EMovementInputMethod movementInputMethod = EMovementInputMethod.Keyboard;
+	public Control PauseMenu;
 
 	public bool MovingTowardsObject = false;
 
@@ -16,26 +13,35 @@ public partial class Player : Actor {
     public Stat Dexterity { get; protected set; } = new(0, true);
     public Stat Intelligence { get; protected set; } = new(0, true);
 
-	private Node3D targetedNode;
-	public Node3D TargetedNode { get => targetedNode; }
+	public Node3D TargetedNode { get; protected set; }
 
-	private Timer attackTimer;
-	private bool isLeftClickHeld = false;
-	private bool isRightClickHeld = false;
-	private bool isSkillInput3Held = false;
-	private bool isSkillInput4Held = false;
+	private int gold = 0;
+	public int Gold { 
+		get => gold; 
+		set {
+			gold = value;
+			GoldCountChanged();
+		} 
+	}
 
-	//private Node3D testSwordNode;
-	//private AnimationPlayer animPlayer;
+	protected const float RayLength = 1000f;
 
-	private PlayerCamera playerCamera;
-	private Label debugLabel;
-	private bool newMouseButtonInput = false;
-	private bool controlsCamera = true;
+	protected EMovementInputMethod movementInputMethod = EMovementInputMethod.Keyboard;
 
-	private Vector2 lastMouseInputPos = new(0, 0);
-	private Vector3 moveTo = new(0, 0, 0);
-	private float remainingDist = 0f;
+	protected Timer attackTimer;
+	protected bool isLeftClickHeld = false;
+	protected bool isRightClickHeld = false;
+	protected bool isSkillInput3Held = false;
+	protected bool isSkillInput4Held = false;
+
+	protected PlayerCamera playerCamera;
+	protected Label debugLabel;
+	protected bool newMouseButtonInput = false;
+	protected bool controlsCamera = true;
+
+	protected Vector2 lastMouseInputPos = new(0, 0);
+	protected Vector3 moveTo = new(0, 0, 0);
+	protected float remainingDist = 0f;
 
 	public Dictionary<EStatName, double> ItemStatDictionary = new() {
 		{ EStatName.FlatStrength, 					0 },
@@ -113,8 +119,9 @@ public partial class Player : Actor {
 
 		debugLabel = GetNode<Label>("DebugLabel");
 		attackTimer = GetNode<Timer>("AttackTimer");
-		PlayerHUD = GetNode<HUD>("CanvasLayer/PlayerHUD");
+		PlayerHUD = GetNode<HUD>("HUDLayer/PlayerHUD");
 		PlayerHUD.AssignPlayer(this);
+		PauseMenu = GetNode<Control>("MenuLayer/PauseMenu");
 		moveTo = GlobalPosition;
 
 		Strength.StatTotalChanged += StrTotalChanged;
@@ -221,18 +228,22 @@ public partial class Player : Actor {
 		else if (@event.IsActionPressed("DebugSpawnEnemy")) {
 			Game.Instance.CurrentMap.Test();
 		}
+		else if (@event.IsActionPressed("Pause")) {
+			GetTree().Paused = true;
+			PauseMenu.Show();
+		}
     }
 
     public void SetDestinationPosition(Vector2 position) {
 		MovingTowardsObject = false;
-		targetedNode = null;
+		TargetedNode = null;
 		lastMouseInputPos = position;
 		newMouseButtonInput = true;
 	}
 
 	public void SetDestinationNode(Node3D node) {
 		MovingTowardsObject = true;
-		targetedNode = node;
+		TargetedNode = node;
 		moveTo = node.GlobalPosition;
 		newMouseButtonInput = true;
 	}
@@ -338,29 +349,32 @@ public partial class Player : Actor {
 		if (movementInputMethod == EMovementInputMethod.Mouse || MovingTowardsObject) {
 			remainingDist = (GlobalPosition with { Y = 0f }).DistanceTo(moveTo with { Y = 0f });
 
-			if (remainingDist <= (float)MovementSpeed.STotal / 100f) {
-				ApplyGroundedVelocity(0f, 0f);
+			if (IsInstanceValid(TargetedNode) && TargetedNode != null) {
+				if (remainingDist <= (float)MovementSpeed.STotal / 100f) {
+					ApplyGroundedVelocity(0f, 0f);
 
-				if (targetedNode != null) {
-					if (targetedNode.IsInGroup("WorldItem")) {
-						WorldItem wi = (WorldItem)targetedNode;
+					if (TargetedNode.IsInGroup("WorldItem")) {
+						WorldItem wi = (WorldItem)TargetedNode;
 						PickupItem(ref wi);
 					}
-					
 					ResetNodeTarget();
+				}
+				else {
+					Vector3 direction = GlobalPosition.DirectionTo(moveTo);
+					ApplyGroundedVelocity(direction.X, direction.Z);
+					
+					Vector3 vecGrounded = Velocity with { Y = 0f };
+					if (vecGrounded.Length() < (float)MovementSpeed.STotal - 0.01f) {
+						if (Velocity.Length() != 0) {
+							float diff = (float)MovementSpeed.STotal / Velocity.Length();
+							Velocity *= diff;
+						}
+					}
 				}
 			}
 			else {
-				Vector3 direction = GlobalPosition.DirectionTo(moveTo);
-				ApplyGroundedVelocity(direction.X, direction.Z);
-				
-				Vector3 vecGrounded = Velocity with { Y = 0f };
-				if (vecGrounded.Length() < (float)MovementSpeed.STotal - 0.01f) {
-					if (Velocity.Length() != 0) {
-						float diff = (float)MovementSpeed.STotal / Velocity.Length();
-						Velocity *= diff;
-					}
-				}
+				ApplyGroundedVelocity(0f, 0f);
+				ResetNodeTarget();
 			}
 		}
 
@@ -427,7 +441,7 @@ public partial class Player : Actor {
 	}
 
 	public void ResetNodeTarget() {
-		targetedNode = null;
+		TargetedNode = null;
 		MovingTowardsObject = false;
 		remainingDist = 0f;
 	}
@@ -657,5 +671,9 @@ public partial class Player : Actor {
 				PlayerHUD.PlayerPanel.OffenceTabPanel.SetOffhandVisibility(false);
 			}
 		}
+	}
+
+	protected void GoldCountChanged() {
+		debugLabel.Text = $"Gold: {Gold}";
 	}
 }

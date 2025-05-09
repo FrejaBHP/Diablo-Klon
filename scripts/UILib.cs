@@ -37,6 +37,11 @@ public static class UILib {
 	public static readonly Texture2D TextureSkillNONE = GD.Load<Texture2D>("res://textures/skills/skill_none.png");
 	public static readonly Texture2D TextureSkillThrust = GD.Load<Texture2D>("res://textures/skills/skill_thrust.png");
 
+	public static readonly Texture2D GoldPileTiny = GD.Load<Texture2D>("res://textures/goldDrop0.png");
+	public static readonly Texture2D GoldPileSmall = GD.Load<Texture2D>("res://textures/goldDrop1.png");
+	public static readonly Texture2D GoldPileMedium = GD.Load<Texture2D>("res://textures/goldDrop2.png");
+	public static readonly Texture2D GoldPileLarge = GD.Load<Texture2D>("res://textures/goldDrop3.png");
+
 	public static readonly Color ColorWhite = Color.Color8(255, 255, 255, 255);
 	public static readonly Color ColorGrey = Color.Color8(150, 150, 150, 255);
 	public static readonly Color ColorBlurple = Color.Color8(100, 100, 190, 255);

@@ -34,7 +34,7 @@ public partial class FloatingLabel : Control {
 		if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == MouseButton.Left && mbe.Pressed) {
 			Player player = camera.GetParent<Player>();
 			if (!player.PlayerHUD.PlayerInventory.IsAnItemSelected) {
-				player.SetDestinationNode(parentAnchor.GetParent<StaticBody3D>());
+				player.SetDestinationNode(parentAnchor.GetParent<Node3D>());
 			}
 		}
 	}
@@ -119,6 +119,7 @@ public partial class FloatingLabel : Control {
 		labelContainer.Visible = true;
 		Rotation = 0;
 
+		/*
 		// Used to display a diagonal arrow when the waypoint is displayed in
 		// one of the screen corners.
 		int overflow = 0;
@@ -146,6 +147,7 @@ public partial class FloatingLabel : Control {
 			labelContainer.Visible = false;
 			Rotation = -overflow;
 		}
+		*/
 	}
 
 	public void SetLabelText(string name, string type) {

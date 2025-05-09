@@ -1,0 +1,33 @@
+[gd_scene load_steps=3 format=3 uid="uid://c0tlij51j4eah"]
+
+[ext_resource type="Script" uid="uid://d1t4kcu75igsm" path="res://scripts/Gold.cs" id="1_62fl5"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jqwkj"]
+size = Vector3(0.4, 0.3, 0.4)
+
+[node name="WorldGold" type="Area3D"]
+collision_layer = 8
+collision_mask = 7
+monitorable = false
+script = ExtResource("1_62fl5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+shape = SubResource("BoxShape3D_jqwkj")
+
+[node name="GoldSprite" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, 0)
+gi_mode = 0
+pixel_size = 0.02
+billboard = 2
+double_sided = false
+texture_filter = 4
+
+[node name="LabelAnchor" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+
+[node name="FloorCast" type="RayCast3D" parent="."]
+target_position = Vector3(0, -5, 0)
+collision_mask = 2
+
+[connection signal="body_entered" from="." to="." method="OnBodyEntered"]

@@ -22,6 +22,8 @@ public partial class Game : Node3D {
 		worldObjectsLayer = GetNode<CanvasLayer>("WorldObjects");
 		PlayerActor = GetNode<Player>("Player");
 		
+		//GameSettings.Instance.ApplyPlayerSettings();
+		
 		CurrentMap = mapTown;
 	}
 
@@ -86,5 +88,18 @@ public partial class Game : Node3D {
 		worldObjectsLayer.AddChild(item);
 		item.GlobalPosition = position with { Y = position.Y + 0.25f };
 		item.PostSpawn();
+	}
+
+	// Skal flyttes senere
+	protected static readonly PackedScene goldScene = GD.Load<PackedScene>("res://scenes/worldgold.tscn");
+	public void DropGold(int baseAmount, Vector3 position) {
+		Gold gold = goldScene.Instantiate<Gold>();
+		worldObjectsLayer.AddChild(gold);
+
+		int goldDropped = (int)Math.Round(Utilities.RandomDouble(baseAmount * 0.75, baseAmount * 1.25), 0);
+		gold.SetAmount(goldDropped);
+
+		gold.GlobalPosition = position with { Y = position.Y + 0.25f };
+		gold.PostSpawn();
 	}
 }

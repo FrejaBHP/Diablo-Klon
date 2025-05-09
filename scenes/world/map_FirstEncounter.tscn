@@ -371,7 +371,11 @@ data = PackedVector3Array(-0.25, 1.5, -12, -0.25, 1.5, 12, -0.25, -1.5, 12, -0.2
 [node name="PlayerSpawn" parent="." index="1"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 12)
 
-[node name="NavigationRegion3D" parent="." index="3"]
+[node name="MapTransition" parent="." index="3" instance=ExtResource("6_78geg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.5, 7)
+GoesToTown = true
+
+[node name="NavigationRegion3D" parent="." index="4"]
 navigation_mesh = SubResource("NavigationMesh_yoycs")
 
 [node name="NavigationObstacle3D" type="NavigationObstacle3D" parent="NavigationRegion3D" index="0"]
@@ -612,7 +616,3 @@ occluder = SubResource("ArrayOccluder3D_dmid3")
 
 [node name="entity_16_collision_shape" type="CollisionShape3D" parent="NavigationRegion3D/FuncGodotMap/entity_16_func_geo" index="2"]
 shape = SubResource("ConcavePolygonShape3D_ir4o8")
-
-[node name="MapTransition" parent="." index="4" instance=ExtResource("6_78geg")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.5, 7)
-GoesToTown = true

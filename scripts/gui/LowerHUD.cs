@@ -3,6 +3,16 @@ using System;
 
 public partial class LowerHUD : Control {
     public Player PlayerOwner { get; protected set; }
+
+    private bool alwaysShowLifeManaValues;
+    public bool AlwaysShowLifeManaValues {
+        get => alwaysShowLifeManaValues;
+        set {
+            alwaysShowLifeManaValues = value;
+            UpdateOrbTextVisibility();
+        }
+    }
+
     private Label lifeLabel;
     private Label manaLabel;
     private TextureProgressBar lifeOrb;
@@ -17,6 +27,8 @@ public partial class LowerHUD : Control {
         manaOrb = GetNode<TextureProgressBar>("RightSide/HBoxContainer/Control/PanelContainer/ManaOrb");
 
         skillHotbar = GetNode<SkillHotbar>("RightSide/HBoxContainer/SkillHotbar");
+
+        AlwaysShowLifeManaValues = GameSettings.Instance.AlwaysShowPlayerLifeAndManaValues;
     }
 
     public void AssignPlayer(Player player) {
@@ -26,17 +38,6 @@ public partial class LowerHUD : Control {
 
     public SkillHotbar GetSkillHotbar() {
         return skillHotbar;
-    }
-
-    public void UpdateOrbs() {
-        lifeOrb.Value = (PlayerOwner.BasicStats.CurrentLife / PlayerOwner.BasicStats.TotalLife) * 100;
-        if (lifeLabel.Visible) {
-            lifeLabel.Text = $"{PlayerOwner.BasicStats.CurrentLife:F0} / {PlayerOwner.BasicStats.TotalLife}";
-        }
-        manaOrb.Value = (PlayerOwner.BasicStats.CurrentMana / PlayerOwner.BasicStats.TotalMana) * 100;
-        if (manaLabel.Visible) {
-            manaLabel.Text = $"{PlayerOwner.BasicStats.CurrentMana:F0} / {PlayerOwner.BasicStats.TotalMana}";
-        }
     }
 
     public void UpdateLifeOrb(double newValue) {
@@ -54,18 +55,39 @@ public partial class LowerHUD : Control {
     }
 
     private void OnLifeOrbEntered() {
-        lifeLabel.Visible = true;
+        if (!AlwaysShowLifeManaValues) {
+            lifeLabel.Text = $"{PlayerOwner.BasicStats.CurrentLife:F0} / {PlayerOwner.BasicStats.TotalLife}";
+            lifeLabel.Visible = true;
+        }
     }
 
     private void OnLifeOrbExited() {
-        lifeLabel.Visible = false;
+        if (!AlwaysShowLifeManaValues) {
+            lifeLabel.Visible = false;
+        }
     }
 
     private void OnManaOrbEntered() {
-        manaLabel.Visible = true;
+        if (!AlwaysShowLifeManaValues) {
+            manaLabel.Text = $"{PlayerOwner.BasicStats.CurrentMana:F0} / {PlayerOwner.BasicStats.TotalMana}";
+            manaLabel.Visible = true;
+        }
     }
 
     private void OnManaOrbExited() {
-        manaLabel.Visible = false;
+        if (!AlwaysShowLifeManaValues) {
+            manaLabel.Visible = false;
+        }
+    }
+
+    private void UpdateOrbTextVisibility() {
+        if (AlwaysShowLifeManaValues) {
+            lifeLabel.Visible = true;
+            manaLabel.Visible = true;
+        }
+        else {
+            lifeLabel.Visible = false;
+            manaLabel.Visible = false;
+        }
     }
 }

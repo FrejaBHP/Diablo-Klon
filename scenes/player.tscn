@@ -1,7 +1,8 @@
-[gd_scene load_steps=11 format=3 uid="uid://dqhy454qpbnlg"]
+[gd_scene load_steps=12 format=3 uid="uid://dqhy454qpbnlg"]
 
 [ext_resource type="Script" uid="uid://pk4sumlpraxb" path="res://scripts/Player.cs" id="1_lgjii"]
 [ext_resource type="PackedScene" uid="uid://bjr2unj1x1myt" path="res://scenes/gui/hud_combined.tscn" id="2_nq0pa"]
+[ext_resource type="PackedScene" uid="uid://doh7gedaau8jh" path="res://scenes/gui/menu_pause.tscn" id="4_dqkch"]
 [ext_resource type="PackedScene" uid="uid://bvbig2y0lfddq" path="res://scenes/player_camera.tscn" id="4_lsgwb"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_cvuyr"]
@@ -105,10 +106,16 @@ spot_range = 6.0
 spot_attenuation = 0.0
 spot_angle = 40.0
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="HUDLayer" type="CanvasLayer" parent="."]
 follow_viewport_enabled = true
 
-[node name="PlayerHUD" parent="CanvasLayer" instance=ExtResource("2_nq0pa")]
+[node name="PlayerHUD" parent="HUDLayer" instance=ExtResource("2_nq0pa")]
+
+[node name="MenuLayer" type="CanvasLayer" parent="."]
+layer = 50
+
+[node name="PauseMenu" parent="MenuLayer" instance=ExtResource("4_dqkch")]
+visible = false
 
 [connection signal="timeout" from="AttackTimer" to="." method="OnAttackTimerTimeout"]
 

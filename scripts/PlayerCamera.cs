@@ -44,7 +44,6 @@ public partial class PlayerCamera : Camera3D {
 
 					MakeColliderMeshTransparent(colliderMesh);
 				}
-				
 			}
 			else {
 				// If colliding with nothing and previously was colliding with a wall, make it opaque
