@@ -6,6 +6,9 @@ public partial class TestEnemy : EnemyBase {
 		BasicStats.BaseLife = 40;
 		BasicStats.BaseMana = 0;
 		RefreshLifeMana();
+
+        goldBounty = 3;
+        experienceBounty = 2;
     }
 
     public override void _Ready() {
@@ -27,7 +30,7 @@ public partial class TestEnemy : EnemyBase {
     }
 
     public override void _PhysicsProcess(double delta) {
-        ApplyRegen();
+        ApplyRegen(delta);
 
         if (isChasingTarget && actorTarget != null) {
             if (GlobalPosition.DistanceTo(actorTarget.GlobalPosition) < Skills[0].CastRange - 0.25f && ActorState != EActorState.Attacking) {
@@ -75,8 +78,5 @@ public partial class TestEnemy : EnemyBase {
         }
     }
 
-    public override void OnNoLifeLeft() {
-        Game.Instance.DropGold(3, GlobalPosition);
-        QueueFree();
-    }
+    //public override void OnNoLifeLeft() {}
 }

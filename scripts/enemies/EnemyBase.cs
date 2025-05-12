@@ -16,6 +16,9 @@ public partial class EnemyBase : Actor {
 
     protected Skill currentlyUsedSkill = null;
 
+    protected int goldBounty = 0;
+    protected int experienceBounty = 0;
+
     public override void _Ready() {
         base._Ready();
         IsIgnoringWeaponRestrictions = true;
@@ -168,8 +171,20 @@ public partial class EnemyBase : Actor {
         damageLabel.Start();
     }
 
-    public override void OnNoLifeLeft() {
+    public void Die() {
+        if (goldBounty > 0) {
+            Game.Instance.DropGold(goldBounty, GlobalPosition);
+        }
+
+        if (experienceBounty > 0) {
+            Game.Instance.AwardExperience(experienceBounty);
+        }
+        
         QueueFree();
+    }
+
+    public override void OnNoLifeLeft() {
+        Die();
     }
 
     public void AddSkill(Skill skill) {

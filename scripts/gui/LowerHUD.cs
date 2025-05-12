@@ -18,15 +18,24 @@ public partial class LowerHUD : Control {
     private TextureProgressBar lifeOrb;
     private TextureProgressBar manaOrb;
 
+    private Label levelLabel;
+    private Label experienceLabel;
+    private int experienceBarMaxValue = 0;
+    private TextureProgressBar experienceBar;
+
     private SkillHotbar skillHotbar;
 
     public override void _Ready() {
-        lifeLabel = GetNode<Label>("LeftSide/Control/LifeLabel");
-        manaLabel = GetNode<Label>("RightSide/HBoxContainer/Control/ManaLabel");
-        lifeOrb = GetNode<TextureProgressBar>("LeftSide/Control/PanelContainer/LifeOrb");
-        manaOrb = GetNode<TextureProgressBar>("RightSide/HBoxContainer/Control/PanelContainer/ManaOrb");
+        lifeLabel = GetNode<Label>("LowerContainer/LeftSide/Control/LifeLabel");
+        manaLabel = GetNode<Label>("LowerContainer/RightSide/HBoxContainer/Control/ManaLabel");
+        lifeOrb = GetNode<TextureProgressBar>("LowerContainer/LeftSide/Control/PanelContainer/LifeOrb");
+        manaOrb = GetNode<TextureProgressBar>("LowerContainer/RightSide/HBoxContainer/Control/PanelContainer/ManaOrb");
 
-        skillHotbar = GetNode<SkillHotbar>("RightSide/HBoxContainer/SkillHotbar");
+        levelLabel = GetNode<Label>("LowerContainer/Control/LevelLabel");
+        experienceLabel = GetNode<Label>("LowerContainer/Control/ExperienceLabel");
+        experienceBar = GetNode<TextureProgressBar>("LowerContainer/Control/ExperienceBar");
+
+        skillHotbar = GetNode<SkillHotbar>("LowerContainer/RightSide/HBoxContainer/SkillHotbar");
 
         AlwaysShowLifeManaValues = GameSettings.Instance.AlwaysShowPlayerLifeAndManaValues;
     }
@@ -89,5 +98,18 @@ public partial class LowerHUD : Control {
             lifeLabel.Visible = false;
             manaLabel.Visible = false;
         }
+    }
+
+    public void UpdateLevelLabel(int newLevel) {
+        levelLabel.Text = $"Level {newLevel}";
+    }
+
+    public void UpdateExperienceBar(double newExp) {
+        experienceLabel.Text = $"{newExp} / {experienceBarMaxValue}";
+        experienceBar.Value = (newExp / experienceBarMaxValue) * 100;
+    }
+
+    public void SetExperienceBarLimit(int newLimit) {
+        experienceBarMaxValue = newLimit;
     }
 }

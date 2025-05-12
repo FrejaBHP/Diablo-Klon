@@ -11,6 +11,8 @@ public partial class MapBase : Node3D {
     public Node3D EnemiesNode { get; protected set; }
     public Marker3D PlayerSpawnMarker { get; protected set; }
 
+    public int AreaLevel = 1;
+
     public override void _Ready() {
         NavRegion = GetNode<NavigationRegion3D>("NavigationRegion3D");
         EnemiesNode = GetNode<Node3D>("Enemies");

@@ -84,6 +84,19 @@ public partial class Game : Node3D {
 		}
 	}
 
+	public void GenerateRandomItemFromCategory(EItemCategory category, Vector3 position) {
+		//int currentAreaLevel = CurrentMap.AreaLevel;
+		Item item = ItemGeneration.GenerateItemFromCategory(category);
+		WorldItem worldItem = item.ConvertToWorldItem();
+		DropItem(worldItem, position);
+	}
+
+	public void GenerateRandomSkillItem(Vector3 position) {
+		Item item = ItemGeneration.GenerateRandomSkillItem();
+		WorldItem worldItem = item.ConvertToWorldItem();
+		DropItem(worldItem, position);
+	}
+
 	public void DropItem(WorldItem item, Vector3 position) {
 		worldObjectsLayer.AddChild(item);
 		item.GlobalPosition = position with { Y = position.Y + 0.25f };
@@ -101,5 +114,9 @@ public partial class Game : Node3D {
 
 		gold.GlobalPosition = position with { Y = position.Y + 0.25f };
 		gold.PostSpawn();
+	}
+
+	public void AwardExperience(double baseAmount) {
+		PlayerActor.GainExperience(baseAmount);
 	}
 }

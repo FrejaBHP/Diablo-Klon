@@ -236,7 +236,7 @@ public partial class Inventory : Control {
 
         item.ClearOccupiedSlots();
         WorldItem worldItem = item.ItemReference.ConvertToWorldItem();
-        PlayerOwner.DropItem(worldItem);
+        PlayerOwner.DropItemOnFloor(worldItem);
     }
 
     public void ToggleInventory() {
@@ -318,7 +318,7 @@ public partial class Inventory : Control {
         slot.RemoveChild(item);
 
         if (!TryAddItemToInventory(ref item)) {
-            PlayerOwner.DropItem(item.ItemReference.ConvertToWorldItem());
+            PlayerOwner.DropItemOnFloor(item.ItemReference.ConvertToWorldItem());
         }
         else {
             item.ToggleClickable();
@@ -335,7 +335,7 @@ public partial class Inventory : Control {
         slot.AddChild(newItem);
 
         if (!TryAddItemToInventory(ref oldItem)) {
-            PlayerOwner.DropItem(oldItem.ItemReference.ConvertToWorldItem());
+            PlayerOwner.DropItemOnFloor(oldItem.ItemReference.ConvertToWorldItem());
         }
         else {
             oldItem.ToggleClickable();

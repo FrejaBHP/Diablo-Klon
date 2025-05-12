@@ -73,7 +73,7 @@ public partial class SkillPanel : Control {
         slot.RemoveChild(item);
         
         if (!PlayerOwner.PlayerHUD.PlayerInventory.TryAddItemToInventory(ref item)) {
-            PlayerOwner.DropItem(item.ItemReference.ConvertToWorldItem());
+            PlayerOwner.DropItemOnFloor(item.ItemReference.ConvertToWorldItem());
         }
         else {
             item.ToggleClickable();

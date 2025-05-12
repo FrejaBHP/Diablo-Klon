@@ -7,13 +7,20 @@ public partial class Player : Actor {
 	public HUD PlayerHUD;
 	public Control PauseMenu;
 
-	public bool MovingTowardsObject = false;
-
 	public Stat Strength { get; protected set; } = new(0, true);
     public Stat Dexterity { get; protected set; } = new(0, true);
     public Stat Intelligence { get; protected set; } = new(0, true);
 
-	public Node3D TargetedNode { get; protected set; }
+	protected int lifeGrowth = 5;
+	protected int manaGrowth = 3;
+
+    public double Experience { get; protected set; } = 0;
+
+    protected int[] experienceRequirements = [
+        10, 12, 14, 17, 20,
+        23, 28, 33, 39, 45,
+        100, 100, 100, 100, 100
+    ];
 
 	private int gold = 0;
 	public int Gold { 
@@ -23,6 +30,9 @@ public partial class Player : Actor {
 			GoldCountChanged();
 		} 
 	}
+
+	public bool MovingTowardsObject = false;
+	public Node3D TargetedNode { get; protected set; }
 
 	protected const float RayLength = 1000f;
 
@@ -130,6 +140,10 @@ public partial class Player : Actor {
 
 		PlayerHUD.PlayerPanel.OffenceTabPanel.SetOffhandVisibility(false);
 		PlayerHUD.PlayerPanel.CharacterLevelLabel.Text = $"Level {ActorLevel} Creature";
+
+		PlayerHUD.PlayerLowerHUD.UpdateLevelLabel(ActorLevel);
+		PlayerHUD.PlayerLowerHUD.SetExperienceBarLimit(experienceRequirements[ActorLevel - 1]);
+		PlayerHUD.PlayerLowerHUD.UpdateExperienceBar(Experience);
 		
 		CalculateStats();
 
@@ -194,29 +208,19 @@ public partial class Player : Actor {
 		}
 		// logik for at spawne items skal flyttes til en mere generel klasse som fx Combat eller Game
 		else if (@event.IsActionPressed("DebugSpawnRandomItem")) {
-			Item item = ItemGeneration.GenerateItemFromCategory(EItemCategory.None);
-			WorldItem worldItem = item.ConvertToWorldItem();
-			DropItem(worldItem);
+			Game.Instance.GenerateRandomItemFromCategory(EItemCategory.None, GlobalPosition);
 		}
 		else if (@event.IsActionPressed("DebugSpawnRandomWeapon")) {
-			Item item = ItemGeneration.GenerateItemFromCategory(EItemCategory.Weapon);
-			WorldItem worldItem = item.ConvertToWorldItem();
-			DropItem(worldItem);
+			Game.Instance.GenerateRandomItemFromCategory(EItemCategory.Weapon, GlobalPosition);
 		}
 		else if (@event.IsActionPressed("DebugSpawnRandomArmour")) {
-			Item item = ItemGeneration.GenerateItemFromCategory(EItemCategory.Armour);
-			WorldItem worldItem = item.ConvertToWorldItem();
-			DropItem(worldItem);
+			Game.Instance.GenerateRandomItemFromCategory(EItemCategory.Armour, GlobalPosition);
 		}
 		else if (@event.IsActionPressed("DebugSpawnRandomJewellery")) {
-			Item item = ItemGeneration.GenerateItemFromCategory(EItemCategory.Jewellery);
-			WorldItem worldItem = item.ConvertToWorldItem();
-			DropItem(worldItem);
+			Game.Instance.GenerateRandomItemFromCategory(EItemCategory.Jewellery, GlobalPosition);
 		}
 		else if (@event.IsActionPressed("DebugSpawnSkillItem")) {
-			Item item = ItemGeneration.GenerateRandomSkillItem();
-			WorldItem worldItem = item.ConvertToWorldItem();
-			DropItem(worldItem);
+			Game.Instance.GenerateRandomSkillItem(GlobalPosition);
 		}
 		else if (@event.IsActionPressed("DebugHalveLifeMana")) {
 			BasicStats.CurrentLife /= 2;
@@ -322,7 +326,7 @@ public partial class Player : Actor {
 	}
 
     public override void _PhysicsProcess(double delta) {
-		ApplyRegen();
+		ApplyRegen(delta);
 
 		if (movementInputMethod == EMovementInputMethod.Keyboard) {
 			ProcessMovementKeyInput();
@@ -460,7 +464,7 @@ public partial class Player : Actor {
 		return true;
 	}
 
-	public void DropItem(WorldItem worldItem) {
+	public void DropItemOnFloor(WorldItem worldItem) {
 		Game.Instance.DropItem(worldItem, GlobalPosition);
 	}
 
@@ -523,6 +527,23 @@ public partial class Player : Actor {
 		IntSpellBonus = Intelligence.STotal / 100;
 	}
 
+	protected void CalculateMaxLifeAndMana() {
+		BasicStats.AddedLife = (int)ItemStatDictionary[EStatName.FlatMaxLife] + (int)StrLifeBonus + (lifeGrowth * (ActorLevel - 1));
+		BasicStats.IncreasedLife = ItemStatDictionary[EStatName.IncreasedMaxLife];
+		BasicStats.AddedMana = (int)ItemStatDictionary[EStatName.FlatMaxMana] + (int)IntManaBonus + (manaGrowth * (ActorLevel - 1));
+		BasicStats.IncreasedMana = ItemStatDictionary[EStatName.IncreasedMaxMana];
+
+		BasicStats.AddedLifeRegen = ItemStatDictionary[EStatName.AddedLifeRegen] + 1;
+		BasicStats.PercentageLifeRegen = ItemStatDictionary[EStatName.PercentageLifeRegen];
+		BasicStats.AddedManaRegen = ItemStatDictionary[EStatName.AddedManaRegen];
+		BasicStats.IncreasedManaRegen = ItemStatDictionary[EStatName.IncreasedManaRegen];
+
+		PlayerHUD.PlayerPanel.LifeContainer.SetValue($"{BasicStats.TotalLife}");
+		PlayerHUD.PlayerPanel.ManaContainer.SetValue($"{BasicStats.TotalMana}");
+		PlayerHUD.PlayerPanel.DefenceTabPanel.LifeRegen.SetValue($"{BasicStats.TotalLifeRegen:F1}");
+		PlayerHUD.PlayerPanel.DefenceTabPanel.ManaRegen.SetValue($"{BasicStats.TotalManaRegen:F1}");
+	}
+
 	protected void CalculateStats() {
 		Strength.SAdded = ItemStatDictionary[EStatName.FlatStrength];
 		UpdateStrBonuses();
@@ -531,15 +552,7 @@ public partial class Player : Actor {
 		Intelligence.SAdded = ItemStatDictionary[EStatName.FlatIntelligence];
 		UpdateIntBonuses();
 
-		BasicStats.AddedLife = (int)ItemStatDictionary[EStatName.FlatMaxLife] + (int)StrLifeBonus;
-		BasicStats.IncreasedLife = ItemStatDictionary[EStatName.IncreasedMaxLife];
-		BasicStats.AddedMana = (int)ItemStatDictionary[EStatName.FlatMaxMana] + (int)IntManaBonus;
-		BasicStats.IncreasedMana = ItemStatDictionary[EStatName.IncreasedMaxMana];
-
-		BasicStats.AddedLifeRegen = ItemStatDictionary[EStatName.AddedLifeRegen] + 1;
-		BasicStats.PercentageLifeRegen = ItemStatDictionary[EStatName.PercentageLifeRegen];
-		BasicStats.AddedManaRegen = ItemStatDictionary[EStatName.AddedManaRegen];
-		BasicStats.IncreasedManaRegen = ItemStatDictionary[EStatName.IncreasedManaRegen];
+		CalculateMaxLifeAndMana();
 
 		AttackSpeedMod.SIncreased = ItemStatDictionary[EStatName.IncreasedAttackSpeed] + DexASBonus;
 		CritChanceMod.SIncreased = ItemStatDictionary[EStatName.IncreasedCritChance];
@@ -609,9 +622,6 @@ public partial class Player : Actor {
 	}
 
 	protected void UpdateStatsPanel() {
-		PlayerHUD.PlayerPanel.LifeContainer.SetValue($"{BasicStats.TotalLife}");
-		PlayerHUD.PlayerPanel.ManaContainer.SetValue($"{BasicStats.TotalMana}");
-
 		PlayerHUD.PlayerPanel.OffenceTabPanel.MainHandPhysDamage.SetValue($"{MainHand.PhysMinDamage} - {MainHand.PhysMaxDamage}");
 		PlayerHUD.PlayerPanel.OffenceTabPanel.MainHandAttackSpeed.SetValue($"{1 / MainHand.AttackSpeed:F2}");
 		PlayerHUD.PlayerPanel.OffenceTabPanel.MainHandCritChance.SetValue($"{MainHand.CritChance * 100:F2}%");
@@ -620,8 +630,6 @@ public partial class Player : Actor {
 		PlayerHUD.PlayerPanel.OffenceTabPanel.OffHandCritChance.SetValue($"{offHandCSC * 100:F2}%");
 		PlayerHUD.PlayerPanel.OffenceTabPanel.CritMulti.SetValue($"{Math.Round(CritMultiplier.STotal, 2) * 100}%");
 
-		PlayerHUD.PlayerPanel.DefenceTabPanel.LifeRegen.SetValue($"{BasicStats.TotalLifeRegen:F1}");
-		PlayerHUD.PlayerPanel.DefenceTabPanel.ManaRegen.SetValue($"{BasicStats.TotalManaRegen:F1}");
 		PlayerHUD.PlayerPanel.DefenceTabPanel.Armour.SetValue($"{Math.Round(Armour.STotal, 0)} / {(1 - GetArmourMitigation(Armour.STotal, ActorLevel)) * 100:F0}%");
 		PlayerHUD.PlayerPanel.DefenceTabPanel.Evasion.SetValue($"{Math.Round(Evasion.STotal, 0)} / {GetEvasionChance(Evasion.STotal, ActorLevel) * 100:F0}%");
 		PlayerHUD.PlayerPanel.DefenceTabPanel.PhysRes.SetValue($"{Resistances.ResPhysical}%");
@@ -675,5 +683,36 @@ public partial class Player : Actor {
 
 	protected void GoldCountChanged() {
 		debugLabel.Text = $"Gold: {Gold}";
+	}
+
+	protected void ExperienceChanged() {
+		PlayerHUD.PlayerLowerHUD.UpdateExperienceBar(Experience);
+	}
+
+	public void GainExperience(double experienceGain) {
+		if (Experience + experienceGain >= experienceRequirements[ActorLevel - 1]) {
+			double overflowExp = Experience + experienceGain - experienceRequirements[ActorLevel - 1];
+			LevelUp();
+			Experience = overflowExp;
+		}
+		else if (Experience + experienceGain < 0) {
+			Experience = 0;
+		}
+		else {
+			Experience += experienceGain;
+		}
+
+		ExperienceChanged();
+	}
+
+	public void LevelUp() {
+		if (ActorLevel < maxLevel) {
+			ActorLevel++;
+			PlayerHUD.PlayerLowerHUD.SetExperienceBarLimit(experienceRequirements[ActorLevel - 1]);
+			PlayerHUD.PlayerLowerHUD.UpdateLevelLabel(ActorLevel);
+			PlayerHUD.PlayerPanel.CharacterLevelLabel.Text = $"Level {ActorLevel} Creature";
+
+			CalculateMaxLifeAndMana();
+		}
 	}
 }

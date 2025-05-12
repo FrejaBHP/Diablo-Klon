@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://dn73hlfk77c1y"]
+[gd_scene load_steps=11 format=3 uid="uid://dn73hlfk77c1y"]
 
 [ext_resource type="Script" uid="uid://dj4vk70ft5cgg" path="res://scripts/gui/LowerHUD.cs" id="1_t1baj"]
 [ext_resource type="Texture2D" uid="uid://dw4rlfgcgt3o4" path="res://textures/ui/hud_health.png" id="2_fxhu6"]
@@ -10,6 +10,20 @@ bg_color = Color(0.6, 0.6, 0.6, 0)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_37rsg"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="Gradient" id="Gradient_fxhu6"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0.529067, 0.529067, 0.529067, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_ah43h"]
+gradient = SubResource("Gradient_fxhu6")
+
+[sub_resource type="Gradient" id="Gradient_ah43h"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0.588235, 0.235294, 0.803922, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_lw6va"]
+gradient = SubResource("Gradient_ah43h")
 
 [node name="LowerHUD" type="Control"]
 layout_mode = 3
@@ -23,95 +37,141 @@ grow_vertical = 0
 mouse_filter = 2
 script = ExtResource("1_t1baj")
 
-[node name="LeftSide" type="PanelContainer" parent="."]
+[node name="LowerContainer" type="HBoxContainer" parent="."]
 layout_mode = 1
-anchors_preset = 2
+anchors_preset = 12
 anchor_top = 1.0
+anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -128.0
-offset_bottom = -128.0
+offset_top = -136.0
+grow_horizontal = 2
 grow_vertical = 0
+
+[node name="LeftSide" type="PanelContainer" parent="LowerContainer"]
+layout_mode = 2
 mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_froqh")
 
-[node name="Control" type="Control" parent="LeftSide"]
+[node name="Control" type="Control" parent="LowerContainer/LeftSide"]
+custom_minimum_size = Vector2(384, 136)
 layout_mode = 2
 
-[node name="LifeLabel" type="Label" parent="LeftSide/Control"]
+[node name="LifeLabel" type="Label" parent="LowerContainer/LeftSide/Control"]
 visible = false
 layout_mode = 1
-anchors_preset = 2
+anchors_preset = -1
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_top = -30.0
+offset_top = -160.0
 offset_right = 136.0
-offset_bottom = -7.0
+offset_bottom = -138.0
 grow_vertical = 0
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 5
 horizontal_alignment = 1
 
-[node name="PanelContainer" type="PanelContainer" parent="LeftSide/Control"]
+[node name="PanelContainer" type="PanelContainer" parent="LowerContainer/LeftSide/Control"]
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 4.0
-offset_top = -4.0
-offset_right = 132.0
-offset_bottom = 124.0
+offset_right = 128.0
+offset_bottom = -4.0
 grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_37rsg")
 
-[node name="LifeOrb" type="TextureProgressBar" parent="LeftSide/Control/PanelContainer"]
+[node name="LifeOrb" type="TextureProgressBar" parent="LowerContainer/LeftSide/Control/PanelContainer"]
 layout_mode = 2
 value = 100.0
 fill_mode = 3
 nine_patch_stretch = true
 texture_progress = ExtResource("2_fxhu6")
 
-[node name="RightSide" type="PanelContainer" parent="."]
+[node name="Control" type="Control" parent="LowerContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LevelLabel" type="Label" parent="LowerContainer/Control"]
 layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -50.0
+offset_top = -38.0
+offset_right = 50.0
+offset_bottom = -40.0
+grow_horizontal = 2
+grow_vertical = 0
+horizontal_alignment = 1
+
+[node name="ExperienceLabel" type="Label" parent="LowerContainer/Control"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -50.0
+offset_top = -35.0
+offset_right = 50.0
+offset_bottom = -15.0
+grow_horizontal = 2
+grow_vertical = 0
+horizontal_alignment = 1
+
+[node name="ExperienceBar" type="TextureProgressBar" parent="LowerContainer/Control"]
+layout_mode = 1
+anchors_preset = -1
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-grow_horizontal = 0
+offset_left = 50.0
+offset_top = -10.0
+offset_right = -50.0
+grow_horizontal = 2
 grow_vertical = 0
+nine_patch_stretch = true
+texture_under = SubResource("GradientTexture1D_ah43h")
+texture_progress = SubResource("GradientTexture1D_lw6va")
+
+[node name="RightSide" type="PanelContainer" parent="LowerContainer"]
+layout_mode = 2
 mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_froqh")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="RightSide"]
+[node name="HBoxContainer" type="HBoxContainer" parent="LowerContainer/RightSide"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="SkillHotbar" parent="RightSide/HBoxContainer" instance=ExtResource("3_fxhu6")]
+[node name="SkillHotbar" parent="LowerContainer/RightSide/HBoxContainer" instance=ExtResource("3_fxhu6")]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="RightSide/HBoxContainer"]
+[node name="Control" type="Control" parent="LowerContainer/RightSide/HBoxContainer"]
 custom_minimum_size = Vector2(136, 136)
 layout_mode = 2
 
-[node name="ManaLabel" type="Label" parent="RightSide/HBoxContainer/Control"]
+[node name="ManaLabel" type="Label" parent="LowerContainer/RightSide/HBoxContainer/Control"]
 visible = false
 layout_mode = 1
-anchors_preset = 3
+anchors_preset = -1
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = -136.0
-offset_top = -158.0
-offset_bottom = -135.0
+offset_top = -160.0
+offset_bottom = -138.0
 grow_horizontal = 0
 grow_vertical = 0
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 5
 horizontal_alignment = 1
 
-[node name="PanelContainer" type="PanelContainer" parent="RightSide/HBoxContainer/Control"]
+[node name="PanelContainer" type="PanelContainer" parent="LowerContainer/RightSide/HBoxContainer/Control"]
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 1
 anchors_preset = -1
@@ -127,14 +187,14 @@ grow_horizontal = 0
 grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_37rsg")
 
-[node name="ManaOrb" type="TextureProgressBar" parent="RightSide/HBoxContainer/Control/PanelContainer"]
+[node name="ManaOrb" type="TextureProgressBar" parent="LowerContainer/RightSide/HBoxContainer/Control/PanelContainer"]
 layout_mode = 2
 value = 100.0
 fill_mode = 3
 nine_patch_stretch = true
 texture_progress = ExtResource("3_ah43h")
 
-[connection signal="mouse_entered" from="LeftSide/Control/PanelContainer" to="." method="OnLifeOrbEntered"]
-[connection signal="mouse_exited" from="LeftSide/Control/PanelContainer" to="." method="OnLifeOrbExited"]
-[connection signal="mouse_entered" from="RightSide/HBoxContainer/Control/PanelContainer" to="." method="OnManaOrbEntered"]
-[connection signal="mouse_exited" from="RightSide/HBoxContainer/Control/PanelContainer" to="." method="OnManaOrbExited"]
+[connection signal="mouse_entered" from="LowerContainer/LeftSide/Control/PanelContainer" to="." method="OnLifeOrbEntered"]
+[connection signal="mouse_exited" from="LowerContainer/LeftSide/Control/PanelContainer" to="." method="OnLifeOrbExited"]
+[connection signal="mouse_entered" from="LowerContainer/RightSide/HBoxContainer/Control/PanelContainer" to="." method="OnManaOrbEntered"]
+[connection signal="mouse_exited" from="LowerContainer/RightSide/HBoxContainer/Control/PanelContainer" to="." method="OnManaOrbExited"]

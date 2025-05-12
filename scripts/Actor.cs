@@ -30,7 +30,7 @@ public class ActorBasicStats {
         }
     }
 
-    private double moreLife;
+    private double moreLife = 1;
     public double MoreLife {
         get { return moreLife; }
         set { 
@@ -119,7 +119,7 @@ public class ActorBasicStats {
         }
     }
 
-    private double moreMana;
+    private double moreMana = 1;
     public double MoreMana {
         get => moreMana;
         set {
@@ -174,7 +174,7 @@ public class ActorBasicStats {
 
     public void CalculateMaxLife() {
         int oldTotalLife = totalLife;
-        totalLife = (int)((baseLife + addedLife) * (1 + increasedLife) * (1 + moreLife));
+        totalLife = (int)((baseLife + addedLife) * (1 + increasedLife) * moreLife);
 
         if (oldTotalLife != 0) {
             AdjustCurrentLife(oldTotalLife);
@@ -221,7 +221,7 @@ public class ActorBasicStats {
 
     public void CalculateMaxMana() {
         int oldTotalMana = totalMana;
-        totalMana = (int)((baseMana + addedMana) * (1 + increasedMana) * (1 + moreMana));
+        totalMana = (int)((baseMana + addedMana) * (1 + increasedMana) * moreMana);
 
         if (oldTotalMana != 0) {
             AdjustCurrentMana(oldTotalMana);
@@ -346,14 +346,16 @@ public partial class Actor : CharacterBody3D {
     [Signal]
     public delegate void DamageEvadedEventHandler();
 
-    protected PackedScene floatingResourceBarsScene = GD.Load<PackedScene>("res://scenes/gui/actor_floating_resource_bars.tscn");
+    protected static readonly PackedScene floatingResourceBarsScene = GD.Load<PackedScene>("res://scenes/gui/actor_floating_resource_bars.tscn");
 
-    protected int ticksPerSecond = ProjectSettings.GetSetting("physics/common/physics_ticks_per_second").AsInt32();
-    public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
+    //protected int ticksPerSecond = ProjectSettings.GetSetting("physics/common/physics_ticks_per_second").AsInt32();
+    public readonly float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 
     public List<Skill> Skills = new List<Skill>();
 
     public int ActorLevel = 1;
+    protected int maxLevel = 15;
+
     public Stat Armour = new(0, true, 0);
     public Stat Evasion = new(0, true, 0);
 
@@ -368,6 +370,7 @@ public partial class Actor : CharacterBody3D {
     public Stat CritChanceMod = new(1, false);
     public Stat CritMultiplier = new(1.5, false, 0);
     public Stat CastSpeedMod = new(1, false);
+    public Stat ExperienceMod = new(1, false, 0);
 
     public Stat MovementSpeed = new(0, false, 0);
 
@@ -442,10 +445,10 @@ public partial class Actor : CharacterBody3D {
         BasicStats.CurrentMana = BasicStats.TotalMana;
     }
 
-    protected void ApplyRegen() {
+    protected void ApplyRegen(double delta) {
         double prevLife = BasicStats.CurrentLife;
-        BasicStats.CurrentLife += BasicStats.TotalLifeRegen / ticksPerSecond;
-        BasicStats.CurrentMana += BasicStats.TotalManaRegen / ticksPerSecond;
+        BasicStats.CurrentLife += BasicStats.TotalLifeRegen * delta;
+        BasicStats.CurrentMana += BasicStats.TotalManaRegen * delta;
 
         if (BasicStats.CurrentLife > prevLife) {
             //GD.Print($"+{BasicStats.CurrentLife - prevLife}");

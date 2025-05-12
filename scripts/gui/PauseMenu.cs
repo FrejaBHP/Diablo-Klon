@@ -4,10 +4,18 @@ using System;
 public partial class PauseMenu : Control {
     protected static readonly PackedScene settingsMenuScene = GD.Load<PackedScene>("res://scenes/gui/menu_settings.tscn");
 
-    protected Control pauseMenuControl;
+    protected Control pauseMenuLeftControl;
+    protected Control pauseMenuRightControl;
+    protected Panel blurPanel;
+
+    protected bool isSettingsOpen = false;
 
     public override void _Ready() {
-        pauseMenuControl = GetNode<Control>("Control");
+        pauseMenuLeftControl = GetNode<Control>("MenuControl/MenuLeft");
+        pauseMenuRightControl = GetNode<Control>("MenuControl/MenuRight");
+
+        // BlurPanel virker ikke 100% efter hensigten og udvisker også verdenen bag sig
+        blurPanel = GetNode<Panel>("MenuControl/BlurPanel");
     }
 
     public override void _UnhandledKeyInput(InputEvent @event) {
@@ -19,13 +27,17 @@ public partial class PauseMenu : Control {
 
     public void OnSettingsPressed() {
         SettingsMenu settingsMenu = settingsMenuScene.Instantiate<SettingsMenu>();
-        pauseMenuControl.Hide();
-        AddChild(settingsMenu);
+        isSettingsOpen = true;
+        blurPanel.Show();
+        pauseMenuRightControl.AddChild(settingsMenu);
+        pauseMenuRightControl.Show();
         settingsMenu.Back += OnSettingsClosed;
     }
 
     public void OnSettingsClosed() {
-        pauseMenuControl.Show();
+        isSettingsOpen = false;
+        blurPanel.Hide();
+        pauseMenuRightControl.Hide();
     }
 
     public void OnResumePressed() {
