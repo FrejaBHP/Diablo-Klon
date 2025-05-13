@@ -18,6 +18,7 @@ public partial class LowerHUD : Control {
     private TextureProgressBar lifeOrb;
     private TextureProgressBar manaOrb;
 
+    private Label goldLabel;
     private Label levelLabel;
     private Label experienceLabel;
     private int experienceBarMaxValue = 0;
@@ -26,11 +27,12 @@ public partial class LowerHUD : Control {
     private SkillHotbar skillHotbar;
 
     public override void _Ready() {
-        lifeLabel = GetNode<Label>("LowerContainer/LeftSide/Control/LifeLabel");
+        lifeLabel = GetNode<Label>("LowerContainer/LeftSide/HBoxContainer/Control/LifeLabel");
         manaLabel = GetNode<Label>("LowerContainer/RightSide/HBoxContainer/Control/ManaLabel");
-        lifeOrb = GetNode<TextureProgressBar>("LowerContainer/LeftSide/Control/PanelContainer/LifeOrb");
+        lifeOrb = GetNode<TextureProgressBar>("LowerContainer/LeftSide/HBoxContainer/Control/PanelContainer/LifeOrb");
         manaOrb = GetNode<TextureProgressBar>("LowerContainer/RightSide/HBoxContainer/Control/PanelContainer/ManaOrb");
 
+        goldLabel = GetNode<Label>("LowerContainer/LeftSide/HBoxContainer/GoldLabel");
         levelLabel = GetNode<Label>("LowerContainer/Control/LevelLabel");
         experienceLabel = GetNode<Label>("LowerContainer/Control/ExperienceLabel");
         experienceBar = GetNode<TextureProgressBar>("LowerContainer/Control/ExperienceBar");
@@ -98,6 +100,10 @@ public partial class LowerHUD : Control {
             lifeLabel.Visible = false;
             manaLabel.Visible = false;
         }
+    }
+
+    public void SetGoldAmount(int newGold) {
+        goldLabel.Text = $"Gold: {newGold}";
     }
 
     public void UpdateLevelLabel(int newLevel) {

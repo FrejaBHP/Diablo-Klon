@@ -36,7 +36,7 @@ public partial class SkillSlotActive : Control {
 
 	public void GUIInput(InputEvent @event) {
 		// On left-click
-		if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == MouseButton.Left && mbe.Pressed) {
+		if (@event.IsActionPressed("LeftClick")) {
 			if (InventoryReference.IsAnItemSelected && InventoryReference.SelectedItem.ItemReference.ItemAllBaseType == EItemAllBaseType.SkillActive) {
 				if (itemInSlot == null) {
 					SetSkill(InventoryReference.SelectedItem);

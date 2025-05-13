@@ -46,7 +46,7 @@ public partial class InventoryItem : PanelContainer {
 	}
 
 	public void GUIInput(InputEvent @event) {
-		if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == MouseButton.Left && mbe.Pressed) {
+		if (@event.IsActionPressed("LeftClick")) {
 			if (!IsClicked) {
 				InventoryReference.ItemClickSelect(this);
 				RemoveTooltip();

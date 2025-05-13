@@ -3,16 +3,26 @@ using System;
 using System.Linq;
 
 public partial class Game : Node3D {
+	protected static readonly PackedScene goldScene = GD.Load<PackedScene>("res://scenes/worldgold.tscn");
+	protected static readonly PackedScene mapTransScene = GD.Load<PackedScene>("res://scenes/map_transition.tscn");
+
 	public static Game Instance { get; private set; }
 
 	public Player PlayerActor;
 	public MapBase CurrentMap;
+
+	public int CurrentAct { get; protected set; } = 1;
+	public int CurrentArea { get; protected set; } = 1;
 
 	private PlayerCamera playerCam;
 	private Node3D currentMapNode;
 	private MapBase mapTown; // Husk at lave en speciel klasse til Town
 
 	private CanvasLayer worldObjectsLayer;
+
+	private EnemyWave activeWave = null;
+	private int enemiesToSpawn = 0;
+	private int activeEnemies = 0;
 
 	public override void _Ready() {
 		Instance = this; // There should possibly only ever be 1 Game instance at any time, so if this somehow results in overrides, lord have mercy
@@ -25,6 +35,8 @@ public partial class Game : Node3D {
 		//GameSettings.Instance.ApplyPlayerSettings();
 		
 		CurrentMap = mapTown;
+
+		SetEnemyWave(EnemyDatabase.TestWave);
 	}
 
 	public void LoadAndSetMapToTown() {
@@ -65,6 +77,8 @@ public partial class Game : Node3D {
 		else {
 			oldMap.QueueFree();
 		}
+
+		SetEnemyWave(EnemyDatabase.TestWave);
 	}
 
 	// Potentially add exception for the town? Just to avoid spawning in the same spot every time no matter where you came from?
@@ -103,8 +117,6 @@ public partial class Game : Node3D {
 		item.PostSpawn();
 	}
 
-	// Skal flyttes senere
-	protected static readonly PackedScene goldScene = GD.Load<PackedScene>("res://scenes/worldgold.tscn");
 	public void DropGold(int baseAmount, Vector3 position) {
 		Gold gold = goldScene.Instantiate<Gold>();
 		worldObjectsLayer.AddChild(gold);
@@ -118,5 +130,46 @@ public partial class Game : Node3D {
 
 	public void AwardExperience(double baseAmount) {
 		PlayerActor.GainExperience(baseAmount);
+	}
+
+	public void SetEnemyWave(EnemyWave wave) {
+		activeWave = wave.ShallowCopy();
+		enemiesToSpawn = activeWave.GetWaveSpawnCount();
+	}
+
+	// Spawns all enemies from a wave at once
+	public void Test() {
+		foreach (EnemyWaveComponent comp in activeWave.WaveComponents) {
+			for (int i = 0; i < comp.EnemyCount; i++) {
+				Vector3 spawnPos = NavigationServer3D.MapGetRandomPoint(GetWorld3D().NavigationMap, 1, false);
+				spawnPos.Y -= 0.5f;
+				EnemyBase enemy = comp.EnemyScene.Instantiate<EnemyBase>();
+				CurrentMap.EnemiesNode.AddChild(enemy);
+				enemy.GlobalPosition = spawnPos;
+
+				enemiesToSpawn--;
+				activeEnemies++;
+				enemy.EnemyDied += DecrementEnemyCount;
+			}
+		}
+    }
+
+	public void DecrementEnemyCount() {
+		activeEnemies--;
+
+		if (CurrentMap != mapTown && activeEnemies == 0 && enemiesToSpawn == 0) {
+			TestSpawnMapTrans();
+		}
+	}
+
+	public void TestSpawnMapTrans() {
+		MapTransitionObj transObj = mapTransScene.Instantiate<MapTransitionObj>();
+		CurrentMap.AddChild(transObj);
+		transObj.SceneToTransitionTo = MapDatabase.FEScene;
+		transObj.GoesToTown = false;
+
+		Vector3 newPos = CurrentMap.PlayerSpawnMarker.GlobalPosition;
+		newPos.Y += 0.5f;
+		transObj.GlobalPosition = newPos;
 	}
 }

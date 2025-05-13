@@ -44,7 +44,7 @@ public partial class SkillHotbarSlot : Control {
     }
 
     public void GUIInput(InputEvent @event) {
-        if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == MouseButton.Left && mbe.Pressed) {
+        if (@event.IsActionPressed("LeftClick")) {
             EmitSignal(SignalName.SkillSlotClicked, this);
         }
     }

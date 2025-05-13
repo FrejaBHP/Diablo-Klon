@@ -2,8 +2,6 @@ using Godot;
 using System;
 
 public partial class MapBase : Node3D {
-    protected static readonly PackedScene testEnemyScene = GD.Load<PackedScene>("res://scenes/enemy_test.tscn");
-
     [Signal]
     public delegate void MapReadyEventHandler();
 
@@ -11,6 +9,8 @@ public partial class MapBase : Node3D {
     public Node3D EnemiesNode { get; protected set; }
     public Marker3D PlayerSpawnMarker { get; protected set; }
 
+    // For the future when item level will be set and matter
+    // Maybe I'll even add enemy scaling
     public int AreaLevel = 1;
 
     public override void _Ready() {
@@ -34,13 +34,5 @@ public partial class MapBase : Node3D {
 
     protected void OnMapReady() {
         EmitSignal(SignalName.MapReady);
-    }
-
-    public void Test() {
-        Vector3 spawnPos = NavigationServer3D.MapGetRandomPoint(GetWorld3D().NavigationMap, 1, false);
-        spawnPos.Y -= 0.5f;
-        TestEnemy testEnemy = testEnemyScene.Instantiate<TestEnemy>();
-        EnemiesNode.AddChild(testEnemy);
-        testEnemy.GlobalPosition = spawnPos;
     }
 }

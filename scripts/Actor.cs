@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Godot;
 
@@ -499,11 +500,13 @@ public partial class Actor : CharacterBody3D {
     }
 
     public static double GetArmourMitigation(double armour, int level) {
-        return 200 / (200 + armour - (20 * (level - 1)));
+        //return Math.Clamp(200 / (200 + armour - (20 * (level - 1))), 0, 1);
+        return Math.Clamp(200 / (200 + (armour * Math.Pow(0.96, level - 1))), 0, 1);
     }
 
     public static double GetEvasionChance(double evasion, int level) {
-        return 1 - (200 / (200 + evasion - (20 * (level - 1))));
+        //return Math.Clamp(1 - (200 / (200 + evasion - (20 * (level - 1)))), 0, 1);
+        return Math.Clamp(1 - (200 / (200 + (evasion * Math.Pow(0.96, level - 1)))), 0, 1);
     }
 
     public static bool RollForEvade(double chance) {
@@ -512,7 +515,6 @@ public partial class Actor : CharacterBody3D {
         if (chance >= evasionRoll) {
             return true;
         }
-
         return false;
     }
 

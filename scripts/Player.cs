@@ -141,6 +141,7 @@ public partial class Player : Actor {
 		PlayerHUD.PlayerPanel.OffenceTabPanel.SetOffhandVisibility(false);
 		PlayerHUD.PlayerPanel.CharacterLevelLabel.Text = $"Level {ActorLevel} Creature";
 
+		PlayerHUD.PlayerLowerHUD.SetGoldAmount(Gold);
 		PlayerHUD.PlayerLowerHUD.UpdateLevelLabel(ActorLevel);
 		PlayerHUD.PlayerLowerHUD.SetExperienceBarLimit(experienceRequirements[ActorLevel - 1]);
 		PlayerHUD.PlayerLowerHUD.UpdateExperienceBar(Experience);
@@ -153,7 +154,7 @@ public partial class Player : Actor {
     public override void _UnhandledInput(InputEvent @event) {
         if (@event is InputEventMouseButton mbe) {
 			// On left click outside of UI elements
-			if (mbe.ButtonIndex == MouseButton.Left && mbe.Pressed) {
+			if (@event.IsActionPressed("LeftClick")) {
 				if (PlayerHUD.PlayerLowerHUD.GetSkillHotbar().IsSkillBeingSelected) {
 					PlayerHUD.PlayerLowerHUD.GetSkillHotbar().DestroySkillAssignmentMenu();
 				}
@@ -172,13 +173,13 @@ public partial class Player : Actor {
 					}
 				}
 			}
-			else if (mbe.ButtonIndex == MouseButton.Left && mbe.IsReleased()) {
+			else if (@event.IsActionReleased("LeftClick")) {
 				isLeftClickHeld = false;
 			}
-			else if (mbe.ButtonIndex == MouseButton.Right && mbe.IsPressed()) {
+			else if (@event.IsActionPressed("RightClick")) {
 				isRightClickHeld = true;
 			}
-			else if (mbe.ButtonIndex == MouseButton.Right && mbe.IsReleased()) {
+			else if (@event.IsActionReleased("RightClick")) {
 				isRightClickHeld = false;
 			}
 		}
@@ -206,7 +207,6 @@ public partial class Player : Actor {
 		else if (@event.IsActionReleased("SkillInput4")) {
 			isSkillInput4Held = false;
 		}
-		// logik for at spawne items skal flyttes til en mere generel klasse som fx Combat eller Game
 		else if (@event.IsActionPressed("DebugSpawnRandomItem")) {
 			Game.Instance.GenerateRandomItemFromCategory(EItemCategory.None, GlobalPosition);
 		}
@@ -230,7 +230,7 @@ public partial class Player : Actor {
 			Game.Instance.RemoveAllWorldItems();
 		}
 		else if (@event.IsActionPressed("DebugSpawnEnemy")) {
-			Game.Instance.CurrentMap.Test();
+			Game.Instance.Test();
 		}
 		else if (@event.IsActionPressed("Pause")) {
 			GetTree().Paused = true;
@@ -682,7 +682,7 @@ public partial class Player : Actor {
 	}
 
 	protected void GoldCountChanged() {
-		debugLabel.Text = $"Gold: {Gold}";
+		PlayerHUD.PlayerLowerHUD.SetGoldAmount(Gold);
 	}
 
 	protected void ExperienceChanged() {
@@ -713,6 +713,8 @@ public partial class Player : Actor {
 			PlayerHUD.PlayerPanel.CharacterLevelLabel.Text = $"Level {ActorLevel} Creature";
 
 			CalculateMaxLifeAndMana();
+			PlayerHUD.PlayerPanel.DefenceTabPanel.Armour.SetValue($"{Math.Round(Armour.STotal, 0)} / {(1 - GetArmourMitigation(Armour.STotal, ActorLevel)) * 100:F0}%");
+			PlayerHUD.PlayerPanel.DefenceTabPanel.Evasion.SetValue($"{Math.Round(Evasion.STotal, 0)} / {GetEvasionChance(Evasion.STotal, ActorLevel) * 100:F0}%");
 		}
 	}
 }

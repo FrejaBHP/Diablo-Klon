@@ -2,6 +2,9 @@ using Godot;
 using System;
 
 public partial class EnemyBase : Actor {
+    [Signal]
+    public delegate void EnemyDiedEventHandler();
+
     protected Marker3D resBarAnchor;
     protected NavigationAgent3D navAgent;
     protected Timer navUpdateTimer;
@@ -180,6 +183,7 @@ public partial class EnemyBase : Actor {
             Game.Instance.AwardExperience(experienceBounty);
         }
         
+        EmitSignal(SignalName.EnemyDied);
         QueueFree();
     }
 

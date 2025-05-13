@@ -52,11 +52,16 @@ layout_mode = 2
 mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_froqh")
 
-[node name="Control" type="Control" parent="LowerContainer/LeftSide"]
+[node name="HBoxContainer" type="HBoxContainer" parent="LowerContainer/LeftSide"]
 custom_minimum_size = Vector2(384, 136)
 layout_mode = 2
+theme_override_constants/separation = 20
 
-[node name="LifeLabel" type="Label" parent="LowerContainer/LeftSide/Control"]
+[node name="Control" type="Control" parent="LowerContainer/LeftSide/HBoxContainer"]
+custom_minimum_size = Vector2(136, 136)
+layout_mode = 2
+
+[node name="LifeLabel" type="Label" parent="LowerContainer/LeftSide/HBoxContainer/Control"]
 visible = false
 layout_mode = 1
 anchors_preset = -1
@@ -70,7 +75,7 @@ theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 5
 horizontal_alignment = 1
 
-[node name="PanelContainer" type="PanelContainer" parent="LowerContainer/LeftSide/Control"]
+[node name="PanelContainer" type="PanelContainer" parent="LowerContainer/LeftSide/HBoxContainer/Control"]
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 1
 anchors_preset = -1
@@ -82,12 +87,17 @@ offset_bottom = -4.0
 grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_37rsg")
 
-[node name="LifeOrb" type="TextureProgressBar" parent="LowerContainer/LeftSide/Control/PanelContainer"]
+[node name="LifeOrb" type="TextureProgressBar" parent="LowerContainer/LeftSide/HBoxContainer/Control/PanelContainer"]
 layout_mode = 2
 value = 100.0
 fill_mode = 3
 nine_patch_stretch = true
 texture_progress = ExtResource("2_fxhu6")
+
+[node name="GoldLabel" type="Label" parent="LowerContainer/LeftSide/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
 
 [node name="Control" type="Control" parent="LowerContainer"]
 layout_mode = 2
@@ -106,6 +116,8 @@ offset_right = 50.0
 offset_bottom = -40.0
 grow_horizontal = 2
 grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
 horizontal_alignment = 1
 
 [node name="ExperienceLabel" type="Label" parent="LowerContainer/Control"]
@@ -121,6 +133,8 @@ offset_right = 50.0
 offset_bottom = -15.0
 grow_horizontal = 2
 grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
 horizontal_alignment = 1
 
 [node name="ExperienceBar" type="TextureProgressBar" parent="LowerContainer/Control"]
@@ -194,7 +208,7 @@ fill_mode = 3
 nine_patch_stretch = true
 texture_progress = ExtResource("3_ah43h")
 
-[connection signal="mouse_entered" from="LowerContainer/LeftSide/Control/PanelContainer" to="." method="OnLifeOrbEntered"]
-[connection signal="mouse_exited" from="LowerContainer/LeftSide/Control/PanelContainer" to="." method="OnLifeOrbExited"]
+[connection signal="mouse_entered" from="LowerContainer/LeftSide/HBoxContainer/Control/PanelContainer" to="." method="OnLifeOrbEntered"]
+[connection signal="mouse_exited" from="LowerContainer/LeftSide/HBoxContainer/Control/PanelContainer" to="." method="OnLifeOrbExited"]
 [connection signal="mouse_entered" from="LowerContainer/RightSide/HBoxContainer/Control/PanelContainer" to="." method="OnManaOrbEntered"]
 [connection signal="mouse_exited" from="LowerContainer/RightSide/HBoxContainer/Control/PanelContainer" to="." method="OnManaOrbExited"]

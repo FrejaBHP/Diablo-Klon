@@ -88,7 +88,7 @@ public partial class Inventory : Control {
 
     public void GUIInput(InputEvent @event) {
         // On left-click
-		if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == MouseButton.Left && mbe.Pressed) {
+		if (@event.IsActionPressed("LeftClick")) {
 			if (IsAnItemSelected && selectedItem != null) {
                 // If an item is selected and the click is inside the inventory panel, try and reparent it to the grid slot matching the top-left corner of the item's bounding box
                 // A small adjustment is added to the offset to make the expected placement match the art better and prevent placing them in unintended slots
@@ -178,7 +178,6 @@ public partial class Inventory : Control {
             selectedItem.IsClicked = false;
             selectedItem.ToggleBackground();
             selectedItem.ZIndex = 1;
-            //selectedItem.ToggleClickable();
             selectedItem.ClearOccupiedSlots();
 
             IsAnItemSelected = false;

@@ -31,7 +31,7 @@ public partial class EquipmentSlot : PanelContainer {
 
 	public void GUIInput(InputEvent @event) {
 		// On left-click
-		if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == MouseButton.Left && mbe.Pressed) {
+		if (@event.IsActionPressed("LeftClick")) {
 			if (InventoryReference.IsAnItemSelected && InventoryReference.CanEquipItemInSlot(this, InventoryReference.SelectedItem) && CanEquipItem(InventoryReference.SelectedItem.ItemReference.ItemAllBaseType)) {
 				if (itemInSlot == null) {
 					SetItem(InventoryReference.SelectedItem);

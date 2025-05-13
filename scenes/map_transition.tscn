@@ -33,7 +33,6 @@ script = ExtResource("1_dmgc8")
 shape = SubResource("BoxShape3D_c5qsb")
 
 [node name="Mesh" type="MeshInstance3D" parent="."]
-layers = 32
 mesh = SubResource("BoxMesh_dmgc8")
 surface_material_override/0 = ExtResource("2_6kj7w")
 
