@@ -6,6 +6,7 @@ using System.Linq;
 public partial class Player : Actor {
 	public HUD PlayerHUD;
 	public Control PauseMenu;
+	public PlayerCamera PlayerCamera;
 
 	public Stat Strength { get; protected set; } = new(0, true);
     public Stat Dexterity { get; protected set; } = new(0, true);
@@ -44,8 +45,7 @@ public partial class Player : Actor {
 	protected bool isSkillInput3Held = false;
 	protected bool isSkillInput4Held = false;
 
-	protected PlayerCamera playerCamera;
-	protected Label debugLabel;
+	public Label debugLabel;
 	protected bool newMouseButtonInput = false;
 	protected bool controlsCamera = true;
 
@@ -124,8 +124,8 @@ public partial class Player : Actor {
 	public override void _Ready() {
 		base._Ready();
 
-		playerCamera = GetNode<PlayerCamera>("PlayerCamera");
-		playerCamera.AssignPlayer(this);
+		PlayerCamera = GetNode<PlayerCamera>("PlayerCamera");
+		PlayerCamera.AssignPlayer(this);
 
 		debugLabel = GetNode<Label>("DebugLabel");
 		attackTimer = GetNode<Timer>("AttackTimer");
@@ -230,7 +230,7 @@ public partial class Player : Actor {
 			Game.Instance.RemoveAllWorldItems();
 		}
 		else if (@event.IsActionPressed("DebugSpawnEnemy")) {
-			Game.Instance.Test();
+			//Game.Instance.Test();
 		}
 		else if (@event.IsActionPressed("Pause")) {
 			GetTree().Paused = true;
@@ -255,8 +255,8 @@ public partial class Player : Actor {
 	// Logic for mouse movement
 	private void HandleMouseMovementInput() {
 		if (!MovingTowardsObject) {
-			Vector3 from = playerCamera.ProjectRayOrigin(lastMouseInputPos);
-			Vector3 to = from + playerCamera.ProjectRayNormal(lastMouseInputPos) * RayLength;
+			Vector3 from = PlayerCamera.ProjectRayOrigin(lastMouseInputPos);
+			Vector3 to = from + PlayerCamera.ProjectRayNormal(lastMouseInputPos) * RayLength;
 			PhysicsDirectSpaceState3D state = GetWorld3D().DirectSpaceState;
 			PhysicsRayQueryParameters3D query = PhysicsRayQueryParameters3D.Create(from, to, CollisionMask = 1 << 1);
 			Godot.Collections.Dictionary result = state.IntersectRay(query);

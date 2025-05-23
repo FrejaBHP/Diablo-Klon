@@ -3,17 +3,22 @@ using System;
 
 public partial class MapTransitionObj : Area3D {
     [Export]
-    public PackedScene SceneToTransitionTo;
-
-    [Export]
     public bool GoesToTown = false;
 
+    [Export]
+    public bool UseRedPortal = false;
+
+    public PackedScene SceneToTransitionTo;
+    
+    private AnimatedSprite3D portalSprites;
     private MeshInstance3D outlineMesh;
 
     public override void _Ready() {
+        portalSprites = GetNode<AnimatedSprite3D>("APortalSprite");
         outlineMesh = GetNode<MeshInstance3D>("Mesh/MeshOutline");
 
         AddToGroup("MapTransition");
+        portalSprites.Play();
     }
 
     // This executes in the last Input step, namely the Physics Picking step, and therefore will not prevent propagating any input to the Unhandled steps
@@ -27,6 +32,17 @@ public partial class MapTransitionObj : Area3D {
 				player.SetDestinationNode(this);
 			}
 		}
+    }
+
+    public void UpdatePortalAnimationAndVisibility() {
+        if (!UseRedPortal) {
+            portalSprites.Animation = "portal_blue";
+        }
+        else {
+            portalSprites.Animation = "portal_red";
+        }
+
+        portalSprites.Visible = true;
     }
 
     public void OnMouseEntered() {

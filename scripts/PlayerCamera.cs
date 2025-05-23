@@ -2,10 +2,11 @@ using Godot;
 using System;
 
 public partial class PlayerCamera : Camera3D {
+	public RayCast3D OcclusionCast;
+
 	private Player player;
 	private bool followsPlayer = false;
 
-	private RayCast3D occlusionCast;
 	private StaticBody3D currentOccludingStaticMesh = null;
 
 	private Vector3 offset = new(10, 10, 10);
@@ -13,7 +14,7 @@ public partial class PlayerCamera : Camera3D {
 	private float transFadeDuration = 0.2f;
 
 	public override void _Ready() {
-		occlusionCast = GetNode<RayCast3D>("OcclusionCast");	
+		OcclusionCast = GetNode<RayCast3D>("OcclusionCast");	
 	}
 
 	public void AssignPlayer(Player p) {
@@ -26,8 +27,8 @@ public partial class PlayerCamera : Camera3D {
 			GlobalPosition = GlobalPosition.Lerp(player.GlobalPosition + offset, 0.5f);
 
 			// Check if a wall is obstructing the raycast to the player
-			if (occlusionCast.IsColliding() && occlusionCast.GetCollider().IsClass("StaticBody3D")) {
-				StaticBody3D collider = occlusionCast.GetCollider() as StaticBody3D;
+			if (OcclusionCast.IsColliding() && IsInstanceValid(OcclusionCast.GetCollider()) && OcclusionCast.GetCollider().IsClass("StaticBody3D")) {
+				StaticBody3D collider = OcclusionCast.GetCollider() as StaticBody3D;
 
 				// If it's a new wall and has a mesh instance
 				if (collider != currentOccludingStaticMesh && collider.GetChildCount() > 0 && collider.GetChild(0).IsClass("MeshInstance3D")) {

@@ -11,18 +11,16 @@ public partial class Game : Node3D {
 	public Player PlayerActor;
 	public MapBase CurrentMap;
 
-	public int CurrentAct { get; protected set; } = 1;
-	public int CurrentArea { get; protected set; } = 1;
+	public int CurrentAct { get; protected set; } = 0;
+	public int CurrentArea { get; protected set; } = 0;
+	private int areasPerAct = 2; // Areas refer to both combat maps and shop/breather maps. Ideally the rotation is C-C-S, and act ends with a boss. 3-4 rotations should be good here in the end
 
 	private PlayerCamera playerCam;
 	private Node3D currentMapNode;
 	private MapBase mapTown; // Husk at lave en speciel klasse til Town
 
 	private CanvasLayer worldObjectsLayer;
-
-	private EnemyWave activeWave = null;
-	private int enemiesToSpawn = 0;
-	private int activeEnemies = 0;
+	private Timer mapStartTimer;
 
 	public override void _Ready() {
 		Instance = this; // There should possibly only ever be 1 Game instance at any time, so if this somehow results in overrides, lord have mercy
@@ -30,17 +28,23 @@ public partial class Game : Node3D {
 		currentMapNode = GetNode<Node3D>("CurrentMap");
 		mapTown = currentMapNode.GetNode<MapBase>("MapTown");
 		worldObjectsLayer = GetNode<CanvasLayer>("WorldObjects");
+		mapStartTimer = GetNode<Timer>("MapStartTimer");
 		PlayerActor = GetNode<Player>("Player");
 		
 		//GameSettings.Instance.ApplyPlayerSettings();
 		
 		CurrentMap = mapTown;
+		mapTown.MapObjective = EMapObjective.None;
+		MapTransitionObj transObj = mapTown.GetNode<MapTransitionObj>("MapTransition");
+		transObj.SceneToTransitionTo = MapDatabase.FEScene;
 
-		SetEnemyWave(EnemyDatabase.TestWave);
+		//SetMapWaveList(EnemyDatabase.TestMapHorde);
 	}
 
 	public void LoadAndSetMapToTown() {
 		if (!mapTown.IsInsideTree()) {
+			PlayerActor.PlayerCamera.OcclusionCast.Enabled = false;
+
 			MapBase oldMap = CurrentMap;
 			oldMap.ClearEnemies();
 			
@@ -50,6 +54,8 @@ public partial class Game : Node3D {
 			OnMapLoaded();
 
 			oldMap.QueueFree();
+
+			CurrentArea = 0;
 		}
 	}
 
@@ -64,11 +70,16 @@ public partial class Game : Node3D {
 	/// </summary>
 	/// <param name="scene"></param>
 	public void ChangeMap(PackedScene scene) {
+		PlayerActor.PlayerCamera.OcclusionCast.Enabled = false;
+
 		MapBase oldMap = CurrentMap;
 		oldMap.ClearEnemies();
 
-		CurrentMap = MapDatabase.GetMap(scene);
+        //CurrentMap = MapDatabase.GetMap(scene);
+        MapDatabase.GetMapTest(scene, out CurrentMap, out EMapObjective mapObjective);
+        CurrentMap.MapObjective = mapObjective;
 		CurrentMap.MapReady += OnMapLoaded;
+		CurrentMap.MapFinished += OnMapCompletion;
 		currentMapNode.AddChild(CurrentMap);
 
 		if (oldMap == mapTown) {
@@ -78,7 +89,13 @@ public partial class Game : Node3D {
 			oldMap.QueueFree();
 		}
 
-		SetEnemyWave(EnemyDatabase.TestWave);
+		CurrentArea++;
+		//activeWaveNumber = 0;
+		//SetMapWaveList(EnemyDatabase.TestMapHorde);
+		//SetEnemyWave(activeWaveList.EnemyWaves[0]);
+
+		//PlayerActor.debugLabel.Text = $"Wave {CurrentMap.ActiveWaveNumber + 1} / {CurrentMap.ActiveWaveList.EnemyWaves.Count}";
+		//SetEnemyWave(EnemyDatabase.TestWave);
 	}
 
 	// Potentially add exception for the town? Just to avoid spawning in the same spot every time no matter where you came from?
@@ -86,6 +103,20 @@ public partial class Game : Node3D {
 		PlayerActor.ResetNodeTarget();
 		PlayerActor.Velocity = Vector3.Zero;
 		PlayerActor.GlobalPosition = CurrentMap.PlayerSpawnMarker.GlobalPosition;
+		PlayerActor.PlayerCamera.OcclusionCast.Enabled = true;
+
+		if (CurrentMap != mapTown) {
+			mapStartTimer.WaitTime = 2;
+			mapStartTimer.Start();
+		}
+	}
+
+	private void OnMapStartTimerTimeout() {
+		CurrentMap.StartObjective();
+
+		//if (activeWave != null) {
+		//	SpawnWave();
+		//}
 	}
 
 	/// <summary>
@@ -117,12 +148,16 @@ public partial class Game : Node3D {
 		item.PostSpawn();
 	}
 
-	public void DropGold(int baseAmount, Vector3 position) {
+	public void DropGold(int baseAmount, Vector3 position, bool isRandom) {
 		Gold gold = goldScene.Instantiate<Gold>();
 		worldObjectsLayer.AddChild(gold);
 
-		int goldDropped = (int)Math.Round(Utilities.RandomDouble(baseAmount * 0.75, baseAmount * 1.25), 0);
-		gold.SetAmount(goldDropped);
+		if (isRandom) {
+			gold.SetAmount((int)Math.Round(Utilities.RandomDouble(baseAmount * 0.75, baseAmount * 1.25), 0));
+		}
+		else {
+			gold.SetAmount(baseAmount);
+		}
 
 		gold.GlobalPosition = position with { Y = position.Y + 0.25f };
 		gold.PostSpawn();
@@ -132,44 +167,41 @@ public partial class Game : Node3D {
 		PlayerActor.GainExperience(baseAmount);
 	}
 
-	public void SetEnemyWave(EnemyWave wave) {
-		activeWave = wave.ShallowCopy();
-		enemiesToSpawn = activeWave.GetWaveSpawnCount();
-	}
-
-	// Spawns all enemies from a wave at once
-	public void Test() {
-		foreach (EnemyWaveComponent comp in activeWave.WaveComponents) {
-			for (int i = 0; i < comp.EnemyCount; i++) {
-				Vector3 spawnPos = NavigationServer3D.MapGetRandomPoint(GetWorld3D().NavigationMap, 1, false);
-				spawnPos.Y -= 0.5f;
-				EnemyBase enemy = comp.EnemyScene.Instantiate<EnemyBase>();
-				CurrentMap.EnemiesNode.AddChild(enemy);
-				enemy.GlobalPosition = spawnPos;
-
-				enemiesToSpawn--;
-				activeEnemies++;
-				enemy.EnemyDied += DecrementEnemyCount;
-			}
-		}
-    }
-
-	public void DecrementEnemyCount() {
-		activeEnemies--;
-
-		if (CurrentMap != mapTown && activeEnemies == 0 && enemiesToSpawn == 0) {
-			TestSpawnMapTrans();
-		}
-	}
-
 	public void TestSpawnMapTrans() {
 		MapTransitionObj transObj = mapTransScene.Instantiate<MapTransitionObj>();
 		CurrentMap.AddChild(transObj);
-		transObj.SceneToTransitionTo = MapDatabase.FEScene;
-		transObj.GoesToTown = false;
 
 		Vector3 newPos = CurrentMap.PlayerSpawnMarker.GlobalPosition;
 		newPos.Y += 0.5f;
 		transObj.GlobalPosition = newPos;
+
+		if (CurrentArea < areasPerAct) {
+			transObj.SceneToTransitionTo = MapDatabase.FEScene;
+			transObj.GoesToTown = false;
+		}
+		else {
+			transObj.GoesToTown = true;
+		}
+
+		if (transObj.GoesToTown) {
+			transObj.UseRedPortal = false;
+		}
+		else {
+			transObj.UseRedPortal = true;
+		}
+		
+		transObj.UpdatePortalAnimationAndVisibility();
 	}
+
+	public void OnMapCompletion() {
+        if (CurrentMap.GoldReward > 0) {
+			DropGold(CurrentMap.GoldReward, CurrentMap.PlayerSpawnMarker.GlobalPosition, false);
+		}
+
+		if (CurrentMap.ExpReward > 0) {
+			AwardExperience(CurrentMap.ExpReward);
+		}
+
+		TestSpawnMapTrans();
+    }
 }

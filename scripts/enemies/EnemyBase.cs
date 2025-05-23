@@ -176,7 +176,7 @@ public partial class EnemyBase : Actor {
 
     public void Die() {
         if (goldBounty > 0) {
-            Game.Instance.DropGold(goldBounty, GlobalPosition);
+            Game.Instance.DropGold(goldBounty, GlobalPosition, true);
         }
 
         if (experienceBounty > 0) {

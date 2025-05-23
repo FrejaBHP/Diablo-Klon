@@ -6,6 +6,18 @@ public enum EMovementInputMethod {
 	Keyboard
 }
 
+
+public enum EMapObjective {
+	None,
+	Survival
+}
+
+public enum EEnemyType {
+	TestEnemy,
+	TestEnemy2,
+}
+
+
 public enum EStatName {
 	None,
 

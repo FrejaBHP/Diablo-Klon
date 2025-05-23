@@ -3,12 +3,12 @@ using System;
 
 public partial class TestEnemy : EnemyBase {
     public TestEnemy() {
-		BasicStats.BaseLife = 40;
+		BasicStats.BaseLife = 25;
 		BasicStats.BaseMana = 0;
 		RefreshLifeMana();
 
         goldBounty = 3;
-        experienceBounty = 2;
+        experienceBounty = 1;
     }
 
     public override void _Ready() {
@@ -22,7 +22,7 @@ public partial class TestEnemy : EnemyBase {
         DamageMods.Physical.SMaxBase = UnarmedMaxDamage;
 
         MovementSpeed.SBase = 4;
-        Evasion.SBase = 67;
+        Evasion.SBase = 0; // 67
 
         Skill skillThrust = new SkillThrust();
         AddSkill(skillThrust);

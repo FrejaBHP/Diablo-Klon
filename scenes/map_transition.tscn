@@ -1,9 +1,123 @@
-[gd_scene load_steps=7 format=4 uid="uid://btdyjtsk2j8aw"]
+[gd_scene load_steps=24 format=4 uid="uid://btdyjtsk2j8aw"]
 
 [ext_resource type="Script" uid="uid://b4ktliy16pppb" path="res://scripts/MapTransitionObj.cs" id="1_dmgc8"]
+[ext_resource type="Texture2D" uid="uid://dapojixcv4nh7" path="res://textures/effects/d2_PortalSheet.png" id="2_05nhn"]
 [ext_resource type="Material" uid="uid://mlqqx7pptscx" path="res://textures/world/stone_brick.tres" id="2_6kj7w"]
+[ext_resource type="Texture2D" uid="uid://culwpw2evucdi" path="res://textures/effects/d2_PortalRedSheet.png" id="3_vlxle"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_c5qsb"]
+size = Vector3(1, 2.5, 1)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vlxle"]
+atlas = ExtResource("2_05nhn")
+region = Rect2(0, 0, 135, 180)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0u62v"]
+atlas = ExtResource("2_05nhn")
+region = Rect2(135, 0, 135, 180)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7e4gr"]
+atlas = ExtResource("2_05nhn")
+region = Rect2(270, 0, 135, 180)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xnltr"]
+atlas = ExtResource("2_05nhn")
+region = Rect2(405, 0, 135, 180)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ldbkg"]
+atlas = ExtResource("2_05nhn")
+region = Rect2(540, 0, 135, 180)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_exykb"]
+atlas = ExtResource("2_05nhn")
+region = Rect2(675, 0, 135, 180)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6mbcx"]
+atlas = ExtResource("2_05nhn")
+region = Rect2(810, 0, 135, 180)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hmdql"]
+atlas = ExtResource("3_vlxle")
+region = Rect2(0, 0, 135, 180)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hu3et"]
+atlas = ExtResource("3_vlxle")
+region = Rect2(135, 0, 135, 180)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i3pm7"]
+atlas = ExtResource("3_vlxle")
+region = Rect2(270, 0, 135, 180)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4n75h"]
+atlas = ExtResource("3_vlxle")
+region = Rect2(405, 0, 135, 180)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jyt4c"]
+atlas = ExtResource("3_vlxle")
+region = Rect2(540, 0, 135, 180)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nfxnl"]
+atlas = ExtResource("3_vlxle")
+region = Rect2(675, 0, 135, 180)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vwj5g"]
+atlas = ExtResource("3_vlxle")
+region = Rect2(810, 0, 135, 180)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_hmdql"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vlxle")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0u62v")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7e4gr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xnltr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ldbkg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_exykb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6mbcx")
+}],
+"loop": true,
+"name": &"portal_blue",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hmdql")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hu3et")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i3pm7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4n75h")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jyt4c")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nfxnl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vwj5g")
+}],
+"loop": true,
+"name": &"portal_red",
+"speed": 8.0
+}]
 
 [sub_resource type="BoxMesh" id="BoxMesh_dmgc8"]
 
@@ -30,9 +144,21 @@ monitorable = false
 script = ExtResource("1_dmgc8")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+visible = false
 shape = SubResource("BoxShape3D_c5qsb")
 
+[node name="APortalSprite" type="AnimatedSprite3D" parent="."]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 0, 1.05, 0)
+gi_mode = 0
+pixel_size = 0.02
+alpha_cut = 2
+texture_filter = 4
+sprite_frames = SubResource("SpriteFrames_hmdql")
+animation = &"portal_blue"
+
 [node name="Mesh" type="MeshInstance3D" parent="."]
+visible = false
 mesh = SubResource("BoxMesh_dmgc8")
 surface_material_override/0 = ExtResource("2_6kj7w")
 

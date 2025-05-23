@@ -1,11 +1,16 @@
-[gd_scene load_steps=29 format=4 uid="uid://df1bl15n8wee3"]
+[gd_scene load_steps=30 format=4 uid="uid://df1bl15n8wee3"]
 
 [ext_resource type="PackedScene" uid="uid://cd3cosrtp6dgb" path="res://scenes/world/map_base.tscn" id="1_5ewx1"]
 [ext_resource type="PackedScene" uid="uid://btdyjtsk2j8aw" path="res://scenes/map_transition.tscn" id="1_dm2gb"]
 [ext_resource type="Material" uid="uid://by4gy6xsypuw5" path="res://textures/world/town/grass.tres" id="4_cwkjp"]
 [ext_resource type="Material" uid="uid://36aribvxlbvk" path="res://textures/world/town/dirt.tres" id="4_dm2gb"]
+[ext_resource type="Texture2D" uid="uid://drln6w5f1g28c" path="res://textures/world/stone_brick.jpg" id="4_q7u6e"]
 [ext_resource type="Material" uid="uid://bp04ct06jlqsw" path="res://textures/world/town/stonepavement.tres" id="5_cwkjp"]
-[ext_resource type="PackedScene" uid="uid://bpvp03fbnp75y" path="res://scenes/world/map_FirstEncounter.tscn" id="7_q7u6e"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2ie1u"]
+resource_local_to_scene = true
+albedo_texture = ExtResource("4_q7u6e")
+anisotropy = 1.0
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_q1rmb"]
 resource_local_to_scene = true
@@ -176,9 +181,15 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 0, 17)
 
 [node name="MapTransition" parent="." index="3" instance=ExtResource("1_dm2gb")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.5, 17)
-SceneToTransitionTo = ExtResource("7_q7u6e")
+UseRedPortal = true
 
-[node name="NavigationRegion3D" parent="." index="4"]
+[node name="APortalSprite" parent="MapTransition" index="1"]
+animation = &"portal_red"
+
+[node name="Mesh" parent="MapTransition" index="2"]
+surface_material_override/0 = SubResource("StandardMaterial3D_2ie1u")
+
+[node name="NavigationRegion3D" parent="." index="6"]
 navigation_mesh = SubResource("NavigationMesh_q1rmb")
 
 [node name="FuncGodotMap" parent="NavigationRegion3D" index="0"]
@@ -284,3 +295,5 @@ occluder = SubResource("ArrayOccluder3D_0dll0")
 
 [node name="entity_7_brush_0_collision_shape" type="CollisionShape3D" parent="NavigationRegion3D/FuncGodotMap/entity_7_func_worldgeo" index="2"]
 shape = SubResource("ConvexPolygonShape3D_r0uq8")
+
+[editable path="MapTransition"]

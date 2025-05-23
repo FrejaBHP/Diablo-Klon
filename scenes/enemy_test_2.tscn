@@ -1,0 +1,21 @@
+[gd_scene load_steps=5 format=3 uid="uid://cmmjntt2r6u5d"]
+
+[ext_resource type="PackedScene" uid="uid://ctw6e5lim1ji" path="res://scenes/enemy_base.tscn" id="1_g32dm"]
+[ext_resource type="Script" uid="uid://bbp8wp3fl345j" path="res://scripts/enemies/TestEnemy.cs" id="2_1lnpm"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g32dm"]
+albedo_color = Color(0.0920232, 0.676337, 7.70092e-07, 1)
+metallic_specular = 0.0
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 0.03
+backlight = Color(0.647059, 0.611765, 1, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_1lnpm"]
+material = SubResource("StandardMaterial3D_g32dm")
+
+[node name="TestEnemy" instance=ExtResource("1_g32dm")]
+script = ExtResource("2_1lnpm")
+
+[node name="CapsuleMesh" parent="." index="1"]
+mesh = SubResource("CapsuleMesh_1lnpm")

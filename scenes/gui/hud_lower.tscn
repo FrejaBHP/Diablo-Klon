@@ -55,6 +55,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_froqh")
 [node name="HBoxContainer" type="HBoxContainer" parent="LowerContainer/LeftSide"]
 custom_minimum_size = Vector2(384, 136)
 layout_mode = 2
+size_flags_vertical = 8
 theme_override_constants/separation = 20
 
 [node name="Control" type="Control" parent="LowerContainer/LeftSide/HBoxContainer"]
