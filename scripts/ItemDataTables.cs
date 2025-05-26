@@ -59,6 +59,20 @@ public static class ItemDataTables {
 		}
 	];
 
+	public static readonly List<WeaponItemData> BowWeaponData = [
+		new WeaponItemData {
+			BaseName = "Short Bow",
+			ItemSpecifierFlags = EItemBaseSpecifierFlags.WBow,
+			Texture = UILib.TextureItemD2ShortBow,
+			MinimumLevel = 0,
+			BasePhysicalMinimumDamage = 5,
+			BasePhysicalMaximumDamage = 10,
+			BaseAttackSpeed = 0.667f,
+			BaseCritChance = 0.05f,
+			ImplicitTypes = []
+		}
+	];
+
 	public static readonly List<ArmourItemData> HeadArmourData = [
 		new ArmourItemData {
 			BaseName = "Cap",
@@ -197,6 +211,18 @@ public static class ItemDataTables {
 		}
 	];
 
+	public static readonly List<ItemData> QuiverJewelleryData = [
+		new ItemData {
+			BaseName = "Light Quiver",
+			ItemSpecifierFlags = EItemBaseSpecifierFlags.NONE,
+			Texture = UILib.TextureItemD2Quiver,
+			MinimumLevel = 0,
+			ImplicitTypes = [
+				typeof(BasicAmuletPhysImplicit)
+			]
+		}
+	];
+
 	public static readonly List<ArmourItemData> SmallShieldArmourData = [
 		new ArmourItemData {
 			BaseName = "Small Shield",
@@ -215,9 +241,19 @@ public static class ItemDataTables {
 		new SkillItemData {
 			BaseName = "Skill Gem",
 			SkillName = ESkillName.BasicThrust,
-			SkillType = typeof(SkillThrust),
+			SkillType = typeof(SThrust),
 			ItemSpecifierFlags = EItemBaseSpecifierFlags.NONE,
 			Texture = UILib.TextureItemD2JewelWhite,
+			MinimumLevel = 0,
+			ImplicitTypes = []
+		},
+
+		new SkillItemData {
+			BaseName = "Skill Gem",
+			SkillName = ESkillName.BasicShoot,
+			SkillType = typeof(SShoot),
+			ItemSpecifierFlags = EItemBaseSpecifierFlags.NONE,
+			Texture = UILib.TextureItemD2JewelGreen,
 			MinimumLevel = 0,
 			ImplicitTypes = []
 		}

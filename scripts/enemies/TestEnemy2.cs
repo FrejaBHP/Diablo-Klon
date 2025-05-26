@@ -1,9 +1,9 @@
 using Godot;
 using System;
 
-public partial class TestEnemy : EnemyBase {
-    public TestEnemy() {
-		BasicStats.BaseLife = 25;
+public partial class TestEnemy2 : EnemyBase {
+    public TestEnemy2() {
+		BasicStats.BaseLife = 20;
 		BasicStats.BaseMana = 0;
 		RefreshLifeMana();
 
@@ -14,8 +14,8 @@ public partial class TestEnemy : EnemyBase {
     public override void _Ready() {
         base._Ready();
 
-        UnarmedMinDamage = 6;
-        UnarmedMaxDamage = 9;
+        UnarmedMinDamage = 8;
+        UnarmedMaxDamage = 12;
         UnarmedAttackSpeed = 1.25;
 
         DamageMods.Physical.SMinBase = UnarmedMinDamage;
@@ -24,9 +24,8 @@ public partial class TestEnemy : EnemyBase {
         MovementSpeed.SBase = 4;
         Evasion.SBase = 0; // 67
 
-        Skill skillThrust = new SThrust();
-        AddSkill(skillThrust);
-        //CalculateStats();
+        Skill skillShoot = new SShoot();
+        AddSkill(skillShoot);
     }
 
     public override void _PhysicsProcess(double delta) {
@@ -41,7 +40,7 @@ public partial class TestEnemy : EnemyBase {
                 lineOfSightCast.ForceRaycastUpdate();
 
                 if (lineOfSightCast.IsColliding()) {
-                    UseThrust();
+                    UseShoot();
                 }
             }
         }
@@ -52,12 +51,9 @@ public partial class TestEnemy : EnemyBase {
 
         DoGravity(delta);
         MoveAndSlide();
-
-        //debugLabel.Text = $"Next Path Pos: {navAgent.GetNextPathPosition().ToString("F2")}\nTarget Pos: {navAgent.TargetPosition.ToString("F2")}\nVelocity Length: {Velocity.Length():F2}";
-        //debugLabel.Text = $"Rotation: {GlobalRotationDegrees.ToString("F2")}\nVelocity Length: {Velocity.Length():F2}";
     }
 
-    public void UseThrust() {
+    public void UseShoot() {
         currentlyUsedSkill = Skills[0];
 
         ActorState = EActorState.Attacking;
@@ -77,6 +73,4 @@ public partial class TestEnemy : EnemyBase {
             currentlyUsedSkill.UseSkill();
         }
     }
-
-    //public override void OnNoLifeLeft() {}
 }

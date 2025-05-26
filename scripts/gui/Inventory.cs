@@ -255,15 +255,28 @@ public partial class Inventory : Control {
 
     public bool CanEquipItemInSlot(EquipmentSlot slot, InventoryItem item) {
         if (slot.Slot == EItemEquipmentSlot.WeaponLeft) {
-            if (item.ItemReference.ItemAllBaseType == EItemAllBaseType.Shield) {
+            // Disallow equipping off hand items in the main hand
+            if (item.ItemReference.ItemAllBaseType == EItemAllBaseType.Shield && item.ItemReference.ItemAllBaseType == EItemAllBaseType.Quiver) {
                 return false;
             }
         }
         else if (slot.Slot == EItemEquipmentSlot.WeaponRight) {
+            // If trying to equip a 2-handed weapon in the off hand slot
             if (item.ItemReference.ItemAllBaseType == EItemAllBaseType.Weapon2H) {
                 return false;
             }
-            else if (WeaponSlotLeft.ItemInSlot != null && WeaponSlotLeft.ItemInSlot.ItemReference.ItemAllBaseType == EItemAllBaseType.Weapon2H) {
+            // If main hand is not empty
+            else if (WeaponSlotLeft.ItemInSlot != null) {
+                WeaponItem wItem = WeaponSlotLeft.ItemInSlot.ItemReference as WeaponItem;
+
+                // Allow equipping a quiver with a bow
+                if (wItem.ItemAllBaseType == EItemAllBaseType.Weapon2H) {
+                    if (wItem.ItemWeaponBaseType == EItemWeaponBaseType.WeaponRanged2H && item.ItemReference.ItemAllBaseType == EItemAllBaseType.Quiver) {
+                        return true;
+                    }
+                }
+
+                // All other combinations are denied
                 return false;
             }
         }
@@ -276,30 +289,8 @@ public partial class Inventory : Control {
         item.GetParent().RemoveChild(item);
         slot.AddChild(item);
 
-        item.Position = Vector2.Zero;
-        item.IsClicked = false;
-        IsAnItemSelected = false;
-        selectedItem = null;
-
-        item.ZIndex = 1;
-
-        foreach (EquipmentSlot slotAll in equipmentSlots) {
-            if (!slotAll.IsHovered) {
-                slotAll.RemoveHighlight();
-            }
-        }
-
-        if (slot.Slot == EItemEquipmentSlot.WeaponLeft) {
-            PlayerOwner.AssignMainHand((WeaponItem)item.ItemReference);
-        }
-        else if (slot.Slot == EItemEquipmentSlot.WeaponRight) {
-            PlayerOwner.AssignOffHand(item.ItemReference);
-        }
-
-        if (item.ItemReference.ItemAllBaseType == EItemAllBaseType.Weapon2H && WeaponSlotRight.ItemInSlot != null) {
-            WeaponSlotRight.UnequipItem(WeaponSlotRight.ItemInSlot);
-            PlayerOwner.AssignOffHand(null);
-        }
+        ResetSelectedItem(item);
+        HandlePotentialWeaponSlotConflict(slot, item);
 
         PlayerOwner.ApplyItemStats(slot, item.ItemReference);
     }
@@ -341,33 +332,54 @@ public partial class Inventory : Control {
             oldItem.ToggleBackground();
         }
         
-        newItem.Position = Vector2.Zero;
-        newItem.IsClicked = false;
+        ResetSelectedItem(newItem);
+        HandlePotentialWeaponSlotConflict(slot, newItem);
+
+        PlayerOwner.RemoveItemStats(slot, oldItem.ItemReference);
+        PlayerOwner.ApplyItemStats(slot, newItem.ItemReference);
+    }
+
+    protected void HandlePotentialWeaponSlotConflict(EquipmentSlot slot, InventoryItem item) {
+        if (slot.Slot == EItemEquipmentSlot.WeaponLeft) {
+            if (item.ItemReference.GetType().IsSubclassOf(typeof(WeaponItem))) {
+                WeaponItem wItem = item.ItemReference as WeaponItem;
+
+                if ((wItem.ItemWeaponBaseType == EItemWeaponBaseType.WeaponMelee1H || wItem.ItemWeaponBaseType == EItemWeaponBaseType.WeaponRanged1H) &&
+                WeaponSlotRight.ItemInSlot != null && WeaponSlotRight.ItemInSlot.ItemReference.ItemAllBaseType == EItemAllBaseType.Quiver) {
+                    WeaponSlotRight.UnequipItem(WeaponSlotRight.ItemInSlot);
+                    PlayerOwner.AssignOffHand(null);
+                }
+                else if (wItem.ItemWeaponBaseType == EItemWeaponBaseType.WeaponMelee2H && WeaponSlotRight.ItemInSlot != null) {
+                    WeaponSlotRight.UnequipItem(WeaponSlotRight.ItemInSlot);
+                    PlayerOwner.AssignOffHand(null);
+                }
+                else if (wItem.ItemWeaponBaseType == EItemWeaponBaseType.WeaponRanged2H && 
+                WeaponSlotRight.ItemInSlot != null && WeaponSlotRight.ItemInSlot.ItemReference.ItemAllBaseType != EItemAllBaseType.Quiver) {
+                    WeaponSlotRight.UnequipItem(WeaponSlotRight.ItemInSlot);
+                    PlayerOwner.AssignOffHand(null);
+                }
+
+                PlayerOwner.AssignMainHand(wItem);
+            }
+        }
+        else if (slot.Slot == EItemEquipmentSlot.WeaponRight) {
+            PlayerOwner.AssignOffHand(item.ItemReference);
+        }
+    }
+
+    protected void ResetSelectedItem(InventoryItem item) {
+        item.Position = Vector2.Zero;
+        item.IsClicked = false;
         IsAnItemSelected = false;
         selectedItem = null;
 
-        newItem.ZIndex = 1;
+        item.ZIndex = 1;
 
         foreach (EquipmentSlot slotAll in equipmentSlots) {
             if (!slotAll.IsHovered) {
                 slotAll.RemoveHighlight();
             }
         }
-
-        if (slot.Slot == EItemEquipmentSlot.WeaponLeft) {
-            PlayerOwner.AssignMainHand((WeaponItem)newItem.ItemReference);
-        }
-        else if (slot.Slot == EItemEquipmentSlot.WeaponRight) {
-            PlayerOwner.AssignOffHand(newItem.ItemReference);
-        }
-
-        if (newItem.ItemReference.ItemAllBaseType == EItemAllBaseType.Weapon2H && WeaponSlotRight.ItemInSlot != null) {
-            WeaponSlotRight.UnequipItem(WeaponSlotRight.ItemInSlot);
-            PlayerOwner.AssignOffHand(null);
-        }
-
-        PlayerOwner.RemoveItemStats(slot, oldItem.ItemReference);
-        PlayerOwner.ApplyItemStats(slot, newItem.ItemReference);
     }
 
     private List<EquipmentSlot> GetEquipmentSlots(EItemAllBaseType type) {
@@ -413,6 +425,10 @@ public partial class Inventory : Control {
                 break;
             
             case EItemAllBaseType.Shield:
+                equipmentSlots.Add(WeaponSlotRight);
+                break;
+
+            case EItemAllBaseType.Quiver:
                 equipmentSlots.Add(WeaponSlotRight);
                 break;
 

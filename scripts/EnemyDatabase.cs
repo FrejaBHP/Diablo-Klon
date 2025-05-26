@@ -26,9 +26,7 @@ public class EnemyWave(List<EnemyWaveComponent> waveComponents) {
     }
 
     public EnemyWave ShallowCopy() {
-        EnemyWave copy = (EnemyWave)MemberwiseClone();
-
-        return copy;
+        return (EnemyWave)MemberwiseClone();
     }
 }
 

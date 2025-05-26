@@ -560,6 +560,16 @@ public partial class AmuletItem : JewelleryItem {
 	}
 }
 
+public partial class QuiverItem : JewelleryItem {
+	public QuiverItem() {
+		gridSizeX = 2;
+		gridSizeY = 3;
+		ItemAllBaseType = EItemAllBaseType.Quiver;
+		ItemJewelleryBaseType = EItemJewelleryBaseType.Quiver;
+		ItemAffixFlags = EAffixItemFlags.Quiver;
+	}
+}
+
 public partial class OneHandedSwordItem : WeaponItem {
 	public OneHandedSwordItem() {
 		gridSizeX = 1;
@@ -579,5 +589,16 @@ public partial class TwoHandedSwordItem : WeaponItem {
 		ItemWeaponBaseType = EItemWeaponBaseType.WeaponMelee2H;
 		ItemAffixFlags = EAffixItemFlags.THWeapon | EAffixItemFlags.Weapon;
 		WeaponClass = "Two Handed Sword";
+	}
+}
+
+public partial class BowItem : WeaponItem {
+	public BowItem() {
+		gridSizeX = 2;
+		gridSizeY = 4;
+		ItemAllBaseType = EItemAllBaseType.Weapon2H;
+		ItemWeaponBaseType = EItemWeaponBaseType.WeaponRanged2H;
+		ItemAffixFlags = EAffixItemFlags.THWeapon | EAffixItemFlags.Weapon | EAffixItemFlags.Bow;
+		WeaponClass = "Bow";
 	}
 }

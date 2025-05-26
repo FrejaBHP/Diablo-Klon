@@ -252,6 +252,20 @@ public partial class Player : Actor {
 		newMouseButtonInput = true;
 	}
 
+	public Vector3 GetCameraRaycast() {
+		Vector3 from = PlayerCamera.ProjectRayOrigin(GetViewport().GetMousePosition());
+		Vector3 to = from + PlayerCamera.ProjectRayNormal(GetViewport().GetMousePosition()) * RayLength;
+		PhysicsDirectSpaceState3D state = GetWorld3D().DirectSpaceState;
+		PhysicsRayQueryParameters3D query = PhysicsRayQueryParameters3D.Create(from, to, CollisionMask = 3);
+		Godot.Collections.Dictionary result = state.IntersectRay(query);
+			
+		if (result.Count > 0) {
+			return result["position"].AsVector3();
+		}
+
+		return Vector3.Zero;
+	}
+
 	// Logic for mouse movement
 	private void HandleMouseMovementInput() {
 		if (!MovingTowardsObject) {
@@ -389,6 +403,7 @@ public partial class Player : Actor {
 		MoveAndSlide();
 
 		//debugLabel.Text = $"Velocity: {Velocity.ToString("F2")}\nVel Length: {Velocity.Length():F2}\nRem. Dist: {remainingDist:F2}\nRotation: {RotationDegrees.Y:F2}";
+		//debugLabel.Text = $"Rotation: {GlobalRotationDegrees.Y:F2}";
 		//GD.Print($"Velocity: {Velocity.ToString("F2")}\nVel Length: {Velocity.Length():F2}\nRem. Dist: {remainingDist:F2}\nRotation: {RotationDegrees.ToString("F2")}");
 		//debugLabel.Text += $"\n\nVelocity: {Velocity.ToString("F2")}\nVel Length: {Velocity.Length():F2}\nRem. Dist: {remainingDist:F2}\nRotation: {RotationDegrees.Y:F2}";
 	}

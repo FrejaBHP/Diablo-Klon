@@ -2,7 +2,8 @@ using System;
 using Godot;
 
 public abstract class Skill {
-    protected static readonly PackedScene thrustAttackScene = GD.Load<PackedScene>("res://scenes/test_attack_tween.tscn");
+    protected static readonly PackedScene thrustAttackScene = GD.Load<PackedScene>("res://scenes/skills/scene_thrust.tscn");
+    protected static readonly PackedScene genericProjectileScene = GD.Load<PackedScene>("res://scenes/skills/scene_projectile_generic.tscn");
 
     public Actor ActorOwner { get; set; }
 
@@ -28,6 +29,10 @@ public abstract class Skill {
 
     public float CastRange { get; set; } // Mainly intended to be used by the AI to help them walk into range first
 
+    public bool UsesMouseAim { get; protected set; } = true;
+    public bool AimsInStraightLine { get; protected set; } = true;
+    protected Vector3 mouseAimPosition = Vector3.Zero;
+
     public virtual bool CanUseSkill() {
         if (!ActorOwner.IsIgnoringManaCosts) {
             if (ActorOwner.BasicStats.CurrentMana < ManaCost * ManaCostMultiplier) {
@@ -36,6 +41,16 @@ public abstract class Skill {
         }
         
         // Indsæt tjek for cooldowns når de bliver implementeret
+
+        if (ActorOwner.IsInGroup("Player") && UsesMouseAim) {
+            Vector3 pos = Game.Instance.PlayerActor.GetCameraRaycast();
+
+            if (pos == Vector3.Zero) {
+                return false;
+            }
+
+            SetMouseAimPosition(Game.Instance.PlayerActor.GetCameraRaycast());
+        }
 
         if (this is IAttack attack) {
             if (ActorOwner.IsIgnoringWeaponRestrictions) {
@@ -48,6 +63,14 @@ public abstract class Skill {
     }
 
     public abstract void UseSkill();
+
+    public void SetMouseAimPosition(Vector3 pos) {
+        if (AimsInStraightLine) {
+            pos.Y = ActorOwner.GlobalPosition.Y + ActorOwner.OutgoingEffectAttachmentHeight;
+        }
+
+        mouseAimPosition = pos;
+    }
 
     public string GetAttackSpeedModifier() {
         return Math.Round(SpeedModifier * 100, 0).ToString();
@@ -185,10 +208,10 @@ public abstract class Skill {
 
     public void SetSkillCollision(Area3D collisionArea) {
         if (ActorOwner.IsInGroup("Enemy")) {
-            collisionArea.CollisionMask = 4;
+            collisionArea.CollisionMask += 4;
         }
         else if (ActorOwner.IsInGroup("Player")) {
-            collisionArea.CollisionMask = 32;
+            collisionArea.CollisionMask += 32;
         }
     }
 
@@ -268,7 +291,7 @@ public interface IAttack {
 }
 
 public interface ISpell {
-    float BaseCastTime { get; protected set; }
+    double BaseCastTime { get; protected set; }
     Stat BaseCastSpeedModifiers { get; protected set; }
     Stat ActiveCastSpeedModifiers { get; protected set; }
 
@@ -287,84 +310,9 @@ public interface IMeleeSkill {
 
 public interface IProjectileSkill {
     float BaseProjectileSpeed { get; protected set; }
-    float BaseProjectileLifetime { get; protected set; }
+    double BaseProjectileLifetime { get; protected set; }
 }
 
 public interface IAreaSkill {
-    float BaseAreaRadius { get; protected set; }
-}
-
-public class SkillThrust : Skill, IAttack, IMeleeSkill {
-    public ESkillWeapons Weapons { get; set; } = ESkillWeapons.AllMeleeWeapons;
-    public bool CanDualWield { get; set; } = true;
-
-    public Stat BaseAttackSpeedModifiers { get; set; } = new(0, false);
-    public Stat ActiveAttackSpeedModifiers { get; set; } = new(0, false);
-
-    public float BaseAttackRange { get; set; } = 3f;
-
-    public SkillThrust() {
-        Name = "Thrust";
-        Description = "Attacks in a straight line with a melee weapon.";
-
-        SkillName = ESkillName.BasicThrust;
-        Type = ESkillType.Attack;
-        Tags = ESkillTags.Melee;
-        DamageCategory = EDamageCategory.Melee;
-        Texture = UILib.TextureSkillThrust;
-
-        ManaCost = 1;
-
-        CastRange = BaseAttackRange;
-
-        //BaseDamageModifiers.IncreasedMelee = 0.35;
-        //BaseDamageModifiers.MoreMelee = 1.25;
-    }
-
-    public override void UseSkill() {
-        if (ActorOwner != null) {
-            TestAttack testAttack = thrustAttackScene.Instantiate() as TestAttack;
-            ActorOwner.GetTree().Root.GetChild(0).AddChild(testAttack);
-            SetSkillCollision(testAttack.Hitbox);
-
-            testAttack.GlobalPosition = testAttack.Position with { 
-                X = ActorOwner.GlobalPosition.X, 
-                Y = ActorOwner.GlobalPosition.Y + ActorOwner.OutgoingEffectAttachmentHeight, 
-                Z = ActorOwner.GlobalPosition.Z 
-            };
-            testAttack.GlobalRotation = ActorOwner.GlobalRotation;
-
-            testAttack.StartAttack(DamageCategory, RollForDamage(true), ActorOwner.Penetrations, 2f, BaseAttackRange, 25f);
-
-            DeductManaFromActor();
-        }
-    }
-}
-
-public class SkillDefaultProjectileAttack : Skill, IAttack, IProjectileSkill {
-    public ESkillWeapons Weapons { get; set; } = ESkillWeapons.AllRangedWeapons;
-    public bool CanDualWield { get; set; } = true;
-
-    public Stat BaseAttackSpeedModifiers { get; set; } = new(0, false);
-    public Stat ActiveAttackSpeedModifiers { get; set; } = new(0, false);
-
-    public float BaseProjectileSpeed { get; set; } = 15f;
-    public float BaseProjectileLifetime { get; set; } = 2f;
-
-    public SkillDefaultProjectileAttack() {
-        Name = "Default Ranged Attack";
-        Description = "A default Attack";
-
-        Type = ESkillType.Attack;
-        Tags = ESkillTags.Ranged | ESkillTags.Projectile;
-        DamageCategory = EDamageCategory.Ranged;
-        
-        ManaCost = 0;
-
-        CastRange = 10f;
-    }
-
-    public override void UseSkill() {
-        
-    }
+    double BaseAreaRadius { get; protected set; }
 }

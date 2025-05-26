@@ -19,7 +19,7 @@ public class AffixTableType {
 public static class AffixDataTables {
 	public static readonly List<AffixTableType> PrefixData = [
 		new(typeof(FlatLifeAffix), EAffixFamily.FlatMaxLife,
-			EAffixItemFlags.Armour | EAffixItemFlags.Jewellery,
+			EAffixItemFlags.Armour | EAffixItemFlags.Jewellery | EAffixItemFlags.Quiver,
 			EItemBaseSpecifierFlags.NoFlags
 		),
 		new(typeof(FlatManaAffix), EAffixFamily.FlatMaxMana,
@@ -67,7 +67,7 @@ public static class AffixDataTables {
 			EItemBaseSpecifierFlags.NoFlags
 		),
 		new(typeof(IncreasedRangedDamageAffix), EAffixFamily.IncreasedRangedDamage,
-			EAffixItemFlags.None, // Cannot currently roll on anything. In the future, should roll on quivers or other ranged offhand items
+			EAffixItemFlags.Quiver,
 			EItemBaseSpecifierFlags.NoFlags
 		),
 		new(typeof(IncreasedSpellDamageAffix), EAffixFamily.IncreasedSpellDamage,
@@ -86,11 +86,11 @@ public static class AffixDataTables {
 			EItemBaseSpecifierFlags.NoFlags
 		),
 		new(typeof(GlobalIncreasedAttackSpeedAffix), EAffixFamily.IncreasedAttackSpeed,
-			EAffixItemFlags.Ring | EAffixItemFlags.Amulet,
+			EAffixItemFlags.Ring | EAffixItemFlags.Amulet | EAffixItemFlags.Quiver,
 			EItemBaseSpecifierFlags.NoFlags
 		),
 		new(typeof(GlobalIncreasedCritChanceAffix), EAffixFamily.IncreasedCritChance,
-			EAffixItemFlags.Ring | EAffixItemFlags.Amulet,
+			EAffixItemFlags.Ring | EAffixItemFlags.Amulet | EAffixItemFlags.Quiver,
 			EItemBaseSpecifierFlags.NoFlags
 		),
 		new(typeof(FlatStrengthAffix), EAffixFamily.AddedStrength,
@@ -98,7 +98,7 @@ public static class AffixDataTables {
 			EItemBaseSpecifierFlags.NoFlags
 		),
 		new(typeof(FlatDexterityAffix), EAffixFamily.AddedDexterity,
-			EAffixItemFlags.Jewellery,
+			EAffixItemFlags.Jewellery | EAffixItemFlags.Quiver,
 			EItemBaseSpecifierFlags.NoFlags
 		),
 		new(typeof(FlatIntelligenceAffix), EAffixFamily.AddedIntelligence,
@@ -106,15 +106,15 @@ public static class AffixDataTables {
 			EItemBaseSpecifierFlags.NoFlags
 		),
 		new(typeof(FireResistanceAffix), EAffixFamily.FireResistance,
-			EAffixItemFlags.Armour | EAffixItemFlags.Jewellery,
+			EAffixItemFlags.Armour | EAffixItemFlags.Jewellery | EAffixItemFlags.Quiver,
 			EItemBaseSpecifierFlags.NoFlags
 		),
 		new(typeof(ColdResistanceAffix), EAffixFamily.ColdResistance,
-			EAffixItemFlags.Armour | EAffixItemFlags.Jewellery,
+			EAffixItemFlags.Armour | EAffixItemFlags.Jewellery | EAffixItemFlags.Quiver,
 			EItemBaseSpecifierFlags.NoFlags
 		),
 		new(typeof(LightningResistanceAffix), EAffixFamily.LightningResistance,
-			EAffixItemFlags.Armour | EAffixItemFlags.Jewellery,
+			EAffixItemFlags.Armour | EAffixItemFlags.Jewellery | EAffixItemFlags.Quiver,
 			EItemBaseSpecifierFlags.NoFlags
 		)
 	];

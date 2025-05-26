@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class TestAttack : Node3D {
+public partial class SThrustScene : Node3D {
     public Area3D Hitbox;
     private CollisionShape3D hitboxCollision;
     private CapsuleShape3D collisionCapsule;

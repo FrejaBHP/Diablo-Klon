@@ -69,23 +69,25 @@ public enum EStatName {
 // ======== AFFIXES ========
 [Flags]
 public enum EAffixItemFlags {
-	None = 0,
-	Helmet = 1 << 0,
-	Chest = 1 << 1,
-	Gloves = 1 << 2,
-	Boots = 1 << 3,
-	Belt = 1 << 4,
-	Ring = 1 << 5,
-	Amulet = 1 << 6,
-	OHWeapon = 1 << 7,
-	THWeapon = 1 << 8,
-	Shield = 1 << 9,
+	None = 		0,
+	Helmet = 	1 << 0,
+	Chest = 	1 << 1,
+	Gloves = 	1 << 2,
+	Boots = 	1 << 3,
+	Belt = 		1 << 4,
+	Ring = 		1 << 5,
+	Amulet = 	1 << 6,
+	OHWeapon = 	1 << 7,
+	THWeapon = 	1 << 8,
+	Bow = 		1 << 9,
+	Shield = 	1 << 10,
+	Quiver = 	1 << 11,
 
-	Armour = 1 << 10,
-	Jewellery = 1 << 11,
-	Weapon = 1 << 12,
+	Armour = 	1 << 12,
+	Jewellery = 1 << 13,
+	Weapon = 	1 << 14,
 
-	All = (1 << 13) - 1 // Unused
+	All = 		(1 << 15) - 1 // Unused
 }
 
 public enum EAffixPosition {
@@ -206,6 +208,7 @@ public enum EItemAllBaseType {
 	Weapon1H,
 	Weapon2H,
 	Shield,
+	Quiver,
 	SkillActive,
 	SkillSupport,
 	COUNT
@@ -233,6 +236,7 @@ public enum EItemJewelleryBaseType {
 	Belt,
 	Ring,
 	Amulet,
+	Quiver,
 	COUNT
 }
 
@@ -257,7 +261,8 @@ public enum EItemBaseSpecifierFlags {
 	AAll = 1 << 7,
 
 	W1HSword = 1 << 8,
-	W2HSword = 1 << 9
+	W2HSword = 1 << 9,
+	WBow = 1 << 10
 }
 
 [Flags]
@@ -285,6 +290,7 @@ public enum EDamageCategory {
 
 public enum ESkillName {
 	BasicThrust,
+	BasicShoot,
 	COUNT
 }
 

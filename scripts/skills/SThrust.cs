@@ -1,0 +1,51 @@
+using Godot;
+using System;
+
+public class SThrust : Skill, IAttack, IMeleeSkill {
+    public ESkillWeapons Weapons { get; set; } = ESkillWeapons.AllMeleeWeapons;
+    public bool CanDualWield { get; set; } = true;
+
+    public Stat BaseAttackSpeedModifiers { get; set; } = new(0, false);
+    public Stat ActiveAttackSpeedModifiers { get; set; } = new(0, false);
+
+    public float BaseAttackRange { get; set; } = 3f;
+
+    public SThrust() {
+        Name = "Thrust";
+        Description = "Attacks in a straight line with a melee weapon.";
+
+        SkillName = ESkillName.BasicThrust;
+        Type = ESkillType.Attack;
+        Tags = ESkillTags.Melee;
+        DamageCategory = EDamageCategory.Melee;
+        Texture = UILib.TextureSkillThrust;
+
+        ManaCost = 1;
+
+        CastRange = BaseAttackRange;
+
+        UsesMouseAim = false;
+
+        //BaseDamageModifiers.IncreasedMelee = 0.35;
+        //BaseDamageModifiers.MoreMelee = 1.25;
+    }
+
+    public override void UseSkill() {
+        if (ActorOwner != null) {
+            SThrustScene thrustScene = thrustAttackScene.Instantiate() as SThrustScene;
+            Game.Instance.AddChild(thrustScene);
+            SetSkillCollision(thrustScene.Hitbox);
+
+            thrustScene.GlobalPosition = thrustScene.Position with { 
+                X = ActorOwner.GlobalPosition.X, 
+                Y = ActorOwner.GlobalPosition.Y + ActorOwner.OutgoingEffectAttachmentHeight, 
+                Z = ActorOwner.GlobalPosition.Z 
+            };
+            thrustScene.GlobalRotation = ActorOwner.GlobalRotation;
+
+            thrustScene.StartAttack(DamageCategory, RollForDamage(true), ActorOwner.Penetrations, 2f, BaseAttackRange, 25f);
+
+            DeductManaFromActor();
+        }
+    }
+}

@@ -17,16 +17,20 @@ public static class UILib {
 	public static readonly Texture2D TextureItemD2Boots = GD.Load<Texture2D>("res://textures/items/d2_Boots.png");
 	public static readonly Texture2D TextureItemD2LightPlatedBoots = GD.Load<Texture2D>("res://textures/items/d2_LightPlatedBoots.png");
 
+	public static readonly Texture2D TextureItemD2SmallShield = GD.Load<Texture2D>("res://textures/items/d2_SmallShield.png");
+
 	public static readonly Texture2D TextureItemD2Sash = GD.Load<Texture2D>("res://textures/items/d2_Sash.png");
 
 	public static readonly Texture2D TextureItemD2Ring0 = GD.Load<Texture2D>("res://textures/items/d2_Ring0.png");
 
 	public static readonly Texture2D TextureItemD2Amulet0 = GD.Load<Texture2D>("res://textures/items/d2_Amulet0.png");
 
+	public static readonly Texture2D TextureItemD2Quiver = GD.Load<Texture2D>("res://textures/items/d2_ArrowQuiver.png");
+
 	public static readonly Texture2D TextureItemD2ShortSword = GD.Load<Texture2D>("res://textures/items/d2_ShortSword.png");
 	public static readonly Texture2D TextureItemD2LongSword = GD.Load<Texture2D>("res://textures/items/d2_LongSword.png");
 
-	public static readonly Texture2D TextureItemD2SmallShield = GD.Load<Texture2D>("res://textures/items/d2_SmallShield.png");
+	public static readonly Texture2D TextureItemD2ShortBow = GD.Load<Texture2D>("res://textures/items/d2_ShortBow.png");
 
 	public static readonly Texture2D TextureItemD2JewelRed = GD.Load<Texture2D>("res://textures/items/d2_Jewel_red_flip.png");
 	public static readonly Texture2D TextureItemD2JewelGreen = GD.Load<Texture2D>("res://textures/items/d2_Jewel_green_flip.png");
@@ -36,6 +40,7 @@ public static class UILib {
 	public static readonly Texture2D TextureRemoveSkill = GD.Load<Texture2D>("res://textures/skills/remove_skill.png");
 	public static readonly Texture2D TextureSkillNONE = GD.Load<Texture2D>("res://textures/skills/skill_none.png");
 	public static readonly Texture2D TextureSkillThrust = GD.Load<Texture2D>("res://textures/skills/skill_thrust.png");
+	public static readonly Texture2D TextureSkillShoot = GD.Load<Texture2D>("res://textures/skills/skill_shoot.png");
 
 	public static readonly Texture2D GoldPileTiny = GD.Load<Texture2D>("res://textures/goldDrop0.png");
 	public static readonly Texture2D GoldPileSmall = GD.Load<Texture2D>("res://textures/goldDrop1.png");

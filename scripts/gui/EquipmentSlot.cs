@@ -155,6 +155,12 @@ public partial class EquipmentSlot : PanelContainer {
 				}
 				return false;
 
+			case EItemAllBaseType.Quiver:
+				if (Slot == EItemEquipmentSlot.WeaponRight) {
+					return true;
+				}
+				return false;
+
 			default:
 				return false;
 		}
