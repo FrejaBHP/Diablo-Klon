@@ -147,6 +147,7 @@ RightClick={
 3d_render/layer_4="NPC"
 3d_render/layer_5="Effect"
 3d_render/layer_6="ObjectNoShadow"
+3d_render/layer_7="Object"
 3d_physics/layer_1="Wall"
 3d_physics/layer_2="Floor"
 3d_physics/layer_3="Player"
