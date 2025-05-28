@@ -80,14 +80,14 @@ public enum EAffixItemFlags {
 	OHWeapon = 	1 << 7,
 	THWeapon = 	1 << 8,
 	Bow = 		1 << 9,
-	Shield = 	1 << 10,
-	Quiver = 	1 << 11,
+	Staff = 	1 << 10,
 
-	Armour = 	1 << 12,
-	Jewellery = 1 << 13,
-	Weapon = 	1 << 14,
+	Shield = 	1 << 11,
+	Quiver = 	1 << 12,
 
-	All = 		(1 << 15) - 1 // Unused
+	Armour = 	1 << 13,
+	Jewellery = 1 << 14,
+	Weapon = 	1 << 15,
 }
 
 public enum EAffixPosition {
@@ -173,6 +173,7 @@ public enum ETextColour {
 
 // ======== ITEMS ========
 public enum EItemRarity {
+	None, // Not an actual rarity, but signifies that a rarity should be randomly decided on generation
 	Common,
 	Magic,
 	Rare,
@@ -214,15 +215,6 @@ public enum EItemAllBaseType {
 	COUNT
 }
 
-public enum EItemArmourBaseType {
-	Helmet,
-	Chestplate,
-	Gloves,
-	Boots,
-    Shield,
-	COUNT
-}
-
 public enum EItemWeaponBaseType {
 	WeaponMelee1H,
 	WeaponMelee2H,
@@ -230,6 +222,15 @@ public enum EItemWeaponBaseType {
 	WeaponRanged2H,
 	COUNT, // Used for item generation, and there's no need to roll for unarmed weapons
 	Unarmed
+}
+
+public enum EItemArmourBaseType {
+	Helmet,
+	Chestplate,
+	Gloves,
+	Boots,
+    Shield,
+	COUNT
 }
 
 public enum EItemJewelleryBaseType {
@@ -262,7 +263,8 @@ public enum EItemBaseSpecifierFlags {
 
 	W1HSword = 1 << 8,
 	W2HSword = 1 << 9,
-	WBow = 1 << 10
+	WBow = 1 << 10,
+	WStaff = 1 << 11,
 }
 
 [Flags]

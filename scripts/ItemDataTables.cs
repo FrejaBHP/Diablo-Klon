@@ -73,6 +73,20 @@ public static class ItemDataTables {
 		}
 	];
 
+	public static readonly List<WeaponItemData> StaffWeaponData = [
+		new WeaponItemData {
+			BaseName = "Long Staff",
+			ItemSpecifierFlags = EItemBaseSpecifierFlags.WStaff,
+			Texture = UILib.TextureItemD2LongStaff,
+			MinimumLevel = 0,
+			BasePhysicalMinimumDamage = 6,
+			BasePhysicalMaximumDamage = 11,
+			BaseAttackSpeed = 0.769f,
+			BaseCritChance = 0.07f,
+			ImplicitTypes = []
+		}
+	];
+
 	public static readonly List<ArmourItemData> HeadArmourData = [
 		new ArmourItemData {
 			BaseName = "Cap",

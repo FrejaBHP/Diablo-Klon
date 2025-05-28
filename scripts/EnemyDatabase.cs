@@ -46,13 +46,16 @@ public static class EnemyDatabase {
         { EEnemyType.TestEnemy2, TestEnemy2Data }
     };
 
+    // Spawn pools for random endless enemy spawns
+
     public static readonly WeightedList<EEnemyType> TestSurvivalSpawnPool = new([
         new WeightedListItem<EEnemyType>(EEnemyType.TestEnemy, 100),
-        new WeightedListItem<EEnemyType>(EEnemyType.TestEnemy2, 10),
+        new WeightedListItem<EEnemyType>(EEnemyType.TestEnemy2, 25),
     ], Utilities.RNG);
 
 
 
+    // Waves for preset enemy spawns
 
     public static readonly EnemyWave TestWave = new([
         new EnemyWaveComponent(TestEnemyScene, 10)

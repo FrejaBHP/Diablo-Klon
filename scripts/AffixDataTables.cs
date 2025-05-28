@@ -23,11 +23,15 @@ public static class AffixDataTables {
 			EItemBaseSpecifierFlags.NoFlags
 		),
 		new(typeof(FlatManaAffix), EAffixFamily.FlatMaxMana,
-			EAffixItemFlags.Armour | EAffixItemFlags.Jewellery,
+			EAffixItemFlags.Armour | EAffixItemFlags.Jewellery | EAffixItemFlags.Staff,
 			EItemBaseSpecifierFlags.NoFlags
 		),
-		new(typeof(LocalFlatPhysDamageAffix), EAffixFamily.LocalFlatPhysDamage,
-			EAffixItemFlags.Weapon,
+		new(typeof(Local1HFlatPhysDamageAffix), EAffixFamily.LocalFlatPhysDamage,
+			EAffixItemFlags.OHWeapon,
+			EItemBaseSpecifierFlags.NoFlags
+		),
+		new(typeof(Local2HFlatPhysDamageAffix), EAffixFamily.LocalFlatPhysDamage,
+			EAffixItemFlags.THWeapon,
 			EItemBaseSpecifierFlags.NoFlags
 		),
 		new(typeof(LocalIncreasedPhysDamageAffix), EAffixFamily.LocalIncreasedPhysDamage,
@@ -71,14 +75,18 @@ public static class AffixDataTables {
 			EItemBaseSpecifierFlags.NoFlags
 		),
 		new(typeof(IncreasedSpellDamageAffix), EAffixFamily.IncreasedSpellDamage,
-			EAffixItemFlags.None, // Cannot currently roll on anything. In the future, should roll on catalysts or other spell weapons or offhand items
+			EAffixItemFlags.Staff, // In the future, should roll on catalysts or other spell-related offhand items
 			EItemBaseSpecifierFlags.NoFlags
 		),
 	];
 
 	public static readonly List<AffixTableType> SuffixData = [
-		new(typeof(LocalIncreasedAttackSpeedAffix), EAffixFamily.LocalIncreasedAttackSpeed,
-			EAffixItemFlags.Weapon,
+		new(typeof(Local1HIncreasedAttackSpeedAffix), EAffixFamily.LocalIncreasedAttackSpeed,
+			EAffixItemFlags.OHWeapon,
+			EItemBaseSpecifierFlags.NoFlags
+		),
+		new(typeof(Local2HIncreasedAttackSpeedAffix), EAffixFamily.LocalIncreasedAttackSpeed,
+			EAffixItemFlags.THWeapon,
 			EItemBaseSpecifierFlags.NoFlags
 		),
 		new(typeof(LocalIncreasedCritChanceAffix), EAffixFamily.LocalIncreasedCritChance,
@@ -102,7 +110,7 @@ public static class AffixDataTables {
 			EItemBaseSpecifierFlags.NoFlags
 		),
 		new(typeof(FlatIntelligenceAffix), EAffixFamily.AddedIntelligence,
-			EAffixItemFlags.Jewellery,
+			EAffixItemFlags.Jewellery | EAffixItemFlags.Staff,
 			EItemBaseSpecifierFlags.NoFlags
 		),
 		new(typeof(FireResistanceAffix), EAffixFamily.FireResistance,

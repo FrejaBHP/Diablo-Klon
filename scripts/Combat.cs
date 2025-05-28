@@ -16,14 +16,6 @@ public class SkillDamage(double phys, double fire, double cold, double lightning
     public readonly bool IsCritical = isCritical;
 }
 
-public class HitDamageInstance(float phys, float fire, float cold, float lightning, float chaos) {
-    public readonly float DamagePhysical = phys;
-    public readonly float DamageFire = fire;
-    public readonly float DamageCold = cold;
-    public readonly float DamageLightning = lightning;
-    public readonly float DamageChaos = chaos;
-}
-
 interface IDoT {
     static DamageType Type { get; }
     static float BaseLength { get; }

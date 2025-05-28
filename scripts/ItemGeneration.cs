@@ -9,13 +9,13 @@ public static class ItemGeneration {
 	private static readonly int rareMaxPrefixes = 3;
 	private static readonly int rareMaxSuffixes = 3;
 
-	static ItemGeneration() {
+	private const int minLevel = 0; // placeholder
 
-	}
-
-	public static Item GenerateItemFromCategory(EItemCategory category) {
+	public static Item GenerateItemFromCategory(EItemCategory category, EItemRarity rarity = EItemRarity.None) {
 		Item item;
-		EItemRarity rarity = CalculateRarity();
+		if (rarity == EItemRarity.None) {
+			rarity = CalculateRarity();
+		}
 
 		// If category not specified, pick one at random
 		if (category == EItemCategory.None) {
@@ -25,22 +25,22 @@ public static class ItemGeneration {
 		switch (category) {
 			case EItemCategory.Weapon:
 				EItemWeaponBaseType weaponType = (EItemWeaponBaseType)Utilities.RNG.Next((int)EItemWeaponBaseType.COUNT);
-				item = GenerateWeaponItem(weaponType, rarity);
+				item = GenerateWeaponItem(weaponType);
 				break;
 
 			case EItemCategory.Armour:
 				EItemArmourBaseType armourType = (EItemArmourBaseType)Utilities.RNG.Next((int)EItemArmourBaseType.COUNT);
-				item = GenerateArmourItem(armourType, rarity);
+				item = GenerateArmourItem(armourType);
 				break;
 			
 			//case EItemCategory.Jewellery:
 			default:
 				EItemJewelleryBaseType jewelleryType = (EItemJewelleryBaseType)Utilities.RNG.Next((int)EItemJewelleryBaseType.COUNT);
-				item = GenerateJewelleryItem(jewelleryType, rarity);
+				item = GenerateJewelleryItem(jewelleryType);
 				break;
 		}
 
-		ApplyRarityAndAffixes(item);
+		ApplyRarityAndAffixes(item, rarity);
 		return item;
 	}
 
@@ -51,133 +51,6 @@ public static class ItemGeneration {
 		}
 	}
 	*/
-
-	private static WeaponItem GenerateWeaponItem(EItemWeaponBaseType weaponType, EItemRarity rarity) {
-		WeaponItem weaponItem;
-
-		switch (weaponType) {
-			case EItemWeaponBaseType.WeaponMelee1H:
-				OneHandedSwordItem ohSwordItem = new();
-				GetBaseFromTable(ref ohSwordItem, 0);
-
-				weaponItem = ohSwordItem;
-				break;
-
-			case EItemWeaponBaseType.WeaponMelee2H:
-				TwoHandedSwordItem thSwordItem = new();
-				GetBaseFromTable(ref thSwordItem, 0);
-
-				weaponItem = thSwordItem;
-				break;
-
-			// case EItemWeaponBaseType.WeaponRanged1H & 2H:
-			default:
-				BowItem bowItem = new();
-				GetBaseFromTable(ref bowItem, 0);
-
-				weaponItem = bowItem;
-				break;
-		}
-
-		if (String.IsNullOrEmpty(weaponItem.ItemBase)) {
-			weaponItem.ItemBase = weaponItem.ItemWeaponBaseType.ToString();
-		}
-
-		return weaponItem;
-	}
-
-	private static ArmourItem GenerateArmourItem(EItemArmourBaseType armourType, EItemRarity rarity) {
-		ArmourItem armourItem;
-
-		switch (armourType) {
-			case EItemArmourBaseType.Helmet:
-				HeadItem headItem = new();
-				GetBaseFromTable(ref headItem, 0);
-
-				armourItem = headItem;
-				break;
-			
-			case EItemArmourBaseType.Chestplate:
-				ChestItem chestItem = new();
-				GetBaseFromTable(ref chestItem, 0);
-
-				armourItem = chestItem;
-				break;
-
-			case EItemArmourBaseType.Gloves:
-				HandsItem handsItem = new();
-				GetBaseFromTable(ref handsItem, 0);
-
-				armourItem = handsItem;
-				break;
-
-			case EItemArmourBaseType.Boots:
-				FeetItem feetItem = new();
-				GetBaseFromTable(ref feetItem, 0);
-
-				armourItem = feetItem;
-				break;
-
-			//case EItemArmourBaseType.Shield:
-			default:
-				int shieldType = Utilities.RNG.Next(0, 3);
-				switch (shieldType) {
-					default:
-						SmallShieldItem smallShieldItem = new();
-						GetBaseFromTable(ref smallShieldItem, 0);
-
-						armourItem = smallShieldItem;
-						break;
-				}
-				break;
-		}
-
-		if (String.IsNullOrEmpty(armourItem.ItemBase)) {
-			armourItem.ItemBase = armourItem.ItemArmourBaseType.ToString();
-		}
-
-		return armourItem;
-	}
-
-	private static JewelleryItem GenerateJewelleryItem(EItemJewelleryBaseType jewelleryType, EItemRarity rarity) {
-		JewelleryItem jewelleryItem;
-
-		switch (jewelleryType) {
-			case EItemJewelleryBaseType.Belt:
-				BeltItem beltItem = new();
-				GetBaseFromTable(ref beltItem, 0);
-
-				jewelleryItem = beltItem;
-				break;
-
-			case EItemJewelleryBaseType.Ring:
-				RingItem ringItem = new();
-				GetBaseFromTable(ref ringItem, 0);
-
-				jewelleryItem = ringItem;
-				break;
-
-			case EItemJewelleryBaseType.Amulet:
-				AmuletItem amuletItem = new();
-				GetBaseFromTable(ref amuletItem, 0);
-
-				jewelleryItem = amuletItem;
-				break;
-
-			default:
-				QuiverItem quiverItem = new();
-				GetBaseFromTable(ref quiverItem, 0);
-
-				jewelleryItem = quiverItem;
-				break;
-		}
-
-		if (String.IsNullOrEmpty(jewelleryItem.ItemBase)) {
-			jewelleryItem.ItemBase = jewelleryItem.ItemJewelleryBaseType.ToString();
-		}
-
-		return jewelleryItem;
-	}
 
 	private static EItemRarity CalculateRarity() {
 		int rarity = Utilities.RNG.Next(4);
@@ -198,108 +71,149 @@ public static class ItemGeneration {
 		}
 	}
 
-	private static void GetBaseFromTable<T>(ref T item, int minLevel) {
-		if (item.GetType().IsSubclassOf(typeof(WeaponItem))) {
-			WeaponItem weaponItem = item as WeaponItem;
-			WeaponItemData data;
+	private static WeaponItem GenerateWeaponItem(EItemWeaponBaseType weaponType) {
+		WeaponItem weaponItem;
+		WeaponItemData data;
 
-			List<WeaponItemData> legalWeaponData = new List<WeaponItemData>();
+		List<WeaponItemData> legalWeaponData = new List<WeaponItemData>();
 
-			switch (weaponItem.ItemWeaponBaseType) {
-				case EItemWeaponBaseType.WeaponMelee1H:
-					legalWeaponData = ItemDataTables.OHSwordWeaponData.Where(i => i.MinimumLevel >= minLevel).ToList();
-					data = legalWeaponData[Utilities.RNG.Next(legalWeaponData.Count)];
-					break;
+		switch (weaponType) {
+			case EItemWeaponBaseType.WeaponMelee1H:
+				weaponItem = new OneHandedSwordItem();
+				legalWeaponData = ItemDataTables.OHSwordWeaponData.Where(i => i.MinimumLevel >= minLevel).ToList();
+				data = legalWeaponData[Utilities.RNG.Next(legalWeaponData.Count)];
+				break;
 
-				case EItemWeaponBaseType.WeaponMelee2H:
-					legalWeaponData = ItemDataTables.THSwordWeaponData.Where(i => i.MinimumLevel >= minLevel).ToList();
-					data = legalWeaponData[Utilities.RNG.Next(legalWeaponData.Count)];
-					break;
+			case EItemWeaponBaseType.WeaponMelee2H:
+				int meleeType = Utilities.RNG.Next(0, 2);
 
-				case EItemWeaponBaseType.WeaponRanged1H:
-					legalWeaponData = ItemDataTables.BowWeaponData.Where(i => i.MinimumLevel >= minLevel).ToList();
-					data = legalWeaponData[Utilities.RNG.Next(legalWeaponData.Count)];
-					break;
+				switch (meleeType) {
+					case 0:
+						weaponItem = new TwoHandedSwordItem();
+						legalWeaponData = ItemDataTables.THSwordWeaponData.Where(i => i.MinimumLevel >= minLevel).ToList();
+						data = legalWeaponData[Utilities.RNG.Next(legalWeaponData.Count)];
+						break;
+					
+					default:
+						weaponItem = new StaffItem();
+						legalWeaponData = ItemDataTables.StaffWeaponData.Where(i => i.MinimumLevel >= minLevel).ToList();
+						data = legalWeaponData[Utilities.RNG.Next(legalWeaponData.Count)];
+						break;
+				}
+				break;
 
-				// case EItemWeaponBaseType.WeaponRanged2H
-				default:
-					legalWeaponData = ItemDataTables.BowWeaponData.Where(i => i.MinimumLevel >= minLevel).ToList();
-					data = legalWeaponData[Utilities.RNG.Next(legalWeaponData.Count)];
-					break;
-			}
-
-			weaponItem.AddImplicits(data.ImplicitTypes);
-			ApplyWeaponBaseStats(weaponItem, data);
+			// case EItemWeaponBaseType.WeaponRanged1H & 2H:
+			default:
+				weaponItem = new BowItem();
+				legalWeaponData = ItemDataTables.BowWeaponData.Where(i => i.MinimumLevel >= minLevel).ToList();
+				data = legalWeaponData[Utilities.RNG.Next(legalWeaponData.Count)];
+				break;
 		}
-		else if (item.GetType().IsSubclassOf(typeof(ArmourItem))) {
-			ArmourItem armourItem = item as ArmourItem;
-			ArmourItemData data;
 
-			List<ArmourItemData> legalArmourData = new List<ArmourItemData>();
+		weaponItem.AddImplicits(data.ImplicitTypes);
+		ApplyWeaponBaseStats(weaponItem, data);
 
-			switch (armourItem.ItemArmourBaseType) {
-				case EItemArmourBaseType.Helmet:
-					legalArmourData = ItemDataTables.HeadArmourData.Where(i => i.MinimumLevel >= minLevel).ToList();
-					data = legalArmourData[Utilities.RNG.Next(legalArmourData.Count)];
-					break;
-
-				case EItemArmourBaseType.Chestplate:
-					legalArmourData = ItemDataTables.ChestArmourData.Where(i => i.MinimumLevel >= minLevel).ToList();
-					data = legalArmourData[Utilities.RNG.Next(legalArmourData.Count)];
-					break;
-
-				case EItemArmourBaseType.Gloves:
-					legalArmourData = ItemDataTables.HandsArmourData.Where(i => i.MinimumLevel >= minLevel).ToList();
-					data = legalArmourData[Utilities.RNG.Next(legalArmourData.Count)];
-					break;
-
-				case EItemArmourBaseType.Boots:
-					legalArmourData = ItemDataTables.FeetArmourData.Where(i => i.MinimumLevel >= minLevel).ToList();
-					data = legalArmourData[Utilities.RNG.Next(legalArmourData.Count)];
-					break;
-
-				// case EItemArmourBaseType.Shield:
-				default:
-					legalArmourData = ItemDataTables.SmallShieldArmourData.Where(i => i.MinimumLevel >= minLevel).ToList();
-					data = legalArmourData[Utilities.RNG.Next(legalArmourData.Count)];
-					break;
-			}
-
-			armourItem.AddImplicits(data.ImplicitTypes);
-			ApplyArmourBaseStats(armourItem, data);
+		if (String.IsNullOrEmpty(weaponItem.ItemBase)) {
+			weaponItem.ItemBase = weaponItem.ItemWeaponBaseType.ToString();
 		}
-		else if (item.GetType().IsSubclassOf(typeof(JewelleryItem))) {
-			JewelleryItem jewelItem = item as JewelleryItem;
-			ItemData data;
 
-			List<ItemData> legalJewelleryData = new List<ItemData>();
+		return weaponItem;
+	}
 
-			switch (jewelItem.ItemJewelleryBaseType) {
-				case EItemJewelleryBaseType.Amulet:
-					legalJewelleryData = ItemDataTables.AmuletJewelleryData.Where(i => i.MinimumLevel >= minLevel).ToList();
-					data = legalJewelleryData[Utilities.RNG.Next(legalJewelleryData.Count)];
-					break;
+	private static ArmourItem GenerateArmourItem(EItemArmourBaseType armourType) {
+		ArmourItem armourItem;
+		ArmourItemData data;
 
-				case EItemJewelleryBaseType.Ring:
-					legalJewelleryData = ItemDataTables.RingJewelleryData.Where(i => i.MinimumLevel >= minLevel).ToList();
-					data = legalJewelleryData[Utilities.RNG.Next(legalJewelleryData.Count)];
-					break;
+		List<ArmourItemData> legalArmourData = new List<ArmourItemData>();
 
-				case EItemJewelleryBaseType.Belt:
-					legalJewelleryData = ItemDataTables.BeltJewelleryData.Where(i => i.MinimumLevel >= minLevel).ToList();
-					data = legalJewelleryData[Utilities.RNG.Next(legalJewelleryData.Count)];
-					break;
+		switch (armourType) {
+			case EItemArmourBaseType.Helmet:
+				armourItem = new HeadItem();
+				legalArmourData = ItemDataTables.HeadArmourData.Where(i => i.MinimumLevel >= minLevel).ToList();
+				data = legalArmourData[Utilities.RNG.Next(legalArmourData.Count)];
+				break;
+			
+			case EItemArmourBaseType.Chestplate:
+				armourItem = new ChestItem();
+				legalArmourData = ItemDataTables.ChestArmourData.Where(i => i.MinimumLevel >= minLevel).ToList();
+				data = legalArmourData[Utilities.RNG.Next(legalArmourData.Count)];
+				break;
 
-				//case EItemJewelleryBaseType.Belt:
-				default:
-					legalJewelleryData = ItemDataTables.QuiverJewelleryData.Where(i => i.MinimumLevel >= minLevel).ToList();
-					data = legalJewelleryData[Utilities.RNG.Next(legalJewelleryData.Count)];
-					break;
-			}
+			case EItemArmourBaseType.Gloves:
+				armourItem = new HandsItem();
+				legalArmourData = ItemDataTables.HandsArmourData.Where(i => i.MinimumLevel >= minLevel).ToList();
+				data = legalArmourData[Utilities.RNG.Next(legalArmourData.Count)];
+				break;
 
-			jewelItem.AddImplicits(data.ImplicitTypes);
-			ApplyJewelleryBaseStats(jewelItem, data);
+			case EItemArmourBaseType.Boots:
+				armourItem = new FeetItem();
+				legalArmourData = ItemDataTables.FeetArmourData.Where(i => i.MinimumLevel >= minLevel).ToList();
+				data = legalArmourData[Utilities.RNG.Next(legalArmourData.Count)];
+				break;
+
+			//case EItemArmourBaseType.Shield:
+			default:
+				int shieldType = Utilities.RNG.Next(0, 3);
+				switch (shieldType) {
+					default:
+						armourItem = new SmallShieldItem();
+						legalArmourData = ItemDataTables.SmallShieldArmourData.Where(i => i.MinimumLevel >= minLevel).ToList();
+						data = legalArmourData[Utilities.RNG.Next(legalArmourData.Count)];
+						break;
+				}
+				break;
 		}
+
+		armourItem.AddImplicits(data.ImplicitTypes);
+		ApplyArmourBaseStats(armourItem, data);
+
+		if (String.IsNullOrEmpty(armourItem.ItemBase)) {
+			armourItem.ItemBase = armourItem.ItemArmourBaseType.ToString();
+		}
+
+		return armourItem;
+	}
+
+	private static JewelleryItem GenerateJewelleryItem(EItemJewelleryBaseType jewelleryType) {
+		JewelleryItem jewelleryItem;
+		ItemData data;
+
+		List<ItemData> legalJewelleryData = new List<ItemData>();
+
+		switch (jewelleryType) {
+			case EItemJewelleryBaseType.Amulet:
+				jewelleryItem = new AmuletItem();
+				legalJewelleryData = ItemDataTables.AmuletJewelleryData.Where(i => i.MinimumLevel >= minLevel).ToList();
+				data = legalJewelleryData[Utilities.RNG.Next(legalJewelleryData.Count)];
+				break;
+
+			case EItemJewelleryBaseType.Ring:
+				jewelleryItem = new RingItem();
+				legalJewelleryData = ItemDataTables.RingJewelleryData.Where(i => i.MinimumLevel >= minLevel).ToList();
+				data = legalJewelleryData[Utilities.RNG.Next(legalJewelleryData.Count)];
+				break;
+
+			case EItemJewelleryBaseType.Belt:
+				jewelleryItem = new BeltItem();
+				legalJewelleryData = ItemDataTables.BeltJewelleryData.Where(i => i.MinimumLevel >= minLevel).ToList();
+				data = legalJewelleryData[Utilities.RNG.Next(legalJewelleryData.Count)];
+				break;
+
+			default:
+				jewelleryItem = new QuiverItem();
+				legalJewelleryData = ItemDataTables.QuiverJewelleryData.Where(i => i.MinimumLevel >= minLevel).ToList();
+				data = legalJewelleryData[Utilities.RNG.Next(legalJewelleryData.Count)];
+				break;
+		}
+
+		jewelleryItem.AddImplicits(data.ImplicitTypes);
+		ApplyJewelleryBaseStats(jewelleryItem, data);
+
+		if (String.IsNullOrEmpty(jewelleryItem.ItemBase)) {
+			jewelleryItem.ItemBase = jewelleryItem.ItemJewelleryBaseType.ToString();
+		}
+
+		return jewelleryItem;
 	}
 
 	private static void ApplyWeaponBaseStats(WeaponItem item, WeaponItemData data) {
@@ -339,8 +253,7 @@ public static class ItemGeneration {
 		item.PostGenCalculation();
 	}
 
-	private static void ApplyRarityAndAffixes(Item item) {
-		EItemRarity rarity = CalculateRarity();
+	private static void ApplyRarityAndAffixes(Item item, EItemRarity rarity) {
 		item.ItemRarity = rarity;
 
 		switch (rarity) {
@@ -404,6 +317,7 @@ public static class ItemGeneration {
 		item.ItemTexture = data.Texture;
 		item.SkillType = data.SkillType;
 
+		// Lav om senere, så denne gøres, når et skill gem samles op, og ikke allerede har et allokeret skill
 		Skill newSkill = (Skill)Activator.CreateInstance(item.SkillType);
 		item.SkillReference = newSkill;
 

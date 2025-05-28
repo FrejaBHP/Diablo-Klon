@@ -19,10 +19,10 @@ public partial class Item {
 	public int ItemLevel = 0;
 	public bool CanRarityChange = true;
 
-	public int MagicMaxPrefixes = 1;
-	public int MagicMaxSuffixes = 1;
-	public int RareMaxPrefixes = 3;
-	public int RareMaxSuffixes = 3;
+	public int MagicMaxPrefixes { get; protected set; } = 1;
+	public int MagicMaxSuffixes { get; protected set; } = 1;
+	public int RareMaxPrefixes { get; protected set; } = 3;
+	public int RareMaxSuffixes { get; protected set; } = 3;
 	public List<Affix> Implicits = new List<Affix>();
 	public List<Affix> Prefixes = new List<Affix>();
 	public List<Affix> Suffixes = new List<Affix>();
@@ -87,7 +87,7 @@ public partial class Item {
 		validPrefixes.RemoveAll(p => !Utilities.HasAnyFlags(ItemBaseSpecifierFlags, p.AffixItemSpecifierFlags));
 
 		for (int i = 0; i < Prefixes.Count; i++) {
-			validPrefixes.RemoveAll(p => p.AffixFamily == Prefixes[i].AffixFamily);
+			validPrefixes.RemoveAll(p => p.AffixFamily == Prefixes[i].Family);
 		}
 		
 		return validPrefixes;
@@ -98,7 +98,7 @@ public partial class Item {
 		validSuffixes.RemoveAll(s => !Utilities.HasAnyFlags(ItemBaseSpecifierFlags, s.AffixItemSpecifierFlags));
 
 		for (int i = 0; i < Suffixes.Count; i++) {
-			validSuffixes.RemoveAll(s => s.AffixFamily == Suffixes[i].AffixFamily);
+			validSuffixes.RemoveAll(s => s.AffixFamily == Suffixes[i].Family);
 		}
 
 		return validSuffixes;
@@ -303,7 +303,7 @@ public partial class WeaponItem : Item {
 	}
 
 	protected override void ApplyLocalAffix(Affix affix, bool add) {
-		switch (affix.AffixFamily) {
+		switch (affix.Family) {
 			case EAffixFamily.LocalFlatPhysDamage:
 				if (add) {
 					AddedPhysicalMinimumDamage += (int)affix.ValueFirst;
@@ -390,7 +390,7 @@ public partial class ArmourItem : Item {
 	}
 
 	protected override void ApplyLocalAffix(Affix affix, bool add) {
-		switch (affix.AffixFamily) {
+		switch (affix.Family) {
 			case EAffixFamily.LocalFlatArmour:
 				if (add) {
 					AddedArmour += (int)affix.ValueFirst;
@@ -461,6 +461,54 @@ public partial class JewelleryItem : Item {
 	public EItemJewelleryBaseType ItemJewelleryBaseType;
 }
 
+// Weapon Types
+
+public partial class OneHandedSwordItem : WeaponItem {
+	public OneHandedSwordItem() {
+		gridSizeX = 1;
+		gridSizeY = 3;
+		ItemAllBaseType = EItemAllBaseType.Weapon1H;
+		ItemWeaponBaseType = EItemWeaponBaseType.WeaponMelee1H;
+		ItemAffixFlags = EAffixItemFlags.OHWeapon | EAffixItemFlags.Weapon;
+		WeaponClass = "One Handed Sword";
+	}
+}
+
+public partial class TwoHandedSwordItem : WeaponItem {
+	public TwoHandedSwordItem() {
+		gridSizeX = 2;
+		gridSizeY = 4;
+		ItemAllBaseType = EItemAllBaseType.Weapon2H;
+		ItemWeaponBaseType = EItemWeaponBaseType.WeaponMelee2H;
+		ItemAffixFlags = EAffixItemFlags.THWeapon | EAffixItemFlags.Weapon;
+		WeaponClass = "Two Handed Sword";
+	}
+}
+
+public partial class StaffItem : WeaponItem {
+	public StaffItem() {
+		gridSizeX = 2;
+		gridSizeY = 4;
+		ItemAllBaseType = EItemAllBaseType.Weapon2H;
+		ItemWeaponBaseType = EItemWeaponBaseType.WeaponMelee2H;
+		ItemAffixFlags = EAffixItemFlags.THWeapon | EAffixItemFlags.Weapon | EAffixItemFlags.Staff;
+		WeaponClass = "Staff";
+	}
+}
+
+public partial class BowItem : WeaponItem {
+	public BowItem() {
+		gridSizeX = 2;
+		gridSizeY = 4;
+		ItemAllBaseType = EItemAllBaseType.Weapon2H;
+		ItemWeaponBaseType = EItemWeaponBaseType.WeaponRanged2H;
+		ItemAffixFlags = EAffixItemFlags.THWeapon | EAffixItemFlags.Weapon | EAffixItemFlags.Bow;
+		WeaponClass = "Bow";
+	}
+}
+
+// Armour Types
+
 public partial class HeadItem : ArmourItem {
 	public HeadItem() {
 		gridSizeX = 2;
@@ -530,6 +578,8 @@ public partial class LargeShieldItem : ShieldItem {
 	}
 }
 
+// Accessory Types
+
 public partial class BeltItem : JewelleryItem {
 	public BeltItem() {
 		gridSizeX = 2;
@@ -567,38 +617,5 @@ public partial class QuiverItem : JewelleryItem {
 		ItemAllBaseType = EItemAllBaseType.Quiver;
 		ItemJewelleryBaseType = EItemJewelleryBaseType.Quiver;
 		ItemAffixFlags = EAffixItemFlags.Quiver;
-	}
-}
-
-public partial class OneHandedSwordItem : WeaponItem {
-	public OneHandedSwordItem() {
-		gridSizeX = 1;
-		gridSizeY = 3;
-		ItemAllBaseType = EItemAllBaseType.Weapon1H;
-		ItemWeaponBaseType = EItemWeaponBaseType.WeaponMelee1H;
-		ItemAffixFlags = EAffixItemFlags.OHWeapon | EAffixItemFlags.Weapon;
-		WeaponClass = "One Handed Sword";
-	}
-}
-
-public partial class TwoHandedSwordItem : WeaponItem {
-	public TwoHandedSwordItem() {
-		gridSizeX = 2;
-		gridSizeY = 4;
-		ItemAllBaseType = EItemAllBaseType.Weapon2H;
-		ItemWeaponBaseType = EItemWeaponBaseType.WeaponMelee2H;
-		ItemAffixFlags = EAffixItemFlags.THWeapon | EAffixItemFlags.Weapon;
-		WeaponClass = "Two Handed Sword";
-	}
-}
-
-public partial class BowItem : WeaponItem {
-	public BowItem() {
-		gridSizeX = 2;
-		gridSizeY = 4;
-		ItemAllBaseType = EItemAllBaseType.Weapon2H;
-		ItemWeaponBaseType = EItemWeaponBaseType.WeaponRanged2H;
-		ItemAffixFlags = EAffixItemFlags.THWeapon | EAffixItemFlags.Weapon | EAffixItemFlags.Bow;
-		WeaponClass = "Bow";
 	}
 }

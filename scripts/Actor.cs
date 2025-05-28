@@ -437,10 +437,6 @@ public partial class Actor : CharacterBody3D {
         
     }
 
-    public void CalculateHit() {
-        HitDamageInstance damageInstance = new HitDamageInstance(0f, 0f, 0f, 0f, 0f);
-    }
-
     protected void RefreshLifeMana() {
         BasicStats.CurrentLife = BasicStats.TotalLife;
         BasicStats.CurrentMana = BasicStats.TotalMana;
@@ -472,11 +468,13 @@ public partial class Actor : CharacterBody3D {
                 }
             }
 
-            physDamage *= GetArmourMitigation(Armour.STotal, ActorLevel);
-            fireDamage *= GetArmourMitigation(Armour.STotal, ActorLevel) / 2;
-            coldDamage *= GetArmourMitigation(Armour.STotal, ActorLevel) / 2;
-            lightningDamage *= GetArmourMitigation(Armour.STotal, ActorLevel) / 2;
-            chaosDamage *= GetArmourMitigation(Armour.STotal, ActorLevel) / 2;
+            double armourMitigation = GetArmourMitigation(Armour.STotal, ActorLevel);
+            
+            physDamage *= armourMitigation;
+            fireDamage *= armourMitigation / 2;
+            coldDamage *= armourMitigation / 2;
+            lightningDamage *= armourMitigation / 2;
+            chaosDamage *= armourMitigation / 2;
         }
 
         physDamage *= 1 - ((Resistances.ResPhysical - Penetrations.PenPhysical) / 100);
@@ -500,12 +498,10 @@ public partial class Actor : CharacterBody3D {
     }
 
     public static double GetArmourMitigation(double armour, int level) {
-        //return Math.Clamp(200 / (200 + armour - (20 * (level - 1))), 0, 1);
         return Math.Clamp(200 / (200 + (armour * Math.Pow(0.96, level - 1))), 0, 1);
     }
 
     public static double GetEvasionChance(double evasion, int level) {
-        //return Math.Clamp(1 - (200 / (200 + evasion - (20 * (level - 1)))), 0, 1);
         return Math.Clamp(1 - (200 / (200 + (evasion * Math.Pow(0.96, level - 1)))), 0, 1);
     }
 
