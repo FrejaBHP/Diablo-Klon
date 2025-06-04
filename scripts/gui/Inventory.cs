@@ -37,7 +37,6 @@ public partial class Inventory : Control {
 
     public override void _Ready() {
         AssignAndPrepareNodes();
-
         GenerateInventory();
     }
 
@@ -93,7 +92,8 @@ public partial class Inventory : Control {
                 // If an item is selected and the click is inside the inventory panel, try and reparent it to the grid slot matching the top-left corner of the item's bounding box
                 // A small adjustment is added to the offset to make the expected placement match the art better and prevent placing them in unintended slots
                 if (InventoryGridContainer.GetGlobalRect().HasPoint(selectedItem.GlobalPosition)) {
-                    Vector2 offset = selectedItem.GlobalPosition - InventoryGridContainer.GlobalPosition + new Vector2(12, 12);
+                    Vector2 magicOffset = new(8, 8);
+                    Vector2 offset = selectedItem.GlobalPosition - InventoryGridContainer.GlobalPosition + magicOffset;
                     Vector2 slotSize = invGridCells[0, 0].Size;
 
                     int slotX = (int)Math.Floor(offset.X / slotSize.X);
@@ -161,7 +161,7 @@ public partial class Inventory : Control {
         
         for (int i = 0; i < item.GetGridSize().X; i++) {
             for (int j = 0; j < item.GetGridSize().Y; j++) {
-                if (!invGridCells[slotX + i, slotY + j].IsEmpty) {
+                if (slotX + i >= inventorySizeX || slotY + j >= inventorySizeY || !invGridCells[slotX + i, slotY + j].IsEmpty) {
                     return false;
                 }
                 tempUsedSlots.Add(invGridCells[slotX + i, slotY + j]);
@@ -253,31 +253,39 @@ public partial class Inventory : Control {
         }
     }
 
+    // Handles special equipment combination cases not covered by just an equipment slot's permissions
     public bool CanEquipItemInSlot(EquipmentSlot slot, InventoryItem item) {
-        if (slot.Slot == EItemEquipmentSlot.WeaponLeft) {
-            // Disallow equipping off hand items in the main hand
-            if (item.ItemReference.ItemAllBaseType == EItemAllBaseType.Shield && item.ItemReference.ItemAllBaseType == EItemAllBaseType.Quiver) {
-                return false;
-            }
-        }
-        else if (slot.Slot == EItemEquipmentSlot.WeaponRight) {
-            // If trying to equip a 2-handed weapon in the off hand slot
-            if (item.ItemReference.ItemAllBaseType == EItemAllBaseType.Weapon2H) {
-                return false;
-            }
+        if (slot.Slot == EItemEquipmentSlot.WeaponRight) {
             // If main hand is not empty
-            else if (WeaponSlotLeft.ItemInSlot != null) {
-                WeaponItem wItem = WeaponSlotLeft.ItemInSlot.ItemReference as WeaponItem;
+            if (WeaponSlotLeft.ItemInSlot != null) {
+                WeaponItem mhItem = WeaponSlotLeft.ItemInSlot.ItemReference as WeaponItem;
+                
+                if (mhItem.ItemAllBaseType == EItemAllBaseType.Weapon1H) {
+                    // Disallow equipping a quiver with 1-handed weapons
+                    if (item.ItemReference.ItemAllBaseType == EItemAllBaseType.Quiver) {
+                        return false;
+                    }
+                    // Disallow dual wielding 1-handed weapons of different types (melee or ranged)
+                    else if (item.ItemReference.GetType().IsSubclassOf(typeof(WeaponItem))) {
+                        WeaponItem wItem = item.ItemReference as WeaponItem;
 
-                // Allow equipping a quiver with a bow
-                if (wItem.ItemAllBaseType == EItemAllBaseType.Weapon2H) {
-                    if (wItem.ItemWeaponBaseType == EItemWeaponBaseType.WeaponRanged2H && item.ItemReference.ItemAllBaseType == EItemAllBaseType.Quiver) {
-                        return true;
+                        if (mhItem.ItemWeaponBaseType == EItemWeaponBaseType.WeaponMelee1H && wItem.ItemWeaponBaseType == EItemWeaponBaseType.WeaponRanged1H) {
+                            return false;
+                        }
+                        else if (mhItem.ItemWeaponBaseType == EItemWeaponBaseType.WeaponRanged1H && wItem.ItemWeaponBaseType == EItemWeaponBaseType.WeaponMelee1H) {
+                            return false;
+                        }
                     }
                 }
+                else if (mhItem.ItemAllBaseType == EItemAllBaseType.Weapon2H) {
+                    // Allow equipping a quiver with a bow
+                    if (mhItem.ItemWeaponBaseType == EItemWeaponBaseType.WeaponRanged2H && item.ItemReference.ItemAllBaseType == EItemAllBaseType.Quiver) {
+                        return true;
+                    }
 
-                // All other combinations are denied
-                return false;
+                    // Disallow other combinations
+                    return false;
+                }
             }
         }
 
@@ -290,21 +298,13 @@ public partial class Inventory : Control {
         slot.AddChild(item);
 
         ResetSelectedItem(item);
-        HandlePotentialWeaponSlotConflict(slot, item);
+        HandleWeaponSlots(slot, item);
 
         PlayerOwner.ApplyItemStats(slot, item.ItemReference);
     }
 
     public void UnequipItemInSlot(EquipmentSlot slot, InventoryItem item) {
         item.RemoveTooltip();
-        
-        if (slot.Slot == EItemEquipmentSlot.WeaponLeft) {
-            PlayerOwner.AssignMainHand(null);
-        }
-        else if (slot.Slot == EItemEquipmentSlot.WeaponRight) {
-            PlayerOwner.AssignOffHand(null);
-        }
-
         slot.RemoveChild(item);
 
         if (!TryAddItemToInventory(ref item)) {
@@ -313,6 +313,30 @@ public partial class Inventory : Control {
         else {
             item.ToggleClickable();
             item.ToggleBackground();
+        }
+
+        if (slot.Slot == EItemEquipmentSlot.WeaponLeft) {
+            // Dirty solution to swapping remaining 1h weapon from the off hand into the main hand when main hand is unequipped
+            // Please rewrite equipping and unequipping logic to be cleaner than this :pleading:
+            if (WeaponSlotRight.ItemInSlot != null && WeaponSlotRight.ItemInSlot.ItemReference.GetType().IsSubclassOf(typeof(WeaponItem))) {
+                WeaponItem wItem = WeaponSlotRight.ItemInSlot.ItemReference as WeaponItem;
+                
+                if (wItem.ItemWeaponBaseType == EItemWeaponBaseType.WeaponMelee1H || wItem.ItemWeaponBaseType == EItemWeaponBaseType.WeaponRanged1H) {
+                    InventoryItem ohItem = WeaponSlotRight.ItemInSlot;
+                    WeaponSlotRight.RemoveChild(ohItem);
+                    WeaponSlotRight.SetItem(null);
+                    WeaponSlotLeft.SetItemSilent(ohItem);
+                    WeaponSlotLeft.AddChild(ohItem);
+                    PlayerOwner.AssignOffHand(null);
+                    PlayerOwner.AssignMainHand(wItem);
+                }
+            }
+            else {
+                PlayerOwner.AssignMainHand(null);
+            }
+        }
+        else if (slot.Slot == EItemEquipmentSlot.WeaponRight) {
+            PlayerOwner.AssignOffHand(null);
         }
 
         PlayerOwner.RemoveItemStats(slot, item.ItemReference);
@@ -333,13 +357,13 @@ public partial class Inventory : Control {
         }
         
         ResetSelectedItem(newItem);
-        HandlePotentialWeaponSlotConflict(slot, newItem);
+        HandleWeaponSlots(slot, newItem);
 
         PlayerOwner.RemoveItemStats(slot, oldItem.ItemReference);
         PlayerOwner.ApplyItemStats(slot, newItem.ItemReference);
     }
 
-    protected void HandlePotentialWeaponSlotConflict(EquipmentSlot slot, InventoryItem item) {
+    protected void HandleWeaponSlots(EquipmentSlot slot, InventoryItem item) {
         if (slot.Slot == EItemEquipmentSlot.WeaponLeft) {
             if (item.ItemReference.GetType().IsSubclassOf(typeof(WeaponItem))) {
                 WeaponItem wItem = item.ItemReference as WeaponItem;
@@ -363,7 +387,22 @@ public partial class Inventory : Control {
             }
         }
         else if (slot.Slot == EItemEquipmentSlot.WeaponRight) {
-            PlayerOwner.AssignOffHand(item.ItemReference);
+            if (WeaponSlotLeft.ItemInSlot == null && item.ItemReference.GetType().IsSubclassOf(typeof(WeaponItem))) {
+                WeaponItem wItem = item.ItemReference as WeaponItem;
+
+                // Extremely dirty solution to placing equipped 1h weapon from off hand to main hand when main hand is empty
+                // Please rewrite equipping and unequipping logic to be cleaner than this :pleading:
+                PlayerOwner.PlayerHUD.RemoveItemTooltip();
+                slot.RemoveChild(item);
+                slot.RemoveHighlight();
+                slot.SetItem(null);
+                WeaponSlotLeft.SetItem(item);
+                WeaponSlotLeft.AddChild(item);
+                PlayerOwner.AssignMainHand(wItem);
+            }
+            else {
+                PlayerOwner.AssignOffHand(item.ItemReference);
+            }
         }
     }
 

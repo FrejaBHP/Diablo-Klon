@@ -22,25 +22,25 @@ public partial class OffencePanel : StatPanel {
 
     public void SetOffhandVisibility(bool ohEquipped) {
         if (!ohEquipped) {
-            OffHandPhysDamage.Visible = false;
-            OffHandAttackSpeed.Visible = false;
-            OffHandCritChance.Visible = false;
+            //OffHandPhysDamage.Visible = false;
+            //OffHandAttackSpeed.Visible = false;
+            //OffHandCritChance.Visible = false;
         }
         else {
-            OffHandPhysDamage.Visible = true;
-            OffHandAttackSpeed.Visible = true;
-            OffHandCritChance.Visible = true;
+            //OffHandPhysDamage.Visible = true;
+            //OffHandAttackSpeed.Visible = true;
+            //OffHandCritChance.Visible = true;
         }
         ApplyAlternatingBackground();
     }
 
     private void BuildTable() {
-        AddEntry(ref MainHandPhysDamage, "MH Physical Damage");
-        AddEntry(ref MainHandAttackSpeed, "MH Attacks per Second");
-        AddEntry(ref MainHandCritChance, "MH Critical Strike Chance");
-        AddEntry(ref OffHandPhysDamage, "OH Physical Damage");
-        AddEntry(ref OffHandAttackSpeed, "OH Attacks per Second");
-        AddEntry(ref OffHandCritChance, "OH Critical Strike Chance");
+        //AddEntry(ref MainHandPhysDamage, "MH Physical Damage");
+        //AddEntry(ref MainHandAttackSpeed, "MH Attacks per Second");
+        //AddEntry(ref MainHandCritChance, "MH Critical Strike Chance");
+        //AddEntry(ref OffHandPhysDamage, "OH Physical Damage");
+        //AddEntry(ref OffHandAttackSpeed, "OH Attacks per Second");
+        //AddEntry(ref OffHandCritChance, "OH Critical Strike Chance");
         AddEntry(ref CritMulti, "Critical Strike Multiplier");
     }
 }

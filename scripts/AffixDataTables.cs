@@ -38,6 +38,38 @@ public static class AffixDataTables {
 			EAffixItemFlags.Weapon,
 			EItemBaseSpecifierFlags.NoFlags
 		),
+		new(typeof(Local1HFlatFireDamageAffix), EAffixFamily.LocalFlatFireDamage,
+			EAffixItemFlags.OHWeapon,
+			EItemBaseSpecifierFlags.NoFlags
+		),
+		new(typeof(Local2HFlatFireDamageAffix), EAffixFamily.LocalFlatFireDamage,
+			EAffixItemFlags.THWeapon,
+			EItemBaseSpecifierFlags.NoFlags
+		),
+		new(typeof(Local1HFlatColdDamageAffix), EAffixFamily.LocalFlatColdDamage,
+			EAffixItemFlags.OHWeapon,
+			EItemBaseSpecifierFlags.NoFlags
+		),
+		new(typeof(Local2HFlatColdDamageAffix), EAffixFamily.LocalFlatColdDamage,
+			EAffixItemFlags.THWeapon,
+			EItemBaseSpecifierFlags.NoFlags
+		),
+		new(typeof(Local1HFlatLightningDamageAffix), EAffixFamily.LocalFlatLightningDamage,
+			EAffixItemFlags.OHWeapon,
+			EItemBaseSpecifierFlags.NoFlags
+		),
+		new(typeof(Local2HFlatLightningDamageAffix), EAffixFamily.LocalFlatLightningDamage,
+			EAffixItemFlags.THWeapon,
+			EItemBaseSpecifierFlags.NoFlags
+		),
+		new(typeof(Local1HFlatChaosDamageAffix), EAffixFamily.LocalFlatChaosDamage,
+			EAffixItemFlags.OHWeapon,
+			EItemBaseSpecifierFlags.NoFlags
+		),
+		new(typeof(Local2HFlatChaosDamageAffix), EAffixFamily.LocalFlatChaosDamage,
+			EAffixItemFlags.THWeapon,
+			EItemBaseSpecifierFlags.NoFlags
+		),
 		new(typeof(LocalFlatArmourAffix), EAffixFamily.LocalFlatArmour,
 			EAffixItemFlags.Armour,
 			EItemBaseSpecifierFlags.AArmour | EItemBaseSpecifierFlags.AArmourEvasion | EItemBaseSpecifierFlags.AEnergyShieldArmour

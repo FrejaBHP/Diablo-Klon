@@ -41,6 +41,11 @@ public enum EStatName {
 	FlatPhysDamage,
 	IncreasedPhysDamage,
 
+	FlatMinFireDamage,
+	FlatMaxFireDamage,
+	FlatFireDamage,
+	IncreasedFireDamage,
+
 	IncreasedMeleeDamage,
 	IncreasedRangedDamage,
 	IncreasedSpellDamage,
@@ -117,6 +122,18 @@ public enum EAffixFamily {
 	FlatPhysDamage,
 	IncreasedPhysDamage,
 
+	FlatFireDamage,
+	IncreasedFireDamage,
+
+	FlatColdDamage,
+	IncreasedColdDamage,
+
+	FlatLightningDamage,
+	IncreasedLightningDamage,
+
+	FlatChaosDamage,
+	IncreasedChaosDamage,
+
 	IncreasedMeleeDamage,
 	IncreasedRangedDamage,
 	IncreasedSpellDamage,
@@ -143,6 +160,11 @@ public enum EAffixFamily {
 	// Local
 	LocalFlatPhysDamage,
 	LocalIncreasedPhysDamage,
+
+	LocalFlatFireDamage,
+	LocalFlatColdDamage,
+	LocalFlatLightningDamage,
+	LocalFlatChaosDamage,
 
 	LocalIncreasedAttackSpeed,
 	LocalIncreasedCritChance,
@@ -293,6 +315,7 @@ public enum EDamageCategory {
 public enum ESkillName {
 	BasicThrust,
 	BasicShoot,
+	PrismaticBolt,
 	COUNT
 }
 

@@ -231,8 +231,24 @@ public partial class InventoryItem : PanelContainer {
 			tooltipContent.BaseStatsContainer.AddChild(weaponClassLabel);
 
 			if (item.PhysicalMinimumDamage > 0) {
-				HBoxContainer physLabel = GenerateBaseStatLabel("Physical Damage:", item.PhysicalMinimumDamage.ToString() + "-" + item.PhysicalMaximumDamage.ToString(), item.PhysicalMinimumDamage > item.BasePhysicalMinimumDamage);
+				HBoxContainer physLabel = GenerateBaseStatLabel("Physical Damage:", $"{item.PhysicalMinimumDamage} - {item.PhysicalMaximumDamage}", item.PhysicalMinimumDamage > item.BasePhysicalMinimumDamage);
 				tooltipContent.BaseStatsContainer.AddChild(physLabel);
+			}
+			if (item.AddedFireMinimumDamage > 0) {
+				HBoxContainer fireLabel = GenerateColouredBaseStatLabel("Fire Damage:", $"{item.AddedFireMinimumDamage} - {item.AddedFireMaximumDamage}", UILib.ColorFire);
+				tooltipContent.BaseStatsContainer.AddChild(fireLabel);
+			}
+			if (item.AddedColdMinimumDamage > 0) {
+				HBoxContainer coldLabel = GenerateColouredBaseStatLabel("Cold Damage:", $"{item.AddedColdMinimumDamage} - {item.AddedColdMaximumDamage}", UILib.ColorCold);
+				tooltipContent.BaseStatsContainer.AddChild(coldLabel);
+			}
+			if (item.AddedLightningMinimumDamage > 0) {
+				HBoxContainer lightningLabel = GenerateColouredBaseStatLabel("Lightning Damage:", $"{item.AddedLightningMinimumDamage} - {item.AddedLightningMaximumDamage}", UILib.ColorLightning);
+				tooltipContent.BaseStatsContainer.AddChild(lightningLabel);
+			}
+			if (item.AddedChaosMinimumDamage > 0) {
+				HBoxContainer chaosLabel = GenerateColouredBaseStatLabel("Chaos Damage:", $"{item.AddedChaosMinimumDamage} - {item.AddedChaosMaximumDamage}", UILib.ColorChaos);
+				tooltipContent.BaseStatsContainer.AddChild(chaosLabel);
 			}
 
 			HBoxContainer critLabel = GenerateBaseStatLabel("Critical Strike Chance:", item.GetCritChance(), item.CriticalStrikeChance > item.BaseCriticalStrikeChance);
@@ -248,12 +264,10 @@ public partial class InventoryItem : PanelContainer {
 				HBoxContainer armourLabel = GenerateBaseStatLabel("Armour:", item.Armour.ToString(), item.Armour > item.BaseArmour);
 				tooltipContent.BaseStatsContainer.AddChild(armourLabel);
 			}
-
 			if (item.ItemDefences.HasFlag(EItemDefences.Evasion)) {
 				HBoxContainer evasionLabel = GenerateBaseStatLabel("Evasion Rating:", item.Evasion.ToString(), item.Evasion > item.BaseEvasion);
 				tooltipContent.BaseStatsContainer.AddChild(evasionLabel);
 			}
-
 			if (item.ItemDefences.HasFlag(EItemDefences.EnergyShield)) {
 				HBoxContainer esLabel = GenerateBaseStatLabel("Energy Shield:", item.EnergyShield.ToString(), item.EnergyShield > item.BaseEnergyShield);
 				tooltipContent.BaseStatsContainer.AddChild(esLabel);
@@ -324,12 +338,40 @@ public partial class InventoryItem : PanelContainer {
 			tooltipContent.StatsContainer.AddChild(dmgLabel);
 		}
 
-		Label descriptionLabel = GenerateDescriptionLabel(skillItem.SkillReference.Description);
-		tooltipContent.DescriptionContainer.AddChild(descriptionLabel);
+		if (skillItem.SkillReference.Type == ESkillType.Spell) {
+			if (skillItem.SkillReference is ISpell spell) {
+				HBoxContainer castTimeLabel = GenerateBaseStatLabel("Cast Time:", spell.BaseCastTime.ToString() + " sec", false);
+				tooltipContent.StatsContainer.AddChild(castTimeLabel);
+			}
+			
+			HBoxContainer dmgLabel = GenerateBaseStatLabel("Added Damage Effectiveness:", skillItem.SkillReference.GetDamageModifier() + "%", false);
+			tooltipContent.StatsContainer.AddChild(dmgLabel);
+		}
 
-		// Indtil der tilføjes synlige effekter/scaling
-		tooltipContent.EffectSeparator.Visible = false;
-		tooltipContent.EffectContainer.Visible = false;
+		//Label descriptionLabel = GenerateDescriptionLabel(skillItem.SkillReference.Description);
+		//tooltipContent.DescriptionContainer.AddChild(descriptionLabel);
+		tooltipContent.DescriptionLabel.Text = skillItem.SkillReference.Description;
+
+		if (skillItem.SkillReference.BaseDamageModifiers.Physical.SMinBase > 0) {
+            Label physLabel = GenerateAffixLabel($"Deals {Math.Round(skillItem.SkillReference.BaseDamageModifiers.Physical.SMinBase, 0)} - {Math.Round(skillItem.SkillReference.BaseDamageModifiers.Physical.SMaxBase, 0)} Physical Damage");
+            tooltipContent.EffectContainer.AddChild(physLabel);
+        }
+		if (skillItem.SkillReference.BaseDamageModifiers.Fire.SMinBase > 0) {
+            Label fireLabel = GenerateAffixLabel($"Deals {Math.Round(skillItem.SkillReference.BaseDamageModifiers.Fire.SMinBase, 0)} - {Math.Round(skillItem.SkillReference.BaseDamageModifiers.Fire.SMaxBase, 0)} Fire Damage");
+            tooltipContent.EffectContainer.AddChild(fireLabel);
+        }
+		if (skillItem.SkillReference.BaseDamageModifiers.Cold.SMinBase > 0) {
+            Label coldLabel = GenerateAffixLabel($"Deals {Math.Round(skillItem.SkillReference.BaseDamageModifiers.Cold.SMinBase, 0)} - {Math.Round(skillItem.SkillReference.BaseDamageModifiers.Cold.SMaxBase, 0)} Cold Damage");
+            tooltipContent.EffectContainer.AddChild(coldLabel);
+        }
+		if (skillItem.SkillReference.BaseDamageModifiers.Lightning.SMinBase > 0) {
+            Label lightningLabel = GenerateAffixLabel($"Deals {Math.Round(skillItem.SkillReference.BaseDamageModifiers.Lightning.SMinBase, 0)} - {Math.Round(skillItem.SkillReference.BaseDamageModifiers.Lightning.SMaxBase, 0)} Lightning Damage");
+            tooltipContent.EffectContainer.AddChild(lightningLabel);
+        }
+		if (skillItem.SkillReference.BaseDamageModifiers.Chaos.SMinBase > 0) {
+            Label chaosLabel = GenerateAffixLabel($"Deals {Math.Round(skillItem.SkillReference.BaseDamageModifiers.Chaos.SMinBase, 0)} - {Math.Round(skillItem.SkillReference.BaseDamageModifiers.Chaos.SMaxBase, 0)} Chaos Damage");
+            tooltipContent.EffectContainer.AddChild(chaosLabel);
+        }
 		
 		return tooltipContent;
 	}
@@ -351,6 +393,26 @@ public partial class InventoryItem : PanelContainer {
 		if (highlight) {
 			baseStatValueLabel.AddThemeColorOverride("font_color", UILib.ColorBlurple);
 		}
+		labelContainer.AddChild(baseStatValueLabel);
+
+		return labelContainer;
+	}
+
+	protected static HBoxContainer GenerateColouredBaseStatLabel(string statName, string statValue, Color color) {
+		HBoxContainer labelContainer = new HBoxContainer();
+		labelContainer.SizeFlagsHorizontal = SizeFlags.ShrinkCenter;
+		labelContainer.MouseFilter = MouseFilterEnum.Ignore;
+
+		Label baseStatNameLabel = new Label();
+		baseStatNameLabel.Text = statName;
+		baseStatNameLabel.AddThemeFontSizeOverride("font_size", 15);
+		baseStatNameLabel.AddThemeColorOverride("font_color", UILib.ColorGrey);
+		labelContainer.AddChild(baseStatNameLabel);
+
+		Label baseStatValueLabel = new Label();
+		baseStatValueLabel.Text = statValue;
+		baseStatValueLabel.AddThemeFontSizeOverride("font_size", 15);
+		baseStatValueLabel.AddThemeColorOverride("font_color", color);
 		labelContainer.AddChild(baseStatValueLabel);
 
 		return labelContainer;
@@ -378,6 +440,7 @@ public partial class InventoryItem : PanelContainer {
 		return affixTextLabel;
 	}
 
+	/*
 	protected static Label GenerateDescriptionLabel(string descriptionText) {
 		Label descriptionTextLabel = new Label();
 
@@ -390,4 +453,5 @@ public partial class InventoryItem : PanelContainer {
 		
 		return descriptionTextLabel;
 	}
+	*/
 }

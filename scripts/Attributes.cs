@@ -251,6 +251,7 @@ public partial class DamageStat() {
 		}
 	}
 
+    /*
     private double sMinTotal;
 	public double SMinTotal {
 		get => sMinTotal;
@@ -294,11 +295,48 @@ public partial class DamageStat() {
             }
 		}
 	}
+    */
 
     private void CalculateStats() {
-        sMinTotal = (sMinBase + sMinAdded) * (1 + sIncreased) * sMore;
-        sMaxTotal = (sMaxBase + sMaxAdded) * (1 + sIncreased) * sMore;
-        DamageStatsTotalChanged?.Invoke(sMinTotal, sMaxTotal);
+        //sMinTotal = (sMinBase + sMinAdded) * (1 + sIncreased) * sMore;
+        //sMaxTotal = (sMaxBase + sMaxAdded) * (1 + sIncreased) * sMore;
+        //DamageStatsTotalChanged?.Invoke(sMinTotal, sMaxTotal);
+    }
+
+    public void CalculateTotal(out double totalMin, out double totalMax) {
+        totalMin = (sMinBase + sMinAdded) * (1 + sIncreased) * sMore;
+        totalMax = (sMaxBase + sMaxAdded) * (1 + sIncreased) * sMore;
+
+        if (totalMin < 0) {
+            totalMin = 0;
+        }
+
+        if (totalMax < 0) {
+            totalMax = 0;
+        }
+
+        if (ShouldRoundToWholeNumber) {
+            totalMin = Math.Round(totalMin, 0);
+            totalMax = Math.Round(totalMax, 0);
+        }
+    }
+
+    public void CalculateTotalWithBase(double baseMin, double baseMax, out double totalMin, out double totalMax) {
+        totalMin = (baseMin + sMinAdded) * (1 + sIncreased) * sMore;
+        totalMax = (baseMax + sMaxAdded) * (1 + sIncreased) * sMore;
+
+        if (totalMin < 0) {
+            totalMin = 0;
+        }
+
+        if (totalMax < 0) {
+            totalMax = 0;
+        }
+
+        if (ShouldRoundToWholeNumber) {
+            totalMin = Math.Round(totalMin, 0);
+            totalMax = Math.Round(totalMax, 0);
+        }
     }
 
     public DamageStat ShallowCopy() {
@@ -342,6 +380,6 @@ public partial class DamageStat() {
     }
 
     public override string ToString() {
-        return $"Base: {SMinBase} - {SMaxBase}\nAdded: {SMinAdded} - {sMaxAdded}\nInc: {SIncreased}% / More: {SMore}%";
+        return $"Base: {SMinBase} - {sMaxBase}\nAdded: {SMinAdded} - {sMaxAdded}\nInc: {SIncreased}% / More: {SMore}%";
     }
 }

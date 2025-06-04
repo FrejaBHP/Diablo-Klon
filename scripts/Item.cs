@@ -263,6 +263,15 @@ public partial class WeaponItem : Item {
 	public int PhysicalMinimumDamage;
 	public int PhysicalMaximumDamage;
 
+	public int AddedFireMinimumDamage = 0;
+	public int AddedFireMaximumDamage = 0;
+	public int AddedColdMinimumDamage = 0;
+	public int AddedColdMaximumDamage = 0;
+	public int AddedLightningMinimumDamage = 0;
+	public int AddedLightningMaximumDamage = 0;
+	public int AddedChaosMinimumDamage = 0;
+	public int AddedChaosMaximumDamage = 0;
+
 	public double BaseAttackSpeed;
 	public double PercentageAttackSpeed = 1;
 	public double AttackSpeed;
@@ -324,6 +333,50 @@ public partial class WeaponItem : Item {
 					PercentagePhysicalDamage -= affix.ValueFirst;
 				}
 				CalculatePhysicalDamage();
+				break;
+
+			case EAffixFamily.LocalFlatFireDamage:
+				if (add) {
+					AddedFireMinimumDamage += (int)affix.ValueFirst;
+					AddedFireMaximumDamage += (int)affix.ValueSecond;
+				}
+				else {
+					AddedFireMinimumDamage -= (int)affix.ValueFirst;
+					AddedFireMaximumDamage -= (int)affix.ValueSecond;
+				}
+				break;
+
+			case EAffixFamily.LocalFlatColdDamage:
+				if (add) {
+					AddedColdMinimumDamage += (int)affix.ValueFirst;
+					AddedColdMaximumDamage += (int)affix.ValueSecond;
+				}
+				else {
+					AddedColdMinimumDamage -= (int)affix.ValueFirst;
+					AddedColdMaximumDamage -= (int)affix.ValueSecond;
+				}
+				break;
+			
+			case EAffixFamily.LocalFlatLightningDamage:
+				if (add) {
+					AddedLightningMinimumDamage += (int)affix.ValueFirst;
+					AddedLightningMaximumDamage += (int)affix.ValueSecond;
+				}
+				else {
+					AddedLightningMinimumDamage -= (int)affix.ValueFirst;
+					AddedLightningMaximumDamage -= (int)affix.ValueSecond;
+				}
+				break;
+			
+			case EAffixFamily.LocalFlatChaosDamage:
+				if (add) {
+					AddedChaosMinimumDamage += (int)affix.ValueFirst;
+					AddedChaosMaximumDamage += (int)affix.ValueSecond;
+				}
+				else {
+					AddedChaosMinimumDamage -= (int)affix.ValueFirst;
+					AddedChaosMaximumDamage -= (int)affix.ValueSecond;
+				}
 				break;
 
 			case EAffixFamily.LocalIncreasedAttackSpeed:

@@ -340,6 +340,23 @@ public class ActorMainHand {
     public double CritChance;
 }
 
+public class ActorWeaponStats {
+    public int PhysMinDamage;
+    public int PhysMaxDamage;
+    public int FireMinDamage;
+    public int FireMaxDamage;
+    public int ColdMinDamage;
+    public int ColdMaxDamage;
+    public int LightningMinDamage;
+    public int LightningMaxDamage;
+    public int ChaosMinDamage;
+    public int ChaosMaxDamage;
+
+    public double Range;
+    public double AttackSpeed;
+    public double CritChance;
+}
+
 public partial class Actor : CharacterBody3D {
     [Signal]
     public delegate void DamageTakenEventHandler(double damage, bool isCritical, bool showDamageText);
@@ -377,9 +394,13 @@ public partial class Actor : CharacterBody3D {
 
     public float OutgoingEffectAttachmentHeight { get; protected set; } = 1f;
 
-    public ActorMainHand MainHand { get; protected set; } = new();
+    public WeaponItem MainHand { get; protected set; } = null;
+    public ActorWeaponStats MainHandStats { get; protected set; } = new();
     public Item OffHandItem { get; protected set; } = null;
     public bool IsOffHandAWeapon { get; protected set; } = false;
+    public ActorWeaponStats OffHandStats { get; protected set; } = new();
+    public bool IsDualWielding { get; protected set; } = false;
+    public bool IsUsingMainHandDW { get; protected set; } = true;
 
     public int UnarmedMinDamage { get; protected set; }
     public int UnarmedMaxDamage { get; protected set; }
@@ -469,12 +490,13 @@ public partial class Actor : CharacterBody3D {
             }
 
             double armourMitigation = GetArmourMitigation(Armour.STotal, ActorLevel);
+            double halfMitigation = armourMitigation + ((1 - armourMitigation) * 0.5);
             
             physDamage *= armourMitigation;
-            fireDamage *= armourMitigation / 2;
-            coldDamage *= armourMitigation / 2;
-            lightningDamage *= armourMitigation / 2;
-            chaosDamage *= armourMitigation / 2;
+            fireDamage *= halfMitigation;
+            coldDamage *= halfMitigation;
+            lightningDamage *= halfMitigation;
+            chaosDamage *= halfMitigation;
         }
 
         physDamage *= 1 - ((Resistances.ResPhysical - Penetrations.PenPhysical) / 100);

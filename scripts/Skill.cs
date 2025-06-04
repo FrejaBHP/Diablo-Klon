@@ -9,7 +9,7 @@ public abstract class Skill {
 
     public DamageModifiers BaseDamageModifiers { get; protected set; } = new(); // Kan måske erstattes med nogle mere simple værdier
     public DamageModifiers ActiveDamageModifiers { get; protected set; } = new(); // Som fx bare have en double der hedder "IncreasedPhys" og lægge det til i det relevante sted i et skill
-    public double CriticalStrikeChance;
+    public double BaseCriticalStrikeChance;
     public double CriticalStrikeMulti;
 
     public string Name { get; protected set; }
@@ -56,7 +56,7 @@ public abstract class Skill {
             if (ActorOwner.IsIgnoringWeaponRestrictions) {
                 return true;
             }
-            return attack.AreActorWeaponsCompatible(ActorOwner.MainHand.Weapon, ActorOwner.OffHandItem);
+            return attack.AreActorWeaponsCompatible(ActorOwner.MainHand, ActorOwner.OffHandItem);
         }
 
         return true;
@@ -87,16 +87,47 @@ public abstract class Skill {
     }
 
     public SkillDamage RollForDamage(bool canCrit) {
+        double physical = 0;
+        double fire = 0;
+        double cold = 0;
+        double lightning = 0;
+        double chaos = 0;
         bool isCritical = false;
-        if (canCrit) {
-            isCritical = RollForCritical(CriticalStrikeChance);
-        }
 
-        double physical = Utilities.RandomDouble(ActiveDamageModifiers.Physical.SMinTotal, ActiveDamageModifiers.Physical.SMaxTotal);
-        double fire = Utilities.RandomDouble(ActiveDamageModifiers.Fire.SMinTotal, ActiveDamageModifiers.Fire.SMaxTotal);
-        double cold = Utilities.RandomDouble(ActiveDamageModifiers.Cold.SMinTotal, ActiveDamageModifiers.Cold.SMaxTotal);
-        double lightning = Utilities.RandomDouble(ActiveDamageModifiers.Lightning.SMinTotal, ActiveDamageModifiers.Lightning.SMaxTotal);
-        double chaos = Utilities.RandomDouble(ActiveDamageModifiers.Chaos.SMinTotal, ActiveDamageModifiers.Chaos.SMaxTotal);
+        if (this is IAttack attack) {
+            attack.GetUsedWeaponStats(ActorOwner, out ActorWeaponStats wStats);
+
+            if (canCrit) {
+                isCritical = RollForCritical(wStats.CritChance * ActorOwner.CritChanceMod.STotal);
+            }
+
+            ActiveDamageModifiers.Physical.CalculateTotalWithBase(wStats.PhysMinDamage, wStats.PhysMaxDamage, out double pMin, out double pMax);
+            physical = Utilities.RandomDouble(pMin, pMax);
+            ActiveDamageModifiers.Fire.CalculateTotalWithBase(wStats.FireMinDamage, wStats.FireMaxDamage, out double fMin, out double fMax);
+            fire = Utilities.RandomDouble(fMin, fMax);
+            ActiveDamageModifiers.Cold.CalculateTotalWithBase(wStats.ColdMinDamage, wStats.ColdMaxDamage, out double cMin, out double cMax);
+            cold = Utilities.RandomDouble(cMin, cMax);
+            ActiveDamageModifiers.Lightning.CalculateTotalWithBase(wStats.LightningMinDamage, wStats.LightningMaxDamage, out double lMin, out double lMax);
+            lightning = Utilities.RandomDouble(lMin, lMax);
+            ActiveDamageModifiers.Chaos.CalculateTotalWithBase(wStats.ChaosMinDamage, wStats.ChaosMaxDamage, out double chMin, out double chMax);
+            chaos = Utilities.RandomDouble(chMin, chMax);
+        }
+        else if (this is ISpell spell) {
+            if (canCrit) {
+                isCritical = RollForCritical(BaseCriticalStrikeChance * ActorOwner.CritChanceMod.STotal);
+            }
+
+            ActiveDamageModifiers.Physical.CalculateTotal(out double pMin, out double pMax);
+            physical = Utilities.RandomDouble(pMin, pMax);
+            ActiveDamageModifiers.Fire.CalculateTotal(out double fMin, out double fMax);
+            fire = Utilities.RandomDouble(fMin, fMax);
+            ActiveDamageModifiers.Cold.CalculateTotal(out double cMin, out double cMax);
+            cold = Utilities.RandomDouble(cMin, cMax);
+            ActiveDamageModifiers.Lightning.CalculateTotal(out double lMin, out double lMax);
+            lightning = Utilities.RandomDouble(lMin, lMax);
+            ActiveDamageModifiers.Chaos.CalculateTotal(out double chMin, out double chMax);
+            chaos = Utilities.RandomDouble(chMin, chMax);
+        }
 
         if (isCritical) {
             physical *= CriticalStrikeMulti;
@@ -122,27 +153,22 @@ public abstract class Skill {
 
     public virtual void UpdateSkillValues() {
         if (ActorOwner != null) {
-            // In case it's not enough to separate damage into Base = Skill base damage and Added = Player base damage
-            /*
-            DamageModifiers actorDamageMods = ActorOwner.DamageMods.ShallowCopy();
-
-            if (AddedDamageModifier != 1) {
-                actorDamageMods.Physical.SMinAdded *= AddedDamageModifier;
-                actorDamageMods.Physical.SMaxAdded *= AddedDamageModifier;
-                actorDamageMods.Fire.SMinAdded *= AddedDamageModifier;
-                actorDamageMods.Fire.SMaxAdded *= AddedDamageModifier;
-                actorDamageMods.Cold.SMinAdded *= AddedDamageModifier;
-                actorDamageMods.Cold.SMaxAdded *= AddedDamageModifier;
-                actorDamageMods.Lightning.SMinAdded *= AddedDamageModifier;
-                actorDamageMods.Lightning.SMaxAdded *= AddedDamageModifier;
-                actorDamageMods.Chaos.SMinAdded *= AddedDamageModifier;
-                actorDamageMods.Chaos.SMaxAdded *= AddedDamageModifier;
-            }
-
-            ActiveDamageModifiers = actorDamageMods + BaseDamageModifiers;
-            */
-            
             ActiveDamageModifiers = ActorOwner.DamageMods + BaseDamageModifiers;
+
+            /*
+            if (Type == ESkillType.Spell) {
+                ActiveDamageModifiers.Physical.SMinBase = BaseDamageModifiers.Physical.SMinBase;
+                ActiveDamageModifiers.Physical.SMaxBase = BaseDamageModifiers.Physical.SMaxBase;
+                ActiveDamageModifiers.Fire.SMinBase = BaseDamageModifiers.Fire.SMinBase;
+                ActiveDamageModifiers.Fire.SMaxBase = BaseDamageModifiers.Fire.SMaxBase;
+                ActiveDamageModifiers.Cold.SMinBase = BaseDamageModifiers.Cold.SMinBase;
+                ActiveDamageModifiers.Cold.SMaxBase = BaseDamageModifiers.Cold.SMaxBase;
+                ActiveDamageModifiers.Lightning.SMinBase = BaseDamageModifiers.Lightning.SMinBase;
+                ActiveDamageModifiers.Lightning.SMaxBase = BaseDamageModifiers.Lightning.SMaxBase;
+                ActiveDamageModifiers.Chaos.SMinBase = BaseDamageModifiers.Chaos.SMinBase;
+                ActiveDamageModifiers.Chaos.SMaxBase = BaseDamageModifiers.Chaos.SMaxBase;
+            }
+            */
 
             if (AddedDamageModifier != 1) {
                 ActiveDamageModifiers.Physical.SMinAdded *= AddedDamageModifier;
@@ -157,7 +183,7 @@ public abstract class Skill {
                 ActiveDamageModifiers.Chaos.SMaxAdded *= AddedDamageModifier;
             }
 
-            CriticalStrikeChance = ActorOwner.MainHand.CritChance * ActorOwner.CritChanceMod.STotal;
+            //CriticalStrikeChance = ActorOwner.MainHandStats.CritChance * ActorOwner.CritChanceMod.STotal;
             CriticalStrikeMulti = ActorOwner.CritMultiplier.STotal;
 
             double activeIncreasedMod;
@@ -194,6 +220,7 @@ public abstract class Skill {
 
             // Does not contain all variables needed
             if (this is IAttack attack) {
+                //attack.UpdateWeaponStats(ActorOwner.MainHandStats, ActorOwner.OffHandStats);
                 attack.UpdateAttackSpeedValues(ActorOwner.AttackSpeedMod);
                 return;
             }
@@ -251,6 +278,20 @@ public interface IAttack {
 
     public string GetAttackSpeedModifier() {
         return Math.Round(ActiveAttackSpeedModifiers.STotal * 100, 0).ToString();
+    }
+
+    public void GetUsedWeaponStats(Actor owner, out ActorWeaponStats wStats) {
+        if (owner.IsDualWielding) {
+            if (owner.IsUsingMainHandDW) {
+                wStats = owner.MainHandStats;
+            }
+            else {
+                wStats = owner.OffHandStats;
+            }
+        }
+        else {
+            wStats = owner.MainHandStats;
+        }
     }
 
     public bool AreActorWeaponsCompatible(WeaponItem mhWeapon, Item ohItem) {

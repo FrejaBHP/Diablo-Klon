@@ -270,6 +270,16 @@ public static class ItemDataTables {
 			Texture = UILib.TextureItemD2JewelGreen,
 			MinimumLevel = 0,
 			ImplicitTypes = []
+		},
+
+		new SkillItemData {
+			BaseName = "Skill Gem",
+			SkillName = ESkillName.PrismaticBolt,
+			SkillType = typeof(SPrismaticBolt),
+			ItemSpecifierFlags = EItemBaseSpecifierFlags.NONE,
+			Texture = UILib.TextureItemD2JewelBlue,
+			MinimumLevel = 0,
+			ImplicitTypes = []
 		}
 	];
 }

@@ -43,6 +43,7 @@ public static class UILib {
 	public static readonly Texture2D TextureSkillNONE = GD.Load<Texture2D>("res://textures/skills/skill_none.png");
 	public static readonly Texture2D TextureSkillThrust = GD.Load<Texture2D>("res://textures/skills/skill_thrust.png");
 	public static readonly Texture2D TextureSkillShoot = GD.Load<Texture2D>("res://textures/skills/skill_shoot.png");
+	public static readonly Texture2D TextureSkillPrismaticBolt = GD.Load<Texture2D>("res://textures/skills/skill_prismatic.png");
 
 	public static readonly Texture2D GoldPileTiny = GD.Load<Texture2D>("res://textures/goldDrop0.png");
 	public static readonly Texture2D GoldPileSmall = GD.Load<Texture2D>("res://textures/goldDrop1.png");
@@ -61,6 +62,11 @@ public static class UILib {
 	public static readonly Color ColorMagic = Color.Color8(25, 135, 255, 255);
 	public static readonly Color ColorRare = Color.Color8(245, 245, 0, 255);
 	public static readonly Color ColorUnique = Color.Color8(255, 175, 0, 255);
+
+	public static readonly Color ColorFire = Color.Color8(185, 115, 35, 255);
+	public static readonly Color ColorCold = Color.Color8(65, 110, 180, 255);
+	public static readonly Color ColorLightning = Color.Color8(175, 170, 70, 255);
+	public static readonly Color ColorChaos = Color.Color8(210, 30, 145, 255);
 
 	public static readonly Color ColorItemBackground = Color.Color8(0, 65, 180, 55);
 	public static readonly Color ColorItemBackgroundHovered = Color.Color8(0, 100, 255, 65);

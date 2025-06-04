@@ -17,7 +17,7 @@ public class SShoot : Skill, IAttack, IProjectileSkill {
 
         SkillName = ESkillName.BasicShoot;
         Type = ESkillType.Attack;
-        Tags = ESkillTags.Ranged;
+        Tags = ESkillTags.Projectile | ESkillTags.Ranged;
         DamageCategory = EDamageCategory.Ranged;
         Texture = UILib.TextureSkillShoot;
 

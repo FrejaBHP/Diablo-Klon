@@ -12,7 +12,7 @@ public partial class SkillTooltip : Control {
 	public TextureRect TimeTexture;
 	public Label TimeLabel;
 
-	public VBoxContainer DamageContainer;
+	public HBoxContainer DamageContainer;
 
 	/*
 	public VBoxContainer DescriptionContainer;
@@ -32,7 +32,7 @@ public partial class SkillTooltip : Control {
 			TimeTexture = InfoContainer.GetNode<TextureRect>("TimeContainer/TimeTexture");
 			TimeLabel = InfoContainer.GetNode<Label>("TimeContainer/TimeLabel");
 
-			DamageContainer = GetNode<VBoxContainer>("VBoxContainer/DamageContainer");
+			DamageContainer = GetNode<HBoxContainer>("VBoxContainer/DamageContainer");
 
 			/*
 			DescriptionContainer = GetNode<VBoxContainer>("VBoxContainer/DescriptionContainer");

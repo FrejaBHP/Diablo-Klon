@@ -45,8 +45,9 @@ public partial class EquipmentSlot : PanelContainer {
 			}
 			else if (!InventoryReference.IsAnItemSelected && itemInSlot != null) {
 				RemoveHighlight();
-				EmitSignal(SignalName.ItemUnequipped, this, itemInSlot);
+				InventoryItem ueItem = itemInSlot;
 				SetItem(null);
+				EmitSignal(SignalName.ItemUnequipped, this, ueItem);
 			}
 		}
 	}
@@ -80,8 +81,12 @@ public partial class EquipmentSlot : PanelContainer {
 		}
 	}
 
+	public void SetItemSilent(InventoryItem item) {
+		itemInSlot = item;
+	}
+
 	public void UnequipItem(InventoryItem item) {
-		EmitSignal(SignalName.ItemUnequipped, this, itemInSlot);
+		EmitSignal(SignalName.ItemUnequipped, this, item);
 		SetItem(null);
 	}
 
