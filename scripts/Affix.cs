@@ -904,20 +904,22 @@ public class IncreasedMovementSpeedAffix : Affix {
 }
 
 
+
+
 // =========== SUFFIXES ===========
 
 public class Local1HIncreasedAttackSpeedAffix : Affix {
 	private static readonly List<AffixData> local1HIncreasedAttackSpeedAffixData = [
 		new(0, "of AS1", 
-			0.05, 0.08, 
+			0.05, 0.07, 
 			0, 0
 		),
 		new(0, "of AS2", 
-			0.09, 0.12, 
+			0.08, 0.11, 
 			0, 0
 		),
 		new(0, "of AS3", 
-			0.13, 0.16, 
+			0.12, 0.15, 
 			0, 0
 		)
 	];
@@ -943,15 +945,15 @@ public class Local1HIncreasedAttackSpeedAffix : Affix {
 public class Local2HIncreasedAttackSpeedAffix : Affix {
 	private static readonly List<AffixData> local2HIncreasedAttackSpeedAffixData = [
 		new(0, "of AS1", 
-			0.07, 0.11, 
+			0.07, 0.10, 
 			0, 0
 		),
 		new(0, "of AS2", 
-			0.12, 0.16, 
+			0.11, 0.15, 
 			0, 0
 		),
 		new(0, "of AS3", 
-			0.17, 0.22, 
+			0.16, 0.20, 
 			0, 0
 		)
 	];

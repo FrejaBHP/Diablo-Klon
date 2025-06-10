@@ -8,6 +8,7 @@ public partial class HUD : Control {
 	public CharacterPanel PlayerPanel;
 	public SkillPanel PlayerSkillPanel;
 	public Inventory PlayerInventory;
+	public UpperHUD PlayerUpperHUD;
 	public LowerHUD PlayerLowerHUD;
 
 	private ItemTooltipPopup activeTooltipPopup = null;
@@ -16,6 +17,7 @@ public partial class HUD : Control {
 		PlayerPanel = GetNode<CharacterPanel>("PlayerPanel");
 		PlayerSkillPanel = GetNode<SkillPanel>("SkillPanel");
 		PlayerInventory = GetNode<Inventory>("Inventory");
+		PlayerUpperHUD = GetNode<UpperHUD>("UpperHUD");
 		PlayerLowerHUD = GetNode<LowerHUD>("LowerHUD");
 	}
 

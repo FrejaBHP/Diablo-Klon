@@ -362,3 +362,11 @@ public enum EActorState {
 	Attacking,
 	Stunned
 }
+
+public enum EEnemyRarity {
+	Normal,
+	Magic,
+	Rare,
+	Unique,
+	Boss
+}

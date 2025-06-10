@@ -22,6 +22,12 @@ public partial class EnemyBase : Actor {
     protected int goldBounty = 0;
     protected int experienceBounty = 0;
 
+    protected EEnemyRarity enemyRarity = EEnemyRarity.Normal;
+    protected const double normalDropChance = 0.1;
+    protected const double magicDropChance = 0.33;
+    protected const double rareDropChance = 1;
+    protected bool canDropItems = true;
+
     public override void _Ready() {
         base._Ready();
         IsIgnoringWeaponRestrictions = true;
@@ -174,6 +180,41 @@ public partial class EnemyBase : Actor {
         damageLabel.Start();
     }
 
+    protected bool RollToDropItem() {
+        double chance = 0;
+        bool haveItemsDropped = false;
+
+        switch (enemyRarity) {
+            case EEnemyRarity.Normal:
+                chance = normalDropChance;
+                break;
+            
+            case EEnemyRarity.Magic:
+                chance = magicDropChance;
+                break;
+
+            case EEnemyRarity.Rare:
+                chance = rareDropChance;
+                break;
+            
+            default:
+                break;
+        }
+
+        while (chance >= 1) {
+            chance -= 1;
+            Game.Instance.GenerateRandomItemFromCategory(EItemCategory.None, GlobalPosition);
+            haveItemsDropped = true;
+        }
+
+        if (chance != 0 && chance >= Utilities.RNG.NextDouble()) {
+            Game.Instance.GenerateRandomItemFromCategory(EItemCategory.None, GlobalPosition);
+            haveItemsDropped = true;
+        }
+        
+        return haveItemsDropped;
+    }
+
     public void Die() {
         if (goldBounty > 0) {
             Game.Instance.DropGold(goldBounty, GlobalPosition, true);
@@ -181,6 +222,10 @@ public partial class EnemyBase : Actor {
 
         if (experienceBounty > 0) {
             Game.Instance.AwardExperience(experienceBounty);
+        }
+
+        if (canDropItems) {
+            RollToDropItem();
         }
         
         EmitSignal(SignalName.EnemyDied);
@@ -196,4 +241,8 @@ public partial class EnemyBase : Actor {
         skill.ActorOwner = this;
         skill.UpdateSkillValues();
 	}
+
+    public void SetRarity(EEnemyRarity rarity) {
+        enemyRarity = rarity;
+    }
 }

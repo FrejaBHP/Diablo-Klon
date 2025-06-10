@@ -71,10 +71,10 @@ public partial class MapBase : Node3D {
             }
 
             if (ObjectiveTimer.TimeLeft > 10) {
-                Game.Instance.PlayerActor.debugLabel.Text = $"{ObjectiveTimer.TimeLeft:F0} seconds left";
+                Game.Instance.PlayerActor.PlayerHUD.PlayerUpperHUD.ObjTimeLabel.Text = $"{ObjectiveTimer.TimeLeft:F0}";
             }
             else {
-                Game.Instance.PlayerActor.debugLabel.Text = $"{ObjectiveTimer.TimeLeft:F1} seconds left";
+                Game.Instance.PlayerActor.PlayerHUD.PlayerUpperHUD.ObjTimeLabel.Text = $"{ObjectiveTimer.TimeLeft:F1}";
             }
         }
     }
@@ -96,7 +96,8 @@ public partial class MapBase : Node3D {
 
     public void StartObjective() {
         SetObjectiveTimerLength();
-        Game.Instance.PlayerActor.debugLabel.Text = $"{Math.Round(ObjectiveTimer.WaitTime, 0)} seconds left";
+        Game.Instance.PlayerActor.PlayerHUD.PlayerUpperHUD.ObjTimeLabel.Visible = true;
+        Game.Instance.PlayerActor.PlayerHUD.PlayerUpperHUD.ObjTimeLabel.Text = $"{Math.Round(ObjectiveTimer.WaitTime, 0)}";
 
         EnemySpawnCeiling = CalculateEnemySpawnCeiling(Game.Instance.CurrentAct, Game.Instance.CurrentArea, 1);
         EnemySpawnDensity = CalculateBaseEnemySpawnDensity(Game.Instance.CurrentAct, Game.Instance.CurrentArea, 1);
@@ -188,7 +189,7 @@ public partial class MapBase : Node3D {
             SecondTimer.Stop();
             EmitSignal(SignalName.MapFinished);
             ClearEnemies();
-            Game.Instance.PlayerActor.debugLabel.Text = "";
+            Game.Instance.PlayerActor.PlayerHUD.PlayerUpperHUD.ObjTimeLabel.Visible = false;
         }
     }
 
@@ -289,7 +290,7 @@ public partial class MapBase : Node3D {
 
 	public void SetAndStartNextWave() {
 		ActiveWaveNumber++;
-		Game.Instance.PlayerActor.debugLabel.Text = $"Wave {ActiveWaveNumber + 1} / {ActiveWaveList.EnemyWaves.Count}";
+		//Game.Instance.PlayerActor.debugLabel.Text = $"Wave {ActiveWaveNumber + 1} / {ActiveWaveList.EnemyWaves.Count}";
 		SetEnemyWave(ActiveWaveList.EnemyWaves[ActiveWaveNumber]);
 		SpawnWave();
 	}

@@ -3,7 +3,7 @@ using System;
 
 public partial class TestEnemy : EnemyBase {
     public TestEnemy() {
-		BasicStats.BaseLife = 25;
+		BasicStats.BaseLife = 12;
 		BasicStats.BaseMana = 0;
 		RefreshLifeMana();
 
@@ -16,10 +16,10 @@ public partial class TestEnemy : EnemyBase {
 
         UnarmedMinDamage = 6;
         UnarmedMaxDamage = 9;
-        UnarmedAttackSpeed = 1.25;
+        UnarmedAttackSpeed = 1.1;
 
-        DamageMods.Physical.SMinBase = UnarmedMinDamage;
-        DamageMods.Physical.SMaxBase = UnarmedMaxDamage;
+        MainHandStats.PhysMinDamage = UnarmedMinDamage;
+        MainHandStats.PhysMaxDamage = UnarmedMaxDamage;
 
         MovementSpeed.SBase = 4;
         Evasion.SBase = 0; // 67
@@ -61,7 +61,7 @@ public partial class TestEnemy : EnemyBase {
         currentlyUsedSkill = Skills[0];
 
         ActorState = EActorState.Attacking;
-        skillTimer.WaitTime = UnarmedAttackSpeed * AttackSpeedMod.STotal;
+        skillTimer.WaitTime = UnarmedAttackSpeed / AttackSpeedMod.STotal;
         skillUsePointTimer.WaitTime = skillTimer.WaitTime / 2;
         skillTimer.Start();
         skillUsePointTimer.Start();
