@@ -180,7 +180,7 @@ public partial class EnemyBase : Actor {
         damageLabel.Start();
     }
 
-    protected bool RollToDropItem() {
+    protected bool RollToDropItems() {
         double chance = 0;
         bool haveItemsDropped = false;
 
@@ -203,12 +203,14 @@ public partial class EnemyBase : Actor {
 
         while (chance >= 1) {
             chance -= 1;
-            Game.Instance.GenerateRandomItemFromCategory(EItemCategory.None, GlobalPosition);
+            //Game.Instance.GenerateRandomItemFromCategory(EItemCategory.None, GlobalPosition);
+            Game.Instance.CurrentMap.AddItemToRewards(ItemGeneration.GenerateItemFromCategory(EItemCategory.None));
             haveItemsDropped = true;
         }
 
         if (chance != 0 && chance >= Utilities.RNG.NextDouble()) {
-            Game.Instance.GenerateRandomItemFromCategory(EItemCategory.None, GlobalPosition);
+            //Game.Instance.GenerateRandomItemFromCategory(EItemCategory.None, GlobalPosition);
+            Game.Instance.CurrentMap.AddItemToRewards(ItemGeneration.GenerateItemFromCategory(EItemCategory.None));
             haveItemsDropped = true;
         }
         
@@ -217,7 +219,8 @@ public partial class EnemyBase : Actor {
 
     public void Die() {
         if (goldBounty > 0) {
-            Game.Instance.DropGold(goldBounty, GlobalPosition, true);
+            //Game.Instance.DropGold(goldBounty, GlobalPosition, true);
+            Game.Instance.CurrentMap.AddGoldToRewards(goldBounty, true);
         }
 
         if (experienceBounty > 0) {
@@ -225,7 +228,7 @@ public partial class EnemyBase : Actor {
         }
 
         if (canDropItems) {
-            RollToDropItem();
+            RollToDropItems();
         }
         
         EmitSignal(SignalName.EnemyDied);

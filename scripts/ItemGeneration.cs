@@ -53,22 +53,14 @@ public static class ItemGeneration {
 	*/
 
 	private static EItemRarity CalculateRarity() {
-		int rarity = Utilities.RNG.Next(4);
+		WeightedList<EItemRarity> rarityList = new([
+			new WeightedListItem<EItemRarity>(EItemRarity.Common, 0),
+			new WeightedListItem<EItemRarity>(EItemRarity.Magic, 50),
+			new WeightedListItem<EItemRarity>(EItemRarity.Rare, 50),
+			new WeightedListItem<EItemRarity>(EItemRarity.Unique, 0),
+		], Utilities.RNG);
 
-		switch (rarity) {
-			case 0:
-				return EItemRarity.Common;
-
-			case 1:
-				return EItemRarity.Magic;
-
-			case 2:
-				return EItemRarity.Rare;
-
-			// case 3:
-			default:
-				return EItemRarity.Unique;
-		}
+		return rarityList.GetRandomItem();
 	}
 
 	private static WeaponItem GenerateWeaponItem(EItemWeaponBaseType weaponType) {

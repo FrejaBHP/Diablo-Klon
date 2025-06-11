@@ -43,10 +43,7 @@ public class SThrust : Skill, IAttack, IMeleeSkill {
             };
             thrustScene.GlobalRotation = ActorOwner.GlobalRotation;
 
-            SkillDamage sdmg = RollForDamage(true);
-            GD.Print(sdmg.ToString());
-
-            thrustScene.StartAttack(DamageCategory, sdmg, ActorOwner.Penetrations, 2f, BaseAttackRange, 25f);
+            thrustScene.StartAttack(DamageCategory, RollForDamage(true), ActorOwner.Penetrations, 2f, BaseAttackRange, 25f);
 
             DeductManaFromActor();
         }

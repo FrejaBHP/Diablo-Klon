@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://bjr2unj1x1myt"]
+[gd_scene load_steps=8 format=3 uid="uid://bjr2unj1x1myt"]
 
 [ext_resource type="Script" uid="uid://blgot83d4npeq" path="res://scripts/gui/HUD.cs" id="1_k6sm4"]
 [ext_resource type="PackedScene" uid="uid://feaoc135f1ku" path="res://scenes/gui/hud_inventory.tscn" id="1_v82wo"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://com0l155ax0xj" path="res://scenes/gui/hud_skill_panel.tscn" id="3_psy8l"]
 [ext_resource type="PackedScene" uid="uid://dn73hlfk77c1y" path="res://scenes/gui/hud_lower.tscn" id="3_ucw7d"]
 [ext_resource type="PackedScene" uid="uid://c2ouxhnw874si" path="res://scenes/gui/hud_upper.tscn" id="5_jpg7b"]
+[ext_resource type="PackedScene" uid="uid://cfjvj5m272104" path="res://scenes/gui/hud_right.tscn" id="6_vyqyk"]
 
 [node name="PlayerHUD" type="Control"]
 layout_mode = 3
@@ -32,6 +33,10 @@ layout_mode = 1
 
 [node name="UpperHUD" parent="." instance=ExtResource("5_jpg7b")]
 layout_mode = 1
+
+[node name="RightHUD" parent="." instance=ExtResource("6_vyqyk")]
+layout_mode = 1
+offset_bottom = 136.0
 
 [node name="LowerHUD" parent="." instance=ExtResource("3_ucw7d")]
 z_index = 1

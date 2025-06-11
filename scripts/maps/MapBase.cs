@@ -1,7 +1,10 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public partial class MapBase : Node3D {
+    protected static readonly PackedScene mapObjectiveHUDScene = GD.Load<PackedScene>("res://scenes/gui/hud_objective.tscn");
+
     [Signal]
     public delegate void MapReadyEventHandler();
 
@@ -13,6 +16,7 @@ public partial class MapBase : Node3D {
     public Marker3D PlayerSpawnMarker { get; protected set; }
     public Timer SecondTimer { get; protected set; }
     public Timer ObjectiveTimer { get; protected set; }
+    public CanvasLayer NameplateLayer { get; protected set; }
 
     public EMapObjective MapObjective = EMapObjective.None;
 
@@ -21,6 +25,9 @@ public partial class MapBase : Node3D {
     public int AreaLevel = 1;
     public int GoldReward { get; protected set; } = 25;
     public int ExpReward { get; protected set; } = 5;
+
+    public int GoldRewardPool { get; protected set; } = 0;
+    public List<Item> ItemRewardPool { get; protected set; } = new();
 
     public WeightedList<EEnemyType> ActiveSpawnPool = null;
     public int EnemySpawnCeiling { get; protected set; } = 0;
@@ -43,12 +50,15 @@ public partial class MapBase : Node3D {
     protected int objectiveLength = 0;
     protected int secondsPassed = 0;
 
+    protected MapObjectiveHUD objective;
+
     public override void _Ready() {
         NavRegion = GetNode<NavigationRegion3D>("NavigationRegion3D");
         EnemiesNode = GetNode<Node3D>("Enemies");
         PlayerSpawnMarker = GetNode<Marker3D>("PlayerSpawn");
         SecondTimer = GetNode<Timer>("SecondTimer");
         ObjectiveTimer = GetNode<Timer>("ObjectiveTimer");
+        NameplateLayer = GetNode<CanvasLayer>("NameplateLayer");
 
         SetEnemySpawnPool(EnemyDatabase.TestSurvivalSpawnPool);
         SetMapWaveList(EnemyDatabase.TestMapHorde);
@@ -56,6 +66,8 @@ public partial class MapBase : Node3D {
 
         CallDeferred(MethodName.AddRegionToNav);
         CallDeferred(MethodName.OnMapReady);
+
+        GoldRewardPool += GoldReward;
     }
 
     public override void _PhysicsProcess(double delta) {
@@ -79,7 +91,6 @@ public partial class MapBase : Node3D {
         }
     }
 
-
     public void ClearEnemies() {
         foreach (Node enemy in EnemiesNode.GetChildren()) {
             enemy.QueueFree();
@@ -92,6 +103,15 @@ public partial class MapBase : Node3D {
 
     protected void OnMapReady() {
         EmitSignal(SignalName.MapReady);
+    }
+
+    public void CreateObjectiveGUI() {
+        objective = mapObjectiveHUDScene.Instantiate<MapObjectiveHUD>();
+		Game.Instance.PlayerActor.PlayerHUD.PlayerRightHUD.ObjectiveContainer.AddChild(objective);
+        objective.SetObjectiveText(MapObjective.ToString());
+        objective.SetGoldReward(GoldRewardPool);
+        objective.SetItemReward(ItemRewardPool.Count);
+        objective.Visible = true;
     }
 
     public void StartObjective() {
@@ -190,6 +210,31 @@ public partial class MapBase : Node3D {
             EmitSignal(SignalName.MapFinished);
             ClearEnemies();
             Game.Instance.PlayerActor.PlayerHUD.PlayerUpperHUD.ObjTimeLabel.Visible = false;
+
+            if (objective != null) {
+                Game.Instance.PlayerActor.PlayerHUD.PlayerRightHUD.ObjectiveContainer.RemoveChild(objective);
+                objective.QueueFree();
+            }
+
+            if (GoldRewardPool > 0) {
+			    Game.Instance.DropGold(GoldRewardPool, PlayerSpawnMarker.GlobalPosition, false);
+		    }
+
+            if (ExpReward > 0) {
+                Game.Instance.AwardExperience(ExpReward);
+            }
+
+            if (ItemRewardPool.Count > 0) {
+                Vector3 distVec = new(0f, 0, 2f);
+
+                for (int i = 0; i < ItemRewardPool.Count; i++) {
+                    double randomAngle = Math.Tau * Utilities.RNG.NextDouble();
+                    Vector3 newPos = distVec.Rotated(Vector3.Up, (float)randomAngle) + PlayerSpawnMarker.GlobalPosition;
+                    
+                    WorldItem wi = ItemRewardPool[i].ConvertToWorldItem();
+                    Game.Instance.DropItem(wi, newPos);
+                }
+            }
         }
     }
 
@@ -297,5 +342,26 @@ public partial class MapBase : Node3D {
 
     public bool IsObjectiveActive() {
         return hasMapStarted && !hasMapFinished;
+    }
+
+    public void AddGoldToRewards(int baseAmount, bool isRandom) {
+        int goldAmount;
+
+		if (isRandom) {
+			goldAmount = (int)Math.Round(Utilities.RandomDouble(baseAmount * 0.75, baseAmount * 1.25), 0);
+		}
+		else {
+			goldAmount = baseAmount;
+		}
+
+        GoldRewardPool += goldAmount;
+
+        objective.SetGoldReward(GoldRewardPool);
+	}
+
+    public void AddItemToRewards(Item item) {
+        ItemRewardPool.Add(item);
+
+        objective.SetItemReward(ItemRewardPool.Count);
     }
 }

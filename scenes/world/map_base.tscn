@@ -22,6 +22,8 @@ shadow_caster_mask = 4293918799
 directional_shadow_mode = 1
 directional_shadow_max_distance = 50.0
 
+[node name="NameplateLayer" type="CanvasLayer" parent="."]
+
 [node name="PlayerSpawn" type="Marker3D" parent="."]
 
 [node name="SecondTimer" type="Timer" parent="."]

@@ -1,9 +1,31 @@
-[gd_scene format=3 uid="uid://cfjvj5m272104"]
+[gd_scene load_steps=2 format=3 uid="uid://cfjvj5m272104"]
+
+[ext_resource type="Script" uid="uid://dd1wj3wkdhhpq" path="res://scripts/gui/RightHUD.cs" id="1_m6aed"]
 
 [node name="RightHUD" type="Control"]
 layout_mode = 3
+anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
 offset_top = 136.0
 offset_bottom = -136.0
+grow_horizontal = 0
+script = ExtResource("1_m6aed")
+
+[node name="ProgressLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 23.0
+grow_horizontal = 0
+
+[node name="ObjectiveContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 40.0
 grow_horizontal = 0

@@ -106,6 +106,8 @@ public partial class Game : Node3D {
 		PlayerActor.PlayerCamera.OcclusionCast.Enabled = true;
 
 		if (CurrentMap != mapTown) {
+			CurrentMap.CreateObjectiveGUI();
+
 			mapStartTimer.WaitTime = 2;
 			mapStartTimer.Start();
 		}
@@ -120,10 +122,11 @@ public partial class Game : Node3D {
 	}
 
 	/// <summary>
-	/// Clears all nodes in the WorldObjectsLayer. Do note these are currently global and not map-specific.
+	/// Clears all nodes in the WorldObjectsLayer and maps' NameplateLayer
 	/// </summary>
 	public void RemoveAllWorldItems() {
         System.Collections.Generic.IEnumerable<Node> worldItems = worldObjectsLayer.GetChildren().Where(c => c.IsInGroup("WorldItem"));
+		worldItems = worldItems.Concat(CurrentMap.NameplateLayer.GetChildren().Where(c => c.IsInGroup("WorldItem")));
 		foreach (Node item in worldItems) {
 			item.QueueFree();
 		}
@@ -143,14 +146,16 @@ public partial class Game : Node3D {
 	}
 
 	public void DropItem(WorldItem item, Vector3 position) {
-		worldObjectsLayer.AddChild(item);
+		//worldObjectsLayer.AddChild(item);
+		CurrentMap.NameplateLayer.AddChild(item);
 		item.GlobalPosition = position with { Y = position.Y + 0.25f };
 		item.PostSpawn();
 	}
 
 	public void DropGold(int baseAmount, Vector3 position, bool isRandom) {
 		Gold gold = goldScene.Instantiate<Gold>();
-		worldObjectsLayer.AddChild(gold);
+		//worldObjectsLayer.AddChild(gold);
+		CurrentMap.NameplateLayer.AddChild(gold);
 
 		if (isRandom) {
 			gold.SetAmount((int)Math.Round(Utilities.RandomDouble(baseAmount * 0.75, baseAmount * 1.25), 0));
@@ -194,14 +199,13 @@ public partial class Game : Node3D {
 	}
 
 	public void OnMapCompletion() {
-        if (CurrentMap.GoldReward > 0) {
-			DropGold(CurrentMap.GoldReward, CurrentMap.PlayerSpawnMarker.GlobalPosition, false);
-		}
-
-		if (CurrentMap.ExpReward > 0) {
-			AwardExperience(CurrentMap.ExpReward);
-		}
-
 		TestSpawnMapTrans();
+
+		/*
+		var objectives = PlayerActor.PlayerHUD.PlayerRightHUD.ObjectiveContainer.GetChildren();
+		foreach (var item in objectives) {
+			item.QueueFree();
+		}
+		*/
     }
 }

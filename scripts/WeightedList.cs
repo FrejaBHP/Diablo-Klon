@@ -104,7 +104,7 @@ public class WeightedList<T> : IEnumerable<T> {
 
         for (int i = 0; i < itemsList.Count; i++) {
             if (i != 0) {
-                iteratorFloor += weightsList[i];
+                iteratorFloor += weightsList[i - 1];
             }
             iteratorCeil += weightsList[i];
 
@@ -114,7 +114,7 @@ public class WeightedList<T> : IEnumerable<T> {
             }
         }
 
-        // Should never happen, but if no item is picked, return null
+        // Should never happen, but if no item is picked, return first element in list or null
         return default;
     }
 
@@ -128,7 +128,6 @@ public class WeightedList<T> : IEnumerable<T> {
         
         foreach (int weight in weightsList) {
             newTotalWeight += weight;
-            
         }
 
         totalWeight = newTotalWeight;
