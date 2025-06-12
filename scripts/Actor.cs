@@ -473,6 +473,18 @@ public partial class Actor : CharacterBody3D {
         }
     }
 
+    // Should really have a separate function first called something along the lines of "RegisterIncomingDamage". Name is confusing
+    /// <summary>
+    /// <para>Sets up an Actor for incoming damage, then processes and applies it.</para>
+    /// <para>A non-spell hit can be Evaded, by which the hit will be ignored. If hit damage isn't Evaded, Armour is applied.</para>
+    /// If createDamageText is true, creates floating text above the Actor showing the final damage taken.
+    /// </summary>
+    /// <param name="dmgCategory"></param>
+    /// <param name="damage"></param>
+    /// <param name="pens"></param>
+    /// <param name="isAHit"></param>
+    /// <param name="isCritical"></param>
+    /// <param name="createDamageText"></param>
     public void TakeDamage(EDamageCategory dmgCategory, SkillDamage damage, ActorPenetrations pens, bool isAHit, bool isCritical, bool createDamageText) {
         double physDamage = damage.Physical;
         double fireDamage = damage.Fire;

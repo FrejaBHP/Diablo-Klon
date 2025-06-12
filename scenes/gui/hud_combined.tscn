@@ -18,6 +18,13 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_k6sm4")
 
+[node name="UpperHUD" parent="." instance=ExtResource("5_jpg7b")]
+layout_mode = 1
+
+[node name="RightHUD" parent="." instance=ExtResource("6_vyqyk")]
+layout_mode = 1
+offset_bottom = 136.0
+
 [node name="PlayerPanel" parent="." instance=ExtResource("2_stx8b")]
 visible = false
 layout_mode = 1
@@ -30,13 +37,6 @@ offset_right = 512.0
 [node name="Inventory" parent="." instance=ExtResource("1_v82wo")]
 visible = false
 layout_mode = 1
-
-[node name="UpperHUD" parent="." instance=ExtResource("5_jpg7b")]
-layout_mode = 1
-
-[node name="RightHUD" parent="." instance=ExtResource("6_vyqyk")]
-layout_mode = 1
-offset_bottom = 136.0
 
 [node name="LowerHUD" parent="." instance=ExtResource("3_ucw7d")]
 z_index = 1

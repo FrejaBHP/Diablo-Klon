@@ -1289,3 +1289,38 @@ public class LightningResistanceAffix : Affix {
 		return $"+{(int)ValueFirst}% to Lightning Resistance";
 	}
 }
+
+public class ChaosResistanceAffix : Affix {
+	private static readonly List<AffixData> chaosResistanceAffixData = [
+		new(0, "of the Dark", 
+			5, 9, 
+			0, 0
+		),
+		new(0, "of the Void", 
+			10, 14, 
+			0, 0
+		),
+		new(0, "of the Abyss", 
+			15, 19, 
+			0, 0
+		)
+	];
+
+	public ChaosResistanceAffix() {
+		AffixDataTable = chaosResistanceAffixData;
+		Family = EAffixFamily.ChaosResistance;
+		IsLocal = false;
+		IsMultiplicative = false;
+		StatNameFirst = EStatName.ChaosResistance;
+	}
+
+	public override void RollAffixValue() {
+		if (TierData != null) {
+			ValueFirst = Utilities.RandomDoubleInclusiveToInt(TierData.AffixMinFirst, TierData.AffixMaxFirst);
+		}
+	}
+
+	public override string GetAffixTooltipText() {
+		return $"+{(int)ValueFirst}% to Chaos Resistance";
+	}
+}

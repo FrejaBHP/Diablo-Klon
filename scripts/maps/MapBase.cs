@@ -48,7 +48,6 @@ public partial class MapBase : Node3D {
     protected double spawnTimer = 0;
 
     protected int objectiveLength = 0;
-    protected int secondsPassed = 0;
 
     protected MapObjectiveHUD objective;
 
@@ -76,6 +75,10 @@ public partial class MapBase : Node3D {
                 if (spawnTimer <= 0) {
                     SpawnFromPool(GetAmountToSpawn(), false);
                     spawnTimer += spawnInterval;
+                    
+                    Game.Instance.PlayerActor.PlayerHUD.PlayerRightHUD.UpdateEnemyDebugLabel(
+                        GetDensityTimeModifier(), 
+                        GetTimeAdjustedSpawnDensity(EnemySpawnDensity, GetDensityTimeModifier()));
                 }
                 else {
                     spawnTimer -= delta;
@@ -122,7 +125,7 @@ public partial class MapBase : Node3D {
         EnemySpawnCeiling = CalculateEnemySpawnCeiling(Game.Instance.CurrentAct, Game.Instance.CurrentArea, 1);
         EnemySpawnDensity = CalculateBaseEnemySpawnDensity(Game.Instance.CurrentAct, Game.Instance.CurrentArea, 1);
         ObjectiveTimer.Start();
-        SecondTimer.Start();
+        //SecondTimer.Start();
 
         hasMapStarted = true;
     }
@@ -198,15 +201,13 @@ public partial class MapBase : Node3D {
     }
 
     public void OnSecondPassed() {
-        if (IsObjectiveActive()) {
-            secondsPassed++;
-        }
+        //if (IsObjectiveActive()) {}
     }
 
     public void OnObjectiveTimerTimeout() {
         if (MapObjective == EMapObjective.Survival) {
             hasMapFinished = true;
-            SecondTimer.Stop();
+            //SecondTimer.Stop();
             EmitSignal(SignalName.MapFinished);
             ClearEnemies();
             Game.Instance.PlayerActor.PlayerHUD.PlayerUpperHUD.ObjTimeLabel.Visible = false;
@@ -355,13 +356,11 @@ public partial class MapBase : Node3D {
 		}
 
         GoldRewardPool += goldAmount;
-
         objective.SetGoldReward(GoldRewardPool);
 	}
 
     public void AddItemToRewards(Item item) {
         ItemRewardPool.Add(item);
-
         objective.SetItemReward(ItemRewardPool.Count);
     }
 }

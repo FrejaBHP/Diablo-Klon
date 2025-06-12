@@ -18,6 +18,7 @@ public class AffixTableType {
 
 public static class AffixDataTables {
 	public static readonly List<AffixTableType> PrefixData = [
+		// ===== LIFE AND MANA =====
 		new(typeof(FlatLifeAffix), EAffixFamily.FlatMaxLife,
 			EAffixItemFlags.Armour | EAffixItemFlags.Jewellery | EAffixItemFlags.Quiver,
 			EItemBaseSpecifierFlags.NoFlags
@@ -26,6 +27,8 @@ public static class AffixDataTables {
 			EAffixItemFlags.Armour | EAffixItemFlags.Jewellery | EAffixItemFlags.Staff,
 			EItemBaseSpecifierFlags.NoFlags
 		),
+
+		// ===== LOCAL WEAPON DAMAGE =====
 		new(typeof(Local1HFlatPhysDamageAffix), EAffixFamily.LocalFlatPhysDamage,
 			EAffixItemFlags.OHWeapon,
 			EItemBaseSpecifierFlags.NoFlags
@@ -70,6 +73,8 @@ public static class AffixDataTables {
 			EAffixItemFlags.THWeapon,
 			EItemBaseSpecifierFlags.NoFlags
 		),
+
+		// ===== LOCAL DEFENCES =====
 		new(typeof(LocalFlatArmourAffix), EAffixFamily.LocalFlatArmour,
 			EAffixItemFlags.Armour,
 			EItemBaseSpecifierFlags.AArmour | EItemBaseSpecifierFlags.AArmourEvasion | EItemBaseSpecifierFlags.AEnergyShieldArmour
@@ -94,10 +99,13 @@ public static class AffixDataTables {
 			EAffixItemFlags.Armour,
 			EItemBaseSpecifierFlags.AEnergyShield | EItemBaseSpecifierFlags.AEvasionEnergyShield | EItemBaseSpecifierFlags.AEnergyShieldArmour
 		),
+
 		new(typeof(IncreasedMovementSpeedAffix), EAffixFamily.IncreasedMovementSpeed,
 			EAffixItemFlags.Boots,
 			EItemBaseSpecifierFlags.NoFlags
 		),
+
+		// ===== GLOBAL DAMAGE INCREASES =====
 		new(typeof(IncreasedMeleeDamageAffix), EAffixFamily.IncreasedMeleeDamage,
 			EAffixItemFlags.Shield,
 			EItemBaseSpecifierFlags.NoFlags
@@ -113,6 +121,7 @@ public static class AffixDataTables {
 	];
 
 	public static readonly List<AffixTableType> SuffixData = [
+		// ===== LOCAL WEAPON STATS =====
 		new(typeof(Local1HIncreasedAttackSpeedAffix), EAffixFamily.LocalIncreasedAttackSpeed,
 			EAffixItemFlags.OHWeapon,
 			EItemBaseSpecifierFlags.NoFlags
@@ -133,6 +142,8 @@ public static class AffixDataTables {
 			EAffixItemFlags.Ring | EAffixItemFlags.Amulet | EAffixItemFlags.Quiver,
 			EItemBaseSpecifierFlags.NoFlags
 		),
+		
+		// ===== ATTRIBUTES =====
 		new(typeof(FlatStrengthAffix), EAffixFamily.AddedStrength,
 			EAffixItemFlags.Jewellery,
 			EItemBaseSpecifierFlags.NoFlags
@@ -145,6 +156,8 @@ public static class AffixDataTables {
 			EAffixItemFlags.Jewellery | EAffixItemFlags.Staff,
 			EItemBaseSpecifierFlags.NoFlags
 		),
+
+		// ===== RESISTANCES =====
 		new(typeof(FireResistanceAffix), EAffixFamily.FireResistance,
 			EAffixItemFlags.Armour | EAffixItemFlags.Jewellery | EAffixItemFlags.Quiver,
 			EItemBaseSpecifierFlags.NoFlags
@@ -154,6 +167,10 @@ public static class AffixDataTables {
 			EItemBaseSpecifierFlags.NoFlags
 		),
 		new(typeof(LightningResistanceAffix), EAffixFamily.LightningResistance,
+			EAffixItemFlags.Armour | EAffixItemFlags.Jewellery | EAffixItemFlags.Quiver,
+			EItemBaseSpecifierFlags.NoFlags
+		),
+		new(typeof(ChaosResistanceAffix), EAffixFamily.ChaosResistance,
 			EAffixItemFlags.Armour | EAffixItemFlags.Jewellery | EAffixItemFlags.Quiver,
 			EItemBaseSpecifierFlags.NoFlags
 		)

@@ -352,6 +352,9 @@ public interface IMeleeSkill {
 public interface IProjectileSkill {
     float BaseProjectileSpeed { get; protected set; }
     double BaseProjectileLifetime { get; protected set; }
+    int BasePierces { get; protected set; }
+    int BaseProjectiles { get; protected set; }
+    bool FiresSequentially { get; protected set; }
 }
 
 public interface IAreaSkill {

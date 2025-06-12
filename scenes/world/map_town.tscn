@@ -176,7 +176,7 @@ points = PackedVector3Array(-6, 0.25, -7, -6, -0.25, -7, 6, -0.25, -7, 6, 0.25, 
 
 [node name="MapTown" instance=ExtResource("1_5ewx1")]
 
-[node name="PlayerSpawn" parent="." index="1"]
+[node name="PlayerSpawn" parent="." index="2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 0, 17)
 
 [node name="MapTransition" parent="." index="3" instance=ExtResource("1_dm2gb")]
@@ -189,7 +189,7 @@ animation = &"portal_red"
 [node name="Mesh" parent="MapTransition" index="2"]
 surface_material_override/0 = SubResource("StandardMaterial3D_2ie1u")
 
-[node name="NavigationRegion3D" parent="." index="6"]
+[node name="NavigationRegion3D" parent="." index="7"]
 navigation_mesh = SubResource("NavigationMesh_q1rmb")
 
 [node name="FuncGodotMap" parent="NavigationRegion3D" index="0"]

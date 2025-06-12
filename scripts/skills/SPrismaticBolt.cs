@@ -8,6 +8,9 @@ public class SPrismaticBolt : Skill, ISpell, IProjectileSkill {
 
     public float BaseProjectileSpeed { get; set; } = 15f;
     public double BaseProjectileLifetime { get; set; } = 2f;
+    public int BasePierces { get; set; } = 0;
+    public int BaseProjectiles { get; set; } = 1;
+    public bool FiresSequentially { get; set; } = false;
 
     public SPrismaticBolt() {
         Name = "Prismatic Bolt";

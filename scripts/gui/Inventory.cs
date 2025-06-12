@@ -18,7 +18,7 @@ public partial class Inventory : Control {
     public EquipmentSlot WeaponSlotLeft;
     public EquipmentSlot WeaponSlotRight;
 
-	private const int inventorySizeX = 13;
+	private const int inventorySizeX = 12;
 	private const int inventorySizeY = 5;
 
     public InventoryGridCell[,] invGridCells = new InventoryGridCell[inventorySizeX, inventorySizeY];

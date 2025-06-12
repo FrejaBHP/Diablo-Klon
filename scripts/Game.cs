@@ -12,7 +12,7 @@ public partial class Game : Node3D {
 	public MapBase CurrentMap;
 
 	public int CurrentAct { get; protected set; } = 0;
-	public int CurrentArea { get; protected set; } = 0;
+	public int CurrentArea { get; protected set; } = -1; // When acts are properly structured, this should be set to 0 by it, and only maps past the first should increment this
 	private int areasPerAct = 2; // Areas refer to both combat maps and shop/breather maps. Ideally the rotation is C-C-S, and act ends with a boss. 3-4 rotations should be good here in the end
 
 	private PlayerCamera playerCam;
@@ -55,7 +55,7 @@ public partial class Game : Node3D {
 
 			oldMap.QueueFree();
 
-			CurrentArea = 0;
+			CurrentArea = -1; // When acts are properly structured, this should be set to 0 by it, and only maps past the first should increment this
 		}
 	}
 
@@ -106,6 +106,7 @@ public partial class Game : Node3D {
 		PlayerActor.PlayerCamera.OcclusionCast.Enabled = true;
 
 		if (CurrentMap != mapTown) {
+			PlayerActor.PlayerHUD.PlayerRightHUD.UpdateProgressLabel();
 			CurrentMap.CreateObjectiveGUI();
 
 			mapStartTimer.WaitTime = 2;
@@ -122,7 +123,7 @@ public partial class Game : Node3D {
 	}
 
 	/// <summary>
-	/// Clears all nodes in the WorldObjectsLayer and maps' NameplateLayer
+	/// Clears all nodes in the WorldObjectsLayer and current map's NameplateLayer
 	/// </summary>
 	public void RemoveAllWorldItems() {
         System.Collections.Generic.IEnumerable<Node> worldItems = worldObjectsLayer.GetChildren().Where(c => c.IsInGroup("WorldItem"));
@@ -145,16 +146,25 @@ public partial class Game : Node3D {
 		DropItem(worldItem, position);
 	}
 
+	/// <summary>
+	/// Adds WorldItem to current map's NameplateLayer at provided GlobalPosition. Useful for generated items or items thrown by the player.
+	/// </summary>
+	/// <param name="item"></param>
+	/// <param name="position"></param>
 	public void DropItem(WorldItem item, Vector3 position) {
-		//worldObjectsLayer.AddChild(item);
 		CurrentMap.NameplateLayer.AddChild(item);
 		item.GlobalPosition = position with { Y = position.Y + 0.25f };
 		item.PostSpawn();
 	}
 
+	/// <summary>
+	/// Creates a pile of Gold at provided GlobalPosition. If isRandom is true, final value is variable within a slight range.
+	/// </summary>
+	/// <param name="baseAmount"></param>
+	/// <param name="position"></param>
+	/// <param name="isRandom"></param>
 	public void DropGold(int baseAmount, Vector3 position, bool isRandom) {
 		Gold gold = goldScene.Instantiate<Gold>();
-		//worldObjectsLayer.AddChild(gold);
 		CurrentMap.NameplateLayer.AddChild(gold);
 
 		if (isRandom) {
@@ -168,6 +178,10 @@ public partial class Game : Node3D {
 		gold.PostSpawn();
 	}
 
+	/// <summary>
+	/// Gives experience to the player. baseAmount is the value before other modifiers are applied.
+	/// </summary>
+	/// <param name="baseAmount"></param>
 	public void AwardExperience(double baseAmount) {
 		PlayerActor.GainExperience(baseAmount);
 	}
@@ -200,12 +214,5 @@ public partial class Game : Node3D {
 
 	public void OnMapCompletion() {
 		TestSpawnMapTrans();
-
-		/*
-		var objectives = PlayerActor.PlayerHUD.PlayerRightHUD.ObjectiveContainer.GetChildren();
-		foreach (var item in objectives) {
-			item.QueueFree();
-		}
-		*/
     }
 }
