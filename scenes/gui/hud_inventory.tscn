@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://feaoc135f1ku"]
+[gd_scene load_steps=7 format=3 uid="uid://feaoc135f1ku"]
 
-[ext_resource type="Script" uid="uid://dhjn104gn456i" path="res://scripts/gui/Inventory.cs" id="1_vjxqy"]
+[ext_resource type="Script" uid="uid://dtlqye8src1cj" path="res://scripts/gui/PlayerInventory.cs" id="1_a13s5"]
 [ext_resource type="Texture2D" uid="uid://fhobutpfvwf2" path="res://textures/ui/inventoryPanelShort2x.png" id="2_jsjul"]
 [ext_resource type="PackedScene" uid="uid://bixft8rqb2x2u" path="res://scenes/gui/hud_equipment_slot.tscn" id="3_d0rpv"]
 [ext_resource type="Texture2D" uid="uid://byijg62afsl55" path="res://textures/ui/inventoryPanelDecoration2x.png" id="3_fl0jp"]
+[ext_resource type="PackedScene" uid="uid://bt0kddrwvt7hg" path="res://scenes/gui/hud_inventory_grid.tscn" id="5_a13s5"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vbele"]
 
@@ -16,7 +17,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 0
 grow_vertical = 2
-script = ExtResource("1_vjxqy")
+script = ExtResource("1_a13s5")
 
 [node name="BackgroundTexture" type="TextureRect" parent="."]
 layout_mode = 1
@@ -142,10 +143,7 @@ offset_top = 15.0
 offset_right = -15.0
 offset_bottom = -15.0
 
-[node name="InventoryGrid" type="GridContainer" parent="CenterContainer"]
+[node name="InventoryGrid" parent="CenterContainer" instance=ExtResource("5_a13s5")]
 layout_mode = 2
-size_flags_horizontal = 4
-theme_override_constants/h_separation = 0
-theme_override_constants/v_separation = 0
 
 [connection signal="gui_input" from="." to="." method="GUIInput"]

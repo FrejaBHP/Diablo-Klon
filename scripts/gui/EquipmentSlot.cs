@@ -11,7 +11,7 @@ public partial class EquipmentSlot : PanelContainer {
 	[Signal]
     public delegate void ItemsSwappedEventHandler(EquipmentSlot slot, InventoryItem oldItem, InventoryItem newItem);
 
-	public Inventory InventoryReference;
+	public PlayerInventory InventoryReference;
 	
 	public EItemEquipmentSlot Slot;
 

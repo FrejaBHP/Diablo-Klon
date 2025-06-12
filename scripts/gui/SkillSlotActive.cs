@@ -11,7 +11,7 @@ public partial class SkillSlotActive : Control {
 	[Signal]
     public delegate void SkillsSwappedEventHandler(Control slot, InventoryItem oldSkill, InventoryItem newSkill);
 
-	public Inventory InventoryReference;
+	public PlayerInventory InventoryReference;
 	
 	public readonly EItemEquipmentSlot Slot = EItemEquipmentSlot.SkillActive;
 

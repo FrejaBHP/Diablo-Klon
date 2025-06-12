@@ -2,9 +2,9 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public partial class Inventory : Control {
+public partial class PlayerInventory : Control {
     public Player PlayerOwner;
-	public GridContainer InventoryGridContainer;
+	public InventoryGrid InventoryGrid;
     private Control equipmentPanelControl;
 
     public EquipmentSlot HelmetSlot;
@@ -18,10 +18,10 @@ public partial class Inventory : Control {
     public EquipmentSlot WeaponSlotLeft;
     public EquipmentSlot WeaponSlotRight;
 
-	private const int inventorySizeX = 12;
-	private const int inventorySizeY = 5;
+	//private const int inventorySizeX = 12;
+	//private const int inventorySizeY = 5;
 
-    public InventoryGridCell[,] invGridCells = new InventoryGridCell[inventorySizeX, inventorySizeY];
+    //public InventoryGridCell[,] invGridCells = new InventoryGridCell[inventorySizeX, inventorySizeY];
 
     public bool IsOpen = false;
     public bool IsAnItemSelected = false;
@@ -31,18 +31,19 @@ public partial class Inventory : Control {
         get { return selectedItem; }
     }
 
-    private List<InventoryGridCell> tempUsedSlots = new List<InventoryGridCell>();
-    private List<InventoryItem> inventoryItems = new List<InventoryItem>();
+    //private List<InventoryGridCell> tempUsedSlots = new List<InventoryGridCell>();
+    //private List<InventoryItem> inventoryItems = new List<InventoryItem>();
     private List<EquipmentSlot> equipmentSlots = new List<EquipmentSlot>();
 
     public override void _Ready() {
         AssignAndPrepareNodes();
-        GenerateInventory();
+        InventoryGrid.GenerateInventory(12, 5);
     }
 
     private void AssignAndPrepareNodes() {
         equipmentPanelControl = GetNode<Control>("EquipmentContainer/Control/Control");
-        InventoryGridContainer = GetNode<GridContainer>("CenterContainer/InventoryGrid");
+        InventoryGrid = GetNode<InventoryGrid>("CenterContainer/InventoryGrid");
+        InventoryGrid.ItemClicked += ItemClickSelect;
 
         HelmetSlot = equipmentPanelControl.GetNode<EquipmentSlot>("HelmetSlot");
         ChestSlot = equipmentPanelControl.GetNode<EquipmentSlot>("ChestSlot");
@@ -91,15 +92,15 @@ public partial class Inventory : Control {
 			if (IsAnItemSelected && selectedItem != null) {
                 // If an item is selected and the click is inside the inventory panel, try and reparent it to the grid slot matching the top-left corner of the item's bounding box
                 // A small adjustment is added to the offset to make the expected placement match the art better and prevent placing them in unintended slots
-                if (InventoryGridContainer.GetGlobalRect().HasPoint(selectedItem.GlobalPosition)) {
+                if (InventoryGrid.GetGlobalRect().HasPoint(selectedItem.GlobalPosition)) {
                     Vector2 magicOffset = new(8, 8);
-                    Vector2 offset = selectedItem.GlobalPosition - InventoryGridContainer.GlobalPosition + magicOffset;
-                    Vector2 slotSize = invGridCells[0, 0].Size;
+                    Vector2 offset = selectedItem.GlobalPosition - InventoryGrid.GlobalPosition + magicOffset;
+                    Vector2 slotSize = InventoryGrid.InvGridCells[0, 0].Size;
 
                     int slotX = (int)Math.Floor(offset.X / slotSize.X);
                     int slotY = (int)Math.Floor(offset.Y / slotSize.Y);
 
-                    if (CanFitInSlot(slotX, slotY, selectedItem)) {
+                    if (InventoryGrid.CanFitInSlot(slotX, slotY, selectedItem)) {
                         MoveSelectedItemToSlot(slotX, slotY);
                     }
                 }
@@ -110,65 +111,12 @@ public partial class Inventory : Control {
 		}
     }
 
-    // Generates the player's inventory grid
-    private void GenerateInventory() {
-        InventoryGridContainer.Columns = inventorySizeX;
-
-        for (int i = 0; i < inventorySizeY; i++) {
-            for (int j = 0; j < inventorySizeX; j++) {
-                InventoryGridCell newCell = new(new Vector2I(j, i));
-                invGridCells[j, i] = newCell;
-                InventoryGridContainer.AddChild(newCell);
-            }
-        }
-    }
-
-    // Goes through the inventory slots one by one (ignoring rows and columns that would be impossible to fit into due to size) to find an open and suitable slot to add it to
-    // The order is determined as going through each column, top to bottom, left to right
-    public bool TryAddItemToInventory(ref InventoryItem item) {
-        for (int i = 0; i < inventorySizeX - (item.GetGridSize().X - 1); i++) {
-            for (int j = 0; j < inventorySizeY - (item.GetGridSize().Y - 1); j++) {
-                if (invGridCells[i, j].IsEmpty) {
-                    if (CanFitInSlot(i, j, item)) {
-                        AddItemToInventory(item, i, j);
-                        return true;
-                    }
-                }
-            }
-        }
-        
-        return false;
-    }
-
-    public void AddItemToInventory(InventoryItem item, int slotX, int slotY) {
-        invGridCells[slotX, slotY].AddChild(item);
-        item.Position = Vector2.Zero;
-        item.SetOccupiedSlots(tempUsedSlots);
-        inventoryItems.Add(item);
-    }
-
     // Reparents an item to a different inventory slot to anchor it there, then deselects the item
     public void MoveSelectedItemToSlot(int slotX, int slotY) {
         selectedItem.ClearOccupiedSlots();
         selectedItem.GetParent().RemoveChild(selectedItem);
-        AddItemToInventory(selectedItem, slotX, slotY);
+        InventoryGrid.AddItemToInventory(selectedItem, slotX, slotY);
         ItemClickDeselect(selectedItem);
-    }
-
-    // Checks the relevant slots relative to the selected slot based on the item's size. Returns true if it can fit, false if it can't
-    public bool CanFitInSlot(int slotX, int slotY, InventoryItem item) {
-        tempUsedSlots.Clear();
-        
-        for (int i = 0; i < item.GetGridSize().X; i++) {
-            for (int j = 0; j < item.GetGridSize().Y; j++) {
-                if (slotX + i >= inventorySizeX || slotY + j >= inventorySizeY || !invGridCells[slotX + i, slotY + j].IsEmpty) {
-                    return false;
-                }
-                tempUsedSlots.Add(invGridCells[slotX + i, slotY + j]);
-            }
-        }
-
-        return true;
     }
 
     public void ClearSelectedItem() {
@@ -227,13 +175,13 @@ public partial class Inventory : Control {
             slot.RemoveHighlight();
         }
 
-        inventoryItems.Remove(item);
+        InventoryGrid.RemoveItemFromInventory(item);
         item.RemoveTooltip();
         item.IsClicked = false;
         IsAnItemSelected = false;
         selectedItem = null;
 
-        item.ClearOccupiedSlots();
+        //item.ClearOccupiedSlots();
         WorldItem worldItem = item.ItemReference.ConvertToWorldItem();
         PlayerOwner.DropItemOnFloor(worldItem);
     }
@@ -307,7 +255,7 @@ public partial class Inventory : Control {
         item.RemoveTooltip();
         slot.RemoveChild(item);
 
-        if (!TryAddItemToInventory(ref item)) {
+        if (!InventoryGrid.TryAddItemToInventory(ref item)) {
             PlayerOwner.DropItemOnFloor(item.ItemReference.ConvertToWorldItem());
         }
         else {
@@ -348,7 +296,7 @@ public partial class Inventory : Control {
         newItem.GetParent().RemoveChild(newItem);
         slot.AddChild(newItem);
 
-        if (!TryAddItemToInventory(ref oldItem)) {
+        if (!InventoryGrid.TryAddItemToInventory(ref oldItem)) {
             PlayerOwner.DropItemOnFloor(oldItem.ItemReference.ConvertToWorldItem());
         }
         else {

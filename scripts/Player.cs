@@ -217,8 +217,9 @@ public partial class Player : Actor {
 			Game.Instance.GenerateRandomSkillItem(GlobalPosition);
 		}
 		else if (@event.IsActionPressed("DebugHalveLifeMana")) {
-			BasicStats.CurrentLife /= 2;
-			BasicStats.CurrentMana /= 2;
+			Gold += 500;
+			//BasicStats.CurrentLife /= 2;
+			//BasicStats.CurrentMana /= 2;
 		}
 		else if (@event.IsActionPressed("DebugRemoveWorlditems")) {
 			Game.Instance.RemoveAllWorldItems();
@@ -502,7 +503,7 @@ public partial class Player : Actor {
 	}
 
 	public bool PickupItem(ref WorldItem item) {
-		item.ItemReference.ConvertToInventoryItem(this);
+		item.ItemReference.ConvertToInventoryItem(PlayerHUD.PlayerInventory.InventoryGrid, this);
 		return true;
 	}
 

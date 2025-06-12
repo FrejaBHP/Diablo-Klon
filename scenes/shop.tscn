@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3 uid="uid://dx03oomkxy4kb"]
+
+[ext_resource type="Script" uid="uid://b6ftt6fvno83m" path="res://scripts/Shop.cs" id="1_xfvoa"]
+[ext_resource type="Material" uid="uid://mlqqx7pptscx" path="res://textures/world/stone_brick.tres" id="4_ajxib"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_c5qsb"]
+size = Vector3(1.5, 2, 1.5)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_lx5au"]
+
+[node name="Shop" type="Area3D"]
+collision_layer = 16
+collision_mask = 4
+monitorable = false
+script = ExtResource("1_xfvoa")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("BoxShape3D_c5qsb")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CylinderMesh_lx5au")
+surface_material_override/0 = ExtResource("4_ajxib")
+
+[connection signal="body_entered" from="." to="." method="OnBodyEntered"]
+[connection signal="body_exited" from="." to="." method="OnBodyExited"]
+[connection signal="input_event" from="." to="." method="OnInputEvent"]
+[connection signal="mouse_entered" from="." to="." method="OnMouseEntered"]
+[connection signal="mouse_exited" from="." to="." method="OnMouseExited"]

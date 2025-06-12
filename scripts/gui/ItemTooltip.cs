@@ -11,6 +11,7 @@ public partial class ItemTooltip : Control {
 	public VBoxContainer AffixContainer;
 	public HSeparator ImplicitSeparator;
 	public HSeparator AffixSeparator;
+	public Label PriceLabel;
 
     public override void _Notification(int what) {
 		// Called when instantiated to avoid needing to get these nodes elsewhere
@@ -22,6 +23,7 @@ public partial class ItemTooltip : Control {
 			AffixContainer = GetNode<VBoxContainer>("VBoxContainer/AffixContainer");
 			ImplicitSeparator = GetNode<HSeparator>("VBoxContainer/ImplicitSeparator");
 			AffixSeparator = GetNode<HSeparator>("VBoxContainer/AffixSeparator");
+			PriceLabel = GetNode<Label>("VBoxContainer/PriceContainer/PriceLabel");
 		}
 
         base._Notification(what);

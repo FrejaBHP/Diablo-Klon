@@ -79,3 +79,15 @@ size_flags_vertical = 4
 mouse_filter = 2
 theme_override_constants/separation = -1
 alignment = 1
+
+[node name="PriceContainer" type="MarginContainer" parent="VBoxContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_bottom = 2
+
+[node name="PriceLabel" type="Label" parent="VBoxContainer/PriceContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.729412, 0, 1)
+theme_override_font_sizes/font_size = 14
+horizontal_alignment = 1

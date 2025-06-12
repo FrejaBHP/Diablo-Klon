@@ -19,6 +19,6 @@ public partial class RightHUD : Control {
     }
 
     public void UpdateEnemyDebugLabel(double denMod, int spawnAmount) {
-        EnemyDebugLabel.Text = $"Density Mod: {denMod:F2}, Amount: {spawnAmount}";
+        EnemyDebugLabel.Text = $"Den. Mod: {denMod:F2}, Amount: {spawnAmount}";
     }
 }

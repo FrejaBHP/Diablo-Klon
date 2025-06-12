@@ -16,7 +16,7 @@ public partial class SkillSlotCluster : Control {
 	public SkillSlotSupport SupportSlotMiddle { get; protected set; }
 	public SkillSlotSupport SupportSlotRight { get; protected set; }
 
-	public Inventory InventoryReference;
+	public PlayerInventory InventoryReference;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready() {
@@ -29,7 +29,7 @@ public partial class SkillSlotCluster : Control {
 		ActiveSlot.SkillUnequipped += OnActiveSkillUnequipped;
 	}
 
-	public void SetInventoryReference(Inventory inventory) {
+	public void SetInventoryReference(PlayerInventory inventory) {
 		InventoryReference = inventory;
 
 		ActiveSlot.InventoryReference = InventoryReference;

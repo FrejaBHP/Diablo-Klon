@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://bt0kddrwvt7hg"]
+
+[ext_resource type="Script" uid="uid://bhuqmrp6i4me6" path="res://scripts/gui/InventoryGrid.cs" id="1_3c6ch"]
+
+[node name="InventoryGrid" type="GridContainer"]
+size_flags_horizontal = 4
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+script = ExtResource("1_3c6ch")

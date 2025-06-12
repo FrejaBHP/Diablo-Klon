@@ -9,8 +9,9 @@ public partial class InventoryItem : PanelContainer {
 	PackedScene itemTooltipScene = GD.Load<PackedScene>("res://scenes/gui/hud_item_tooltip.tscn");
 	PackedScene skillTooltipScene = GD.Load<PackedScene>("res://scenes/gui/hud_skillitem_tooltip.tscn");
 
-	public Inventory InventoryReference;
+	public InventoryGrid InventoryReference;
 	public bool IsClicked = false;
+	public bool IsForSale = false;
 
 	public Item ItemReference;
 
@@ -48,14 +49,16 @@ public partial class InventoryItem : PanelContainer {
 	public void GUIInput(InputEvent @event) {
 		if (@event.IsActionPressed("LeftClick")) {
 			if (!IsClicked) {
-				InventoryReference.ItemClickSelect(this);
-				RemoveTooltip();
+				InventoryReference.OnItemClicked(this);
+				if (!IsForSale) {
+					RemoveTooltip();
+				}
 			}
 		}
 	}
 
 	public void OnMouseEntered() {
-		if (!InventoryReference.IsAnItemSelected) {
+		if (!Game.Instance.PlayerActor.PlayerHUD.PlayerInventory.IsAnItemSelected) {
 			itemBackground.Color = UILib.ColorItemBackgroundHovered;
 			isHovered = true;
 
@@ -70,7 +73,7 @@ public partial class InventoryItem : PanelContainer {
 	}
 
 	public void OnMouseExited() {
-		if (!InventoryReference.IsAnItemSelected) {
+		if (!Game.Instance.PlayerActor.PlayerHUD.PlayerInventory.IsAnItemSelected) {
 			itemBackground.Color = UILib.ColorItemBackground;
 			isHovered = false;
 			RemoveTooltip();
@@ -78,12 +81,12 @@ public partial class InventoryItem : PanelContainer {
 	}
 
 	public void SignalCreateEquipmentTooltip(Vector2 anchor, Rect2 rect, bool rightSide) {
-		InventoryReference.PlayerOwner.PlayerHUD.CreateItemTooltip(GetCustomEquipmentTooltip(), anchor, rect, rightSide);
+		Game.Instance.PlayerActor.PlayerHUD.CreateItemTooltip(GetCustomEquipmentTooltip(), anchor, rect, rightSide);
 		hasActiveTooltip = true;
 	}
 
 	public void SignalCreateSkillItemTooltip(Vector2 anchor, Rect2 rect, bool rightSide) {
-		InventoryReference.PlayerOwner.PlayerHUD.CreateItemTooltip(GetCustomSkillTooltip(), anchor, rect, rightSide);
+		Game.Instance.PlayerActor.PlayerHUD.CreateItemTooltip(GetCustomSkillTooltip(), anchor, rect, rightSide);
 		hasActiveTooltip = true;
 	}
 
@@ -97,7 +100,7 @@ public partial class InventoryItem : PanelContainer {
 	}
 
 	public void RemoveTooltip() {
-		InventoryReference.PlayerOwner.PlayerHUD.RemoveItemTooltip();
+		Game.Instance.PlayerActor.PlayerHUD.RemoveItemTooltip();
 		isHovered = false;
 		hasActiveTooltip = false;
 	}
@@ -299,6 +302,11 @@ public partial class InventoryItem : PanelContainer {
 		else {
 			tooltipContent.AffixSeparator.Visible = false;
 			tooltipContent.AffixContainer.Visible = false;
+		}
+
+		if (IsForSale) {
+			tooltipContent.PriceLabel.Text = $"{ItemReference.Price} Gold";
+			tooltipContent.PriceLabel.GetParent<Control>().Visible = true;
 		}
 		
 		return tooltipContent;

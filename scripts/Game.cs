@@ -12,8 +12,9 @@ public partial class Game : Node3D {
 	public MapBase CurrentMap;
 
 	public int CurrentAct { get; protected set; } = 0;
-	public int CurrentArea { get; protected set; } = -1; // When acts are properly structured, this should be set to 0 by it, and only maps past the first should increment this
-	private int areasPerAct = 2; // Areas refer to both combat maps and shop/breather maps. Ideally the rotation is C-C-S, and act ends with a boss. 3-4 rotations should be good here in the end
+	public int CurrentArea { get; protected set; } = 0; // When acts are properly structured, this should be set to 0 by it, and only maps past the first should increment this
+	private const int areasPerAct = 2; // Areas refer to both combat maps and shop/breather maps. Ideally the rotation is C-C-S, and act ends with a boss. 3-4 rotations should be good here in the end
+	private bool firstMapEntered = false;
 
 	private PlayerCamera playerCam;
 	private Node3D currentMapNode;
@@ -55,7 +56,7 @@ public partial class Game : Node3D {
 
 			oldMap.QueueFree();
 
-			CurrentArea = -1; // When acts are properly structured, this should be set to 0 by it, and only maps past the first should increment this
+			CurrentArea = 0; // When acts are properly structured, this should be set to 0 by it, and only maps past the first should increment this
 		}
 	}
 
@@ -89,7 +90,13 @@ public partial class Game : Node3D {
 			oldMap.QueueFree();
 		}
 
-		CurrentArea++;
+		if (firstMapEntered) {
+			CurrentArea++;
+		}
+		else {
+			firstMapEntered = true;
+		}
+		
 		//activeWaveNumber = 0;
 		//SetMapWaveList(EnemyDatabase.TestMapHorde);
 		//SetEnemyWave(activeWaveList.EnemyWaves[0]);
@@ -194,7 +201,7 @@ public partial class Game : Node3D {
 		newPos.Y += 0.5f;
 		transObj.GlobalPosition = newPos;
 
-		if (CurrentArea < areasPerAct) {
+		if (CurrentArea < areasPerAct - 1) {
 			transObj.SceneToTransitionTo = MapDatabase.FEScene;
 			transObj.GoesToTown = false;
 		}

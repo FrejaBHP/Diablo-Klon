@@ -18,6 +18,7 @@ public partial class Item {
 	public int MinimumLevel = 0;
 	public int ItemLevel = 0;
 	public bool CanRarityChange = true;
+	public int Price = 50;
 
 	public int MagicMaxPrefixes { get; protected set; } = 1;
 	public int MagicMaxSuffixes { get; protected set; } = 1;
@@ -60,12 +61,12 @@ public partial class Item {
 		return worldItem;
 	}
 
-	public void ConvertToInventoryItem(Player player) {
+	public void ConvertToInventoryItem(InventoryGrid grid, Player owner = null) {
 		InventoryItem inventoryItem = inventoryItemScene.Instantiate<InventoryItem>();
 		inventoryItem.SetItemReference(this);
 		inventoryItem.SetGridSize(gridSizeX, gridSizeY);
 
-		if (player.PlayerHUD.PlayerInventory.TryAddItemToInventory(ref inventoryItem)) {
+		if (grid.TryAddItemToInventory(ref inventoryItem)) {
 			if (IsInWorld) {
 				worldItemRef.QueueFree();
 				worldItemRef = null;
@@ -73,9 +74,8 @@ public partial class Item {
 
 			IsInWorld = false;
 			IsPickedUp = true;
-			PlayerOwner = player;
+			PlayerOwner = owner;
 			invItemRef = inventoryItem;
-			inventoryItem.InventoryReference = player.PlayerHUD.PlayerInventory;
 		}
 		else {
 			inventoryItem.QueueFree();

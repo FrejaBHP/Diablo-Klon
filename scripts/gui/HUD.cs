@@ -7,7 +7,7 @@ public partial class HUD : Control {
 	public Player PlayerOwner { get; protected set; }
 	public CharacterPanel PlayerPanel;
 	public SkillPanel PlayerSkillPanel;
-	public Inventory PlayerInventory;
+	public PlayerInventory PlayerInventory;
 	public UpperHUD PlayerUpperHUD;
 	public RightHUD PlayerRightHUD;
 	public LowerHUD PlayerLowerHUD;
@@ -17,7 +17,7 @@ public partial class HUD : Control {
 	public override void _Ready() {
 		PlayerPanel = GetNode<CharacterPanel>("PlayerPanel");
 		PlayerSkillPanel = GetNode<SkillPanel>("SkillPanel");
-		PlayerInventory = GetNode<Inventory>("Inventory");
+		PlayerInventory = GetNode<PlayerInventory>("Inventory");
 		PlayerUpperHUD = GetNode<UpperHUD>("UpperHUD");
 		PlayerRightHUD = GetNode<RightHUD>("RightHUD");
 		PlayerLowerHUD = GetNode<LowerHUD>("LowerHUD");

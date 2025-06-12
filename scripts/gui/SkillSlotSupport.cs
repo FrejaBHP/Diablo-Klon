@@ -11,7 +11,7 @@ public partial class SkillSlotSupport : Control {
 	[Signal]
     public delegate void SupportsSwappedEventHandler(SkillSlotSupport slot, InventoryItem oldSkill, InventoryItem newSkill);
 
-	public Inventory InventoryReference;
+	public PlayerInventory InventoryReference;
 	
 	public readonly EItemEquipmentSlot Slot = EItemEquipmentSlot.SkillSupport;
 
