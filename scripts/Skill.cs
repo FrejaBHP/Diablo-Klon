@@ -155,21 +155,6 @@ public abstract class Skill {
         if (ActorOwner != null) {
             ActiveDamageModifiers = ActorOwner.DamageMods + BaseDamageModifiers;
 
-            /*
-            if (Type == ESkillType.Spell) {
-                ActiveDamageModifiers.Physical.SMinBase = BaseDamageModifiers.Physical.SMinBase;
-                ActiveDamageModifiers.Physical.SMaxBase = BaseDamageModifiers.Physical.SMaxBase;
-                ActiveDamageModifiers.Fire.SMinBase = BaseDamageModifiers.Fire.SMinBase;
-                ActiveDamageModifiers.Fire.SMaxBase = BaseDamageModifiers.Fire.SMaxBase;
-                ActiveDamageModifiers.Cold.SMinBase = BaseDamageModifiers.Cold.SMinBase;
-                ActiveDamageModifiers.Cold.SMaxBase = BaseDamageModifiers.Cold.SMaxBase;
-                ActiveDamageModifiers.Lightning.SMinBase = BaseDamageModifiers.Lightning.SMinBase;
-                ActiveDamageModifiers.Lightning.SMaxBase = BaseDamageModifiers.Lightning.SMaxBase;
-                ActiveDamageModifiers.Chaos.SMinBase = BaseDamageModifiers.Chaos.SMinBase;
-                ActiveDamageModifiers.Chaos.SMaxBase = BaseDamageModifiers.Chaos.SMaxBase;
-            }
-            */
-
             if (AddedDamageModifier != 1) {
                 ActiveDamageModifiers.Physical.SMinAdded *= AddedDamageModifier;
                 ActiveDamageModifiers.Physical.SMaxAdded *= AddedDamageModifier;
@@ -183,7 +168,6 @@ public abstract class Skill {
                 ActiveDamageModifiers.Chaos.SMaxAdded *= AddedDamageModifier;
             }
 
-            //CriticalStrikeChance = ActorOwner.MainHandStats.CritChance * ActorOwner.CritChanceMod.STotal;
             CriticalStrikeMulti = ActorOwner.CritMultiplier.STotal;
 
             double activeIncreasedMod;
@@ -353,7 +337,9 @@ public interface IProjectileSkill {
     float BaseProjectileSpeed { get; protected set; }
     double BaseProjectileLifetime { get; protected set; }
     int BasePierces { get; protected set; }
+    int TotalPierces { get; protected set; }
     int BaseProjectiles { get; protected set; }
+    int TotalProjectiles { get; protected set; }
     bool FiresSequentially { get; protected set; }
 }
 

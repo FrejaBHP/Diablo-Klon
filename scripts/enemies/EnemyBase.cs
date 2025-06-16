@@ -81,7 +81,7 @@ public partial class EnemyBase : Actor {
     }
 
     public virtual void OnSkillTimerTimeout() {
-        if (ActorState == EActorState.Attacking) {
+        if (ActorState == EActorState.UsingSkill) {
             ActorState = EActorState.Actionable;
             currentlyUsedSkill = null;
         }
@@ -218,6 +218,8 @@ public partial class EnemyBase : Actor {
     }
 
     public void Die() {
+        ActorState = EActorState.Dead;
+
         if (goldBounty > 0) {
             //Game.Instance.DropGold(goldBounty, GlobalPosition, true);
             Game.Instance.CurrentMap.AddGoldToRewards(goldBounty, true);
@@ -236,6 +238,7 @@ public partial class EnemyBase : Actor {
     }
 
     public override void OnNoLifeLeft() {
+        ActorState = EActorState.Dying;
         Die();
     }
 

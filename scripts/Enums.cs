@@ -359,8 +359,10 @@ public enum ESkillWeapons {
 
 public enum EActorState {
 	Actionable,
-	Attacking,
-	Stunned
+	UsingSkill,
+	Stunned,
+	Dying,
+	Dead
 }
 
 public enum EEnemyRarity {

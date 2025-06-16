@@ -24,7 +24,7 @@ public class SThrust : Skill, IAttack, IMeleeSkill {
 
         CastRange = BaseAttackRange;
 
-        UsesMouseAim = false;
+        UsesMouseAim = true;
 
         //BaseDamageModifiers.IncreasedMelee = 0.35;
         //BaseDamageModifiers.MoreMelee = 1.25;
@@ -41,7 +41,13 @@ public class SThrust : Skill, IAttack, IMeleeSkill {
                 Y = ActorOwner.GlobalPosition.Y + ActorOwner.OutgoingEffectAttachmentHeight, 
                 Z = ActorOwner.GlobalPosition.Z 
             };
-            thrustScene.GlobalRotation = ActorOwner.GlobalRotation;
+            
+            if (mouseAimPosition != Vector3.Zero) {
+                thrustScene.LookAt(mouseAimPosition, Vector3.Up, true);
+            }
+            else {
+                thrustScene.RotateY(ActorOwner.GlobalRotation.Y);
+            }
 
             thrustScene.StartAttack(DamageCategory, RollForDamage(true), ActorOwner.Penetrations, 2f, BaseAttackRange, 25f);
 

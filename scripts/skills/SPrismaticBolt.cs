@@ -9,7 +9,9 @@ public class SPrismaticBolt : Skill, ISpell, IProjectileSkill {
     public float BaseProjectileSpeed { get; set; } = 15f;
     public double BaseProjectileLifetime { get; set; } = 2f;
     public int BasePierces { get; set; } = 0;
+    public int TotalPierces { get; set; }
     public int BaseProjectiles { get; set; } = 1;
+    public int TotalProjectiles { get; set; }
     public bool FiresSequentially { get; set; } = false;
 
     public SPrismaticBolt() {
@@ -25,6 +27,9 @@ public class SPrismaticBolt : Skill, ISpell, IProjectileSkill {
         ManaCost = 1;
 
         CastRange = 15f;
+
+        TotalPierces = BasePierces;
+        TotalProjectiles = BaseProjectiles;
 
         BaseDamageModifiers.Physical.SMinBase = 1;
         BaseDamageModifiers.Physical.SMaxBase = 3;

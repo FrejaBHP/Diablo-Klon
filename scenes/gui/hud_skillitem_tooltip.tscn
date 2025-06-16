@@ -1,13 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://djpxvo2s8teqh"]
 
 [ext_resource type="Script" uid="uid://tt70vabdtlx1" path="res://scripts/gui/ItemSkillTooltip.cs" id="1_8caim"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ddotj"]
-content_margin_left = 4.0
-content_margin_top = 1.0
-content_margin_right = 4.0
-content_margin_bottom = 1.0
-bg_color = Color(0.117647, 0.117647, 0.117647, 0.784314)
+[ext_resource type="StyleBox" uid="uid://dwmrqk1vdeutx" path="res://styles/tooltip_style_generic.tres" id="1_bnx0p"]
 
 [node name="TooltipContainer" type="PanelContainer"]
 anchors_preset = 7
@@ -22,7 +16,7 @@ offset_bottom = -4.0
 grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_ddotj")
+theme_override_styles/panel = ExtResource("1_bnx0p")
 script = ExtResource("1_8caim")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]

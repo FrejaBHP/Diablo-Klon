@@ -32,7 +32,7 @@ public partial class TestEnemy2 : EnemyBase {
         ApplyRegen(delta);
 
         if (isChasingTarget && actorTarget != null) {
-            if (GlobalPosition.DistanceTo(actorTarget.GlobalPosition) < Skills[0].CastRange - 0.25f && ActorState != EActorState.Attacking) {
+            if (GlobalPosition.DistanceTo(actorTarget.GlobalPosition) < Skills[0].CastRange - 0.25f && ActorState != EActorState.UsingSkill) {
                 lineOfSightCast.ForceRaycastUpdate();
 
                 if (lineOfSightCast.IsColliding()) {
@@ -52,7 +52,7 @@ public partial class TestEnemy2 : EnemyBase {
     public void UseShoot() {
         currentlyUsedSkill = Skills[0];
 
-        ActorState = EActorState.Attacking;
+        ActorState = EActorState.UsingSkill;
         skillTimer.WaitTime = UnarmedAttackSpeed / AttackSpeedMod.STotal;
         skillUsePointTimer.WaitTime = skillTimer.WaitTime / 2;
         skillTimer.Start();
@@ -65,7 +65,7 @@ public partial class TestEnemy2 : EnemyBase {
     }
 
     public override void OnSkillUsePointTimerTimeout() {
-        if (currentlyUsedSkill != null && ActorState == EActorState.Attacking) {
+        if (currentlyUsedSkill != null && ActorState == EActorState.UsingSkill) {
             currentlyUsedSkill.UseSkill();
         }
     }

@@ -39,11 +39,14 @@ public partial class Player : Actor {
 
 	protected EMovementInputMethod movementInputMethod = EMovementInputMethod.Keyboard;
 
-	protected Timer attackTimer;
+	protected Timer skillTimer;
 	protected bool isLeftClickHeld = false;
 	protected bool isRightClickHeld = false;
 	protected bool isSkillInput3Held = false;
 	protected bool isSkillInput4Held = false;
+	protected Skill skillInProgress = null;
+	protected int skillInProgressNo = -1;
+	protected const double skillMovementSpeedPenalty = 0.4;
 
 	public Label debugLabel;
 	protected bool newMouseButtonInput = false;
@@ -122,7 +125,7 @@ public partial class Player : Actor {
 		PlayerCamera.AssignPlayer(this);
 
 		debugLabel = GetNode<Label>("DebugLabel");
-		attackTimer = GetNode<Timer>("AttackTimer");
+		skillTimer = GetNode<Timer>("SkillTimer");
 		PlayerHUD = GetNode<HUD>("HUDLayer/PlayerHUD");
 		PlayerHUD.AssignPlayer(this);
 		PauseMenu = GetNode<Control>("MenuLayer/PauseMenu");
@@ -335,68 +338,70 @@ public partial class Player : Actor {
 	}
 
     public override void _PhysicsProcess(double delta) {
-		ApplyRegen(delta);
+		if (ActorState != EActorState.Dying || ActorState != EActorState.Dead) {
+			ApplyRegen(delta);
 
-		if (movementInputMethod == EMovementInputMethod.Keyboard) {
-			ProcessMovementKeyInput();
-			FaceMouse();
-		}
+			if (movementInputMethod == EMovementInputMethod.Keyboard) {
+				ProcessMovementKeyInput();
+				FaceMouse();
+			}
 
-		if (newMouseButtonInput) {
-			HandleMouseMovementInput();
-		}
+			if (newMouseButtonInput) {
+				HandleMouseMovementInput();
+			}
 
-		if (isLeftClickHeld && movementInputMethod == EMovementInputMethod.Keyboard) {
-			UseSkill(0);
-		}
-		else if (isRightClickHeld) {
-			UseSkill(1);
-		}
-		else if (isSkillInput3Held) {
-			UseSkill(2);
-		}
-		else if (isSkillInput4Held) {
-			UseSkill(3);
-		}
+			if (isLeftClickHeld && movementInputMethod == EMovementInputMethod.Keyboard) {
+				UseSkill(0);
+			}
+			else if (isRightClickHeld) {
+				UseSkill(1);
+			}
+			else if (isSkillInput3Held) {
+				UseSkill(2);
+			}
+			else if (isSkillInput4Held) {
+				UseSkill(3);
+			}
 
-		if (movementInputMethod == EMovementInputMethod.Mouse || MovingTowardsObject) {
-			remainingDist = (GlobalPosition with { Y = 0f }).DistanceTo(moveTo with { Y = 0f });
+			if (movementInputMethod == EMovementInputMethod.Mouse || MovingTowardsObject) {
+				remainingDist = (GlobalPosition with { Y = 0f }).DistanceTo(moveTo with { Y = 0f });
 
-			if (IsInstanceValid(TargetedNode) && TargetedNode != null) {
-				if (remainingDist <= (float)MovementSpeed.STotal / 100f) {
-					ApplyGroundedVelocity(0f, 0f);
+				if (IsInstanceValid(TargetedNode) && TargetedNode != null) {
+					if (remainingDist <= (float)MovementSpeed.STotal / 100f) {
+						ApplyGroundedVelocity(0f, 0f);
 
-					if (TargetedNode.IsInGroup("WorldItem")) {
-						WorldItem wi = (WorldItem)TargetedNode;
-						PickupItem(ref wi);
+						if (TargetedNode.IsInGroup("WorldItem")) {
+							WorldItem wi = (WorldItem)TargetedNode;
+							PickupItem(ref wi);
+						}
+						ResetNodeTarget();
 					}
-					ResetNodeTarget();
-				}
-				else {
-					Vector3 direction = GlobalPosition.DirectionTo(moveTo);
-					ApplyGroundedVelocity(direction.X, direction.Z);
-					
-					Vector3 vecGrounded = Velocity with { Y = 0f };
-					if (vecGrounded.Length() < (float)MovementSpeed.STotal - 0.01f) {
-						if (Velocity.Length() != 0) {
-							float diff = (float)MovementSpeed.STotal / Velocity.Length();
-							Velocity *= diff;
+					else {
+						Vector3 direction = GlobalPosition.DirectionTo(moveTo);
+						ApplyGroundedVelocity(direction.X, direction.Z);
+						
+						Vector3 vecGrounded = Velocity with { Y = 0f };
+						if (vecGrounded.Length() < (float)MovementSpeed.STotal - 0.01f) {
+							if (Velocity.Length() != 0) {
+								float diff = (float)MovementSpeed.STotal / Velocity.Length();
+								Velocity *= diff;
+							}
 						}
 					}
 				}
+				else {
+					ApplyGroundedVelocity(0f, 0f);
+					ResetNodeTarget();
+				}
 			}
-			else {
-				ApplyGroundedVelocity(0f, 0f);
-				ResetNodeTarget();
+
+			if (!IsOnFloor()) {
+				DoGravity(delta);
 			}
+
+			MoveAndSlide();
 		}
-
-		if (!IsOnFloor()) {
-			DoGravity(delta);
-		}
-
-		MoveAndSlide();
-
+		
 		//debugLabel.Text = $"Velocity: {Velocity.ToString("F2")}\nVel Length: {Velocity.Length():F2}\nRem. Dist: {remainingDist:F2}\nRotation: {RotationDegrees.Y:F2}";
 		//debugLabel.Text = $"Rotation: {GlobalRotationDegrees.Y:F2}";
 		//GD.Print($"Velocity: {Velocity.ToString("F2")}\nVel Length: {Velocity.Length():F2}\nRem. Dist: {remainingDist:F2}\nRotation: {RotationDegrees.ToString("F2")}");
@@ -413,70 +418,88 @@ public partial class Player : Actor {
 	}
 
 	public void UseSkill(int skillNo) {
-		if (ActorState == EActorState.Actionable) {
-			bool skillUsed = false;
-			Skill skill;
+		if (PlayerHUD.PlayerLowerHUD.GetSkillHotbar().SkillHotbarSlots[skillNo].AssignedSkill != null && ActorState == EActorState.Actionable) {
+			Skill skill = PlayerHUD.PlayerLowerHUD.GetSkillHotbar().SkillHotbarSlots[skillNo].AssignedSkill;
+			bool canUseSkill = skill.CanUseSkill();
 
-			switch (skillNo) {
-				case 0:
-					skillUsed = PlayerHUD.PlayerLowerHUD.GetSkillHotbar().SkillHotbarSlot1.TryUseSkill();
-					skill = PlayerHUD.PlayerLowerHUD.GetSkillHotbar().SkillHotbarSlot1.AssignedSkill;
-					break;
-				case 1:
-					skillUsed = PlayerHUD.PlayerLowerHUD.GetSkillHotbar().SkillHotbarSlot2.TryUseSkill();
-					skill = PlayerHUD.PlayerLowerHUD.GetSkillHotbar().SkillHotbarSlot2.AssignedSkill;
-					break;
-				case 2:
-					skillUsed = PlayerHUD.PlayerLowerHUD.GetSkillHotbar().SkillHotbarSlot3.TryUseSkill();
-					skill = PlayerHUD.PlayerLowerHUD.GetSkillHotbar().SkillHotbarSlot3.AssignedSkill;
-					break;
-				case 3: 
-					skillUsed = PlayerHUD.PlayerLowerHUD.GetSkillHotbar().SkillHotbarSlot4.TryUseSkill();
-					skill = PlayerHUD.PlayerLowerHUD.GetSkillHotbar().SkillHotbarSlot4.AssignedSkill;
-					break;
-				default:
-					skillUsed = false;
-					skill = null;
-					break;
-			}
-
-			if (!skillUsed) {
+			if (!canUseSkill) {
 				return;
 			}
 
-			ActorState = EActorState.Attacking;
+			skillInProgress = skill;
+			skillInProgressNo = skillNo;
+			ActorState = EActorState.UsingSkill;
+			MovementSpeed.SMore = skillMovementSpeedPenalty;
 
 			if (skill != null && skill is IAttack attack) {
 				if (IsDualWielding) {
 					if (IsUsingMainHandDW) {
-						attackTimer.Start(MainHandStats.AttackSpeed / attack.ActiveAttackSpeedModifiers.STotal);
+						skillTimer.Start(MainHandStats.AttackSpeed / attack.ActiveAttackSpeedModifiers.STotal);
 						IsUsingMainHandDW = false;
 					}
 					else {
-						attackTimer.Start(OffHandStats.AttackSpeed / attack.ActiveAttackSpeedModifiers.STotal);
+						skillTimer.Start(OffHandStats.AttackSpeed / attack.ActiveAttackSpeedModifiers.STotal);
 						IsUsingMainHandDW = true;
 					}
 				}
 				else {
 					IsUsingMainHandDW = true;
-					attackTimer.Start(MainHandStats.AttackSpeed / attack.ActiveAttackSpeedModifiers.STotal);
+					skillTimer.Start(MainHandStats.AttackSpeed / attack.ActiveAttackSpeedModifiers.STotal);
 				}
 			}
 			else if (skill != null && skill is ISpell spell) {
-				attackTimer.Start(spell.BaseCastTime / spell.ActiveCastSpeedModifiers.STotal);
+				skillTimer.Start(spell.BaseCastTime / spell.ActiveCastSpeedModifiers.STotal);
 			}
+
+			//GD.Print($"Attack Time: {attackTimer.WaitTime:F2}");
 		}
 	}
 
-	public void OnAttackTimerTimeout() {
-		if (ActorState != EActorState.Stunned) {
+	public void OnSkillTimerTimeout() {
+		if (ActorState != EActorState.Dying || ActorState != EActorState.Dead || ActorState != EActorState.Stunned) { // Currently, stunned is not a reachable state and can be ignored
+			PlayerHUD.PlayerLowerHUD.GetSkillHotbar().SkillHotbarSlots[skillInProgressNo].TryUseSkill();
+
+			// A "refire" check occurs here to smoothen out sustained action (and stops movement from stuttering)
+			bool isSkillHeld = false;
+			int skillNoHeld = -1;
+			
+			if (movementInputMethod == EMovementInputMethod.Keyboard) {
+				if (isLeftClickHeld && PlayerHUD.PlayerLowerHUD.GetSkillHotbar().SkillHotbarSlots[0].AssignedSkill != null) {
+					isSkillHeld = true;
+					skillNoHeld = 0;
+				}
+				else if (isRightClickHeld && PlayerHUD.PlayerLowerHUD.GetSkillHotbar().SkillHotbarSlots[1].AssignedSkill != null) {
+					isSkillHeld = true;
+					skillNoHeld = 1;
+				}
+				else if (isSkillInput3Held && PlayerHUD.PlayerLowerHUD.GetSkillHotbar().SkillHotbarSlots[2].AssignedSkill != null) {
+					isSkillHeld = true;
+					skillNoHeld = 2;
+				}
+				else if (isSkillInput4Held && PlayerHUD.PlayerLowerHUD.GetSkillHotbar().SkillHotbarSlots[3].AssignedSkill != null) {
+					isSkillHeld = true;
+					skillNoHeld = 3;
+				}
+			}
+
 			ActorState = EActorState.Actionable;
+			if (isSkillHeld && skillNoHeld != -1) {
+				UseSkill(skillNoHeld);
+			}
+			else {
+				skillInProgress = null;
+				skillInProgressNo = -1;
+				MovementSpeed.SMore = 1;
+			}
+
+			//GD.Print($"Held: {isSkillHeld}, index: {skillNoHeld}");
+			//GD.Print($"SProg null: {skillInProgress == null}, index: {skillInProgressNo}");
 		}
 	}
 
 	// For later
 	public void OnStunned() {
-		if (ActorState == EActorState.Attacking) {
+		if (ActorState == EActorState.UsingSkill) {
 			
 		}
 
@@ -793,5 +816,17 @@ public partial class Player : Actor {
 			PlayerHUD.PlayerPanel.DefenceTabPanel.Armour.SetValue($"{Math.Round(Armour.STotal, 0)} / {(1 - GetArmourMitigation(Armour.STotal, ActorLevel)) * 100:F0}%");
 			PlayerHUD.PlayerPanel.DefenceTabPanel.Evasion.SetValue($"{Math.Round(Evasion.STotal, 0)} / {GetEvasionChance(Evasion.STotal, ActorLevel) * 100:F0}%");
 		}
+	}
+
+	public override void OnNoLifeLeft() {
+		ActorState = EActorState.Dying;
+		Die();
+    }
+
+	// For lack of a better term
+	public void Die() {
+		ActorState = EActorState.Dead;
+		ResetNodeTarget();
+		Velocity = Vector3.Zero;
 	}
 }

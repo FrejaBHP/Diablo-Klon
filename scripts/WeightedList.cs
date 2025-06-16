@@ -108,8 +108,8 @@ public class WeightedList<T> : IEnumerable<T> {
             }
             iteratorCeil += weightsList[i];
 
-            // If a match, return the element
-            if (randomNumber <= iteratorCeil && randomNumber > iteratorFloor) {
+            // If weight is non-zero and a match, return the element
+            if (weightsList[i] != 0 && randomNumber < iteratorCeil && randomNumber >= iteratorFloor) {
                 return itemsList[i];
             }
         }

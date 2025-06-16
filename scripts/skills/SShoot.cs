@@ -11,7 +11,9 @@ public class SShoot : Skill, IAttack, IProjectileSkill {
     public float BaseProjectileSpeed { get; set; } = 15f;
     public double BaseProjectileLifetime { get; set; } = 2f;
     public int BasePierces { get; set; } = 2;
+    public int TotalPierces { get; set; }
     public int BaseProjectiles { get; set; } = 1;
+    public int TotalProjectiles { get; set; }
     public bool FiresSequentially { get; set; } = false;
 
     public SShoot() {
@@ -27,6 +29,9 @@ public class SShoot : Skill, IAttack, IProjectileSkill {
         ManaCost = 1;
 
         CastRange = 15f;
+
+        TotalPierces = BasePierces;
+        TotalProjectiles = BaseProjectiles;
     }
 
     public override void UseSkill() {

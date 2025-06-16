@@ -172,9 +172,6 @@ public partial class Stat {
 }
 
 public partial class DamageStat() {
-    public delegate void DamageStatsTotalChangedEventHandler(double newMin, double newMax);
-    public event DamageStatsTotalChangedEventHandler DamageStatsTotalChanged;
-
     public readonly bool ShouldRoundToWholeNumber = false;
 
     private double sMinBase = 0;
@@ -187,7 +184,6 @@ public partial class DamageStat() {
             else {
                 sMinBase = value;
             }
-            CalculateStats();
 		}
 	}
 
@@ -201,7 +197,6 @@ public partial class DamageStat() {
             else {
                 sMaxBase = value;
             }
-            CalculateStats();
 		}
 	}
 
@@ -215,7 +210,6 @@ public partial class DamageStat() {
             else {
                 sMinAdded = value;
             }
-            CalculateStats();
 		}
 	}
 
@@ -229,7 +223,6 @@ public partial class DamageStat() {
             else {
                 sMaxAdded = value;
             }
-            CalculateStats();
 		}
 	}
 
@@ -238,7 +231,6 @@ public partial class DamageStat() {
 		get => sIncreased;
 		set {
 			sIncreased = value;
-            CalculateStats();
 		}
 	}
 
@@ -247,61 +239,8 @@ public partial class DamageStat() {
 		get => sMore;
 		set {
 			sMore = value;
-            CalculateStats();
 		}
 	}
-
-    /*
-    private double sMinTotal;
-	public double SMinTotal {
-		get => sMinTotal;
-		set {
-            double incValue;
-
-            if (value < 0) {
-                incValue = 0;
-            }
-            else {
-                incValue = value;
-            }
-
-			if (ShouldRoundToWholeNumber) {
-                sMinTotal = Math.Round(incValue, 0);
-            }
-            else {
-                sMinTotal = incValue;
-            }
-		}
-	}
-
-    private double sMaxTotal;
-	public double SMaxTotal {
-		get => sMaxTotal;
-		set {
-            double incValue;
-
-            if (value < 0) {
-                incValue = 0;
-            }
-            else {
-                incValue = value;
-            }
-
-			if (ShouldRoundToWholeNumber) {
-                sMaxTotal = Math.Round(incValue, 0);
-            }
-            else {
-                sMaxTotal = incValue;
-            }
-		}
-	}
-    */
-
-    private void CalculateStats() {
-        //sMinTotal = (sMinBase + sMinAdded) * (1 + sIncreased) * sMore;
-        //sMaxTotal = (sMaxBase + sMaxAdded) * (1 + sIncreased) * sMore;
-        //DamageStatsTotalChanged?.Invoke(sMinTotal, sMaxTotal);
-    }
 
     public void CalculateTotal(out double totalMin, out double totalMax) {
         totalMin = (sMinBase + sMinAdded) * (1 + sIncreased) * sMore;

@@ -9,10 +9,7 @@ public partial class SkillHotbar : Control {
 
     protected VBoxContainer skillAssignmentContainer;
     protected HBoxContainer skillsContainer;
-    public SkillHotbarSlot SkillHotbarSlot1 { get; protected set; }
-    public SkillHotbarSlot SkillHotbarSlot2 { get; protected set; }
-    public SkillHotbarSlot SkillHotbarSlot3 { get; protected set; }
-    public SkillHotbarSlot SkillHotbarSlot4 { get; protected set; }
+    public SkillHotbarSlot[] SkillHotbarSlots = new SkillHotbarSlot[4];
     
     public bool IsSkillBeingSelected = false;
     protected SkillHotbarSlot selectedSlot;
@@ -21,30 +18,18 @@ public partial class SkillHotbar : Control {
     public override void _Ready() {
         skillAssignmentContainer = GetNode<VBoxContainer>("SkillAssignmentContainer");
         skillsContainer = skillAssignmentContainer.GetNode<HBoxContainer>("SkillsContainer");
-        SkillHotbarSlot1 = GetNode<SkillHotbarSlot>("SkillHotbar/SkillHotbarSlot1");
-        SkillHotbarSlot2 = GetNode<SkillHotbarSlot>("SkillHotbar/SkillHotbarSlot2");
-        SkillHotbarSlot3 = GetNode<SkillHotbarSlot>("SkillHotbar/SkillHotbarSlot3");
-        SkillHotbarSlot4 = GetNode<SkillHotbarSlot>("SkillHotbar/SkillHotbarSlot4");
 
-        SkillHotbarSlot1.SkillSlotClicked += SkillSlotClicked;
-        SkillHotbarSlot2.SkillSlotClicked += SkillSlotClicked;
-        SkillHotbarSlot3.SkillSlotClicked += SkillSlotClicked;
-        SkillHotbarSlot4.SkillSlotClicked += SkillSlotClicked;
+        for (int i = 0; i < SkillHotbarSlots.Length; i++) {
+            SkillHotbarSlots[i] = GetNode<SkillHotbarSlot>($"SkillHotbar/SkillHotbarSlot{i + 1}");
+            SkillHotbarSlots[i].SkillSlotClicked += SkillSlotClicked;
+            SkillHotbarSlots[i].SkillSlotEntered += SkillSlotMouseEntered;
+            SkillHotbarSlots[i].SkillSlotExited += SkillSlotMouseExited;
+        }
 
-        SkillHotbarSlot1.SkillSlotEntered += SkillSlotMouseEntered;
-        SkillHotbarSlot2.SkillSlotEntered += SkillSlotMouseEntered;
-        SkillHotbarSlot3.SkillSlotEntered += SkillSlotMouseEntered;
-        SkillHotbarSlot4.SkillSlotEntered += SkillSlotMouseEntered;
-
-        SkillHotbarSlot1.SkillSlotExited += SkillSlotMouseExited;
-        SkillHotbarSlot2.SkillSlotExited += SkillSlotMouseExited;
-        SkillHotbarSlot3.SkillSlotExited += SkillSlotMouseExited;
-        SkillHotbarSlot4.SkillSlotExited += SkillSlotMouseExited;
-
-        SkillHotbarSlot1.UpdateHint("LMB");
-        SkillHotbarSlot2.UpdateHint("RMB");
-        SkillHotbarSlot3.UpdateHint("Q");
-        SkillHotbarSlot4.UpdateHint("E");
+        SkillHotbarSlots[0].UpdateHint("LMB");
+        SkillHotbarSlots[1].UpdateHint("RMB");
+        SkillHotbarSlots[2].UpdateHint("Q");
+        SkillHotbarSlots[3].UpdateHint("E");
 
         SkillAssignable removeSkill = skillAssignableScene.Instantiate<SkillAssignable>();
         removeSkill.SizeFlagsHorizontal = SizeFlags.ShrinkCenter;
@@ -54,20 +39,10 @@ public partial class SkillHotbar : Control {
     }
 
     public void ClearInvalidSkills(ESkillName skillName) {
-        if (SkillHotbarSlot1.AssignedSkill != null && SkillHotbarSlot1.GetSkillName() == skillName) {
-            SkillHotbarSlot1.AssignSkillToSlot(null);
-        }
-
-        if (SkillHotbarSlot2.AssignedSkill != null && SkillHotbarSlot2.GetSkillName() == skillName) {
-            SkillHotbarSlot2.AssignSkillToSlot(null);
-        }
-
-        if (SkillHotbarSlot3.AssignedSkill != null && SkillHotbarSlot3.GetSkillName() == skillName) {
-            SkillHotbarSlot3.AssignSkillToSlot(null);
-        }
-
-        if (SkillHotbarSlot4.AssignedSkill != null && SkillHotbarSlot4.GetSkillName() == skillName) {
-            SkillHotbarSlot4.AssignSkillToSlot(null);
+        for (int i = 0; i < SkillHotbarSlots.Length; i++) {
+            if (SkillHotbarSlots[i].AssignedSkill != null && SkillHotbarSlots[i].GetSkillName() == skillName) {
+                SkillHotbarSlots[i].AssignSkillToSlot(null);
+            }
         }
     }
 
@@ -108,7 +83,6 @@ public partial class SkillHotbar : Control {
         foreach (Skill skill in PlayerOwner.Skills) {
             SkillAssignable assignableSkill = skillAssignableScene.Instantiate<SkillAssignable>();
             assignableSkill.SetAssignableSkill(skill);
-
             assignableSkill.SkillSelected += AssignableSkillSelected;
 
             skillsContainer.AddChild(assignableSkill);
@@ -134,17 +108,18 @@ public partial class SkillHotbar : Control {
     }
 
     public Control GetCustomSkillTooltip(SkillHotbarSlot skillSlot) {
+        SkillTooltip tooltipContent = skillTooltipScene.Instantiate<SkillTooltip>();
 		Skill skill = skillSlot.AssignedSkill;
-
-		SkillTooltip tooltipContent = skillTooltipScene.Instantiate<SkillTooltip>();
 
 		tooltipContent.NameLabel.Text = skill.Name;
 		tooltipContent.NameLabel.AddThemeColorOverride("font_color", UILib.ColorSkill);
 
-		tooltipContent.CostLabel.Text = $"{skill.ManaCost}";
+		tooltipContent.CostLabel.Text = $"{skill.ManaCost} Mana";
 
 		if (skill.Type == ESkillType.Attack) {
 			IAttack attack = skill as IAttack;
+
+            tooltipContent.TimeDescLabel.Text = "Attack time";
 
             if (PlayerOwner.MainHand != null) {
                 tooltipContent.TimeLabel.Text = $"{PlayerOwner.MainHandStats.AttackSpeed / attack.ActiveAttackSpeedModifiers.STotal:F2}";
@@ -221,6 +196,7 @@ public partial class SkillHotbar : Control {
         else if (skill.Type == ESkillType.Spell) {
 			ISpell spell = skill as ISpell;
 
+            tooltipContent.TimeDescLabel.Text = "Cast time";
             tooltipContent.TimeLabel.Text = $"{spell.BaseCastTime / spell.ActiveCastSpeedModifiers.STotal:F2}";
 
             VBoxContainer spellDmgCon = GenerateDamageContainer();
@@ -254,6 +230,33 @@ public partial class SkillHotbar : Control {
             tooltipContent.DamageContainer.AddChild(spellDmgCon);
 		}
 
+        if (skill.Tags.HasFlag(ESkillTags.Projectile)) {
+            IProjectileSkill ps = skill as IProjectileSkill;
+
+            if (ps.TotalPierces != 0) {
+                string pierceString = "";
+
+                if (ps.TotalPierces == 1) {
+                    pierceString = $"Pierces {ps.TotalPierces} target";
+                }
+                else {
+                    pierceString = $"Pierces {ps.TotalPierces} targets";
+                }
+
+                tooltipContent.EffectContainer.AddChild(GenerateAffixLabel(pierceString));
+            }
+
+            string projString = "";
+            if (ps.TotalProjectiles == 1) {
+                projString = $"Fires {ps.TotalProjectiles} projectile";
+            }
+            else {
+                projString = $"Fires {ps.TotalProjectiles} projectiles";
+            }
+
+            tooltipContent.EffectContainer.AddChild(GenerateAffixLabel(projString));
+        }
+
 		return tooltipContent;
 	}
 
@@ -269,7 +272,6 @@ public partial class SkillHotbar : Control {
 
     protected Label GenerateAffixLabel(string affixText) {
 		Label affixTextLabel = new Label();
-
 		affixTextLabel.Text = affixText;
 		affixTextLabel.AddThemeFontSizeOverride("font_size", 15);
 		affixTextLabel.AddThemeColorOverride("font_color", UILib.ColorBlurple);

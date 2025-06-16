@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Text;
 using Vector2 = Godot.Vector2;
 
 public partial class InventoryItem : PanelContainer {
@@ -55,6 +56,21 @@ public partial class InventoryItem : PanelContainer {
 				}
 			}
 		}
+		if (@event.IsActionPressed("RightClick")) {
+			if (!IsClicked) {
+				PrintDebug();
+			}
+		}
+	}
+
+	protected void PrintDebug() {
+		StringBuilder sb = new();
+		sb.Append($"Name: {ItemReference.ItemName}\n");
+		sb.Append($"Base: {ItemReference.ItemBase}\n");
+		sb.Append($"Rarity: {ItemReference.ItemRarity}\n");
+		sb.Append($"No of Prefixes: {ItemReference.Prefixes.Count}\n");
+		sb.Append($"No of Suffixes: {ItemReference.Suffixes.Count}");
+		GD.Print(sb.ToString());
 	}
 
 	public void OnMouseEntered() {
@@ -133,7 +149,6 @@ public partial class InventoryItem : PanelContainer {
 
 	// Sets the list of slots that this item will occupy
 	public void SetOccupiedSlots(List<InventoryGridCell> list) {
-		//GD.Print("Slots set");
 		occupiedInventorySlots = list.GetRange(0, list.Count);
 
 		foreach (InventoryGridCell slot in occupiedInventorySlots) {
@@ -143,7 +158,6 @@ public partial class InventoryItem : PanelContainer {
 
 	// Sets the list of occupied slots as empty without taking a new list. Used for when moving items around
 	public void OpenOccupiedSlots() {
-		//GD.Print("Slots opened");
 		foreach (InventoryGridCell slot in occupiedInventorySlots) {
             slot.IsEmpty = true;
         }
@@ -151,7 +165,6 @@ public partial class InventoryItem : PanelContainer {
 
 	// Sets the list of occupied slots as used without clearing the list. Used for when moving items around
 	public void CloseOccupiedSlots() {
-		//GD.Print("Slots closed");
 		foreach (InventoryGridCell slot in occupiedInventorySlots) {
             slot.IsEmpty = false;
         }
@@ -159,7 +172,6 @@ public partial class InventoryItem : PanelContainer {
 
 	// Empties the list of occupied slots
 	public void ClearOccupiedSlots() {
-		//GD.Print("Slots cleared");
 		foreach (InventoryGridCell slot in occupiedInventorySlots) {
             slot.IsEmpty = true;
         }
@@ -180,13 +192,13 @@ public partial class InventoryItem : PanelContainer {
 	public void ApplyBorder() {
 		StyleBoxFlat styleBoxFlat = GetThemeStylebox("panel").Duplicate() as StyleBoxFlat;
 		const int marginFactor = margin / 2;
+		
 		styleBoxFlat.BorderWidthLeft = marginFactor;
 		styleBoxFlat.BorderWidthTop = marginFactor;
 		styleBoxFlat.BorderWidthRight = marginFactor;
 		styleBoxFlat.BorderWidthBottom = marginFactor;
 		
 		styleBoxFlat.BorderColor = GetRarityColour();
-
 		AddThemeStyleboxOverride("panel", styleBoxFlat);
 	}
 
@@ -321,18 +333,18 @@ public partial class InventoryItem : PanelContainer {
 		tooltipContent.NameLabel.AddThemeColorOverride("font_color", UILib.ColorSkill);
 
         List<string> tagList = Enum.GetValues(typeof(ESkillTags)).Cast<ESkillTags>().Where(t => (skillItem.SkillReference.Tags & t) == t).Select(t => t.ToString()).ToList();
-		string tags = "";
+		StringBuilder sbTags = new();
 
 		for (int i = 1; i < tagList.Count; i++) {
 			if (i == 1) {
-				tags = tagList[1];
+				sbTags.Append(tagList[1]);
 			}
 			else {
-				tags += $", {tagList[i]}";
+				sbTags.Append($", {tagList[i]}");
 			}
 		}
 
-		Label tagsLabel = GenerateGreyLabel(tags);
+		Label tagsLabel = GenerateGreyLabel(sbTags.ToString());
 		tooltipContent.StatsContainer.AddChild(tagsLabel);
 
 		HBoxContainer costLabel = GenerateBaseStatLabel("Cost:", skillItem.SkillReference.ManaCost.ToString() + " Mana", false);
@@ -356,8 +368,6 @@ public partial class InventoryItem : PanelContainer {
 			tooltipContent.StatsContainer.AddChild(dmgLabel);
 		}
 
-		//Label descriptionLabel = GenerateDescriptionLabel(skillItem.SkillReference.Description);
-		//tooltipContent.DescriptionContainer.AddChild(descriptionLabel);
 		tooltipContent.DescriptionLabel.Text = skillItem.SkillReference.Description;
 
 		if (skillItem.SkillReference.BaseDamageModifiers.Physical.SMinBase > 0) {
@@ -447,19 +457,4 @@ public partial class InventoryItem : PanelContainer {
 
 		return affixTextLabel;
 	}
-
-	/*
-	protected static Label GenerateDescriptionLabel(string descriptionText) {
-		Label descriptionTextLabel = new Label();
-
-		descriptionTextLabel.CustomMinimumSize = new Vector2(350, 0);
-		descriptionTextLabel.AutowrapMode = TextServer.AutowrapMode.Word;
-		descriptionTextLabel.Text = descriptionText;
-		descriptionTextLabel.AddThemeFontSizeOverride("font_size", 15);
-		descriptionTextLabel.AddThemeColorOverride("font_color", UILib.ColorSkill);
-		descriptionTextLabel.HorizontalAlignment = HorizontalAlignment.Center;
-		
-		return descriptionTextLabel;
-	}
-	*/
 }

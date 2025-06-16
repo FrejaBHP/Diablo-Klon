@@ -9,14 +9,14 @@ public partial class ShopInventory : Control {
 
     public override void _Ready() {
         InventoryGrid = GetNode<InventoryGrid>("VBoxContainer/CenterContainer/InventoryGrid");
-        InventoryGrid.GenerateInventory(12, 8);
+        InventoryGrid.GenerateInventory(12, 12);
         InventoryGrid.ItemClicked += OnItemClicked;
 
         RerollButton = GetNode<Button>("Control/RerollButton");
     }
 
     public void PopulateShop() {
-        int random = Utilities.RNG.Next(6, 11);
+        int random = Utilities.RNG.Next(10, 16);
 
         for (int i = 0; i < random; i++) {
             Item newItem = ItemGeneration.GenerateItemFromCategory(EItemCategory.None);

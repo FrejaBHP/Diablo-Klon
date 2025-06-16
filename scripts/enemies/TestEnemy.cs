@@ -33,7 +33,7 @@ public partial class TestEnemy : EnemyBase {
         ApplyRegen(delta);
 
         if (isChasingTarget && actorTarget != null) {
-            if (GlobalPosition.DistanceTo(actorTarget.GlobalPosition) < Skills[0].CastRange - 0.25f && ActorState != EActorState.Attacking) {
+            if (GlobalPosition.DistanceTo(actorTarget.GlobalPosition) < Skills[0].CastRange - 0.25f && ActorState != EActorState.UsingSkill) {
                 //Vector3 targetVector = actorTarget.GlobalPosition - GlobalPosition;
                 //targetVector = targetVector.Normalized() * 20;
                 //lineOfSightCast.TargetPosition = targetVector;
@@ -60,7 +60,7 @@ public partial class TestEnemy : EnemyBase {
     public void UseThrust() {
         currentlyUsedSkill = Skills[0];
 
-        ActorState = EActorState.Attacking;
+        ActorState = EActorState.UsingSkill;
         skillTimer.WaitTime = UnarmedAttackSpeed / AttackSpeedMod.STotal;
         skillUsePointTimer.WaitTime = skillTimer.WaitTime / 2;
         skillTimer.Start();
@@ -73,7 +73,7 @@ public partial class TestEnemy : EnemyBase {
     }
 
     public override void OnSkillUsePointTimerTimeout() {
-        if (currentlyUsedSkill != null && ActorState == EActorState.Attacking) {
+        if (currentlyUsedSkill != null && ActorState == EActorState.UsingSkill) {
             currentlyUsedSkill.UseSkill();
         }
     }
