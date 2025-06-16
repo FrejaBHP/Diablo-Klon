@@ -49,6 +49,8 @@ public partial class Shop : Area3D {
 
     public void OnBodyExited(Node3D body) {
         Player player = (Player)body;
-        shopInventory.Visible = false;
+        if (shopInventory != null) {
+            shopInventory.Visible = false;
+        }
     }
 }
