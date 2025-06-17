@@ -204,33 +204,34 @@ public partial class Player : Actor {
 		else if (@event.IsActionReleased("SkillInput4")) {
 			isSkillInput4Held = false;
 		}
-		else if (@event.IsActionPressed("DebugSpawnRandomItem")) {
+		else if (@event.IsActionPressed("DebugSpawnRandomItem")) { // NUM0
 			Game.Instance.GenerateRandomItemFromCategory(EItemCategory.None, GlobalPosition);
 		}
-		else if (@event.IsActionPressed("DebugSpawnRandomWeapon")) {
+		else if (@event.IsActionPressed("DebugSpawnRandomWeapon")) { // NUM1
 			Game.Instance.GenerateRandomItemFromCategory(EItemCategory.Weapon, GlobalPosition);
 		}
-		else if (@event.IsActionPressed("DebugSpawnRandomArmour")) {
+		else if (@event.IsActionPressed("DebugSpawnRandomArmour")) { // NUM2
 			Game.Instance.GenerateRandomItemFromCategory(EItemCategory.Armour, GlobalPosition);
 		}
-		else if (@event.IsActionPressed("DebugSpawnRandomJewellery")) {
+		else if (@event.IsActionPressed("DebugSpawnRandomJewellery")) { // NUM3
 			Game.Instance.GenerateRandomItemFromCategory(EItemCategory.Jewellery, GlobalPosition);
 		}
-		else if (@event.IsActionPressed("DebugSpawnSkillItem")) {
+		else if (@event.IsActionPressed("DebugSpawnSkillItem")) { // NUM4
 			Game.Instance.GenerateRandomSkillItem(GlobalPosition);
 		}
-		else if (@event.IsActionPressed("DebugHalveLifeMana")) {
-			Gold += 500;
+		else if (@event.IsActionPressed("DebugHalveLifeMana")) { // NUM5
+			Gold += 1000;
 			//BasicStats.CurrentLife /= 2;
 			//BasicStats.CurrentMana /= 2;
 		}
-		else if (@event.IsActionPressed("DebugRemoveWorlditems")) {
+		else if (@event.IsActionPressed("DebugRemoveWorlditems")) { // NUM6
 			Game.Instance.RemoveAllWorldItems();
 		}
-		else if (@event.IsActionPressed("DebugSpawnEnemy")) {
+		else if (@event.IsActionPressed("DebugSpawnEnemy")) { // NUM7
+			Game.Instance.GenerateRandomSkillSupportItem(GlobalPosition);
 			//Game.Instance.Test();
 		}
-		else if (@event.IsActionPressed("Pause")) {
+		else if (@event.IsActionPressed("Pause")) { // ESC
 			GetTree().Paused = true;
 			PauseMenu.Show();
 		}

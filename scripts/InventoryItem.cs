@@ -85,6 +85,9 @@ public partial class InventoryItem : PanelContainer {
 			else if (ItemReference.GetType() == typeof(SkillItem)) {
 				SignalCreateSkillItemTooltip(anchor, GetGlobalRect(), true);
 			}
+			else if (ItemReference.GetType() == typeof(SkillSupportItem)) {
+				SignalCreateSupportItemTooltip(anchor, GetGlobalRect(), true);
+			}
 		}
 	}
 
@@ -103,6 +106,11 @@ public partial class InventoryItem : PanelContainer {
 
 	public void SignalCreateSkillItemTooltip(Vector2 anchor, Rect2 rect, bool rightSide) {
 		Game.Instance.PlayerActor.PlayerHUD.CreateItemTooltip(GetCustomSkillTooltip(), anchor, rect, rightSide);
+		hasActiveTooltip = true;
+	}
+
+	public void SignalCreateSupportItemTooltip(Vector2 anchor, Rect2 rect, bool rightSide) {
+		Game.Instance.PlayerActor.PlayerHUD.CreateItemTooltip(GetCustomSupportTooltip(), anchor, rect, rightSide);
 		hasActiveTooltip = true;
 	}
 
@@ -390,6 +398,35 @@ public partial class InventoryItem : PanelContainer {
             Label chaosLabel = GenerateAffixLabel($"Deals {Math.Round(skillItem.SkillReference.BaseDamageModifiers.Chaos.SMinBase, 0)} - {Math.Round(skillItem.SkillReference.BaseDamageModifiers.Chaos.SMaxBase, 0)} Chaos Damage");
             tooltipContent.EffectContainer.AddChild(chaosLabel);
         }
+		
+		return tooltipContent;
+	}
+
+	public Control GetCustomSupportTooltip() {
+		SkillSupportItem supportItem = ItemReference as SkillSupportItem;
+
+		ItemSkillTooltip tooltipContent = skillTooltipScene.Instantiate<ItemSkillTooltip>();
+
+		tooltipContent.NameLabel.Text = ItemReference.ItemName;
+		tooltipContent.NameLabel.AddThemeColorOverride("font_color", UILib.ColorSkill);
+
+        List<string> tagList = Enum.GetValues(typeof(ESkillTags)).Cast<ESkillTags>().Where(t => (supportItem.SkillTags & t) == t).Select(t => t.ToString()).ToList();
+		StringBuilder sbTags = new();
+
+		for (int i = 1; i < tagList.Count; i++) {
+			if (i == 1) {
+				sbTags.Append(tagList[1]);
+			}
+			else {
+				sbTags.Append($", {tagList[i]}");
+			}
+		}
+
+		tooltipContent.DescriptionLabel.Visible = false;
+		tooltipContent.DescriptionSeparator.Visible = false;
+
+		Label effectLabel = GenerateAffixLabel($"{supportItem.Description}");
+        tooltipContent.EffectContainer.AddChild(effectLabel);
 		
 		return tooltipContent;
 	}

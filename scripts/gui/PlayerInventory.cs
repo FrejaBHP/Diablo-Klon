@@ -37,7 +37,7 @@ public partial class PlayerInventory : Control {
 
     public override void _Ready() {
         AssignAndPrepareNodes();
-        InventoryGrid.GenerateInventory(12, 5);
+        InventoryGrid.GenerateGrid(12, 5);
     }
 
     private void AssignAndPrepareNodes() {
@@ -264,7 +264,7 @@ public partial class PlayerInventory : Control {
         }
 
         if (slot.Slot == EItemEquipmentSlot.WeaponLeft) {
-            // Dirty solution to swapping remaining 1h weapon from the off hand into the main hand when main hand is unequipped
+            // FIXME: Dirty solution to swapping remaining 1h weapon from the off hand into the main hand when main hand is unequipped
             // Please rewrite equipping and unequipping logic to be cleaner than this :pleading:
             if (WeaponSlotRight.ItemInSlot != null && WeaponSlotRight.ItemInSlot.ItemReference.GetType().IsSubclassOf(typeof(WeaponItem))) {
                 WeaponItem wItem = WeaponSlotRight.ItemInSlot.ItemReference as WeaponItem;

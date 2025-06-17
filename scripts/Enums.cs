@@ -46,6 +46,21 @@ public enum EStatName {
 	FlatFireDamage,
 	IncreasedFireDamage,
 
+	FlatMinColdDamage,
+	FlatMaxColdDamage,
+	FlatColdDamage,
+	IncreasedColdDamage,
+
+	FlatMinLightningDamage,
+	FlatMaxLightningDamage,
+	FlatLightningDamage,
+	IncreasedLightningDamage,
+
+	FlatMinChaosDamage,
+	FlatMaxChaosDamage,
+	FlatChaosDamage,
+	IncreasedChaosDamage,
+
 	IncreasedMeleeDamage,
 	IncreasedRangedDamage,
 	IncreasedSpellDamage,

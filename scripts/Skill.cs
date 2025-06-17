@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Godot;
 
 public abstract class Skill {
@@ -27,11 +30,54 @@ public abstract class Skill {
     public double SpeedModifier { get; protected set; } = 1;
     public double Cooldown { get; protected set; } = 0;
 
+    public Dictionary<EStatName, double> SupportStatDictionary = new();
+
     public float CastRange { get; set; } // Mainly intended to be used by the AI to help them walk into range first
 
     public bool UsesMouseAim { get; protected set; } = true;
     public bool AimsInStraightLine { get; protected set; } = true;
     protected Vector3 mouseAimPosition = Vector3.Zero;
+
+    // FIXME: Bad solution. Support gems should be used as their own thing, and apply these stats directly, rather than having a long list of bullshit like this!
+    public void UpdateSupportStatDictionary(List<SkillSupportItem> supports) {
+        SupportStatDictionary.Clear();
+
+        for (int i = 0; i < supports.Count; i++) {
+            if (Tags.HasFlag(supports[i].SkillTags)) {
+                for (int j = 0; j < supports[i].SupportStatDictionary.Count; j++) {
+                    EStatName statKey = supports[i].SupportStatDictionary.ElementAt(j).Key;
+                    
+                    if (SupportStatDictionary.ContainsKey(statKey)) {
+                        if (supports[i].IsStatMultiplicative[j]) {
+                            SupportStatDictionary[statKey] *= supports[i].SupportStatDictionary[statKey];
+                        }
+                        else {
+                            SupportStatDictionary[statKey] += supports[i].SupportStatDictionary[statKey];
+                        }
+                    }
+                    else {
+                        if (supports[i].IsStatMultiplicative[j]) {
+                            SupportStatDictionary.Add(statKey, 1 + supports[i].SupportStatDictionary.ElementAt(j).Value);
+                        }
+                        else {
+                            SupportStatDictionary.Add(statKey, supports[i].SupportStatDictionary.ElementAt(j).Value);
+                        }
+                    }
+                }
+            }
+        }
+
+        StringBuilder sb = new();
+        sb.Append("Key-Value pairs in Skill dictionary:\n");
+
+        foreach (var kvp in SupportStatDictionary) {
+            sb.Append($"{kvp.Key}, {kvp.Value}\n");
+        }
+
+        GD.Print($"{sb}");
+
+        UpdateSkillValues();
+    }
 
     public virtual bool CanUseSkill() {
         if (!ActorOwner.IsIgnoringManaCosts) {
@@ -154,6 +200,17 @@ public abstract class Skill {
     public virtual void UpdateSkillValues() {
         if (ActorOwner != null) {
             ActiveDamageModifiers = ActorOwner.DamageMods + BaseDamageModifiers;
+
+            if (SupportStatDictionary.TryGetValue(EStatName.FlatMinPhysDamage, out double minPhys)) ActiveDamageModifiers.Physical.SMinAdded += minPhys;
+            if (SupportStatDictionary.TryGetValue(EStatName.FlatMaxPhysDamage, out double maxPhys)) ActiveDamageModifiers.Physical.SMaxAdded += maxPhys;
+            if (SupportStatDictionary.TryGetValue(EStatName.FlatMinFireDamage, out double minFire)) ActiveDamageModifiers.Fire.SMinAdded += minFire;
+            if (SupportStatDictionary.TryGetValue(EStatName.FlatMaxFireDamage, out double maxFire)) ActiveDamageModifiers.Fire.SMaxAdded += maxFire;
+            if (SupportStatDictionary.TryGetValue(EStatName.FlatMinColdDamage, out double minCold)) ActiveDamageModifiers.Cold.SMinAdded += minCold;
+            if (SupportStatDictionary.TryGetValue(EStatName.FlatMaxColdDamage, out double maxCold)) ActiveDamageModifiers.Cold.SMaxAdded += maxCold;
+            if (SupportStatDictionary.TryGetValue(EStatName.FlatMinLightningDamage, out double minLight)) ActiveDamageModifiers.Lightning.SMinAdded += minLight;
+            if (SupportStatDictionary.TryGetValue(EStatName.FlatMaxLightningDamage, out double maxLight)) ActiveDamageModifiers.Lightning.SMaxAdded += maxLight;
+            if (SupportStatDictionary.TryGetValue(EStatName.FlatMinChaosDamage, out double minChaos)) ActiveDamageModifiers.Chaos.SMinAdded += minChaos;
+            if (SupportStatDictionary.TryGetValue(EStatName.FlatMaxChaosDamage, out double maxChaos)) ActiveDamageModifiers.Chaos.SMaxAdded += maxChaos;
 
             if (AddedDamageModifier != 1) {
                 ActiveDamageModifiers.Physical.SMinAdded *= AddedDamageModifier;

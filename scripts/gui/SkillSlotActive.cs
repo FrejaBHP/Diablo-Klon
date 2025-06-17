@@ -71,7 +71,6 @@ public partial class SkillSlotActive : Control {
 
 		if (itemInSlot != null) {
 			RemoveHighlight();
-
 			InventoryReference.PlayerOwner.PlayerHUD.RemoveItemTooltip();
 		}
 	}

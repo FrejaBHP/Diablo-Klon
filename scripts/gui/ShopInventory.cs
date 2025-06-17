@@ -9,7 +9,7 @@ public partial class ShopInventory : Control {
 
     public override void _Ready() {
         InventoryGrid = GetNode<InventoryGrid>("VBoxContainer/CenterContainer/InventoryGrid");
-        InventoryGrid.GenerateInventory(12, 12);
+        InventoryGrid.GenerateGrid(12, 12);
         InventoryGrid.ItemClicked += OnItemClicked;
 
         RerollButton = GetNode<Button>("Control/RerollButton");
@@ -37,7 +37,7 @@ public partial class ShopInventory : Control {
     }
 
     public void OnItemClicked(InventoryItem item) {
-        if (Game.Instance.PlayerActor.Gold >= item.ItemReference.Price) {
+        if (Game.Instance.PlayerActor.Gold >= item.ItemReference.Price && Game.Instance.PlayerActor.PlayerHUD.PlayerInventory.InventoryGrid.CanFitInInventory(ref item)) {
             item.IsForSale = false;
             Game.Instance.PlayerActor.Gold -= item.ItemReference.Price;
             InventoryGrid.RemoveItemFromInventory(item);

@@ -153,6 +153,12 @@ public partial class Game : Node3D {
 		DropItem(worldItem, position);
 	}
 
+	public void GenerateRandomSkillSupportItem(Vector3 position) {
+		Item item = ItemGeneration.GenerateRandomSkillSupportItem();
+		WorldItem worldItem = item.ConvertToWorldItem();
+		DropItem(worldItem, position);
+	}
+
 	/// <summary>
 	/// Adds WorldItem to current map's NameplateLayer at provided GlobalPosition. Useful for generated items or items thrown by the player.
 	/// </summary>

@@ -298,8 +298,7 @@ public static class ItemGeneration {
 		SkillItem item = new();
 		SkillItemData data;
 
-		List<SkillItemData> legalSkillItemData = new List<SkillItemData>();
-		legalSkillItemData = ItemDataTables.SkillData.ToList();
+		List<SkillItemData> legalSkillItemData = ItemDataTables.SkillData.ToList();
 		data = legalSkillItemData[Utilities.RNG.Next(legalSkillItemData.Count)];
 
 		item.ItemRarity = EItemRarity.Skill;
@@ -314,6 +313,26 @@ public static class ItemGeneration {
 		item.SkillReference = newSkill;
 
 		item.ItemName = item.SkillReference.Name;
+
+		return item;
+	}
+
+	public static SkillSupportItem GenerateRandomSkillSupportItem() {
+		SkillSupportItem item = new();
+		SkillSupportItemData data;
+
+		List<SkillSupportItemData> legalSkillSupportItemData = ItemDataTables.SkillSupportData.ToList();
+		data = legalSkillSupportItemData[Utilities.RNG.Next(legalSkillSupportItemData.Count)];
+
+		item.ItemRarity = EItemRarity.Skill;
+
+		item.ItemBase = data.BaseName;
+		item.ItemName = data.SupportName;
+		item.Description = data.SupportDescription;
+		item.SkillTags = data.SkillTags;
+		item.ItemTexture = data.Texture;
+		item.SupportStatDictionary = data.SupportStatDictionary;
+		item.IsStatMultiplicative = data.IsStatMultiplicative;
 
 		return item;
 	}

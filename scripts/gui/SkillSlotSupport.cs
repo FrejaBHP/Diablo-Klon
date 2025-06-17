@@ -30,7 +30,25 @@ public partial class SkillSlotSupport : Control {
 	}
 
 	public void GUIInput(InputEvent @event) {
-
+		// On left-click
+		if (@event.IsActionPressed("LeftClick")) {
+			if (InventoryReference.IsAnItemSelected && InventoryReference.SelectedItem.ItemReference.ItemAllBaseType == EItemAllBaseType.SkillSupport) {
+				if (itemInSlot == null) {
+					SetSupport(InventoryReference.SelectedItem);
+					EmitSignal(SignalName.SupportEquipped, this, itemInSlot);
+				}
+				else {
+					InventoryItem temp = InventoryReference.SelectedItem;
+					SetSupport(temp);
+					EmitSignal(SignalName.SupportsSwapped, this, itemInSlot, InventoryReference.SelectedItem);
+				}
+			}
+			else if (!InventoryReference.IsAnItemSelected && itemInSlot != null) {
+				RemoveHighlight();
+				EmitSignal(SignalName.SupportUnequipped, this, itemInSlot);
+				SetSupport(null);
+			}
+		}
 	}
 
 	public void OnMouseEntered() {
@@ -39,7 +57,7 @@ public partial class SkillSlotSupport : Control {
 		if (itemInSlot != null) {
 			HighlightSlot();
 			Vector2 anchor = GlobalPosition with { X = GlobalPosition.X + Size.X / 2, Y = GlobalPosition.Y };
-			//itemInSlot.SignalCreateEquipmentTooltip(anchor, GetGlobalRect());
+			itemInSlot.SignalCreateSupportItemTooltip(anchor, GetGlobalRect(), false);
 		}
 	}
 
@@ -48,8 +66,7 @@ public partial class SkillSlotSupport : Control {
 
 		if (itemInSlot != null) {
 			RemoveHighlight();
-
-			//InventoryReference.PlayerOwner.PlayerHUD.RemoveItemTooltip();
+			InventoryReference.PlayerOwner.PlayerHUD.RemoveItemTooltip();
 		}
 	}
 
@@ -58,7 +75,7 @@ public partial class SkillSlotSupport : Control {
 
 		if (itemInSlot != null && IsHovered) {
 			Vector2 anchor = GlobalPosition with { X = GlobalPosition.X + Size.X / 2, Y = GlobalPosition.Y };
-			itemInSlot.SignalCreateEquipmentTooltip(anchor, GetGlobalRect(), false);
+			itemInSlot.SignalCreateSupportItemTooltip(anchor, GetGlobalRect(), false);
 		}
 	}
 

@@ -30,6 +30,14 @@ public class SkillItemData : ItemData {
 	public Skill SkillReference;
 }
 
+public class SkillSupportItemData : ItemData {
+	public string SupportName;
+	public string SupportDescription;
+	public ESkillTags SkillTags;
+	public Dictionary<EStatName, double> SupportStatDictionary;
+	public List<bool> IsStatMultiplicative;
+}
+
 public static class ItemDataTables {
 	public static readonly List<WeaponItemData> OHSwordWeaponData = [
 		new WeaponItemData {
@@ -281,5 +289,27 @@ public static class ItemDataTables {
 			MinimumLevel = 0,
 			ImplicitTypes = []
 		}
+	];
+
+	// Supports really should be their own classes to avoid this overly convoluted structure rippling through everything else
+	public static readonly List<SkillSupportItemData> SkillSupportData = [
+		new SkillSupportItemData {
+			BaseName = "Skill Gem",
+			SupportName = "Added Cold Damage Support",
+			SupportDescription = $"Adds 5 to 7 Cold Damage",
+			SkillTags = ESkillTags.None,
+			SupportStatDictionary = new() {
+				{EStatName.FlatMinColdDamage, 5},
+				{EStatName.FlatMaxColdDamage, 7}
+			},
+			IsStatMultiplicative = [
+				false,
+				false
+			],
+			ItemSpecifierFlags = EItemBaseSpecifierFlags.NONE,
+			Texture = UILib.TextureItemD2JewelWhite,
+			MinimumLevel = 0,
+			ImplicitTypes = []
+		},
 	];
 }
