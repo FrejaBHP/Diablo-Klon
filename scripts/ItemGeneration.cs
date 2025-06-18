@@ -296,13 +296,11 @@ public static class ItemGeneration {
 
 	public static SkillItem GenerateRandomSkillItem() {
 		SkillItem item = new();
-		SkillItemData data;
 
 		List<SkillItemData> legalSkillItemData = ItemDataTables.SkillData.ToList();
-		data = legalSkillItemData[Utilities.RNG.Next(legalSkillItemData.Count)];
+		SkillItemData data = legalSkillItemData[Utilities.RNG.Next(legalSkillItemData.Count)];
 
 		item.ItemRarity = EItemRarity.Skill;
-
 		item.ItemBase = data.BaseName;
 		item.SkillName = data.SkillName;
 		item.ItemTexture = data.Texture;
@@ -317,22 +315,15 @@ public static class ItemGeneration {
 		return item;
 	}
 
-	public static SkillSupportItem GenerateRandomSkillSupportItem() {
-		SkillSupportItem item = new();
-		SkillSupportItemData data;
+	public static SupportGem GenerateRandomSkillSupportItem() {
+		List<SupportGemData> legalSupportGemData = ItemDataTables.SupportGemData.ToList();
+		SupportGemData data = legalSupportGemData[Utilities.RNG.Next(legalSupportGemData.Count)];
 
-		List<SkillSupportItemData> legalSkillSupportItemData = ItemDataTables.SkillSupportData.ToList();
-		data = legalSkillSupportItemData[Utilities.RNG.Next(legalSkillSupportItemData.Count)];
+		SupportGem item = (SupportGem)Activator.CreateInstance(data.SupportType);
 
 		item.ItemRarity = EItemRarity.Skill;
-
 		item.ItemBase = data.BaseName;
-		item.ItemName = data.SupportName;
-		item.Description = data.SupportDescription;
-		item.SkillTags = data.SkillTags;
 		item.ItemTexture = data.Texture;
-		item.SupportStatDictionary = data.SupportStatDictionary;
-		item.IsStatMultiplicative = data.IsStatMultiplicative;
 
 		return item;
 	}

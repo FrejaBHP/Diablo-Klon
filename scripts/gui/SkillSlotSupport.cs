@@ -45,8 +45,9 @@ public partial class SkillSlotSupport : Control {
 			}
 			else if (!InventoryReference.IsAnItemSelected && itemInSlot != null) {
 				RemoveHighlight();
-				EmitSignal(SignalName.SupportUnequipped, this, itemInSlot);
+				InventoryItem temp = itemInSlot;
 				SetSupport(null);
+				EmitSignal(SignalName.SupportUnequipped, this, temp);
 			}
 		}
 	}

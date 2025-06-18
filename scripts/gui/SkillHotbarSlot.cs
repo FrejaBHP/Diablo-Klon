@@ -36,7 +36,7 @@ public partial class SkillHotbarSlot : Control {
         
         if (skill != null) {
             skillTextureRect.Texture = AssignedSkill.Texture;
-            AssignedSkill.UpdateSkillValues();
+            AssignedSkill.RecalculateSkillValues();
         }
         else {
             skillTextureRect.Texture = UILib.TextureSkillNONE;

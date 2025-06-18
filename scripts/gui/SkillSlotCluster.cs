@@ -7,10 +7,10 @@ public partial class SkillSlotCluster : Control {
     public delegate void ClusterChangedEventHandler(SkillSlotCluster cluster);
 
 	[Signal]
-    public delegate void ActiveSkillEquippedEventHandler(Control slot, InventoryItem skill);
+    public delegate void ActiveSkillEquippedEventHandler(SkillSlotCluster cluster, Control slot, InventoryItem skill);
 
 	[Signal]
-    public delegate void ActiveSkillUnequippedEventHandler(Control slot, InventoryItem skill);
+    public delegate void ActiveSkillUnequippedEventHandler(SkillSlotCluster cluster, Control slot, InventoryItem skill);
 
 	[Signal]
     public delegate void SupportEquippedEventHandler(Control slot, InventoryItem support);
@@ -61,27 +61,25 @@ public partial class SkillSlotCluster : Control {
 	}
 
 	public void OnActiveSkillEquipped(Control slot, InventoryItem item) {
-		EmitSignal(SignalName.ActiveSkillEquipped, slot, item);
+		EmitSignal(SignalName.ActiveSkillEquipped, this, slot, item);
+
+		SkillItem skillItem = (SkillItem)item.ItemReference;
+		skillItem.SkillReference.RecalculateSkillValues();
 	}
 
 	public void OnActiveSkillUnequipped(Control slot, InventoryItem item) {
-		EmitSignal(SignalName.ActiveSkillUnequipped, slot, item);
+		EmitSignal(SignalName.ActiveSkillUnequipped, this, slot, item);
+
+		SkillItem skillItem = (SkillItem)item.ItemReference;
+		skillItem.SkillReference.RecalculateSkillValues();
 	}
 
 	public void OnSupportEquipped(Control slot, InventoryItem item) {
 		EmitSignal(SignalName.SupportEquipped, slot, item);
 
 		if (ActiveSlot.ItemInSlot != null) {
-			List<SkillSupportItem> supports = new();
-
-			for (int i = 0; i < SupportSlots.Length; i++) {
-				if (SupportSlots[i].ItemInSlot != null) {
-					SkillSupportItem supportItem = (SkillSupportItem)SupportSlots[i].ItemInSlot.ItemReference;
-					supports.Add(supportItem);
-				}
-			}
 			SkillItem skillItem = (SkillItem)ActiveSlot.ItemInSlot.ItemReference;
-			skillItem.SkillReference.UpdateSupportStatDictionary(supports);
+			skillItem.SkillReference.RecalculateSkillValues();
 		}
 	}
 
@@ -89,17 +87,22 @@ public partial class SkillSlotCluster : Control {
 		EmitSignal(SignalName.SupportUnequipped, slot, item);
 
 		if (ActiveSlot.ItemInSlot != null) {
-			List<SkillSupportItem> supports = new();
-
-			for (int i = 0; i < SupportSlots.Length; i++) {
-				if (SupportSlots[i].ItemInSlot != null && SupportSlots[i].ItemInSlot != item) {
-					SkillSupportItem supportItem = (SkillSupportItem)SupportSlots[i].ItemInSlot.ItemReference;
-					supports.Add(supportItem);
-				}
-			}
 			SkillItem skillItem = (SkillItem)ActiveSlot.ItemInSlot.ItemReference;
-			skillItem.SkillReference.UpdateSupportStatDictionary(supports);
+			skillItem.SkillReference.RecalculateSkillValues();
 		}
+	}
+
+	public List<SupportGem> GetSupports() {
+		List<SupportGem> supports = new();
+
+		for (int i = 0; i < SupportSlots.Length; i++) {
+			if (SupportSlots[i].ItemInSlot != null) {
+				SupportGem supportGem = (SupportGem)SupportSlots[i].ItemInSlot.ItemReference;
+				supports.Add(supportGem);
+			}
+		}
+
+		return supports;
 	}
 
 	public void HighlightSlot() {

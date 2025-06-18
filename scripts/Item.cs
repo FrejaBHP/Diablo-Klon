@@ -251,25 +251,6 @@ public partial class SkillItem : Item {
 	}
 }
 
-public partial class SkillSupportItem : Item {
-	public string Description;
-	public ESkillTags SkillTags;
-	public Dictionary<EStatName, double> SupportStatDictionary;
-	public List<bool> IsStatMultiplicative;
-
-	public SkillSupportItem() {
-		ItemAllBaseType = EItemAllBaseType.SkillSupport;
-		CanRarityChange = false;
-		MagicMaxPrefixes = 0;
-		MagicMaxSuffixes = 0;
-		RareMaxPrefixes = 0;
-		RareMaxSuffixes = 0;
-
-		gridSizeX = 1;
-		gridSizeY = 1;
-	}
-}
-
 public partial class WeaponItem : Item {
 	public EItemWeaponBaseType ItemWeaponBaseType;
 	public string WeaponClass;

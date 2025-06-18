@@ -732,7 +732,7 @@ public partial class Player : Actor {
 
 	public void UpdateSkillValues() {
 		for (int i = 0; i < Skills.Count; i++) {
-			Skills[i].UpdateSkillValues();
+			Skills[i].RecalculateSkillValues();
 		}
 	}
 

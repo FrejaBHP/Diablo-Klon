@@ -85,7 +85,7 @@ public partial class InventoryItem : PanelContainer {
 			else if (ItemReference.GetType() == typeof(SkillItem)) {
 				SignalCreateSkillItemTooltip(anchor, GetGlobalRect(), true);
 			}
-			else if (ItemReference.GetType() == typeof(SkillSupportItem)) {
+			else if (ItemReference.GetType().IsSubclassOf(typeof(SupportGem))) {
 				SignalCreateSupportItemTooltip(anchor, GetGlobalRect(), true);
 			}
 		}
@@ -403,14 +403,15 @@ public partial class InventoryItem : PanelContainer {
 	}
 
 	public Control GetCustomSupportTooltip() {
-		SkillSupportItem supportItem = ItemReference as SkillSupportItem;
+		//SkillSupportItem supportItem = ItemReference as SkillSupportItem;
+		SupportGem supportGem = ItemReference as SupportGem;
 
 		ItemSkillTooltip tooltipContent = skillTooltipScene.Instantiate<ItemSkillTooltip>();
 
 		tooltipContent.NameLabel.Text = ItemReference.ItemName;
 		tooltipContent.NameLabel.AddThemeColorOverride("font_color", UILib.ColorSkill);
 
-        List<string> tagList = Enum.GetValues(typeof(ESkillTags)).Cast<ESkillTags>().Where(t => (supportItem.SkillTags & t) == t).Select(t => t.ToString()).ToList();
+        List<string> tagList = Enum.GetValues(typeof(ESkillTags)).Cast<ESkillTags>().Where(t => (supportGem.SkillTags & t) == t).Select(t => t.ToString()).ToList();
 		StringBuilder sbTags = new();
 
 		for (int i = 1; i < tagList.Count; i++) {
@@ -425,7 +426,7 @@ public partial class InventoryItem : PanelContainer {
 		tooltipContent.DescriptionLabel.Visible = false;
 		tooltipContent.DescriptionSeparator.Visible = false;
 
-		Label effectLabel = GenerateAffixLabel($"{supportItem.Description}");
+		Label effectLabel = GenerateAffixLabel($"{supportGem.Description}");
         tooltipContent.EffectContainer.AddChild(effectLabel);
 		
 		return tooltipContent;

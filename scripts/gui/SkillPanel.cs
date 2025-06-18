@@ -42,7 +42,7 @@ public partial class SkillPanel : Control {
 
     }
 
-    public void OnSkillEquippedFromInventory(Control slot, InventoryItem item) {
+    public void OnSkillEquippedFromInventory(SkillSlotCluster cluster, Control slot, InventoryItem item) {
         item.GetParent().RemoveChild(item);
         slot.AddChild(item);
 
@@ -51,10 +51,11 @@ public partial class SkillPanel : Control {
         SkillItem skillItem = (SkillItem)item.ItemReference;
 
         skillItem.SkillReference.ActorOwner = PlayerOwner;
+        skillItem.SkillReference.HousingSkillCluster = cluster;
         PlayerOwner.AddSkill(skillItem.SkillReference);
     }
 
-    public void OnSkillUnequipped(Control slot, InventoryItem item) {
+    public void OnSkillUnequipped(SkillSlotCluster cluster, Control slot, InventoryItem item) {
         item.RemoveTooltip();
         slot.RemoveChild(item);
         
@@ -69,6 +70,7 @@ public partial class SkillPanel : Control {
         SkillItem skillItem = (SkillItem)item.ItemReference;
 
         skillItem.SkillReference.ActorOwner = null;
+        skillItem.SkillReference.HousingSkillCluster = null;
         PlayerOwner.RemoveSkill(skillItem.SkillReference);
     }
 
@@ -90,21 +92,5 @@ public partial class SkillPanel : Control {
             item.ToggleClickable();
             item.ToggleBackground();
         }
-    }
-
-    public void EquipSkillInCluster(SkillSlotCluster cluster, SkillSlotActive slot) {
-
-    }
-
-    public void UnequipSkillInCluster(SkillSlotCluster cluster, SkillSlotActive slot) {
-
-    }
-
-    public void EquipSupportInCluster(SkillSlotCluster cluster, SkillSlotSupport slot) {
-
-    }
-
-    public void UnequipSupportInCluster(SkillSlotCluster cluster, SkillSlotSupport slot) {
-
     }
 }

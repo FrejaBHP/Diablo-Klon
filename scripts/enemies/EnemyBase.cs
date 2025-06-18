@@ -245,7 +245,7 @@ public partial class EnemyBase : Actor {
     public void AddSkill(Skill skill) {
 		Skills.Add(skill);
         skill.ActorOwner = this;
-        skill.UpdateSkillValues();
+        skill.RecalculateSkillValues();
 	}
 
     public void SetRarity(EEnemyRarity rarity) {

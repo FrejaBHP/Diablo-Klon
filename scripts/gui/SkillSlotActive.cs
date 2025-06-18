@@ -29,11 +29,6 @@ public partial class SkillSlotActive : Control {
 		highlight = GetNode<ColorRect>("Highlight");
 	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta) {
-		
-	}
-
 	public void GUIInput(InputEvent @event) {
 		// On left-click
 		if (@event.IsActionPressed("LeftClick")) {

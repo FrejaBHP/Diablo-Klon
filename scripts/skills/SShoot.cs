@@ -11,8 +11,10 @@ public class SShoot : Skill, IAttack, IProjectileSkill {
     public float BaseProjectileSpeed { get; set; } = 15f;
     public double BaseProjectileLifetime { get; set; } = 2f;
     public int BasePierces { get; set; } = 2;
+    public int AddedPierces { get; set; } = 0;
     public int TotalPierces { get; set; }
     public int BaseProjectiles { get; set; } = 1;
+    public int AddedProjectiles { get; set; } = 0;
     public int TotalProjectiles { get; set; }
     public bool FiresSequentially { get; set; } = false;
 
@@ -53,7 +55,7 @@ public class SShoot : Skill, IAttack, IProjectileSkill {
                 proj.SetFacing(ActorOwner.GlobalRotation.Y);
             }
             
-            proj.SetProperties(DamageCategory, RollForDamage(true), ActorOwner.Penetrations, BaseProjectileSpeed, -1, BasePierces);
+            proj.SetProperties(DamageCategory, RollForDamage(true), ActorOwner.Penetrations, BaseProjectileSpeed, -1, TotalPierces);
 
             DeductManaFromActor();
         }

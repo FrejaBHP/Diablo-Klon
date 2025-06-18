@@ -9,6 +9,7 @@ public abstract class Skill {
     protected static readonly PackedScene genericProjectileScene = GD.Load<PackedScene>("res://scenes/skills/scene_projectile_generic.tscn");
 
     public Actor ActorOwner { get; set; }
+    public SkillSlotCluster HousingSkillCluster = null;
 
     public DamageModifiers BaseDamageModifiers { get; protected set; } = new(); // Kan måske erstattes med nogle mere simple værdier
     public DamageModifiers ActiveDamageModifiers { get; protected set; } = new(); // Som fx bare have en double der hedder "IncreasedPhys" og lægge det til i det relevante sted i et skill
@@ -30,54 +31,11 @@ public abstract class Skill {
     public double SpeedModifier { get; protected set; } = 1;
     public double Cooldown { get; protected set; } = 0;
 
-    public Dictionary<EStatName, double> SupportStatDictionary = new();
-
     public float CastRange { get; set; } // Mainly intended to be used by the AI to help them walk into range first
 
     public bool UsesMouseAim { get; protected set; } = true;
     public bool AimsInStraightLine { get; protected set; } = true;
     protected Vector3 mouseAimPosition = Vector3.Zero;
-
-    // FIXME: Bad solution. Support gems should be used as their own thing, and apply these stats directly, rather than having a long list of bullshit like this!
-    public void UpdateSupportStatDictionary(List<SkillSupportItem> supports) {
-        SupportStatDictionary.Clear();
-
-        for (int i = 0; i < supports.Count; i++) {
-            if (Tags.HasFlag(supports[i].SkillTags)) {
-                for (int j = 0; j < supports[i].SupportStatDictionary.Count; j++) {
-                    EStatName statKey = supports[i].SupportStatDictionary.ElementAt(j).Key;
-                    
-                    if (SupportStatDictionary.ContainsKey(statKey)) {
-                        if (supports[i].IsStatMultiplicative[j]) {
-                            SupportStatDictionary[statKey] *= supports[i].SupportStatDictionary[statKey];
-                        }
-                        else {
-                            SupportStatDictionary[statKey] += supports[i].SupportStatDictionary[statKey];
-                        }
-                    }
-                    else {
-                        if (supports[i].IsStatMultiplicative[j]) {
-                            SupportStatDictionary.Add(statKey, 1 + supports[i].SupportStatDictionary.ElementAt(j).Value);
-                        }
-                        else {
-                            SupportStatDictionary.Add(statKey, supports[i].SupportStatDictionary.ElementAt(j).Value);
-                        }
-                    }
-                }
-            }
-        }
-
-        StringBuilder sb = new();
-        sb.Append("Key-Value pairs in Skill dictionary:\n");
-
-        foreach (var kvp in SupportStatDictionary) {
-            sb.Append($"{kvp.Key}, {kvp.Value}\n");
-        }
-
-        GD.Print($"{sb}");
-
-        UpdateSkillValues();
-    }
 
     public virtual bool CanUseSkill() {
         if (!ActorOwner.IsIgnoringManaCosts) {
@@ -197,20 +155,19 @@ public abstract class Skill {
         return false;
     }
 
-    public virtual void UpdateSkillValues() {
+    public virtual void RecalculateSkillValues() {
         if (ActorOwner != null) {
             ActiveDamageModifiers = ActorOwner.DamageMods + BaseDamageModifiers;
 
-            if (SupportStatDictionary.TryGetValue(EStatName.FlatMinPhysDamage, out double minPhys)) ActiveDamageModifiers.Physical.SMinAdded += minPhys;
-            if (SupportStatDictionary.TryGetValue(EStatName.FlatMaxPhysDamage, out double maxPhys)) ActiveDamageModifiers.Physical.SMaxAdded += maxPhys;
-            if (SupportStatDictionary.TryGetValue(EStatName.FlatMinFireDamage, out double minFire)) ActiveDamageModifiers.Fire.SMinAdded += minFire;
-            if (SupportStatDictionary.TryGetValue(EStatName.FlatMaxFireDamage, out double maxFire)) ActiveDamageModifiers.Fire.SMaxAdded += maxFire;
-            if (SupportStatDictionary.TryGetValue(EStatName.FlatMinColdDamage, out double minCold)) ActiveDamageModifiers.Cold.SMinAdded += minCold;
-            if (SupportStatDictionary.TryGetValue(EStatName.FlatMaxColdDamage, out double maxCold)) ActiveDamageModifiers.Cold.SMaxAdded += maxCold;
-            if (SupportStatDictionary.TryGetValue(EStatName.FlatMinLightningDamage, out double minLight)) ActiveDamageModifiers.Lightning.SMinAdded += minLight;
-            if (SupportStatDictionary.TryGetValue(EStatName.FlatMaxLightningDamage, out double maxLight)) ActiveDamageModifiers.Lightning.SMaxAdded += maxLight;
-            if (SupportStatDictionary.TryGetValue(EStatName.FlatMinChaosDamage, out double minChaos)) ActiveDamageModifiers.Chaos.SMinAdded += minChaos;
-            if (SupportStatDictionary.TryGetValue(EStatName.FlatMaxChaosDamage, out double maxChaos)) ActiveDamageModifiers.Chaos.SMaxAdded += maxChaos;
+
+
+            if (HousingSkillCluster != null) {
+                foreach (SupportGem support in HousingSkillCluster.GetSupports()) {
+                    if (support.AffectsDamageModifiers) {
+                        support.ApplyToDamageModifiers(ActiveDamageModifiers);
+                    }
+                }
+            }
 
             if (AddedDamageModifier != 1) {
                 ActiveDamageModifiers.Physical.SMinAdded *= AddedDamageModifier;
@@ -263,13 +220,27 @@ public abstract class Skill {
             if (this is IAttack attack) {
                 //attack.UpdateWeaponStats(ActorOwner.MainHandStats, ActorOwner.OffHandStats);
                 attack.UpdateAttackSpeedValues(ActorOwner.AttackSpeedMod);
-                return;
             }
 
             // Ditto
             if (this is ISpell spell) {
                 spell.UpdateCastSpeedValues(ActorOwner.CastSpeedMod);
-                return;
+            }
+
+            if (this is IProjectileSkill pSkill) {
+                pSkill.AddedPierces = 0;
+                pSkill.AddedProjectiles = 0;
+
+                if (HousingSkillCluster != null) {
+                    foreach (SupportGem support in HousingSkillCluster.GetSupports()) {
+                        if (support.SkillTags.HasAnyFlags(ESkillTags.Projectile)) {
+                            support.ModifyProjectileSkill(pSkill);
+                        }
+                    }
+                }
+
+                pSkill.TotalPierces = pSkill.BasePierces + pSkill.AddedPierces;
+                pSkill.TotalProjectiles = pSkill.BaseProjectiles + pSkill.AddedProjectiles;
             }
         }
     }
@@ -394,10 +365,12 @@ public interface IProjectileSkill {
     float BaseProjectileSpeed { get; protected set; }
     double BaseProjectileLifetime { get; protected set; }
     int BasePierces { get; protected set; }
-    int TotalPierces { get; protected set; }
+    int AddedPierces { get; set; }
+    int TotalPierces { get; set; }
     int BaseProjectiles { get; protected set; }
-    int TotalProjectiles { get; protected set; }
-    bool FiresSequentially { get; protected set; }
+    int AddedProjectiles { get; set; }
+    int TotalProjectiles { get; set; }
+    bool FiresSequentially { get; set; }
 }
 
 public interface IAreaSkill {
