@@ -134,11 +134,17 @@ public static class AffixDataTables {
 			EAffixItemFlags.Weapon,
 			EItemBaseSpecifierFlags.NoFlags
 		),
-		new(typeof(GlobalIncreasedAttackSpeedAffix), EAffixFamily.IncreasedAttackSpeed,
+
+		// ===== OTHER DAMAGE RELATED STATS =====
+		new(typeof(IncreasedAttackSpeedAffix), EAffixFamily.IncreasedAttackSpeed,
 			EAffixItemFlags.Ring | EAffixItemFlags.Amulet | EAffixItemFlags.Quiver,
 			EItemBaseSpecifierFlags.NoFlags
 		),
-		new(typeof(GlobalIncreasedCritChanceAffix), EAffixFamily.IncreasedCritChance,
+		new(typeof(IncreasedCastSpeedAffix), EAffixFamily.IncreasedCastSpeed,
+			EAffixItemFlags.Ring | EAffixItemFlags.Amulet | EAffixItemFlags.Staff,
+			EItemBaseSpecifierFlags.NoFlags
+		),
+		new(typeof(IncreasedCritChanceAffix), EAffixFamily.IncreasedCritChance,
 			EAffixItemFlags.Ring | EAffixItemFlags.Amulet | EAffixItemFlags.Quiver,
 			EItemBaseSpecifierFlags.NoFlags
 		),

@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Globalization;
 
 public static class Utilities {
 	private static readonly PackedScene damageTextScene = GD.Load<PackedScene>("res://scenes/damage_text.tscn");

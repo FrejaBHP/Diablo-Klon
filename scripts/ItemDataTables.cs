@@ -262,7 +262,7 @@ public static class ItemDataTables {
 			SkillName = ESkillName.BasicThrust,
 			SkillType = typeof(SThrust),
 			ItemSpecifierFlags = EItemBaseSpecifierFlags.NONE,
-			Texture = UILib.TextureItemD2JewelWhite,
+			Texture = UILib.TextureItemD2JewelRed,
 			MinimumLevel = 0,
 			ImplicitTypes = []
 		},
@@ -292,9 +292,59 @@ public static class ItemDataTables {
 		new SupportGemData {
 			BaseName = "Support Gem",
 			SkillTags = ESkillTags.None,
+			SupportType = typeof(SAddedFire),
+			ItemSpecifierFlags = EItemBaseSpecifierFlags.NONE,
+			Texture = UILib.TextureItemD2JewelRedF,
+			MinimumLevel = 0,
+			ImplicitTypes = []
+		},
+
+		new SupportGemData {
+			BaseName = "Support Gem",
+			SkillTags = ESkillTags.None,
 			SupportType = typeof(SAddedCold),
 			ItemSpecifierFlags = EItemBaseSpecifierFlags.NONE,
-			Texture = UILib.TextureItemD2JewelWhite,
+			Texture = UILib.TextureItemD2JewelGreenF,
+			MinimumLevel = 0,
+			ImplicitTypes = []
+		},
+
+		new SupportGemData {
+			BaseName = "Support Gem",
+			SkillTags = ESkillTags.None,
+			SupportType = typeof(SAddedLightning),
+			ItemSpecifierFlags = EItemBaseSpecifierFlags.NONE,
+			Texture = UILib.TextureItemD2JewelBlueF,
+			MinimumLevel = 0,
+			ImplicitTypes = []
+		},
+
+		new SupportGemData {
+			BaseName = "Support Gem",
+			SkillTags = ESkillTags.None,
+			SupportType = typeof(SAddedChaos),
+			ItemSpecifierFlags = EItemBaseSpecifierFlags.NONE,
+			Texture = UILib.TextureItemD2JewelWhiteF,
+			MinimumLevel = 0,
+			ImplicitTypes = []
+		},
+
+		new SupportGemData {
+			BaseName = "Support Gem",
+			SkillTags = ESkillTags.Attack,
+			SupportType = typeof(SAttackSpeed),
+			ItemSpecifierFlags = EItemBaseSpecifierFlags.NONE,
+			Texture = UILib.TextureItemD2JewelGreenF,
+			MinimumLevel = 0,
+			ImplicitTypes = []
+		},
+
+		new SupportGemData {
+			BaseName = "Support Gem",
+			SkillTags = ESkillTags.Spell,
+			SupportType = typeof(SCastSpeed),
+			ItemSpecifierFlags = EItemBaseSpecifierFlags.NONE,
+			Texture = UILib.TextureItemD2JewelBlueF,
 			MinimumLevel = 0,
 			ImplicitTypes = []
 		},
@@ -304,7 +354,7 @@ public static class ItemDataTables {
 			SkillTags = ESkillTags.Projectile,
 			SupportType = typeof(SPierce),
 			ItemSpecifierFlags = EItemBaseSpecifierFlags.NONE,
-			Texture = UILib.TextureItemD2JewelWhite,
+			Texture = UILib.TextureItemD2JewelGreenF,
 			MinimumLevel = 0,
 			ImplicitTypes = []
 		},

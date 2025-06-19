@@ -159,8 +159,6 @@ public abstract class Skill {
         if (ActorOwner != null) {
             ActiveDamageModifiers = ActorOwner.DamageMods + BaseDamageModifiers;
 
-
-
             if (HousingSkillCluster != null) {
                 foreach (SupportGem support in HousingSkillCluster.GetSupports()) {
                     if (support.AffectsDamageModifiers) {
@@ -218,13 +216,29 @@ public abstract class Skill {
 
             // Does not contain all variables needed
             if (this is IAttack attack) {
-                //attack.UpdateWeaponStats(ActorOwner.MainHandStats, ActorOwner.OffHandStats);
                 attack.UpdateAttackSpeedValues(ActorOwner.AttackSpeedMod);
+                //attack.UpdateWeaponStats(ActorOwner.MainHandStats, ActorOwner.OffHandStats);
+
+                if (HousingSkillCluster != null) {
+                    foreach (SupportGem support in HousingSkillCluster.GetSupports()) {
+                        if (support.SkillTags.HasFlag(ESkillTags.Attack)) {
+                            support.ModifyAttackSkill(attack);
+                        }
+                    }
+                }
             }
 
             // Ditto
             if (this is ISpell spell) {
                 spell.UpdateCastSpeedValues(ActorOwner.CastSpeedMod);
+
+                if (HousingSkillCluster != null) {
+                    foreach (SupportGem support in HousingSkillCluster.GetSupports()) {
+                        if (support.SkillTags.HasFlag(ESkillTags.Spell)) {
+                            support.ModifySpellSkill(spell);
+                        }
+                    }
+                }
             }
 
             if (this is IProjectileSkill pSkill) {
@@ -233,7 +247,7 @@ public abstract class Skill {
 
                 if (HousingSkillCluster != null) {
                     foreach (SupportGem support in HousingSkillCluster.GetSupports()) {
-                        if (support.SkillTags.HasAnyFlags(ESkillTags.Projectile)) {
+                        if (support.SkillTags.HasFlag(ESkillTags.Projectile)) {
                             support.ModifyProjectileSkill(pSkill);
                         }
                     }

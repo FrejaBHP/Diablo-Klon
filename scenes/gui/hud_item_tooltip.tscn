@@ -19,12 +19,12 @@ mouse_filter = 2
 theme_override_styles/panel = ExtResource("1_a2jgh")
 script = ExtResource("1_53ehe")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="PartsContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 0
 
-[node name="NameContainer" type="VBoxContainer" parent="VBoxContainer"]
+[node name="NameContainer" type="VBoxContainer" parent="PartsContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -32,19 +32,19 @@ mouse_filter = 2
 theme_override_constants/separation = 0
 alignment = 1
 
-[node name="ItemName" type="Label" parent="VBoxContainer/NameContainer"]
+[node name="ItemName" type="Label" parent="PartsContainer/NameContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ItemType" type="Label" parent="VBoxContainer/NameContainer"]
+[node name="ItemType" type="Label" parent="PartsContainer/NameContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="BaseStatsContainer" type="VBoxContainer" parent="VBoxContainer"]
+[node name="BaseStatsContainer" type="VBoxContainer" parent="PartsContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -52,36 +52,24 @@ mouse_filter = 2
 theme_override_constants/separation = -1
 alignment = 1
 
-[node name="ImplicitSeparator" type="HSeparator" parent="VBoxContainer"]
+[node name="ImplicitSeparator" type="HSeparator" parent="PartsContainer"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 4
 
-[node name="ImplicitContainer" type="VBoxContainer" parent="VBoxContainer"]
+[node name="ImplicitContainer" type="VBoxContainer" parent="PartsContainer"]
 layout_mode = 2
 mouse_filter = 2
 
-[node name="AffixSeparator" type="HSeparator" parent="VBoxContainer"]
+[node name="AffixSeparator" type="HSeparator" parent="PartsContainer"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 4
 
-[node name="AffixContainer" type="VBoxContainer" parent="VBoxContainer"]
+[node name="AffixContainer" type="VBoxContainer" parent="PartsContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 mouse_filter = 2
 theme_override_constants/separation = -1
 alignment = 1
-
-[node name="PriceContainer" type="MarginContainer" parent="VBoxContainer"]
-visible = false
-layout_mode = 2
-theme_override_constants/margin_top = 4
-theme_override_constants/margin_bottom = 2
-
-[node name="PriceLabel" type="Label" parent="VBoxContainer/PriceContainer"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.729412, 0, 1)
-theme_override_font_sizes/font_size = 14
-horizontal_alignment = 1

@@ -22,104 +22,104 @@ mouse_filter = 2
 theme_override_styles/panel = ExtResource("1_1eqhn")
 script = ExtResource("1_us5t6")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="PartsContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 4
 
-[node name="TopContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="TopContainer" type="HBoxContainer" parent="PartsContainer"]
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2
 theme_override_constants/separation = 0
 
-[node name="NameLabel" type="Label" parent="VBoxContainer/TopContainer"]
+[node name="NameLabel" type="Label" parent="PartsContainer/TopContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Spacer" type="Control" parent="VBoxContainer/TopContainer"]
+[node name="Spacer" type="Control" parent="PartsContainer/TopContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="InfoContainer" type="HBoxContainer" parent="VBoxContainer/TopContainer"]
+[node name="InfoContainer" type="HBoxContainer" parent="PartsContainer/TopContainer"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="CostContainer" type="VBoxContainer" parent="VBoxContainer/TopContainer/InfoContainer"]
+[node name="CostContainer" type="VBoxContainer" parent="PartsContainer/TopContainer/InfoContainer"]
 layout_mode = 2
 theme_override_constants/separation = 1
 
-[node name="CostDescLabel" type="Label" parent="VBoxContainer/TopContainer/InfoContainer/CostContainer"]
+[node name="CostDescLabel" type="Label" parent="PartsContainer/TopContainer/InfoContainer/CostContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "Cost"
 horizontal_alignment = 1
 
-[node name="CostInfoContainer" type="HBoxContainer" parent="VBoxContainer/TopContainer/InfoContainer/CostContainer"]
+[node name="CostInfoContainer" type="HBoxContainer" parent="PartsContainer/TopContainer/InfoContainer/CostContainer"]
 layout_mode = 2
 alignment = 1
 
-[node name="CostTexture" type="TextureRect" parent="VBoxContainer/TopContainer/InfoContainer/CostContainer/CostInfoContainer"]
+[node name="CostTexture" type="TextureRect" parent="PartsContainer/TopContainer/InfoContainer/CostContainer/CostInfoContainer"]
 visible = false
 layout_mode = 2
 texture = ExtResource("2_01lr4")
 expand_mode = 3
 stretch_mode = 5
 
-[node name="CostLabel" type="Label" parent="VBoxContainer/TopContainer/InfoContainer/CostContainer/CostInfoContainer"]
+[node name="CostLabel" type="Label" parent="PartsContainer/TopContainer/InfoContainer/CostContainer/CostInfoContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 horizontal_alignment = 1
 
-[node name="TimeContainer" type="VBoxContainer" parent="VBoxContainer/TopContainer/InfoContainer"]
+[node name="TimeContainer" type="VBoxContainer" parent="PartsContainer/TopContainer/InfoContainer"]
 layout_mode = 2
 theme_override_constants/separation = 1
 
-[node name="TimeDescLabel" type="Label" parent="VBoxContainer/TopContainer/InfoContainer/TimeContainer"]
+[node name="TimeDescLabel" type="Label" parent="PartsContainer/TopContainer/InfoContainer/TimeContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 horizontal_alignment = 1
 
-[node name="TimeInfoContainer" type="HBoxContainer" parent="VBoxContainer/TopContainer/InfoContainer/TimeContainer"]
+[node name="TimeInfoContainer" type="HBoxContainer" parent="PartsContainer/TopContainer/InfoContainer/TimeContainer"]
 layout_mode = 2
 alignment = 1
 
-[node name="TimeTexture" type="TextureRect" parent="VBoxContainer/TopContainer/InfoContainer/TimeContainer/TimeInfoContainer"]
+[node name="TimeTexture" type="TextureRect" parent="PartsContainer/TopContainer/InfoContainer/TimeContainer/TimeInfoContainer"]
 visible = false
 layout_mode = 2
 texture = ExtResource("3_us5t6")
 expand_mode = 3
 stretch_mode = 5
 
-[node name="TimeLabel" type="Label" parent="VBoxContainer/TopContainer/InfoContainer/TimeContainer/TimeInfoContainer"]
+[node name="TimeLabel" type="Label" parent="PartsContainer/TopContainer/InfoContainer/TimeContainer/TimeInfoContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 horizontal_alignment = 1
 
-[node name="DescriptionSeparator" type="HSeparator" parent="VBoxContainer"]
+[node name="DescriptionSeparator" type="HSeparator" parent="PartsContainer"]
 visible = false
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 4
 
-[node name="DescriptionContainer" type="VBoxContainer" parent="VBoxContainer"]
+[node name="DescriptionContainer" type="VBoxContainer" parent="PartsContainer"]
 visible = false
 layout_mode = 2
 mouse_filter = 2
 
-[node name="EffectSeparator" type="HSeparator" parent="VBoxContainer"]
+[node name="EffectSeparator" type="HSeparator" parent="PartsContainer"]
 visible = false
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 4
 
-[node name="DamageEffectContainer" type="VBoxContainer" parent="VBoxContainer"]
+[node name="DamageEffectContainer" type="VBoxContainer" parent="PartsContainer"]
 layout_mode = 2
 theme_override_constants/separation = -1
 
-[node name="DamageContainer" type="HBoxContainer" parent="VBoxContainer/DamageEffectContainer"]
+[node name="DamageContainer" type="HBoxContainer" parent="PartsContainer/DamageEffectContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -127,7 +127,7 @@ mouse_filter = 2
 theme_override_constants/separation = 32
 alignment = 1
 
-[node name="EffectContainer" type="VBoxContainer" parent="VBoxContainer/DamageEffectContainer"]
+[node name="EffectContainer" type="VBoxContainer" parent="PartsContainer/DamageEffectContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4

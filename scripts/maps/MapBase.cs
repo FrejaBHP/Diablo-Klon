@@ -66,22 +66,23 @@ public partial class MapBase : Node3D {
         CallDeferred(MethodName.AddRegionToNav);
         CallDeferred(MethodName.OnMapReady);
 
-        GoldRewardPool += GoldReward;
+        if (MapObjective == EMapObjective.Survival) {
+            GoldRewardPool += GoldReward;
+        }
     }
 
     public override void _PhysicsProcess(double delta) {
         if (IsObjectiveActive()) {
             if (MapObjective == EMapObjective.Survival) {
+                spawnTimer -= delta;
+
                 if (spawnTimer <= 0) {
-                    SpawnFromPool(GetAmountToSpawn(), false);
                     spawnTimer += spawnInterval;
+                    SpawnFromPool(GetAmountToSpawn(), false);
                     
                     Game.Instance.PlayerActor.PlayerHUD.PlayerRightHUD.UpdateEnemyDebugLabel(
                         GetDensityTimeModifier(), 
                         GetTimeAdjustedSpawnDensity(EnemySpawnDensity, GetDensityTimeModifier()));
-                }
-                else {
-                    spawnTimer -= delta;
                 }
             }
 
@@ -106,6 +107,10 @@ public partial class MapBase : Node3D {
 
     protected void OnMapReady() {
         EmitSignal(SignalName.MapReady);
+
+        if (MapObjective == EMapObjective.Shop) {
+            EmitSignal(SignalName.MapFinished);
+        }
     }
 
     public void CreateObjectiveGUI() {

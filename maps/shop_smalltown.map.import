@@ -1,0 +1,14 @@
+[remap]
+
+importer="func_godot.map"
+type="Resource"
+uid="uid://cwf3r8nbg6ocb"
+path="res://.godot/imported/shop_smalltown.map-efa53bd1e8fca17e4885294f974cb17e.tres"
+
+[deps]
+
+source_file="res://maps/shop_smalltown.map"
+dest_files=["res://.godot/imported/shop_smalltown.map-efa53bd1e8fca17e4885294f974cb17e.tres"]
+
+[params]
+

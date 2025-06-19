@@ -80,6 +80,7 @@ public partial class Player : Actor {
 		{ EStatName.IncreasedSpellDamage, 			0 },
 
 		{ EStatName.IncreasedAttackSpeed, 			0 },
+		{ EStatName.IncreasedCastSpeed, 			0 },
 		{ EStatName.IncreasedCritChance, 			0 },
 		{ EStatName.AddedCritMulti, 				0 },
 
@@ -217,7 +218,7 @@ public partial class Player : Actor {
 			Game.Instance.GenerateRandomItemFromCategory(EItemCategory.Jewellery, GlobalPosition);
 		}
 		else if (@event.IsActionPressed("DebugSpawnSkillItem")) { // NUM4
-			Game.Instance.GenerateRandomSkillItem(GlobalPosition);
+			Game.Instance.GenerateRandomSkillGem(GlobalPosition);
 		}
 		else if (@event.IsActionPressed("DebugHalveLifeMana")) { // NUM5
 			Gold += 1000;
@@ -228,7 +229,7 @@ public partial class Player : Actor {
 			Game.Instance.RemoveAllWorldItems();
 		}
 		else if (@event.IsActionPressed("DebugSpawnEnemy")) { // NUM7
-			Game.Instance.GenerateRandomSkillSupportItem(GlobalPosition);
+			Game.Instance.GenerateRandomSupportGem(GlobalPosition);
 			//Game.Instance.Test();
 		}
 		else if (@event.IsActionPressed("Pause")) { // ESC
@@ -622,6 +623,7 @@ public partial class Player : Actor {
 		CalculateMaxLifeAndMana();
 
 		AttackSpeedMod.SIncreased = ItemStatDictionary[EStatName.IncreasedAttackSpeed] + DexASBonus;
+		CastSpeedMod.SIncreased = ItemStatDictionary[EStatName.IncreasedCastSpeed];
 		CritChanceMod.SIncreased = ItemStatDictionary[EStatName.IncreasedCritChance];
 		CritMultiplier.SAdded = ItemStatDictionary[EStatName.AddedCritMulti];
 

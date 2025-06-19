@@ -204,7 +204,7 @@ public class LocalIncreasedPhysDamageAffix : Affix {
 	}
 
 	public override string GetAffixTooltipText() {
-		return $"{Math.Round(ValueFirst * 100, 0)}% increased Local Physical Damage";
+		return $"{ValueFirst:P0} increased Local Physical Damage";
 	}
 }
 
@@ -622,8 +622,7 @@ public class LocalIncreasedArmourAffix : Affix {
 	}
 
 	public override string GetAffixTooltipText() {
-		
-		return $"{Math.Round(ValueFirst * 100, 0)}% increased Local Armour";
+		return $"{ValueFirst:P0} increased Local Armour";
 	}
 }
 
@@ -691,7 +690,7 @@ public class LocalIncreasedEvasionAffix : Affix {
 	}
 
 	public override string GetAffixTooltipText() {
-		return $"{Math.Round(ValueFirst * 100, 0)}% increased Local Evasion Rating";
+		return $"{ValueFirst:P0} increased Local Evasion Rating";
 	}
 }
 
@@ -759,7 +758,7 @@ public class LocalIncreasedEnergyShieldAffix : Affix {
 	}
 
 	public override string GetAffixTooltipText() {
-		return $"{Math.Round(ValueFirst * 100, 0)}% increased Local Energy Shield";
+		return $"{ValueFirst:P0} increased Local Energy Shield";
 	}
 }
 
@@ -794,7 +793,7 @@ public class IncreasedMeleeDamageAffix : Affix {
 	}
 
 	public override string GetAffixTooltipText() {
-		return $"{Math.Round(ValueFirst * 100, 0)}% increased Melee Damage";
+		return $"{ValueFirst:P0} increased Melee Damage";
 	}
 }
 
@@ -829,7 +828,7 @@ public class IncreasedRangedDamageAffix : Affix {
 	}
 
 	public override string GetAffixTooltipText() {
-		return $"{Math.Round(ValueFirst * 100, 0)}% increased Ranged Damage";
+		return $"{ValueFirst:P0} increased Ranged Damage";
 	}
 }
 
@@ -864,7 +863,7 @@ public class IncreasedSpellDamageAffix : Affix {
 	}
 
 	public override string GetAffixTooltipText() {
-		return $"{Math.Round(ValueFirst * 100, 0)}% increased Spell Damage";
+		return $"{ValueFirst:P0} increased Spell Damage";
 	}
 }
 
@@ -899,7 +898,7 @@ public class IncreasedMovementSpeedAffix : Affix {
 	}
 
 	public override string GetAffixTooltipText() {
-		return $"{Math.Round(ValueFirst * 100, 0)}% increased Movement Speed";
+		return $"{ValueFirst:P0} increased Movement Speed";
 	}
 }
 
@@ -938,7 +937,7 @@ public class Local1HIncreasedAttackSpeedAffix : Affix {
 	}
 
 	public override string GetAffixTooltipText() {
-		return $"{Math.Round(ValueFirst * 100, 0)}% increased Local Attack Speed";
+		return $"{ValueFirst:P0} increased Local Attack Speed";
 	}
 }
 
@@ -972,7 +971,7 @@ public class Local2HIncreasedAttackSpeedAffix : Affix {
 	}
 
 	public override string GetAffixTooltipText() {
-		return $"{Math.Round(ValueFirst * 100, 0)}% increased Local Attack Speed";
+		return $"{ValueFirst:P0} increased Local Attack Speed";
 	}
 }
 
@@ -1006,28 +1005,28 @@ public class LocalIncreasedCritChanceAffix : Affix {
 	}
 
 	public override string GetAffixTooltipText() {
-		return $"{Math.Round(ValueFirst * 100, 0)}% increased Local Critical Strike Chance";
+		return $"{ValueFirst:P0} increased Local Critical Strike Chance";
 	}
 }
 
-public class GlobalIncreasedAttackSpeedAffix : Affix {
-	private static readonly List<AffixData> globalIncreasedAttackSpeedAffixData = [
-		new(0, "of Global AS1", 
+public class IncreasedAttackSpeedAffix : Affix {
+	private static readonly List<AffixData> increasedAttackSpeedAffixData = [
+		new(0, "of AS1", 
 			0.05, 0.08, 
 			0, 0
 		),
-		new(0, "of Global AS2", 
+		new(0, "of AS2", 
 			0.09, 0.12, 
 			0, 0
 		),
-		new(0, "of Global AS3", 
+		new(0, "of AS3", 
 			0.13, 0.17, 
 			0, 0
 		)
 	];
 
-	public GlobalIncreasedAttackSpeedAffix() {
-		AffixDataTable = globalIncreasedAttackSpeedAffixData;
+	public IncreasedAttackSpeedAffix() {
+		AffixDataTable = increasedAttackSpeedAffixData;
 		Family = EAffixFamily.IncreasedAttackSpeed;
 		IsLocal = false;
 		IsMultiplicative = false;
@@ -1041,28 +1040,63 @@ public class GlobalIncreasedAttackSpeedAffix : Affix {
 	}
 
 	public override string GetAffixTooltipText() {
-		return $"{Math.Round(ValueFirst * 100, 0)}% increased Attack Speed";
+		return $"{ValueFirst:P0} increased Attack Speed";
 	}
 }
 
-public class GlobalIncreasedCritChanceAffix : Affix {
-	private static readonly List<AffixData> globalIncreasedCritChanceAffixData = [
-		new(0, "of Global CC1", 
+public class IncreasedCastSpeedAffix : Affix {
+	private static readonly List<AffixData> increasedCastSpeedAffixData = [
+		new(0, "of CS1", 
+			0.06, 0.09, 
+			0, 0
+		),
+		new(0, "of CS2", 
+			0.10, 0.13, 
+			0, 0
+		),
+		new(0, "of CS3", 
+			0.14, 0.18, 
+			0, 0
+		)
+	];
+
+	public IncreasedCastSpeedAffix() {
+		AffixDataTable = increasedCastSpeedAffixData;
+		Family = EAffixFamily.IncreasedCastSpeed;
+		IsLocal = false;
+		IsMultiplicative = false;
+		StatNameFirst = EStatName.IncreasedCastSpeed;
+	}
+
+	public override void RollAffixValue() {
+		if (TierData != null) {
+			ValueFirst = Math.Round(Utilities.RandomDouble(TierData.AffixMinFirst, TierData.AffixMaxFirst), 2);
+		}
+	}
+
+	public override string GetAffixTooltipText() {
+		return $"{ValueFirst:P0} increased Cast Speed";
+	}
+}
+
+public class IncreasedCritChanceAffix : Affix {
+	private static readonly List<AffixData> increasedCritChanceAffixData = [
+		new(0, "of CC1", 
 			0.15, 0.19, 
 			0, 0
 		),
-		new(0, "of Global CC2", 
+		new(0, "of CC2", 
 			0.20, 0.24, 
 			0, 0
 		),
-		new(0, "of Global CC3", 
+		new(0, "of CC3", 
 			0.25, 0.29, 
 			0, 0
 		)
 	];
 
-	public GlobalIncreasedCritChanceAffix() {
-		AffixDataTable = globalIncreasedCritChanceAffixData;
+	public IncreasedCritChanceAffix() {
+		AffixDataTable = increasedCritChanceAffixData;
 		Family = EAffixFamily.IncreasedCritChance;
 		IsLocal = false;
 		IsMultiplicative = false;
@@ -1076,7 +1110,7 @@ public class GlobalIncreasedCritChanceAffix : Affix {
 	}
 
 	public override string GetAffixTooltipText() {
-		return $"{Math.Round(ValueFirst * 100, 0)}% increased Critical Strike Chance";
+		return $"{ValueFirst:P0} increased Critical Strike Chance";
 	}
 }
 
@@ -1216,7 +1250,7 @@ public class FireResistanceAffix : Affix {
 	}
 
 	public override string GetAffixTooltipText() {
-		return $"+{(int)ValueFirst}% to Fire Resistance";
+		return $"+{(int)ValueFirst} to Fire Resistance";
 	}
 }
 
@@ -1251,7 +1285,7 @@ public class ColdResistanceAffix : Affix {
 	}
 
 	public override string GetAffixTooltipText() {
-		return $"+{(int)ValueFirst}% to Cold Resistance";
+		return $"+{(int)ValueFirst} to Cold Resistance";
 	}
 }
 
@@ -1286,7 +1320,7 @@ public class LightningResistanceAffix : Affix {
 	}
 
 	public override string GetAffixTooltipText() {
-		return $"+{(int)ValueFirst}% to Lightning Resistance";
+		return $"+{(int)ValueFirst} to Lightning Resistance";
 	}
 }
 
@@ -1321,6 +1355,6 @@ public class ChaosResistanceAffix : Affix {
 	}
 
 	public override string GetAffixTooltipText() {
-		return $"+{(int)ValueFirst}% to Chaos Resistance";
+		return $"+{(int)ValueFirst} to Chaos Resistance";
 	}
 }

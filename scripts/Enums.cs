@@ -9,7 +9,8 @@ public enum EMovementInputMethod {
 
 public enum EMapObjective {
 	None,
-	Survival
+	Survival,
+	Shop
 }
 
 public enum EEnemyType {
@@ -66,6 +67,7 @@ public enum EStatName {
 	IncreasedSpellDamage,
 
 	IncreasedAttackSpeed,
+	IncreasedCastSpeed,
 	IncreasedCritChance,
 	AddedCritMulti,
 
@@ -154,6 +156,7 @@ public enum EAffixFamily {
 	IncreasedSpellDamage,
 
 	IncreasedAttackSpeed,
+	IncreasedCastSpeed,
 	IncreasedCritChance,
 	AddedCritMulti,
 
@@ -342,18 +345,20 @@ public enum ESkillType {
 [Flags]
 public enum ESkillTags {
     None = 0,
-    Melee = 1 << 0,
-    Ranged = 1 << 1,
-    Spell = 1 << 2,
+	Attack = 1 << 0,
+    Spell = 1 << 1,
+	
+    Melee = 1 << 2,
+    Ranged = 1 << 3,
 
-	Projectile = 1 << 3,
-    Area = 1 << 4,
+	Projectile = 1 << 4,
+    Area = 1 << 5,
 
-	Physical = 1 << 5,
-	Fire = 1 << 6,
-	Cold = 1 << 7,
-	Lightning = 1 << 8,
-	Chaos = 1 << 9
+	Physical = 1 << 6,
+	Fire = 1 << 7,
+	Cold = 1 << 8,
+	Lightning = 1 << 9,
+	Chaos = 1 << 10
 }
 
 [Flags]
@@ -386,4 +391,9 @@ public enum EEnemyRarity {
 	Rare,
 	Unique,
 	Boss
+}
+
+public enum EShopType {
+	Equipment,
+	Gems
 }

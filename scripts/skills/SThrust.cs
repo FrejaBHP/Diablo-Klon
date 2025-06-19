@@ -16,7 +16,7 @@ public class SThrust : Skill, IAttack, IMeleeSkill {
 
         SkillName = ESkillName.BasicThrust;
         Type = ESkillType.Attack;
-        Tags = ESkillTags.Melee;
+        Tags = ESkillTags.Attack | ESkillTags.Melee;
         DamageCategory = EDamageCategory.Melee;
         Texture = UILib.TextureSkillThrust;
 

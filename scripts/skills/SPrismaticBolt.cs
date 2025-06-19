@@ -2,7 +2,7 @@ using Godot;
 using System;
 
 public class SPrismaticBolt : Skill, ISpell, IProjectileSkill {
-    public double BaseCastTime { get; set; } = 0.8;
+    public double BaseCastTime { get; set; } = 0.65;
     public Stat BaseCastSpeedModifiers { get; set; } = new(0, false);
     public Stat ActiveCastSpeedModifiers { get; set; } = new(0, false);
 
@@ -22,7 +22,7 @@ public class SPrismaticBolt : Skill, ISpell, IProjectileSkill {
 
         SkillName = ESkillName.PrismaticBolt;
         Type = ESkillType.Spell;
-        Tags = ESkillTags.Projectile | ESkillTags.Spell | ESkillTags.Physical | ESkillTags.Fire | ESkillTags.Cold | ESkillTags.Lightning | ESkillTags.Chaos;
+        Tags = ESkillTags.Spell | ESkillTags.Projectile | ESkillTags.Physical | ESkillTags.Fire | ESkillTags.Cold | ESkillTags.Lightning | ESkillTags.Chaos;
         DamageCategory = EDamageCategory.Spell;
         Texture = UILib.TextureSkillPrismaticBolt;
 

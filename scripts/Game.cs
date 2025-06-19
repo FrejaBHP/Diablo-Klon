@@ -1,6 +1,9 @@
 using Godot;
 using System;
+using System.Globalization;
 using System.Linq;
+using System.Threading;
+using Timer = Godot.Timer;
 
 public partial class Game : Node3D {
 	protected static readonly PackedScene goldScene = GD.Load<PackedScene>("res://scenes/worldgold.tscn");
@@ -13,7 +16,7 @@ public partial class Game : Node3D {
 
 	public int CurrentAct { get; protected set; } = 0;
 	public int CurrentArea { get; protected set; } = 0; // When acts are properly structured, this should be set to 0 by it, and only maps past the first should increment this
-	private const int areasPerAct = 2; // Areas refer to both combat maps and shop/breather maps. Ideally the rotation is C-C-S, and act ends with a boss. 3-4 rotations should be good here in the end
+	private const int areasPerAct = 6; // Areas refer to both combat maps and shop/breather maps. Ideally the rotation is C-C-S, and act ends with a boss. 3-4 rotations should be good here in the end
 	private bool firstMapEntered = false;
 
 	private PlayerCamera playerCam;
@@ -25,6 +28,12 @@ public partial class Game : Node3D {
 
 	public override void _Ready() {
 		Instance = this; // There should possibly only ever be 1 Game instance at any time, so if this somehow results in overrides, lord have mercy
+
+		string cultureName = Thread.CurrentThread.CurrentCulture.Name;
+		CultureInfo ci = new CultureInfo(cultureName);
+		ci.NumberFormat.PercentPositivePattern = 1;
+		ci.NumberFormat.PercentNegativePattern = 1;
+		Thread.CurrentThread.CurrentCulture = ci;
 
 		currentMapNode = GetNode<Node3D>("CurrentMap");
 		mapTown = currentMapNode.GetNode<MapBase>("MapTown");
@@ -90,12 +99,7 @@ public partial class Game : Node3D {
 			oldMap.QueueFree();
 		}
 
-		if (firstMapEntered) {
-			CurrentArea++;
-		}
-		else {
-			firstMapEntered = true;
-		}
+		CurrentArea++;
 		
 		//activeWaveNumber = 0;
 		//SetMapWaveList(EnemyDatabase.TestMapHorde);
@@ -112,7 +116,8 @@ public partial class Game : Node3D {
 		PlayerActor.GlobalPosition = CurrentMap.PlayerSpawnMarker.GlobalPosition;
 		PlayerActor.PlayerCamera.OcclusionCast.Enabled = true;
 
-		if (CurrentMap != mapTown) {
+		//if (CurrentMap != mapTown || CurrentMap.MapObjective != EMapObjective.Shop) {
+		if (CurrentMap.MapObjective == EMapObjective.Survival) {
 			PlayerActor.PlayerHUD.PlayerRightHUD.UpdateProgressLabel();
 			CurrentMap.CreateObjectiveGUI();
 
@@ -147,14 +152,14 @@ public partial class Game : Node3D {
 		DropItem(worldItem, position);
 	}
 
-	public void GenerateRandomSkillItem(Vector3 position) {
-		Item item = ItemGeneration.GenerateRandomSkillItem();
+	public void GenerateRandomSkillGem(Vector3 position) {
+		Item item = ItemGeneration.GenerateRandomSkillGem();
 		WorldItem worldItem = item.ConvertToWorldItem();
 		DropItem(worldItem, position);
 	}
 
-	public void GenerateRandomSkillSupportItem(Vector3 position) {
-		Item item = ItemGeneration.GenerateRandomSkillSupportItem();
+	public void GenerateRandomSupportGem(Vector3 position) {
+		Item item = ItemGeneration.GenerateRandomSupportGem();
 		WorldItem worldItem = item.ConvertToWorldItem();
 		DropItem(worldItem, position);
 	}
@@ -203,23 +208,31 @@ public partial class Game : Node3D {
 		MapTransitionObj transObj = mapTransScene.Instantiate<MapTransitionObj>();
 		CurrentMap.AddChild(transObj);
 
-		Vector3 newPos = CurrentMap.PlayerSpawnMarker.GlobalPosition;
+		Vector3 newPos = new();
+		if (CurrentMap.MapObjective == EMapObjective.Shop) {
+			Marker3D portalSpawnMarker = CurrentMap.GetNode<Marker3D>("PlayerExit");
+			newPos = portalSpawnMarker.GlobalPosition;
+		}
+		else {
+			newPos = CurrentMap.PlayerSpawnMarker.GlobalPosition;
+		}
+		
 		newPos.Y += 0.5f;
 		transObj.GlobalPosition = newPos;
 
-		if (CurrentArea < areasPerAct - 1) {
+		if ((CurrentArea + 1) % 3 == 0) {
+			transObj.SceneToTransitionTo = MapDatabase.ShopSmallTownScene;
+			transObj.GoesToTown = false;
+			transObj.UseRedPortal = false;
+		}
+		else if (CurrentArea < areasPerAct - 1) {
 			transObj.SceneToTransitionTo = MapDatabase.FEScene;
 			transObj.GoesToTown = false;
+			transObj.UseRedPortal = true;
 		}
 		else {
 			transObj.GoesToTown = true;
-		}
-
-		if (transObj.GoesToTown) {
 			transObj.UseRedPortal = false;
-		}
-		else {
-			transObj.UseRedPortal = true;
 		}
 		
 		transObj.UpdatePortalAnimationAndVisibility();

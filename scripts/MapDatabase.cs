@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public static class MapDatabase {
     public static readonly PackedScene TownScene = GD.Load<PackedScene>("res://scenes/world/map_town.tscn");
     public static readonly PackedScene FEScene = GD.Load<PackedScene>("res://scenes/world/map_firstEncounter.tscn");
+    public static readonly PackedScene ShopSmallTownScene = GD.Load<PackedScene>("res://scenes/world/map_shop_smalltown.tscn");
 
     public static MapBase GetMap(PackedScene scene) {
         MapBase newMap = scene.Instantiate<MapBase>();
@@ -20,5 +21,6 @@ public static class MapDatabase {
     private static readonly Dictionary<PackedScene, List<EMapObjective>> mapMap = new() {
         { TownScene, new() { EMapObjective.None } },
         { FEScene, new() { EMapObjective.Survival } },
+        { ShopSmallTownScene, new() { EMapObjective.Shop } },
     };
 }

@@ -34,10 +34,14 @@ public static class UILib {
 
 	public static readonly Texture2D TextureItemD2ShortBow = GD.Load<Texture2D>("res://textures/items/d2_ShortBow.png");
 
-	public static readonly Texture2D TextureItemD2JewelRed = GD.Load<Texture2D>("res://textures/items/d2_Jewel_red_flip.png");
-	public static readonly Texture2D TextureItemD2JewelGreen = GD.Load<Texture2D>("res://textures/items/d2_Jewel_green_flip.png");
+	public static readonly Texture2D TextureItemD2JewelRed = GD.Load<Texture2D>("res://textures/items/d2_Jewel_red.png");
+	public static readonly Texture2D TextureItemD2JewelGreen = GD.Load<Texture2D>("res://textures/items/d2_Jewel_green.png");
 	public static readonly Texture2D TextureItemD2JewelBlue = GD.Load<Texture2D>("res://textures/items/d2_Jewel_blue.png");
-	public static readonly Texture2D TextureItemD2JewelWhite = GD.Load<Texture2D>("res://textures/items/d2_Jewel_white_flip.png");
+	public static readonly Texture2D TextureItemD2JewelWhite = GD.Load<Texture2D>("res://textures/items/d2_Jewel_white.png");
+	public static readonly Texture2D TextureItemD2JewelRedF = GD.Load<Texture2D>("res://textures/items/d2_Jewel_red_flip.png");
+	public static readonly Texture2D TextureItemD2JewelGreenF = GD.Load<Texture2D>("res://textures/items/d2_Jewel_green_flip.png");
+	public static readonly Texture2D TextureItemD2JewelBlueF = GD.Load<Texture2D>("res://textures/items/d2_Jewel_blue_flip.png");
+	public static readonly Texture2D TextureItemD2JewelWhiteF = GD.Load<Texture2D>("res://textures/items/d2_Jewel_white_flip.png");
 
 	public static readonly Texture2D TextureRemoveSkill = GD.Load<Texture2D>("res://textures/skills/remove_skill.png");
 	public static readonly Texture2D TextureSkillNONE = GD.Load<Texture2D>("res://textures/skills/skill_none.png");
@@ -54,6 +58,7 @@ public static class UILib {
 	public static readonly Color ColorGrey = Color.Color8(150, 150, 150, 255);
 	public static readonly Color ColorBlurple = Color.Color8(100, 100, 190, 255);
 	public static readonly Color ColorSkill = Color.Color8(27, 162, 155, 255);
+	public static readonly Color ColorGold = Color.Color8(255, 185, 0, 255);
 	public static readonly Color ColorEquipmentSlotBackground = Color.Color8(55, 55, 55, 255);
 	public static readonly Color ColorEquipmentSlotBorder = Color.Color8(35, 35, 35, 255);
 	public static readonly Color ColorGreenBorderHighlight = Color.Color8(40, 240, 70, 255);

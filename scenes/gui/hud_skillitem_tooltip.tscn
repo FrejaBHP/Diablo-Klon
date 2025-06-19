@@ -19,12 +19,12 @@ mouse_filter = 2
 theme_override_styles/panel = ExtResource("1_bnx0p")
 script = ExtResource("1_8caim")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="PartsContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 0
 
-[node name="NameContainer" type="VBoxContainer" parent="VBoxContainer"]
+[node name="NameContainer" type="VBoxContainer" parent="PartsContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -32,13 +32,13 @@ mouse_filter = 2
 theme_override_constants/separation = 0
 alignment = 1
 
-[node name="ItemName" type="Label" parent="VBoxContainer/NameContainer"]
+[node name="ItemName" type="Label" parent="PartsContainer/NameContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="StatsContainer" type="VBoxContainer" parent="VBoxContainer"]
+[node name="StatsContainer" type="VBoxContainer" parent="PartsContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -46,12 +46,12 @@ mouse_filter = 2
 theme_override_constants/separation = -1
 alignment = 1
 
-[node name="DescriptionSeparator" type="HSeparator" parent="VBoxContainer"]
+[node name="DescriptionSeparator" type="HSeparator" parent="PartsContainer"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 4
 
-[node name="DescriptionLabel" type="Label" parent="VBoxContainer"]
+[node name="DescriptionLabel" type="Label" parent="PartsContainer"]
 custom_minimum_size = Vector2(350, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.105882, 0.635294, 0.607843, 1)
@@ -60,12 +60,12 @@ theme_override_font_sizes/font_size = 15
 horizontal_alignment = 1
 autowrap_mode = 2
 
-[node name="EffectSeparator" type="HSeparator" parent="VBoxContainer"]
+[node name="EffectSeparator" type="HSeparator" parent="PartsContainer"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 4
 
-[node name="EffectContainer" type="VBoxContainer" parent="VBoxContainer"]
+[node name="EffectContainer" type="VBoxContainer" parent="PartsContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4

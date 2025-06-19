@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://chw831hi2pkhm"]
+
+[ext_resource type="Texture2D" uid="uid://d3x3q66j5ftnj" path="res://textures/world/thatch_brightened.png" id="1_ones6"]
+
+[resource]
+albedo_texture = ExtResource("1_ones6")
+metallic_specular = 0.0
+texture_filter = 4

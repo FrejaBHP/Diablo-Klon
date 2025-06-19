@@ -231,7 +231,6 @@ public partial class InventoryItem : PanelContainer {
 
 	public Control GetCustomEquipmentTooltip() {
 		ItemTooltip tooltipContent = itemTooltipScene.Instantiate<ItemTooltip>();
-
 		tooltipContent.NameLabel.Text = ItemReference.ItemName;
 		tooltipContent.NameLabel.AddThemeColorOverride("font_color", GetRarityColour());
 
@@ -325,8 +324,7 @@ public partial class InventoryItem : PanelContainer {
 		}
 
 		if (IsForSale) {
-			tooltipContent.PriceLabel.Text = $"{ItemReference.Price} Gold";
-			tooltipContent.PriceLabel.GetParent<Control>().Visible = true;
+			tooltipContent.PartsContainer.AddChild(GeneratePriceTag(ItemReference.Price));
 		}
 		
 		return tooltipContent;
@@ -336,7 +334,6 @@ public partial class InventoryItem : PanelContainer {
 		SkillItem skillItem = ItemReference as SkillItem;
 
 		ItemSkillTooltip tooltipContent = skillTooltipScene.Instantiate<ItemSkillTooltip>();
-
 		tooltipContent.NameLabel.Text = ItemReference.ItemName;
 		tooltipContent.NameLabel.AddThemeColorOverride("font_color", UILib.ColorSkill);
 
@@ -398,20 +395,23 @@ public partial class InventoryItem : PanelContainer {
             Label chaosLabel = GenerateAffixLabel($"Deals {Math.Round(skillItem.SkillReference.BaseDamageModifiers.Chaos.SMinBase, 0)} - {Math.Round(skillItem.SkillReference.BaseDamageModifiers.Chaos.SMaxBase, 0)} Chaos Damage");
             tooltipContent.EffectContainer.AddChild(chaosLabel);
         }
+
+		if (IsForSale) {
+			tooltipContent.PartsContainer.AddChild(GeneratePriceTag(ItemReference.Price));
+		}
 		
 		return tooltipContent;
 	}
 
 	public Control GetCustomSupportTooltip() {
-		//SkillSupportItem supportItem = ItemReference as SkillSupportItem;
 		SupportGem supportGem = ItemReference as SupportGem;
 
 		ItemSkillTooltip tooltipContent = skillTooltipScene.Instantiate<ItemSkillTooltip>();
-
 		tooltipContent.NameLabel.Text = ItemReference.ItemName;
 		tooltipContent.NameLabel.AddThemeColorOverride("font_color", UILib.ColorSkill);
 
         List<string> tagList = Enum.GetValues(typeof(ESkillTags)).Cast<ESkillTags>().Where(t => (supportGem.SkillTags & t) == t).Select(t => t.ToString()).ToList();
+		tagList.Add("Support");
 		StringBuilder sbTags = new();
 
 		for (int i = 1; i < tagList.Count; i++) {
@@ -423,11 +423,17 @@ public partial class InventoryItem : PanelContainer {
 			}
 		}
 
-		tooltipContent.DescriptionLabel.Visible = false;
-		tooltipContent.DescriptionSeparator.Visible = false;
+		Label tagsLabel = GenerateGreyLabel(sbTags.ToString());
+		tooltipContent.StatsContainer.AddChild(tagsLabel);
 
-		Label effectLabel = GenerateAffixLabel($"{supportGem.Description}");
+		tooltipContent.DescriptionLabel.Text = supportGem.Description;
+
+		Label effectLabel = GenerateAffixLabel($"{supportGem.DescEffects}");
         tooltipContent.EffectContainer.AddChild(effectLabel);
+
+		if (IsForSale) {
+			tooltipContent.PartsContainer.AddChild(GeneratePriceTag(ItemReference.Price));
+		}
 		
 		return tooltipContent;
 	}
@@ -494,5 +500,20 @@ public partial class InventoryItem : PanelContainer {
 		affixTextLabel.HorizontalAlignment = HorizontalAlignment.Center;
 
 		return affixTextLabel;
+	}
+
+	protected static MarginContainer GeneratePriceTag(int price) {
+		MarginContainer container = new();
+		container.AddThemeConstantOverride("margin_top", 4);
+		container.AddThemeConstantOverride("margin_bottom", 2);
+
+		Label priceLabel = new();
+		priceLabel.Text = $"{price} Gold";
+		priceLabel.AddThemeFontSizeOverride("font_size", 15);
+		priceLabel.AddThemeColorOverride("font_color", UILib.ColorGold);
+		priceLabel.HorizontalAlignment = HorizontalAlignment.Center;
+		container.AddChild(priceLabel);
+
+		return container;
 	}
 }

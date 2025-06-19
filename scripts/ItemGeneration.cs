@@ -294,7 +294,7 @@ public static class ItemGeneration {
 		}
 	}
 
-	public static SkillItem GenerateRandomSkillItem() {
+	public static SkillItem GenerateRandomSkillGem() {
 		SkillItem item = new();
 
 		List<SkillItemData> legalSkillItemData = ItemDataTables.SkillData.ToList();
@@ -315,7 +315,40 @@ public static class ItemGeneration {
 		return item;
 	}
 
-	public static SupportGem GenerateRandomSkillSupportItem() {
+	public static List<SkillItem> GenerateRandomSkillGems(int amount, bool allowRepeats) {
+		List<SkillItemData> legalSkillGemData = ItemDataTables.SkillData.ToList();
+		List<SkillItem> generatedSkillGems = new();
+
+		for (int i = 0; i < amount; i++) {
+			if (legalSkillGemData.Count != 0) {
+				SkillItem item = new();
+				int index = Utilities.RNG.Next(legalSkillGemData.Count);
+
+				SkillItemData data = legalSkillGemData[index];
+
+				item.ItemRarity = EItemRarity.Skill;
+				item.ItemBase = data.BaseName;
+				item.SkillName = data.SkillName;
+				item.ItemTexture = data.Texture;
+				item.SkillType = data.SkillType;
+
+				Skill newSkill = (Skill)Activator.CreateInstance(item.SkillType);
+				item.SkillReference = newSkill;
+
+				item.ItemName = item.SkillReference.Name;
+
+				generatedSkillGems.Add(item);
+
+				if (!allowRepeats) {
+					legalSkillGemData.RemoveAt(index);
+				}
+			}
+		}
+		
+		return generatedSkillGems;
+	}
+
+	public static SupportGem GenerateRandomSupportGem() {
 		List<SupportGemData> legalSupportGemData = ItemDataTables.SupportGemData.ToList();
 		SupportGemData data = legalSupportGemData[Utilities.RNG.Next(legalSupportGemData.Count)];
 
@@ -326,5 +359,32 @@ public static class ItemGeneration {
 		item.ItemTexture = data.Texture;
 
 		return item;
+	}
+
+	public static List<SupportGem> GenerateRandomSupportGems(int amount, bool allowRepeats) {
+		List<SupportGemData> legalSupportGemData = ItemDataTables.SupportGemData.ToList();
+		List<SupportGem> generatedSupportGems = new();
+
+		for (int i = 0; i < amount; i++) {
+			if (legalSupportGemData.Count != 0) {
+				int index = Utilities.RNG.Next(legalSupportGemData.Count);
+
+				SupportGemData data = legalSupportGemData[index];
+
+				SupportGem item = (SupportGem)Activator.CreateInstance(data.SupportType);
+
+				item.ItemRarity = EItemRarity.Skill;
+				item.ItemBase = data.BaseName;
+				item.ItemTexture = data.Texture;
+
+				generatedSupportGems.Add(item);
+
+				if (!allowRepeats) {
+					legalSupportGemData.RemoveAt(index);
+				}
+			}
+		}
+		
+		return generatedSupportGems;
 	}
 }
