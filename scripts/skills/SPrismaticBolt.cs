@@ -2,7 +2,7 @@ using Godot;
 using System;
 
 public class SPrismaticBolt : Skill, ISpell, IProjectileSkill {
-    public double BaseCastTime { get; set; } = 0.65;
+    public double BaseCastTime { get; set; } = 0.70;
     public Stat BaseCastSpeedModifiers { get; set; } = new(0, false);
     public Stat ActiveCastSpeedModifiers { get; set; } = new(0, false);
 

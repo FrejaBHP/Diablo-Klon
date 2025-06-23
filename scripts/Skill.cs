@@ -148,10 +148,8 @@ public abstract class Skill {
         double critRoll = Utilities.RNG.NextDouble();
 
         if (chance >= critRoll) {
-            //GD.Print($"Crit: {chance:F3} / {critRoll:F3}, True");
             return true;
         }
-        //GD.Print($"Crit: {chance:F3} / {critRoll:F3}, False");
         return false;
     }
 
@@ -163,6 +161,49 @@ public abstract class Skill {
                 foreach (SupportGem support in HousingSkillCluster.GetSupports()) {
                     if (support.AffectsDamageModifiers) {
                         support.ApplyToDamageModifiers(ActiveDamageModifiers);
+                    }
+
+                    // Does not contain all variables needed
+                    if (this is IAttack attack) {
+                        attack.UpdateAttackSpeedValues(ActorOwner.AttackSpeedMod);
+                        //attack.UpdateWeaponStats(ActorOwner.MainHandStats, ActorOwner.OffHandStats);
+
+                        if (support.SkillTags.HasFlag(ESkillTags.Attack)) {
+                            support.ModifyAttackSkill(attack);
+                        }
+                    }
+
+                    // Ditto
+                    if (this is ISpell spell) {
+                        spell.UpdateCastSpeedValues(ActorOwner.CastSpeedMod);
+
+                        if (support.SkillTags.HasFlag(ESkillTags.Spell)) {
+                            support.ModifySpellSkill(spell);
+                        }
+                    }
+
+                    if (this is IMeleeSkill mSkill) {
+                        if (support.SkillTags.HasFlag(ESkillTags.Melee)) {
+                            support.ModifyMeleeSkill(mSkill);
+                        }
+                    }
+
+                    if (this is IProjectileSkill pSkill) {
+                        pSkill.AddedPierces = 0;
+                        pSkill.AddedProjectiles = 0;
+
+                        if (support.SkillTags.HasFlag(ESkillTags.Projectile)) {
+                            support.ModifyProjectileSkill(pSkill);
+                        }
+
+                        pSkill.TotalPierces = pSkill.BasePierces + pSkill.AddedPierces;
+                        pSkill.TotalProjectiles = pSkill.BaseProjectiles + pSkill.AddedProjectiles;
+                    }
+
+                    if (this is IAreaSkill aSkill) {
+                        if (support.SkillTags.HasFlag(ESkillTags.Area)) {
+                            support.ModifyAreaSkill(aSkill);
+                        }
                     }
                 }
             }
@@ -213,49 +254,6 @@ public abstract class Skill {
             ActiveDamageModifiers.Cold.SMore *= activeMoreMod;
             ActiveDamageModifiers.Lightning.SMore *= activeMoreMod;
             ActiveDamageModifiers.Chaos.SMore *= activeMoreMod;
-
-            // Does not contain all variables needed
-            if (this is IAttack attack) {
-                attack.UpdateAttackSpeedValues(ActorOwner.AttackSpeedMod);
-                //attack.UpdateWeaponStats(ActorOwner.MainHandStats, ActorOwner.OffHandStats);
-
-                if (HousingSkillCluster != null) {
-                    foreach (SupportGem support in HousingSkillCluster.GetSupports()) {
-                        if (support.SkillTags.HasFlag(ESkillTags.Attack)) {
-                            support.ModifyAttackSkill(attack);
-                        }
-                    }
-                }
-            }
-
-            // Ditto
-            if (this is ISpell spell) {
-                spell.UpdateCastSpeedValues(ActorOwner.CastSpeedMod);
-
-                if (HousingSkillCluster != null) {
-                    foreach (SupportGem support in HousingSkillCluster.GetSupports()) {
-                        if (support.SkillTags.HasFlag(ESkillTags.Spell)) {
-                            support.ModifySpellSkill(spell);
-                        }
-                    }
-                }
-            }
-
-            if (this is IProjectileSkill pSkill) {
-                pSkill.AddedPierces = 0;
-                pSkill.AddedProjectiles = 0;
-
-                if (HousingSkillCluster != null) {
-                    foreach (SupportGem support in HousingSkillCluster.GetSupports()) {
-                        if (support.SkillTags.HasFlag(ESkillTags.Projectile)) {
-                            support.ModifyProjectileSkill(pSkill);
-                        }
-                    }
-                }
-
-                pSkill.TotalPierces = pSkill.BasePierces + pSkill.AddedPierces;
-                pSkill.TotalProjectiles = pSkill.BaseProjectiles + pSkill.AddedProjectiles;
-            }
         }
     }
 
