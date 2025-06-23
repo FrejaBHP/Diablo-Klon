@@ -99,6 +99,13 @@ public partial class Stat {
 		}
 	}
 
+    public void SetAddedIncreasedMore(double added, double increased = 0, double more = 1) {
+        sAdded = added;
+        sIncreased = increased;
+        sMore = more;
+        CalculateStats();
+    }
+
     private void CalculateStats() {
         sTotal = (sBase + sAdded) * (1 + sIncreased) * sMore;
         StatTotalChanged?.Invoke(sTotal);
@@ -241,6 +248,13 @@ public partial class DamageStat() {
 			sMore = value;
 		}
 	}
+
+    public void SetAddedIncreasedMore(double minAdded, double maxAdded, double increased = 0, double more = 1) {
+        sMinAdded = minAdded;
+        sMaxAdded = maxAdded;
+        sIncreased = increased;
+        sMore = more;
+    }
 
     public void CalculateTotal(out double totalMin, out double totalMax) {
         totalMin = (sMinBase + sMinAdded) * (1 + sIncreased) * sMore;

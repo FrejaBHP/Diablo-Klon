@@ -76,6 +76,22 @@ public partial class Player : Actor {
 		{ EStatName.FlatMaxPhysDamage, 				0 },
 		{ EStatName.IncreasedPhysDamage, 			0 },
 
+		{ EStatName.FlatMinFireDamage, 				0 },
+		{ EStatName.FlatMaxFireDamage, 				0 },
+		{ EStatName.IncreasedFireDamage, 			0 },
+
+		{ EStatName.FlatMinColdDamage, 				0 },
+		{ EStatName.FlatMaxColdDamage, 				0 },
+		{ EStatName.IncreasedColdDamage, 			0 },
+
+		{ EStatName.FlatMinLightningDamage, 		0 },
+		{ EStatName.FlatMaxLightningDamage, 		0 },
+		{ EStatName.IncreasedLightningDamage, 		0 },
+
+		{ EStatName.FlatMinChaosDamage, 			0 },
+		{ EStatName.FlatMaxChaosDamage, 			0 },
+		{ EStatName.IncreasedChaosDamage, 			0 },
+
 		{ EStatName.IncreasedMeleeDamage, 			0 },
 		{ EStatName.IncreasedRangedDamage, 			0 },
 		{ EStatName.IncreasedSpellDamage, 			0 },
@@ -654,19 +670,55 @@ public partial class Player : Actor {
 		CritMultiplier.SAdded = ItemStatDictionary[EStatName.AddedCritMulti];
 
 		MovementSpeed.SIncreased = ItemStatDictionary[EStatName.IncreasedMovementSpeed];
+
+		// Skal nok erstattes med et system, hvor jeg kan markere individuelle slags stats som "dirty"
+		DamageMods.Physical.SetAddedIncreasedMore(
+			(int)ItemStatDictionary[EStatName.FlatMinPhysDamage], (int)ItemStatDictionary[EStatName.FlatMaxPhysDamage],
+			ItemStatDictionary[EStatName.IncreasedPhysDamage]
+		);
+
+		DamageMods.Fire.SetAddedIncreasedMore(
+			(int)ItemStatDictionary[EStatName.FlatMinFireDamage], (int)ItemStatDictionary[EStatName.FlatMaxFireDamage],
+			ItemStatDictionary[EStatName.IncreasedFireDamage]
+		);
+
+		DamageMods.Cold.SetAddedIncreasedMore(
+			(int)ItemStatDictionary[EStatName.FlatMinColdDamage], (int)ItemStatDictionary[EStatName.FlatMaxColdDamage],
+			ItemStatDictionary[EStatName.IncreasedColdDamage]
+		);
+
+		DamageMods.Lightning.SetAddedIncreasedMore(
+			(int)ItemStatDictionary[EStatName.FlatMinLightningDamage], (int)ItemStatDictionary[EStatName.FlatMaxLightningDamage],
+			ItemStatDictionary[EStatName.IncreasedLightningDamage]
+		);
+
+		DamageMods.Chaos.SetAddedIncreasedMore(
+			(int)ItemStatDictionary[EStatName.FlatMinChaosDamage], (int)ItemStatDictionary[EStatName.FlatMaxChaosDamage],
+			ItemStatDictionary[EStatName.IncreasedChaosDamage]
+		);
 		
-		DamageMods.Physical.SMinAdded = (int)ItemStatDictionary[EStatName.FlatMinPhysDamage];
-		DamageMods.Physical.SMaxAdded = (int)ItemStatDictionary[EStatName.FlatMaxPhysDamage];
-		DamageMods.Physical.SIncreased = ItemStatDictionary[EStatName.IncreasedPhysDamage];
+		//DamageMods.Physical.SMinAdded = (int)ItemStatDictionary[EStatName.FlatMinPhysDamage];
+		//DamageMods.Physical.SMaxAdded = (int)ItemStatDictionary[EStatName.FlatMaxPhysDamage];
+		//DamageMods.Physical.SIncreased = ItemStatDictionary[EStatName.IncreasedPhysDamage];
 
 		DamageMods.IncreasedMelee = ItemStatDictionary[EStatName.IncreasedMeleeDamage] + StrMeleeBonus;
 		DamageMods.IncreasedRanged = ItemStatDictionary[EStatName.IncreasedRangedDamage];
 		DamageMods.IncreasedSpell = ItemStatDictionary[EStatName.IncreasedSpellDamage] + IntSpellBonus;
 
-		Armour.SAdded = (int)ItemStatDictionary[EStatName.FlatArmour];
-		Armour.SIncreased = ItemStatDictionary[EStatName.IncreasedArmour];
-		Evasion.SAdded = (int)ItemStatDictionary[EStatName.FlatEvasion];
-		Evasion.SIncreased = ItemStatDictionary[EStatName.IncreasedEvasion] + DexEvasionBonus;
+		Armour.SetAddedIncreasedMore(
+			(int)ItemStatDictionary[EStatName.FlatArmour], 
+			ItemStatDictionary[EStatName.IncreasedArmour]
+		);
+
+		Evasion.SetAddedIncreasedMore(
+			(int)ItemStatDictionary[EStatName.FlatEvasion],
+			ItemStatDictionary[EStatName.IncreasedEvasion] + DexEvasionBonus
+		);
+
+		//Armour.SAdded = (int)ItemStatDictionary[EStatName.FlatArmour];
+		//Armour.SIncreased = ItemStatDictionary[EStatName.IncreasedArmour];
+		//Evasion.SAdded = (int)ItemStatDictionary[EStatName.FlatEvasion];
+		//Evasion.SIncreased = ItemStatDictionary[EStatName.IncreasedEvasion] + DexEvasionBonus;
 
 		Resistances.ResPhysical = (int)ItemStatDictionary[EStatName.PhysicalResistance];
 		Resistances.ResFire = (int)ItemStatDictionary[EStatName.FireResistance];

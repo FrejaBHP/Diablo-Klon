@@ -157,6 +157,15 @@ public abstract class Skill {
         if (ActorOwner != null) {
             ActiveDamageModifiers = ActorOwner.DamageMods + BaseDamageModifiers;
 
+            if (this is IAttack attack) {
+                attack.UpdateAttackSpeedValues(ActorOwner.AttackSpeedMod);
+                //attack.UpdateWeaponStats(ActorOwner.MainHandStats, ActorOwner.OffHandStats);
+            }
+
+            if (this is ISpell spell) {
+                spell.UpdateCastSpeedValues(ActorOwner.CastSpeedMod);
+            }
+
             if (HousingSkillCluster != null) {
                 foreach (SupportGem support in HousingSkillCluster.GetSupports()) {
                     if (support.AffectsDamageModifiers) {
@@ -164,21 +173,16 @@ public abstract class Skill {
                     }
 
                     // Does not contain all variables needed
-                    if (this is IAttack attack) {
-                        attack.UpdateAttackSpeedValues(ActorOwner.AttackSpeedMod);
-                        //attack.UpdateWeaponStats(ActorOwner.MainHandStats, ActorOwner.OffHandStats);
-
+                    if (this is IAttack atSkill) {
                         if (support.SkillTags.HasFlag(ESkillTags.Attack)) {
-                            support.ModifyAttackSkill(attack);
+                            support.ModifyAttackSkill(atSkill);
                         }
                     }
 
                     // Ditto
-                    if (this is ISpell spell) {
-                        spell.UpdateCastSpeedValues(ActorOwner.CastSpeedMod);
-
+                    if (this is ISpell spSkill) {
                         if (support.SkillTags.HasFlag(ESkillTags.Spell)) {
-                            support.ModifySpellSkill(spell);
+                            support.ModifySpellSkill(spSkill);
                         }
                     }
 
