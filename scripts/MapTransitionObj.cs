@@ -18,7 +18,7 @@ public partial class MapTransitionObj : Area3D {
         outlineMesh = GetNode<MeshInstance3D>("Mesh/MeshOutline");
 
         AddToGroup("MapTransition");
-        AddToGroup("Interactible");
+        AddToGroup("Interactable");
         portalSprites.Play();
     }
 

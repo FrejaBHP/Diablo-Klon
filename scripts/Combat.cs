@@ -1,3 +1,5 @@
+using System.Text;
+
 public enum DamageType {
     Untyped,
     Physical,   // DoT: Bleed/Bleeding
@@ -16,27 +18,26 @@ public class SkillDamage(double phys, double fire, double cold, double lightning
     public readonly bool IsCritical = isCritical;
 
     public override string ToString() {
-        string outputString = "";
+        StringBuilder sb = new();
         
         if (Physical > 0) {
-            outputString += $"Physical: {Physical:F2}\n";
+            sb.Append($"Physical: {Physical:F2}\n");
         }
         if (Fire > 0) {
-            outputString += $"Fire: {Fire:F2}\n";
+            sb.Append($"Fire: {Fire:F2}\n");
         }
         if (Cold > 0) {
-            outputString += $"Cold: {Cold:F2}\n";
+            sb.Append($"Cold: {Cold:F2}\n");
         }
         if (Lightning > 0) {
-            outputString += $"Lightning: {Lightning:F2}\n";
+            sb.Append($"Lightning: {Lightning:F2}\n");
         }
         if (Chaos > 0) {
-            outputString += $"Chaos: {Chaos:F2}\n";
+            sb.Append($"Chaos: {Chaos:F2}\n");
         }
 
-        outputString += $"Total: {Physical + Fire + Cold + Lightning + Chaos:F2}\nCritical: {IsCritical}";
-        return outputString;
-        //return $"Phys: {Physical:F2}\nFire: {Fire:F2}\nCold: {Cold:F2}\nLightning: {Lightning:F2}\nChaos: {Chaos:F2}\nTotal: {Physical + Fire + Cold + Lightning + Chaos:F2}\nCritical: {IsCritical}";
+        sb.Append($"Total: {Physical + Fire + Cold + Lightning + Chaos:F2}\nCritical: {IsCritical}");
+        return sb.ToString();
     }
 }
 

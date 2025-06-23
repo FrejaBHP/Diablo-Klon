@@ -291,7 +291,7 @@ public partial class Player : Actor {
 
 		if (result.Count > 0) {
 			Node3D collider = (Node3D)result["collider"];
-			if (collider.IsInGroup("Interactible")) {
+			if (collider.IsInGroup("Interactable")) {
 				isLeftClickHeldForInteraction = true;
 				SetDestinationNode(collider);
 				GetTree().Root.SetInputAsHandled();
@@ -672,6 +672,7 @@ public partial class Player : Actor {
 		MovementSpeed.SIncreased = ItemStatDictionary[EStatName.IncreasedMovementSpeed];
 
 		// Skal nok erstattes med et system, hvor jeg kan markere individuelle slags stats som "dirty"
+		// Enten det, eller få disse ordentligt delt op
 		DamageMods.Physical.SetAddedIncreasedMore(
 			(int)ItemStatDictionary[EStatName.FlatMinPhysDamage], (int)ItemStatDictionary[EStatName.FlatMaxPhysDamage],
 			ItemStatDictionary[EStatName.IncreasedPhysDamage]
@@ -696,10 +697,6 @@ public partial class Player : Actor {
 			(int)ItemStatDictionary[EStatName.FlatMinChaosDamage], (int)ItemStatDictionary[EStatName.FlatMaxChaosDamage],
 			ItemStatDictionary[EStatName.IncreasedChaosDamage]
 		);
-		
-		//DamageMods.Physical.SMinAdded = (int)ItemStatDictionary[EStatName.FlatMinPhysDamage];
-		//DamageMods.Physical.SMaxAdded = (int)ItemStatDictionary[EStatName.FlatMaxPhysDamage];
-		//DamageMods.Physical.SIncreased = ItemStatDictionary[EStatName.IncreasedPhysDamage];
 
 		DamageMods.IncreasedMelee = ItemStatDictionary[EStatName.IncreasedMeleeDamage] + StrMeleeBonus;
 		DamageMods.IncreasedRanged = ItemStatDictionary[EStatName.IncreasedRangedDamage];
@@ -714,11 +711,6 @@ public partial class Player : Actor {
 			(int)ItemStatDictionary[EStatName.FlatEvasion],
 			ItemStatDictionary[EStatName.IncreasedEvasion] + DexEvasionBonus
 		);
-
-		//Armour.SAdded = (int)ItemStatDictionary[EStatName.FlatArmour];
-		//Armour.SIncreased = ItemStatDictionary[EStatName.IncreasedArmour];
-		//Evasion.SAdded = (int)ItemStatDictionary[EStatName.FlatEvasion];
-		//Evasion.SIncreased = ItemStatDictionary[EStatName.IncreasedEvasion] + DexEvasionBonus;
 
 		Resistances.ResPhysical = (int)ItemStatDictionary[EStatName.PhysicalResistance];
 		Resistances.ResFire = (int)ItemStatDictionary[EStatName.FireResistance];
@@ -793,16 +785,31 @@ public partial class Player : Actor {
 	}
 
 	protected void UpdateStatsPanel() {
-		//PlayerHUD.PlayerPanel.OffenceTabPanel.MainHandPhysDamage.SetValue($"{MainHandStats.PhysMinDamage} - {MainHandStats.PhysMaxDamage}");
-		//PlayerHUD.PlayerPanel.OffenceTabPanel.MainHandAttackSpeed.SetValue($"{1 / MainHandStats.AttackSpeed:F2}");
-		//PlayerHUD.PlayerPanel.OffenceTabPanel.MainHandCritChance.SetValue($"{MainHandStats.CritChance * 100:F2}%");
-		//PlayerHUD.PlayerPanel.OffenceTabPanel.OffHandPhysDamage.SetValue($"{OffHandStats.PhysMinDamage} - {OffHandStats.PhysMaxDamage}");
-		//PlayerHUD.PlayerPanel.OffenceTabPanel.OffHandAttackSpeed.SetValue($"{1 / OffHandStats.AttackSpeed:F2}");
-		//PlayerHUD.PlayerPanel.OffenceTabPanel.OffHandCritChance.SetValue($"{OffHandStats.CritChance * 100:F2}%");
-		PlayerHUD.PlayerPanel.OffenceTabPanel.CritMulti.SetValue($"{Math.Round(CritMultiplier.STotal, 2) * 100}%");
+		// ===== OFFENCE =====
+		PlayerHUD.PlayerPanel.OffenceTabPanel.AddedPhysDamage.SetValue($"{DamageMods.Physical.SMinAdded:F0} - {DamageMods.Physical.SMaxAdded:F0}");
+		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedPhysDamage.SetValue($"{DamageMods.Physical.SIncreased * DamageMods.Physical.SMore:P0}");
+		PlayerHUD.PlayerPanel.OffenceTabPanel.AddedFireDamage.SetValue($"{DamageMods.Fire.SMinAdded:F0} - {DamageMods.Fire.SMaxAdded:F0}");
+		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedFireDamage.SetValue($"{DamageMods.Fire.SIncreased * DamageMods.Fire.SMore:P0}");
+		PlayerHUD.PlayerPanel.OffenceTabPanel.AddedColdDamage.SetValue($"{DamageMods.Cold.SMinAdded:F0} - {DamageMods.Cold.SMaxAdded:F0}");
+		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedColdDamage.SetValue($"{DamageMods.Cold.SIncreased * DamageMods.Cold.SMore:P0}");
+		PlayerHUD.PlayerPanel.OffenceTabPanel.AddedLightningDamage.SetValue($"{DamageMods.Lightning.SMinAdded:F0} - {DamageMods.Lightning.SMaxAdded:F0}");
+		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedLightningDamage.SetValue($"{DamageMods.Lightning.SIncreased * DamageMods.Lightning.SMore:P0}");
+		PlayerHUD.PlayerPanel.OffenceTabPanel.AddedChaosDamage.SetValue($"{DamageMods.Chaos.SMinAdded:F0} - {DamageMods.Chaos.SMaxAdded:F0}");
+		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedChaosDamage.SetValue($"{DamageMods.Chaos.SIncreased * DamageMods.Chaos.SMore:P0}");
 
-		PlayerHUD.PlayerPanel.DefenceTabPanel.Armour.SetValue($"{Math.Round(Armour.STotal, 0)} / {(1 - GetArmourMitigation(Armour.STotal, ActorLevel)) * 100:F0}%");
-		PlayerHUD.PlayerPanel.DefenceTabPanel.Evasion.SetValue($"{Math.Round(Evasion.STotal, 0)} / {GetEvasionChance(Evasion.STotal, ActorLevel) * 100:F0}%");
+		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedMeleeDamage.SetValue($"{DamageMods.IncreasedMelee * DamageMods.MoreMelee:P0}");
+		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedRangedDamage.SetValue($"{DamageMods.IncreasedRanged * DamageMods.MoreRanged:P0}");
+		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedSpellDamage.SetValue($"{DamageMods.IncreasedSpell * DamageMods.MoreSpell:P0}");
+
+		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedAttackSpeed.SetValue($"{AttackSpeedMod.STotal - 1:P1}");
+		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedCastSpeed.SetValue($"{CastSpeedMod.STotal - 1:P1}");
+		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedCritChance.SetValue($"{CritChanceMod.STotal - 1:P0}");
+		PlayerHUD.PlayerPanel.OffenceTabPanel.CritMulti.SetValue($"{CritMultiplier.STotal:P0}");
+
+		// ===== DEFENCE =====
+		PlayerHUD.PlayerPanel.DefenceTabPanel.MovementSpeed.SetValue($"{MovementSpeed.SIncreased * MovementSpeed.SMore:P0}");
+		PlayerHUD.PlayerPanel.DefenceTabPanel.Armour.SetValue($"{Math.Round(Armour.STotal, 0)} / {(1 - GetArmourMitigation(Armour.STotal, ActorLevel)):P1}");
+		PlayerHUD.PlayerPanel.DefenceTabPanel.Evasion.SetValue($"{Math.Round(Evasion.STotal, 0)} / {GetEvasionChance(Evasion.STotal, ActorLevel):P1}");
 		PlayerHUD.PlayerPanel.DefenceTabPanel.PhysRes.SetValue($"{Resistances.ResPhysical}%");
 		PlayerHUD.PlayerPanel.DefenceTabPanel.FireRes.SetValue($"{Resistances.ResFire}%");
 		PlayerHUD.PlayerPanel.DefenceTabPanel.ColdRes.SetValue($"{Resistances.ResCold}%");
@@ -894,8 +901,8 @@ public partial class Player : Actor {
 			PlayerHUD.PlayerPanel.CharacterLevelLabel.Text = $"Level {ActorLevel} Creature";
 
 			CalculateMaxLifeAndMana();
-			PlayerHUD.PlayerPanel.DefenceTabPanel.Armour.SetValue($"{Math.Round(Armour.STotal, 0)} / {(1 - GetArmourMitigation(Armour.STotal, ActorLevel)) * 100:F0}%");
-			PlayerHUD.PlayerPanel.DefenceTabPanel.Evasion.SetValue($"{Math.Round(Evasion.STotal, 0)} / {GetEvasionChance(Evasion.STotal, ActorLevel) * 100:F0}%");
+			PlayerHUD.PlayerPanel.DefenceTabPanel.Armour.SetValue($"{Math.Round(Armour.STotal, 0)} / {(1 - GetArmourMitigation(Armour.STotal, ActorLevel)):P1}");
+			PlayerHUD.PlayerPanel.DefenceTabPanel.Evasion.SetValue($"{Math.Round(Evasion.STotal, 0)} / {GetEvasionChance(Evasion.STotal, ActorLevel):P1}");
 		}
 	}
 

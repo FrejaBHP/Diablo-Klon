@@ -2,6 +2,7 @@ using Godot;
 using System;
 
 public partial class DefencePanel : StatPanel {
+    public StatTableEntry MovementSpeed;
     public StatTableEntry LifeRegen;
     public StatTableEntry ManaRegen;
     public StatTableEntry Armour;
@@ -19,6 +20,7 @@ public partial class DefencePanel : StatPanel {
     }
 
     private void BuildTable() {
+        AddEntry(ref MovementSpeed, "Movement Speed Modifier");
         AddEntry(ref LifeRegen, "Life Regeneration per Second");
         AddEntry(ref ManaRegen, "Mana Regeneration per Second");
         AddEntry(ref Armour, "Armour");

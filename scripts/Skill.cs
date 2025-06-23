@@ -157,11 +157,13 @@ public abstract class Skill {
         if (ActorOwner != null) {
             ActiveDamageModifiers = ActorOwner.DamageMods + BaseDamageModifiers;
 
+            // Does not contain all variables needed
             if (this is IAttack attack) {
                 attack.UpdateAttackSpeedValues(ActorOwner.AttackSpeedMod);
                 //attack.UpdateWeaponStats(ActorOwner.MainHandStats, ActorOwner.OffHandStats);
             }
 
+            // Ditto
             if (this is ISpell spell) {
                 spell.UpdateCastSpeedValues(ActorOwner.CastSpeedMod);
             }
@@ -172,14 +174,12 @@ public abstract class Skill {
                         support.ApplyToDamageModifiers(ActiveDamageModifiers);
                     }
 
-                    // Does not contain all variables needed
                     if (this is IAttack atSkill) {
                         if (support.SkillTags.HasFlag(ESkillTags.Attack)) {
                             support.ModifyAttackSkill(atSkill);
                         }
                     }
 
-                    // Ditto
                     if (this is ISpell spSkill) {
                         if (support.SkillTags.HasFlag(ESkillTags.Spell)) {
                             support.ModifySpellSkill(spSkill);

@@ -12,7 +12,7 @@ public partial class Shop : Area3D {
 
     public override void _Ready() {
         AddToGroup("Shop");
-        AddToGroup("Interactible");
+        AddToGroup("Interactable");
     }
 
     public void OnInputEvent(Node camera, InputEvent @event, Vector3 eventPosition, Vector3 normal, int shapeidx) {

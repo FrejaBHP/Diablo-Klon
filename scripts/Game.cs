@@ -26,14 +26,16 @@ public partial class Game : Node3D {
 	private CanvasLayer worldObjectsLayer;
 	private Timer mapStartTimer;
 
-	public override void _Ready() {
-		Instance = this; // There should possibly only ever be 1 Game instance at any time, so if this somehow results in overrides, lord have mercy
-
-		string cultureName = Thread.CurrentThread.CurrentCulture.Name;
-		CultureInfo ci = new CultureInfo(cultureName);
+    public override void _EnterTree() {
+        string cultureName = Thread.CurrentThread.CurrentCulture.Name;
+		CultureInfo ci = new(cultureName);
 		ci.NumberFormat.PercentPositivePattern = 1;
 		ci.NumberFormat.PercentNegativePattern = 1;
 		Thread.CurrentThread.CurrentCulture = ci;
+    }
+
+	public override void _Ready() {
+		Instance = this; // There should possibly only ever be 1 Game instance at any time, so if this somehow results in overrides, lord have mercy
 
 		currentMapNode = GetNode<Node3D>("CurrentMap");
 		mapTown = currentMapNode.GetNode<MapBase>("MapTown");
