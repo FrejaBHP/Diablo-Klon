@@ -18,9 +18,9 @@ public partial class Player : Actor {
     public double Experience { get; protected set; } = 0;
 
     protected int[] experienceRequirements = [
-        10, 12, 14, 17, 20,
-        23, 28, 33, 39, 45,
-        100, 100, 100, 100, 100
+        25, 30, 35, 40, 45,
+        50, 55, 60, 65, 70,
+        75, 80, 85, 90, 95
     ];
 
 	private int gold = 0;
@@ -40,6 +40,7 @@ public partial class Player : Actor {
 	protected EMovementInputMethod movementInputMethod = EMovementInputMethod.Keyboard;
 
 	protected Timer skillTimer;
+	protected bool isLeftClickHeldForInteraction = false;
 	protected bool isLeftClickHeld = false;
 	protected bool isRightClickHeld = false;
 	protected bool isSkillInput3Held = false;
@@ -165,14 +166,12 @@ public partial class Player : Actor {
 				}
 				else {
 					isLeftClickHeld = true;
-
-					if (movementInputMethod == EMovementInputMethod.Mouse) {
-						SetDestinationPosition(mbe.GlobalPosition);
-					}
+					CastAndInterpretMouseRaycast(mbe);
 				}
 			}
 			else if (@event.IsActionReleased("LeftClick")) {
 				isLeftClickHeld = false;
+				isLeftClickHeldForInteraction = false;
 			}
 			else if (@event.IsActionPressed("RightClick")) {
 				isRightClickHeld = true;
@@ -252,11 +251,11 @@ public partial class Player : Actor {
 		newMouseButtonInput = true;
 	}
 
-	public Vector3 GetCameraRaycast() {
+	public Vector3 CreateCameraRaycastAndGetPosition() {
 		Vector3 from = PlayerCamera.ProjectRayOrigin(GetViewport().GetMousePosition());
 		Vector3 to = from + PlayerCamera.ProjectRayNormal(GetViewport().GetMousePosition()) * RayLength;
 		PhysicsDirectSpaceState3D state = GetWorld3D().DirectSpaceState;
-		PhysicsRayQueryParameters3D query = PhysicsRayQueryParameters3D.Create(from, to, CollisionMask = 3);
+		PhysicsRayQueryParameters3D query = PhysicsRayQueryParameters3D.Create(from, to, CollisionMask = 2); // 3 includes walls
 		Godot.Collections.Dictionary result = state.IntersectRay(query);
 			
 		if (result.Count > 0) {
@@ -266,26 +265,42 @@ public partial class Player : Actor {
 		return Vector3.Zero;
 	}
 
-	// Logic for mouse movement
-	private void HandleMouseMovementInput() {
-		if (!MovingTowardsObject) {
-			Vector3 from = PlayerCamera.ProjectRayOrigin(lastMouseInputPos);
-			Vector3 to = from + PlayerCamera.ProjectRayNormal(lastMouseInputPos) * RayLength;
-			PhysicsDirectSpaceState3D state = GetWorld3D().DirectSpaceState;
-			PhysicsRayQueryParameters3D query = PhysicsRayQueryParameters3D.Create(from, to, CollisionMask = 1 << 1);
-			Godot.Collections.Dictionary result = state.IntersectRay(query);
-			
-			if (result.Count > 0) {
-				moveTo = result["position"].AsVector3();
-				Vector3 direction = GlobalPosition.DirectionTo(moveTo);
-				ApplyGroundedVelocity(direction.X, direction.Z);
+	private void CastAndInterpretMouseRaycast(InputEventMouseButton mbe) {
+		Vector3 from = PlayerCamera.ProjectRayOrigin(mbe.GlobalPosition);
+		Vector3 to = from + PlayerCamera.ProjectRayNormal(mbe.GlobalPosition) * RayLength;
+		PhysicsDirectSpaceState3D state = GetWorld3D().DirectSpaceState;
+		PhysicsRayQueryParameters3D query = PhysicsRayQueryParameters3D.Create(from, to, CollisionMask = 0b00010010); // 2 + 16, floor + object
+		query.CollideWithAreas = true;
+		Godot.Collections.Dictionary result = state.IntersectRay(query);
 
-				Vector3 lookAt = moveTo with { Y = GlobalPosition.Y };
-				if (!Mathf.IsZeroApprox(GlobalPosition.DistanceTo(lookAt))) {
-					LookAt(lookAt, null, true);
-				}
+		if (result.Count > 0) {
+			Node3D collider = (Node3D)result["collider"];
+			if (collider.IsInGroup("Interactible")) {
+				isLeftClickHeldForInteraction = true;
+				SetDestinationNode(collider);
+				GetTree().Root.SetInputAsHandled();
+			}
+			else if (movementInputMethod == EMovementInputMethod.Mouse) {
+				SetDestinationPosition(mbe.GlobalPosition);
+				moveTo = result["position"].AsVector3();
+				GetTree().Root.SetInputAsHandled();
 			}
 		}
+	}
+
+	// Logic for mouse movement
+	private void HandleMouseMovementInput() {
+		// Hits after calling SetDestinationPosition
+		if (!MovingTowardsObject) {
+			Vector3 direction = GlobalPosition.DirectionTo(moveTo);
+			ApplyGroundedVelocity(direction.X, direction.Z);
+
+			Vector3 lookAt = moveTo with { Y = GlobalPosition.Y };
+			if (!Mathf.IsZeroApprox(GlobalPosition.DistanceTo(lookAt))) {
+				LookAt(lookAt, null, true);
+			}
+		}
+		// Hits after calling SetDestinationNode
 		else {
 			Vector3 direction = GlobalPosition.DirectionTo(moveTo);
 			ApplyGroundedVelocity(direction.X, direction.Z);
@@ -352,7 +367,7 @@ public partial class Player : Actor {
 				HandleMouseMovementInput();
 			}
 
-			if (isLeftClickHeld && movementInputMethod == EMovementInputMethod.Keyboard) {
+			if (isLeftClickHeld && !isLeftClickHeldForInteraction && movementInputMethod == EMovementInputMethod.Keyboard) {
 				UseSkill(0);
 			}
 			else if (isRightClickHeld) {
@@ -368,15 +383,30 @@ public partial class Player : Actor {
 			if (movementInputMethod == EMovementInputMethod.Mouse || MovingTowardsObject) {
 				remainingDist = (GlobalPosition with { Y = 0f }).DistanceTo(moveTo with { Y = 0f });
 
-				if (IsInstanceValid(TargetedNode) && TargetedNode != null) {
+				if (MovingTowardsObject) {
+					if (IsInstanceValid(TargetedNode) && TargetedNode != null) {
+						if (remainingDist <= (float)MovementSpeed.STotal / 100f) {
+							ApplyGroundedVelocity(0f, 0f);
+
+							if (TargetedNode.IsInGroup("WorldItem")) {
+								WorldItem wi = (WorldItem)TargetedNode;
+								PickupItem(ref wi);
+							}
+							ResetNodeTarget();
+						}
+						else {
+							Vector3 direction = GlobalPosition.DirectionTo(moveTo);
+							ApplyGroundedVelocity(direction.X, direction.Z);
+						}
+					}
+					else {
+						ApplyGroundedVelocity(0f, 0f);
+						ResetNodeTarget();
+					}
+				}
+				else {
 					if (remainingDist <= (float)MovementSpeed.STotal / 100f) {
 						ApplyGroundedVelocity(0f, 0f);
-
-						if (TargetedNode.IsInGroup("WorldItem")) {
-							WorldItem wi = (WorldItem)TargetedNode;
-							PickupItem(ref wi);
-						}
-						ResetNodeTarget();
 					}
 					else {
 						Vector3 direction = GlobalPosition.DirectionTo(moveTo);
@@ -390,10 +420,6 @@ public partial class Player : Actor {
 							}
 						}
 					}
-				}
-				else {
-					ApplyGroundedVelocity(0f, 0f);
-					ResetNodeTarget();
 				}
 			}
 
@@ -453,7 +479,7 @@ public partial class Player : Actor {
 				skillTimer.Start(spell.BaseCastTime / spell.ActiveCastSpeedModifiers.STotal);
 			}
 
-			//GD.Print($"Attack Time: {attackTimer.WaitTime:F2}");
+			//GD.Print($"Skill Time: {attackTimer.WaitTime:F2}");
 		}
 	}
 
