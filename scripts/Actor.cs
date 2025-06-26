@@ -191,11 +191,11 @@ public class ActorBasicStats {
         //GD.Print($"%: {percentageCurrentLife}, Change: {changeInLife}");
 
         if (changeInLife > 0) {
-            currentLife += changeInLife * percentageCurrentLife;
+            CurrentLife += changeInLife * percentageCurrentLife;
             //GD.Print($"Positiv Ændring, +{(double)(changeInLife * percentageCurrentLife)}");
         }
         else if (changeInLife < 0 && currentLife > totalLife) {
-            currentLife = totalLife;
+            CurrentLife = totalLife;
             //GD.Print("Life sat til fuld");
         }
     }
@@ -207,11 +207,11 @@ public class ActorBasicStats {
         //GD.Print($"%: {percentageCurrentMana}, Change: {changeInMana}");
 
         if (changeInMana > 0) {
-            currentMana += changeInMana * percentageCurrentMana;
+            CurrentMana += changeInMana * percentageCurrentMana;
             //GD.Print($"Positiv Ændring, +{(double)(changeInMana * percentageCurrentMana)}");
         }
         else if (changeInMana < 0 && currentMana > totalMana) {
-            currentMana = totalMana;
+            CurrentMana = totalMana;
             //GD.Print("Mana sat til fuld");
         }
     }
@@ -237,8 +237,6 @@ public class ActorBasicStats {
 }
 
 public class DamageModifiers() {
-    //private DamageModifiers(DamageModifiers clone) : this() {}
-
     public DamageStat Physical { get; protected set; } = new();
     public DamageStat Fire { get; protected set; } = new();
     public DamageStat Cold { get; protected set; } = new();
@@ -366,13 +364,12 @@ public partial class Actor : CharacterBody3D {
 
     protected static readonly PackedScene floatingResourceBarsScene = GD.Load<PackedScene>("res://scenes/gui/actor_floating_resource_bars.tscn");
 
-    //protected int ticksPerSecond = ProjectSettings.GetSetting("physics/common/physics_ticks_per_second").AsInt32();
     public readonly float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 
     public List<Skill> Skills = new List<Skill>();
 
     public int ActorLevel = 1;
-    protected int maxLevel = 15;
+    protected int maxLevel = 40;
 
     public Stat Armour = new(0, true, 0);
     public Stat Evasion = new(0, true, 0);

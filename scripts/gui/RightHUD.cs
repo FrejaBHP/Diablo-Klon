@@ -15,7 +15,7 @@ public partial class RightHUD : Control {
     }
 
     public void UpdateProgressLabel() {
-        ProgressLabel.Text = $"Act: {Game.Instance.CurrentAct}, Area: {Game.Instance.CurrentArea}";
+        ProgressLabel.Text = $"Act: {Game.Instance.CurrentAct}, Area: {Game.Instance.CurrentArea}\nArea Level: {Game.Instance.CurrentMap.AreaLevel}, Scaling: {1 * Math.Pow(Game.EnemyScalingFactor, Game.Instance.CurrentMap.AreaLevel - 1)}";
     }
 
     public void UpdateEnemyDebugLabel(double denMod, int spawnAmount) {

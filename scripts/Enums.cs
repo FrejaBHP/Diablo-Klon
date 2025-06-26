@@ -353,12 +353,13 @@ public enum ESkillTags {
 
 	Projectile = 1 << 4,
     Area = 1 << 5,
+	Duration = 1 << 6,
 
-	Physical = 1 << 6,
-	Fire = 1 << 7,
-	Cold = 1 << 8,
-	Lightning = 1 << 9,
-	Chaos = 1 << 10
+	Physical = 1 << 7,
+	Fire = 1 << 8,
+	Cold = 1 << 9,
+	Lightning = 1 << 10,
+	Chaos = 1 << 11
 }
 
 [Flags]

@@ -22,6 +22,8 @@ public class SThrust : Skill, IAttack, IMeleeSkill {
 
         ManaCost = 1;
 
+        AddedDamageModifier = 1.60;
+
         CastRange = BaseAttackRange;
 
         UsesMouseAim = true;

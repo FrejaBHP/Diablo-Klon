@@ -9,12 +9,15 @@ public partial class MapBase : Node3D {
     public delegate void MapReadyEventHandler();
 
     [Signal]
-    public delegate void MapFinishedEventHandler();
+    public delegate void MapObjectiveStartedEventHandler(EMapObjective objectiveType);
+
+    [Signal]
+    public delegate void MapObjectiveFinishedEventHandler();
 
     public NavigationRegion3D NavRegion { get; protected set; }
     public Node3D EnemiesNode { get; protected set; }
     public Marker3D PlayerSpawnMarker { get; protected set; }
-    public Timer SecondTimer { get; protected set; }
+    public Timer MapStartTimer { get; protected set; }
     public Timer ObjectiveTimer { get; protected set; }
     public CanvasLayer NameplateLayer { get; protected set; }
 
@@ -55,7 +58,7 @@ public partial class MapBase : Node3D {
         NavRegion = GetNode<NavigationRegion3D>("NavigationRegion3D");
         EnemiesNode = GetNode<Node3D>("Enemies");
         PlayerSpawnMarker = GetNode<Marker3D>("PlayerSpawn");
-        SecondTimer = GetNode<Timer>("SecondTimer");
+        MapStartTimer = GetNode<Timer>("MapStartTimer");
         ObjectiveTimer = GetNode<Timer>("ObjectiveTimer");
         NameplateLayer = GetNode<CanvasLayer>("NameplateLayer");
 
@@ -63,6 +66,7 @@ public partial class MapBase : Node3D {
         SetMapWaveList(EnemyDatabase.TestMapHorde);
 		SetEnemyWave(ActiveWaveList.EnemyWaves[0]);
 
+        CallDeferred(MethodName.CalculateAndUpdateAreaLevel);
         CallDeferred(MethodName.AddRegionToNav);
         CallDeferred(MethodName.OnMapReady);
 
@@ -82,7 +86,8 @@ public partial class MapBase : Node3D {
                     
                     Game.Instance.PlayerActor.PlayerHUD.PlayerRightHUD.UpdateEnemyDebugLabel(
                         GetDensityTimeModifier(), 
-                        GetTimeAdjustedSpawnDensity(EnemySpawnDensity, GetDensityTimeModifier()));
+                        GetTimeAdjustedSpawnDensity(EnemySpawnDensity, GetDensityTimeModifier())
+                    );
                 }
             }
 
@@ -93,6 +98,10 @@ public partial class MapBase : Node3D {
                 Game.Instance.PlayerActor.PlayerHUD.PlayerUpperHUD.ObjTimeLabel.Text = $"{ObjectiveTimer.TimeLeft:F1}";
             }
         }
+    }
+
+    public void CalculateAndUpdateAreaLevel() {
+        AreaLevel = Game.Instance.CurrentAct * 10 + Game.Instance.CurrentArea;
     }
 
     public void ClearEnemies() {
@@ -109,7 +118,13 @@ public partial class MapBase : Node3D {
         EmitSignal(SignalName.MapReady);
 
         if (MapObjective == EMapObjective.Shop) {
-            EmitSignal(SignalName.MapFinished);
+            EmitSignal(SignalName.MapObjectiveFinished);
+        }
+        else if (MapObjective == EMapObjective.Survival) {
+			CreateObjectiveGUI();
+
+			MapStartTimer.WaitTime = 2;
+			MapStartTimer.Start();
         }
     }
 
@@ -122,15 +137,22 @@ public partial class MapBase : Node3D {
         objective.Visible = true;
     }
 
+    public void OnMapStartTimerTimeout() {
+        StartObjective();
+    }
+
     public void StartObjective() {
         SetObjectiveTimerLength();
         Game.Instance.PlayerActor.PlayerHUD.PlayerUpperHUD.ObjTimeLabel.Visible = true;
         Game.Instance.PlayerActor.PlayerHUD.PlayerUpperHUD.ObjTimeLabel.Text = $"{Math.Round(ObjectiveTimer.WaitTime, 0)}";
 
-        EnemySpawnCeiling = CalculateEnemySpawnCeiling(Game.Instance.CurrentAct, Game.Instance.CurrentArea, 1);
-        EnemySpawnDensity = CalculateBaseEnemySpawnDensity(Game.Instance.CurrentAct, Game.Instance.CurrentArea, 1);
+        if (MapObjective == EMapObjective.Survival) {
+            EnemySpawnCeiling = CalculateEnemySpawnCeiling(Game.Instance.CurrentAct, Game.Instance.CurrentArea, 1);
+            EnemySpawnDensity = CalculateBaseEnemySpawnDensity(Game.Instance.CurrentAct, Game.Instance.CurrentArea, 1);
+            Game.Instance.PlayerActor.PlayerHUD.PlayerRightHUD.EnemyDebugLabel.Visible = true;
+        }
+
         ObjectiveTimer.Start();
-        //SecondTimer.Start();
 
         hasMapStarted = true;
     }
@@ -142,7 +164,7 @@ public partial class MapBase : Node3D {
         double ratio = Math.Clamp(1 - (ObjectiveTimer.TimeLeft / ObjectiveTimer.WaitTime), 0, 0.67);
         
         // At max time ratio, spawn density should be 1
-        return modFloor + ratio;
+        return modFloor + ratio + 0.001;
     }
 
     protected void SetObjectiveTimerLength() {
@@ -205,21 +227,18 @@ public partial class MapBase : Node3D {
         return (int)(density * timeMod);
     }
 
-    public void OnSecondPassed() {
-        //if (IsObjectiveActive()) {}
-    }
-
     public void OnObjectiveTimerTimeout() {
         if (MapObjective == EMapObjective.Survival) {
             hasMapFinished = true;
-            //SecondTimer.Stop();
-            EmitSignal(SignalName.MapFinished);
+            EmitSignal(SignalName.MapObjectiveFinished);
             ClearEnemies();
             Game.Instance.PlayerActor.PlayerHUD.PlayerUpperHUD.ObjTimeLabel.Visible = false;
 
             if (objective != null) {
                 Game.Instance.PlayerActor.PlayerHUD.PlayerRightHUD.ObjectiveContainer.RemoveChild(objective);
                 objective.QueueFree();
+
+                Game.Instance.PlayerActor.PlayerHUD.PlayerRightHUD.EnemyDebugLabel.Visible = false;
             }
 
             if (GoldRewardPool > 0) {
@@ -333,7 +352,7 @@ public partial class MapBase : Node3D {
 			}
 			else {
 				//OnMapCompletion();
-                EmitSignal(SignalName.MapFinished);
+                EmitSignal(SignalName.MapObjectiveFinished);
 				//TestSpawnMapTrans();
 			}
 		}

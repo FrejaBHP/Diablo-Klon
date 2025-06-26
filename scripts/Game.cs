@@ -3,7 +3,6 @@ using System;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
-using Timer = Godot.Timer;
 
 public partial class Game : Node3D {
 	protected static readonly PackedScene goldScene = GD.Load<PackedScene>("res://scenes/worldgold.tscn");
@@ -14,17 +13,26 @@ public partial class Game : Node3D {
 	public Player PlayerActor;
 	public MapBase CurrentMap;
 
-	public int CurrentAct { get; protected set; } = 0;
-	public int CurrentArea { get; protected set; } = 0; // When acts are properly structured, this should be set to 0 by it, and only maps past the first should increment this
-	private const int areasPerAct = 6; // Areas refer to both combat maps and shop/breather maps. Ideally the rotation is C-C-S, and act ends with a boss. 3-4 rotations should be good here in the end
-	private bool firstMapEntered = false;
-
 	private PlayerCamera playerCam;
 	private Node3D currentMapNode;
 	private MapBase mapTown; // Husk at lave en speciel klasse til Town
 
 	private CanvasLayer worldObjectsLayer;
-	private Timer mapStartTimer;
+
+	public int AreaLevelMod { get; protected set; } = 0;
+	public int CurrentAct { get; protected set; } = 0;
+	public int CurrentArea { get; protected set; } = 0; // When acts are properly structured, this should be set to 0 by it, and only maps past the first should increment this
+	private const int areasPerAct = 6; // Areas refer to both combat maps and shop/breather maps. Ideally the rotation is C-C-S, and act ends with a boss. 3-4 rotations should be good here in the end
+	private bool firstMapEntered = false;
+
+	public const double EnemyLifeScalingFactor = 1.2;
+	public const double EnemyDamageScalingFactor = 1.1;
+
+	public const double EnemyScalingFactor = 1.1;
+
+	// Scaling noter
+	// 1,1^30 = 17,45
+	// 1,075^40 = 18,04
 
     public override void _EnterTree() {
         string cultureName = Thread.CurrentThread.CurrentCulture.Name;
@@ -40,7 +48,6 @@ public partial class Game : Node3D {
 		currentMapNode = GetNode<Node3D>("CurrentMap");
 		mapTown = currentMapNode.GetNode<MapBase>("MapTown");
 		worldObjectsLayer = GetNode<CanvasLayer>("WorldObjects");
-		mapStartTimer = GetNode<Timer>("MapStartTimer");
 		PlayerActor = GetNode<Player>("Player");
 		
 		//GameSettings.Instance.ApplyPlayerSettings();
@@ -49,6 +56,8 @@ public partial class Game : Node3D {
 		mapTown.MapObjective = EMapObjective.None;
 		MapTransitionObj transObj = mapTown.GetNode<MapTransitionObj>("MapTransition");
 		transObj.SceneToTransitionTo = MapDatabase.FEScene;
+
+		PlayerActor.PlayerHUD.PlayerRightHUD.UpdateProgressLabel();
 
 		//SetMapWaveList(EnemyDatabase.TestMapHorde);
 	}
@@ -91,7 +100,7 @@ public partial class Game : Node3D {
         MapDatabase.GetMapTest(scene, out CurrentMap, out EMapObjective mapObjective);
         CurrentMap.MapObjective = mapObjective;
 		CurrentMap.MapReady += OnMapLoaded;
-		CurrentMap.MapFinished += OnMapCompletion;
+		CurrentMap.MapObjectiveFinished += OnMapCompletion;
 		currentMapNode.AddChild(CurrentMap);
 
 		if (oldMap == mapTown) {
@@ -118,22 +127,7 @@ public partial class Game : Node3D {
 		PlayerActor.GlobalPosition = CurrentMap.PlayerSpawnMarker.GlobalPosition;
 		PlayerActor.PlayerCamera.OcclusionCast.Enabled = true;
 
-		//if (CurrentMap != mapTown || CurrentMap.MapObjective != EMapObjective.Shop) {
-		if (CurrentMap.MapObjective == EMapObjective.Survival) {
-			PlayerActor.PlayerHUD.PlayerRightHUD.UpdateProgressLabel();
-			CurrentMap.CreateObjectiveGUI();
-
-			mapStartTimer.WaitTime = 2;
-			mapStartTimer.Start();
-		}
-	}
-
-	private void OnMapStartTimerTimeout() {
-		CurrentMap.StartObjective();
-
-		//if (activeWave != null) {
-		//	SpawnWave();
-		//}
+		PlayerActor.PlayerHUD.PlayerRightHUD.UpdateProgressLabel();
 	}
 
 	/// <summary>

@@ -18,6 +18,7 @@ public abstract class Skill {
 
     public string Name { get; protected set; }
     public string Description { get; protected set; }
+    public int Level { get; set; } = 0;
 
     public ESkillName SkillName { get; protected set; }
     public ESkillType Type { get; protected set; }
@@ -105,15 +106,15 @@ public abstract class Skill {
                 isCritical = RollForCritical(wStats.CritChance * ActorOwner.CritChanceMod.STotal);
             }
 
-            ActiveDamageModifiers.Physical.CalculateTotalWithBase(wStats.PhysMinDamage, wStats.PhysMaxDamage, out double pMin, out double pMax);
+            ActiveDamageModifiers.Physical.CalculateTotalWithBase(wStats.PhysMinDamage, wStats.PhysMaxDamage, AddedDamageModifier, out double pMin, out double pMax);
             physical = Utilities.RandomDouble(pMin, pMax);
-            ActiveDamageModifiers.Fire.CalculateTotalWithBase(wStats.FireMinDamage, wStats.FireMaxDamage, out double fMin, out double fMax);
+            ActiveDamageModifiers.Fire.CalculateTotalWithBase(wStats.FireMinDamage, wStats.FireMaxDamage, AddedDamageModifier, out double fMin, out double fMax);
             fire = Utilities.RandomDouble(fMin, fMax);
-            ActiveDamageModifiers.Cold.CalculateTotalWithBase(wStats.ColdMinDamage, wStats.ColdMaxDamage, out double cMin, out double cMax);
+            ActiveDamageModifiers.Cold.CalculateTotalWithBase(wStats.ColdMinDamage, wStats.ColdMaxDamage, AddedDamageModifier, out double cMin, out double cMax);
             cold = Utilities.RandomDouble(cMin, cMax);
-            ActiveDamageModifiers.Lightning.CalculateTotalWithBase(wStats.LightningMinDamage, wStats.LightningMaxDamage, out double lMin, out double lMax);
+            ActiveDamageModifiers.Lightning.CalculateTotalWithBase(wStats.LightningMinDamage, wStats.LightningMaxDamage, AddedDamageModifier, out double lMin, out double lMax);
             lightning = Utilities.RandomDouble(lMin, lMax);
-            ActiveDamageModifiers.Chaos.CalculateTotalWithBase(wStats.ChaosMinDamage, wStats.ChaosMaxDamage, out double chMin, out double chMax);
+            ActiveDamageModifiers.Chaos.CalculateTotalWithBase(wStats.ChaosMinDamage, wStats.ChaosMaxDamage, AddedDamageModifier, out double chMin, out double chMax);
             chaos = Utilities.RandomDouble(chMin, chMax);
         }
         else if (this is ISpell spell) {
@@ -146,65 +147,87 @@ public abstract class Skill {
 
     public static bool RollForCritical(double chance) {
         double critRoll = Utilities.RNG.NextDouble();
-
-        if (chance >= critRoll) {
-            return true;
-        }
-        return false;
+        return chance >= critRoll;
     }
 
     public virtual void RecalculateSkillValues() {
         if (ActorOwner != null) {
             ActiveDamageModifiers = ActorOwner.DamageMods + BaseDamageModifiers;
 
-            // Does not contain all variables needed
-            if (this is IAttack attack) {
-                attack.UpdateAttackSpeedValues(ActorOwner.AttackSpeedMod);
-                //attack.UpdateWeaponStats(ActorOwner.MainHandStats, ActorOwner.OffHandStats);
+            List<SupportGem> supportGems;
+
+            bool isPartOfCluster = HousingSkillCluster != null;
+            if (isPartOfCluster) {
+                supportGems = HousingSkillCluster.GetSupports();
+            }
+            else {
+                supportGems = [];
             }
 
-            // Ditto
-            if (this is ISpell spell) {
-                spell.UpdateCastSpeedValues(ActorOwner.CastSpeedMod);
-            }
-
-            if (HousingSkillCluster != null) {
-                foreach (SupportGem support in HousingSkillCluster.GetSupports()) {
+            if (isPartOfCluster) {
+                foreach (SupportGem support in supportGems) {
                     if (support.AffectsDamageModifiers) {
                         support.ApplyToDamageModifiers(ActiveDamageModifiers);
                     }
+                }
+            }
 
-                    if (this is IAttack atSkill) {
+            if (this is IAttack atSkill) {
+                // Does not contain all variables needed
+                atSkill.UpdateAttackSpeedValues(ActorOwner.AttackSpeedMod);
+                //attack.UpdateWeaponStats(ActorOwner.MainHandStats, ActorOwner.OffHandStats);
+
+                if (isPartOfCluster) {
+                    foreach (SupportGem support in supportGems) {
                         if (support.SkillTags.HasFlag(ESkillTags.Attack)) {
                             support.ModifyAttackSkill(atSkill);
                         }
-                    }
+                    } 
+                }
+            }
 
-                    if (this is ISpell spSkill) {
+            if (this is ISpell spSkill) {
+                // Ditto
+                spSkill.UpdateCastSpeedValues(ActorOwner.CastSpeedMod);
+
+                if (isPartOfCluster) {
+                    foreach (SupportGem support in supportGems) {
                         if (support.SkillTags.HasFlag(ESkillTags.Spell)) {
                             support.ModifySpellSkill(spSkill);
                         }
                     }
+                }
+            }
 
-                    if (this is IMeleeSkill mSkill) {
+            if (this is IMeleeSkill mSkill) {
+                if (isPartOfCluster) {
+                    foreach (SupportGem support in supportGems) {
                         if (support.SkillTags.HasFlag(ESkillTags.Melee)) {
                             support.ModifyMeleeSkill(mSkill);
                         }
-                    }
+                    }  
+                }
+            }
 
-                    if (this is IProjectileSkill pSkill) {
-                        pSkill.AddedPierces = 0;
-                        pSkill.AddedProjectiles = 0;
-
+            if (this is IProjectileSkill pSkill) {
+                pSkill.AddedPierces = 0;
+                pSkill.AddedProjectiles = 0;
+                
+                if (isPartOfCluster) {
+                    foreach (SupportGem support in supportGems) {
                         if (support.SkillTags.HasFlag(ESkillTags.Projectile)) {
                             support.ModifyProjectileSkill(pSkill);
                         }
-
-                        pSkill.TotalPierces = pSkill.BasePierces + pSkill.AddedPierces;
-                        pSkill.TotalProjectiles = pSkill.BaseProjectiles + pSkill.AddedProjectiles;
                     }
+                }
 
-                    if (this is IAreaSkill aSkill) {
+                pSkill.TotalPierces = pSkill.BasePierces + pSkill.AddedPierces;
+                pSkill.TotalProjectiles = pSkill.BaseProjectiles + pSkill.AddedProjectiles;
+            }
+
+            if (this is IAreaSkill aSkill) {
+                if (isPartOfCluster) {
+                    foreach (SupportGem support in supportGems) {
                         if (support.SkillTags.HasFlag(ESkillTags.Area)) {
                             support.ModifyAreaSkill(aSkill);
                         }
@@ -212,6 +235,21 @@ public abstract class Skill {
                 }
             }
 
+            if (this is IDurationSkill dSkill) {
+                dSkill.IncreasedDuration = 1;
+                dSkill.MoreDuration = 1;
+
+                if (isPartOfCluster) {
+                    foreach (SupportGem support in supportGems) {
+                        if (support.SkillTags.HasFlag(ESkillTags.Duration)) {
+                            support.ModifyDurationSkill(dSkill);
+                        }
+                    }
+                }
+
+                dSkill.TotalDuration = dSkill.BaseDuration * dSkill.IncreasedDuration * dSkill.MoreDuration;
+            }
+            
             if (AddedDamageModifier != 1) {
                 ActiveDamageModifiers.Physical.SMinAdded *= AddedDamageModifier;
                 ActiveDamageModifiers.Physical.SMaxAdded *= AddedDamageModifier;
@@ -391,4 +429,11 @@ public interface IProjectileSkill {
 
 public interface IAreaSkill {
     double BaseAreaRadius { get; protected set; }
+}
+
+public interface IDurationSkill {
+    double BaseDuration { get; protected set; }
+    double IncreasedDuration { get; set; }
+    double MoreDuration { get; set; }
+    double TotalDuration { get; set; }
 }

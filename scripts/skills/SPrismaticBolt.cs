@@ -30,6 +30,8 @@ public class SPrismaticBolt : Skill, ISpell, IProjectileSkill {
 
         CastRange = 15f;
 
+        AddedDamageModifier = 2.50;
+
         TotalPierces = BasePierces;
         TotalProjectiles = BaseProjectiles;
 

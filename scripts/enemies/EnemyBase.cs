@@ -37,14 +37,16 @@ public partial class EnemyBase : Actor {
         skillUsePointTimer = GetNode<Timer>("SkillUsePointTimer");
         lineOfSightCast = GetNode<RayCast3D>("LoSCast");
         debugLabel = GetNode<Label3D>("Label3D");
-
-        navAgent = GetNode<NavigationAgent3D>("NavigationAgent3D");
-        navAgent.VelocityComputed += OnVelocityComputed;
-
         navUpdateTimer = GetNode<Timer>("NavigationUpdateTimer");
-
         resBarAnchor = GetNode<Marker3D>("ResBarAnchor");
+        navAgent = GetNode<NavigationAgent3D>("NavigationAgent3D");
+
+        navAgent.VelocityComputed += OnVelocityComputed;
         AddFloatingBars(resBarAnchor);
+
+        if (enemyRarity != EEnemyRarity.Boss) {
+            ApplyAreaLevelScaling();
+        }
 
         AddToGroup("Enemy");
 
@@ -60,6 +62,16 @@ public partial class EnemyBase : Actor {
 
     public override void _PhysicsProcess(double delta) {
         
+    }
+
+    public void ApplyAreaLevelScaling() {
+        ActorLevel = Game.Instance.CurrentMap.AreaLevel;
+
+        double scaling = 1 * Math.Pow(Game.EnemyScalingFactor, ActorLevel - 1);
+        BasicStats.MoreLife *= scaling;
+        DamageMods.MoreMelee *= scaling;
+        DamageMods.MoreRanged *= scaling;
+        DamageMods.MoreSpell *= scaling;
     }
 
     public void OnNavigationUpdateTimeout() {

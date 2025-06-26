@@ -352,6 +352,9 @@ public partial class InventoryItem : PanelContainer {
 		Label tagsLabel = GenerateGreyLabel(sbTags.ToString());
 		tooltipContent.StatsContainer.AddChild(tagsLabel);
 
+		HBoxContainer levelLabel = GenerateBaseStatLabel("Level:", $"{skillItem.SkillReference.Level + 1}", false);
+		tooltipContent.StatsContainer.AddChild(levelLabel);
+
 		HBoxContainer costLabel = GenerateBaseStatLabel("Cost:", skillItem.SkillReference.ManaCost.ToString() + " Mana", false);
 		tooltipContent.StatsContainer.AddChild(costLabel);
 
@@ -412,8 +415,8 @@ public partial class InventoryItem : PanelContainer {
 
         List<string> tagList = Enum.GetValues(typeof(ESkillTags)).Cast<ESkillTags>().Where(t => (supportGem.SkillTags & t) == t).Select(t => t.ToString()).ToList();
 		tagList.Add("Support");
-		StringBuilder sbTags = new();
 
+		StringBuilder sbTags = new();
 		for (int i = 1; i < tagList.Count; i++) {
 			if (i == 1) {
 				sbTags.Append(tagList[1]);
@@ -425,6 +428,9 @@ public partial class InventoryItem : PanelContainer {
 
 		Label tagsLabel = GenerateGreyLabel(sbTags.ToString());
 		tooltipContent.StatsContainer.AddChild(tagsLabel);
+
+		HBoxContainer levelLabel = GenerateBaseStatLabel("Level:", $"{supportGem.Level + 1}", false);
+		tooltipContent.StatsContainer.AddChild(levelLabel);
 
 		tooltipContent.DescriptionLabel.Text = supportGem.Description;
 

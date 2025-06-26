@@ -3,10 +3,30 @@ using System;
 using System.Collections.Generic;
 
 public partial class SupportGem : Item {
-    public string Description;
-    public string DescEffects;
-    public bool AffectsDamageModifiers;
-	public ESkillTags SkillTags;
+    protected const int maxLevel = 14;
+
+    protected int level = 0;
+    public int Level { 
+        get => level; 
+        set {
+            if (value > maxLevel) {
+                level = maxLevel;
+            }
+            else if (value < 0) {
+                level = 0;
+            }
+            else {
+                level = value;
+            }
+
+            OnGemLevelChanged();
+        } 
+    }
+
+    public string Description { get; protected set; }
+    public string DescEffects { get; protected set; }
+    public bool AffectsDamageModifiers { get; protected set; }
+	public ESkillTags SkillTags { get; protected set; }
 
 	public SupportGem() {
 		ItemAllBaseType = EItemAllBaseType.SkillSupport;
@@ -20,6 +40,7 @@ public partial class SupportGem : Item {
 		gridSizeY = 1;
 	}
 
+    protected virtual void OnGemLevelChanged() {}
     protected virtual void UpdateGemEffectsDescription(){}
 
     public virtual void ApplyToDamageModifiers(DamageModifiers dmgMods) {}
@@ -28,6 +49,7 @@ public partial class SupportGem : Item {
     public virtual void ModifyMeleeSkill(IMeleeSkill mSkill) {}
     public virtual void ModifyProjectileSkill(IProjectileSkill pSkill) {}
     public virtual void ModifyAreaSkill(IAreaSkill aSkill) {}
+    public virtual void ModifyDurationSkill(IDurationSkill dSkill) {}
 }
 
 public partial class SAddedFire : SupportGem {
@@ -119,13 +141,24 @@ public partial class SAddedChaos : SupportGem {
 }
 
 public partial class SAttackSpeed : SupportGem {
-    private const double attackSpeedIncrease = 0.25;
+    private static readonly double[] increasedAttackSpeedArray = [
+        0.25, 0.26, 0.27, 0.28, 0.29,
+        0.30, 0.31, 0.32, 0.33, 0.34,
+        0.35, 0.36, 0.37, 0.38, 0.39
+    ];
+
+    private double attackSpeedIncrease = increasedAttackSpeedArray[0];
 
     public SAttackSpeed() {
         ItemName = "Attack Speed Support";
         Description = "Supports Attacks";
         AffectsDamageModifiers = false;
         SkillTags = ESkillTags.Attack;
+        UpdateGemEffectsDescription();
+    }
+
+    protected override void OnGemLevelChanged() {
+        attackSpeedIncrease = increasedAttackSpeedArray[level];
         UpdateGemEffectsDescription();
     }
 
@@ -139,13 +172,24 @@ public partial class SAttackSpeed : SupportGem {
 }
 
 public partial class SCastSpeed : SupportGem {
-    private const double castSpeedIncrease = 0.25;
+    private static readonly double[] increasedCastSpeedArray = [
+        0.25, 0.26, 0.27, 0.28, 0.29,
+        0.30, 0.31, 0.32, 0.33, 0.34,
+        0.35, 0.36, 0.37, 0.38, 0.39
+    ];
+
+    private double castSpeedIncrease = increasedCastSpeedArray[0];
 
     public SCastSpeed() {
         ItemName = "Cast Speed Support";
         Description = "Supports Spells";
         AffectsDamageModifiers = false;
         SkillTags = ESkillTags.Spell;
+        UpdateGemEffectsDescription();
+    }
+
+    protected override void OnGemLevelChanged() {
+        castSpeedIncrease = increasedCastSpeedArray[level];
         UpdateGemEffectsDescription();
     }
 
@@ -175,5 +219,67 @@ public partial class SPierce : SupportGem {
 
     public override void ModifyProjectileSkill(IProjectileSkill pSkill) {
         pSkill.AddedPierces += addedPierces;
+    }
+}
+
+public partial class SIncreasedDuration : SupportGem {
+    private static readonly double[] increasedDurationArray = [
+        0.40, 0.41, 0.42, 0.43, 0.44,
+        0.45, 0.46, 0.47, 0.48, 0.49,
+        0.50, 0.51, 0.52, 0.53, 0.54
+    ];
+
+    private double incDuration = increasedDurationArray[0];
+
+    public SIncreasedDuration() {
+        ItemName = "Increased Duration Support";
+        Description = "Supports Duration Skills";
+        AffectsDamageModifiers = false;
+        SkillTags = ESkillTags.Duration;
+        UpdateGemEffectsDescription();
+    }
+
+    protected override void OnGemLevelChanged() {
+        incDuration = increasedDurationArray[level];
+        UpdateGemEffectsDescription();
+    }
+
+    protected override void UpdateGemEffectsDescription() {
+        DescEffects = $"{incDuration:P0} increased Duration of Skill Effects";
+    }
+
+    public override void ModifyDurationSkill(IDurationSkill dSkill) {
+        dSkill.IncreasedDuration += incDuration;
+    }
+}
+
+public partial class SLessDuration : SupportGem {
+    private static readonly double[] lessDurationArray = [
+        0.50, 0.51, 0.51, 0.52, 0.53, 
+        0.53, 0.54, 0.55, 0.56, 0.57, 
+        0.57, 0.58, 0.59, 0.59, 0.60
+    ];
+
+    private double lessDuration = lessDurationArray[0];
+
+    public SLessDuration() {
+        ItemName = "Less Duration Support";
+        Description = "Supports Duration Skills";
+        AffectsDamageModifiers = false;
+        SkillTags = ESkillTags.Duration;
+        UpdateGemEffectsDescription();
+    }
+
+    protected override void OnGemLevelChanged() {
+        lessDuration = lessDurationArray[level];
+        UpdateGemEffectsDescription();
+    }
+
+    protected override void UpdateGemEffectsDescription() {
+        DescEffects = $"{1 - lessDuration:P0} less Duration of Skill Effects";
+    }
+
+    public override void ModifyDurationSkill(IDurationSkill dSkill) {
+        dSkill.MoreDuration *= lessDuration;
     }
 }

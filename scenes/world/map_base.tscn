@@ -26,8 +26,10 @@ directional_shadow_max_distance = 50.0
 
 [node name="PlayerSpawn" type="Marker3D" parent="."]
 
-[node name="SecondTimer" type="Timer" parent="."]
+[node name="MapStartTimer" type="Timer" parent="."]
 process_callback = 0
+wait_time = 2.0
+one_shot = true
 
 [node name="ObjectiveTimer" type="Timer" parent="."]
 process_callback = 0
@@ -45,5 +47,5 @@ script = ExtResource("3_ubqxs")
 map_settings = ExtResource("4_judmk")
 metadata/_custom_type_script = "uid://dd0nmn1ut8mlk"
 
-[connection signal="timeout" from="SecondTimer" to="." method="OnSecondPassed"]
+[connection signal="timeout" from="MapStartTimer" to="." method="OnMapStartTimerTimeout"]
 [connection signal="timeout" from="ObjectiveTimer" to="." method="OnObjectiveTimerTimeout"]

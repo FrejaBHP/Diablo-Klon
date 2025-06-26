@@ -32,6 +32,8 @@ public class SShoot : Skill, IAttack, IProjectileSkill {
 
         CastRange = 15f;
 
+        AddedDamageModifier = 1.30;
+
         TotalPierces = BasePierces;
         TotalProjectiles = BaseProjectiles;
     }

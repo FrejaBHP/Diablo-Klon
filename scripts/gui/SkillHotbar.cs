@@ -130,29 +130,28 @@ public partial class SkillHotbar : Control {
 
             VBoxContainer mhDmgCon = GenerateDamageContainer();
 
-            // Indsæt logik både her og i Tooltip scene, der kan bruge begge våben
             if (skill.ActiveDamageModifiers.Physical.SMinBase > 0 || skill.ActiveDamageModifiers.Physical.SMinAdded > 0 || PlayerOwner.MainHandStats.PhysMinDamage > 0) {
-                skill.ActiveDamageModifiers.Physical.CalculateTotalWithBase(PlayerOwner.MainHandStats.PhysMinDamage, PlayerOwner.MainHandStats.PhysMaxDamage, out double tMin, out double tMax);
+                skill.ActiveDamageModifiers.Physical.CalculateTotalWithBase(PlayerOwner.MainHandStats.PhysMinDamage, PlayerOwner.MainHandStats.PhysMaxDamage, skill.AddedDamageModifier, out double tMin, out double tMax);
                 Label physLabel = GenerateAffixLabel($"{Math.Round(tMin, 0)} - {Math.Round(tMax, 0)} Physical Damage");
                 mhDmgCon.AddChild(physLabel);
             }
             if (skill.ActiveDamageModifiers.Fire.SMinBase > 0 || skill.ActiveDamageModifiers.Fire.SMinAdded > 0 || PlayerOwner.MainHandStats.FireMinDamage > 0) {
-                skill.ActiveDamageModifiers.Fire.CalculateTotalWithBase(PlayerOwner.MainHandStats.FireMinDamage, PlayerOwner.MainHandStats.FireMaxDamage, out double tMin, out double tMax);
+                skill.ActiveDamageModifiers.Fire.CalculateTotalWithBase(PlayerOwner.MainHandStats.FireMinDamage, PlayerOwner.MainHandStats.FireMaxDamage, skill.AddedDamageModifier, out double tMin, out double tMax);
                 Label fireLabel = GenerateAffixLabel($"{Math.Round(tMin, 0)} - {Math.Round(tMax, 0)} Fire Damage");
                 mhDmgCon.AddChild(fireLabel);
             }
             if (skill.ActiveDamageModifiers.Cold.SMinBase > 0 || skill.ActiveDamageModifiers.Cold.SMinAdded > 0 || PlayerOwner.MainHandStats.ColdMinDamage > 0) {
-                skill.ActiveDamageModifiers.Cold.CalculateTotalWithBase(PlayerOwner.MainHandStats.ColdMinDamage, PlayerOwner.MainHandStats.ColdMaxDamage, out double tMin, out double tMax);
+                skill.ActiveDamageModifiers.Cold.CalculateTotalWithBase(PlayerOwner.MainHandStats.ColdMinDamage, PlayerOwner.MainHandStats.ColdMaxDamage, skill.AddedDamageModifier, out double tMin, out double tMax);
                 Label coldLabel = GenerateAffixLabel($"{Math.Round(tMin, 0)} - {Math.Round(tMax, 0)} Cold Damage");
                 mhDmgCon.AddChild(coldLabel);
             }
             if (skill.ActiveDamageModifiers.Lightning.SMinBase > 0 || skill.ActiveDamageModifiers.Lightning.SMinAdded > 0 || PlayerOwner.MainHandStats.LightningMinDamage > 0) {
-                skill.ActiveDamageModifiers.Lightning.CalculateTotalWithBase(PlayerOwner.MainHandStats.LightningMinDamage, PlayerOwner.MainHandStats.LightningMaxDamage, out double tMin, out double tMax);
+                skill.ActiveDamageModifiers.Lightning.CalculateTotalWithBase(PlayerOwner.MainHandStats.LightningMinDamage, PlayerOwner.MainHandStats.LightningMaxDamage, skill.AddedDamageModifier, out double tMin, out double tMax);
                 Label lightningLabel = GenerateAffixLabel($"{Math.Round(tMin, 0)} - {Math.Round(tMax, 0)} Lightning Damage");
                 mhDmgCon.AddChild(lightningLabel);
             }
             if (skill.ActiveDamageModifiers.Chaos.SMinBase > 0 || skill.ActiveDamageModifiers.Chaos.SMinAdded > 0 || PlayerOwner.MainHandStats.ChaosMinDamage > 0) {
-                skill.ActiveDamageModifiers.Chaos.CalculateTotalWithBase(PlayerOwner.MainHandStats.ChaosMinDamage, PlayerOwner.MainHandStats.ChaosMaxDamage, out double tMin, out double tMax);
+                skill.ActiveDamageModifiers.Chaos.CalculateTotalWithBase(PlayerOwner.MainHandStats.ChaosMinDamage, PlayerOwner.MainHandStats.ChaosMaxDamage, skill.AddedDamageModifier, out double tMin, out double tMax);
                 Label chaosLabel = GenerateAffixLabel($"{Math.Round(tMin, 0)} - {Math.Round(tMax, 0)} Chaos Damage");
                 mhDmgCon.AddChild(chaosLabel);
             }
@@ -162,29 +161,28 @@ public partial class SkillHotbar : Control {
             if (PlayerOwner.IsDualWielding) {
                 VBoxContainer ohDmgCon = GenerateDamageContainer();
 
-                // Indsæt logik både her og i Tooltip scene, der kan bruge begge våben
                 if (skill.ActiveDamageModifiers.Physical.SMinBase > 0 || skill.ActiveDamageModifiers.Physical.SMinAdded > 0 || PlayerOwner.OffHandStats.PhysMinDamage > 0) {
-                    skill.ActiveDamageModifiers.Physical.CalculateTotalWithBase(PlayerOwner.OffHandStats.PhysMinDamage, PlayerOwner.OffHandStats.PhysMaxDamage, out double tMin, out double tMax);
+                    skill.ActiveDamageModifiers.Physical.CalculateTotalWithBase(PlayerOwner.OffHandStats.PhysMinDamage, PlayerOwner.OffHandStats.PhysMaxDamage, skill.AddedDamageModifier, out double tMin, out double tMax);
                     Label physLabel = GenerateAffixLabel($"{Math.Round(tMin, 0)} - {Math.Round(tMax, 0)} Physical Damage");
                     ohDmgCon.AddChild(physLabel);
                 }
                 if (skill.ActiveDamageModifiers.Fire.SMinBase > 0 || skill.ActiveDamageModifiers.Fire.SMinAdded > 0 || PlayerOwner.OffHandStats.FireMinDamage > 0) {
-                    skill.ActiveDamageModifiers.Fire.CalculateTotalWithBase(PlayerOwner.OffHandStats.FireMinDamage, PlayerOwner.OffHandStats.FireMaxDamage, out double tMin, out double tMax);
+                    skill.ActiveDamageModifiers.Fire.CalculateTotalWithBase(PlayerOwner.OffHandStats.FireMinDamage, PlayerOwner.OffHandStats.FireMaxDamage, skill.AddedDamageModifier, out double tMin, out double tMax);
                     Label fireLabel = GenerateAffixLabel($"{Math.Round(tMin, 0)} - {Math.Round(tMax, 0)} Fire Damage");
                     ohDmgCon.AddChild(fireLabel);
                 }
                 if (skill.ActiveDamageModifiers.Cold.SMinBase > 0 || skill.ActiveDamageModifiers.Cold.SMinAdded > 0 || PlayerOwner.OffHandStats.ColdMinDamage > 0) {
-                    skill.ActiveDamageModifiers.Cold.CalculateTotalWithBase(PlayerOwner.OffHandStats.ColdMinDamage, PlayerOwner.OffHandStats.ColdMaxDamage, out double tMin, out double tMax);
+                    skill.ActiveDamageModifiers.Cold.CalculateTotalWithBase(PlayerOwner.OffHandStats.ColdMinDamage, PlayerOwner.OffHandStats.ColdMaxDamage, skill.AddedDamageModifier, out double tMin, out double tMax);
                     Label coldLabel = GenerateAffixLabel($"{Math.Round(tMin, 0)} - {Math.Round(tMax, 0)} Cold Damage");
                     ohDmgCon.AddChild(coldLabel);
                 }
                 if (skill.ActiveDamageModifiers.Lightning.SMinBase > 0 || skill.ActiveDamageModifiers.Lightning.SMinAdded > 0 || PlayerOwner.OffHandStats.LightningMinDamage > 0) {
-                    skill.ActiveDamageModifiers.Lightning.CalculateTotalWithBase(PlayerOwner.OffHandStats.LightningMinDamage, PlayerOwner.OffHandStats.LightningMaxDamage, out double tMin, out double tMax);
+                    skill.ActiveDamageModifiers.Lightning.CalculateTotalWithBase(PlayerOwner.OffHandStats.LightningMinDamage, PlayerOwner.OffHandStats.LightningMaxDamage, skill.AddedDamageModifier, out double tMin, out double tMax);
                     Label lightningLabel = GenerateAffixLabel($"{Math.Round(tMin, 0)} - {Math.Round(tMax, 0)} Lightning Damage");
                     ohDmgCon.AddChild(lightningLabel);
                 }
                 if (skill.ActiveDamageModifiers.Chaos.SMinBase > 0 || skill.ActiveDamageModifiers.Chaos.SMinAdded > 0 || PlayerOwner.OffHandStats.ChaosMinDamage > 0) {
-                    skill.ActiveDamageModifiers.Chaos.CalculateTotalWithBase(PlayerOwner.OffHandStats.ChaosMinDamage, PlayerOwner.OffHandStats.ChaosMaxDamage, out double tMin, out double tMax);
+                    skill.ActiveDamageModifiers.Chaos.CalculateTotalWithBase(PlayerOwner.OffHandStats.ChaosMinDamage, PlayerOwner.OffHandStats.ChaosMaxDamage, skill.AddedDamageModifier, out double tMin, out double tMax);
                     Label chaosLabel = GenerateAffixLabel($"{Math.Round(tMin, 0)} - {Math.Round(tMax, 0)} Chaos Damage");
                     ohDmgCon.AddChild(chaosLabel);
                 }
@@ -234,7 +232,7 @@ public partial class SkillHotbar : Control {
             IProjectileSkill ps = skill as IProjectileSkill;
 
             if (ps.TotalPierces != 0) {
-                string pierceString = "";
+                string pierceString;
 
                 if (ps.TotalPierces == 1) {
                     pierceString = $"Pierces {ps.TotalPierces} target";
@@ -246,7 +244,7 @@ public partial class SkillHotbar : Control {
                 tooltipContent.EffectContainer.AddChild(GenerateAffixLabel(pierceString));
             }
 
-            string projString = "";
+            string projString;
             if (ps.TotalProjectiles == 1) {
                 projString = $"Fires {ps.TotalProjectiles} projectile";
             }

@@ -274,9 +274,9 @@ public partial class DamageStat() {
         }
     }
 
-    public void CalculateTotalWithBase(double baseMin, double baseMax, out double totalMin, out double totalMax) {
-        totalMin = (baseMin + sMinAdded) * (1 + sIncreased) * sMore;
-        totalMax = (baseMax + sMaxAdded) * (1 + sIncreased) * sMore;
+    public void CalculateTotalWithBase(double baseMin, double baseMax, double multiplier, out double totalMin, out double totalMax) {
+        totalMin = ((baseMin * multiplier) + sMinAdded) * (1 + sIncreased) * sMore;
+        totalMax = ((baseMax * multiplier) + sMaxAdded) * (1 + sIncreased) * sMore;
 
         if (totalMin < 0) {
             totalMin = 0;

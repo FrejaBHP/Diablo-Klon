@@ -28,11 +28,23 @@ public class SkillItemData : ItemData {
 	public ESkillName SkillName;
 	public Type SkillType;
 	public Skill SkillReference;
+
+	public SkillItemData() {
+		BaseName = "Skill Gem";
+		ItemSpecifierFlags = EItemBaseSpecifierFlags.NONE;
+		ImplicitTypes = [];
+	}
 }
 
 public class SupportGemData : ItemData {
 	public ESkillTags SkillTags;
 	public Type SupportType;
+
+	public SupportGemData() {
+		BaseName = "Support Gem";
+		ItemSpecifierFlags = EItemBaseSpecifierFlags.NONE;
+		ImplicitTypes = [];
+	}
 }
 
 public static class ItemDataTables {
@@ -258,105 +270,89 @@ public static class ItemDataTables {
 
 	public static readonly List<SkillItemData> SkillData = [
 		new SkillItemData {
-			BaseName = "Skill Gem",
 			SkillName = ESkillName.BasicThrust,
 			SkillType = typeof(SThrust),
-			ItemSpecifierFlags = EItemBaseSpecifierFlags.NONE,
 			Texture = UILib.TextureItemD2JewelRed,
 			MinimumLevel = 0,
-			ImplicitTypes = []
 		},
 
 		new SkillItemData {
-			BaseName = "Skill Gem",
 			SkillName = ESkillName.BasicShoot,
 			SkillType = typeof(SShoot),
-			ItemSpecifierFlags = EItemBaseSpecifierFlags.NONE,
 			Texture = UILib.TextureItemD2JewelGreen,
 			MinimumLevel = 0,
-			ImplicitTypes = []
 		},
 
 		new SkillItemData {
-			BaseName = "Skill Gem",
 			SkillName = ESkillName.PrismaticBolt,
 			SkillType = typeof(SPrismaticBolt),
-			ItemSpecifierFlags = EItemBaseSpecifierFlags.NONE,
 			Texture = UILib.TextureItemD2JewelBlue,
 			MinimumLevel = 0,
-			ImplicitTypes = []
 		}
 	];
 
 	public static readonly List<SupportGemData> SupportGemData = [
 		new SupportGemData {
-			BaseName = "Support Gem",
 			SkillTags = ESkillTags.None,
 			SupportType = typeof(SAddedFire),
-			ItemSpecifierFlags = EItemBaseSpecifierFlags.NONE,
 			Texture = UILib.TextureItemD2JewelRedF,
 			MinimumLevel = 0,
-			ImplicitTypes = []
 		},
 
 		new SupportGemData {
-			BaseName = "Support Gem",
 			SkillTags = ESkillTags.None,
 			SupportType = typeof(SAddedCold),
-			ItemSpecifierFlags = EItemBaseSpecifierFlags.NONE,
 			Texture = UILib.TextureItemD2JewelGreenF,
 			MinimumLevel = 0,
-			ImplicitTypes = []
 		},
 
 		new SupportGemData {
-			BaseName = "Support Gem",
 			SkillTags = ESkillTags.None,
 			SupportType = typeof(SAddedLightning),
-			ItemSpecifierFlags = EItemBaseSpecifierFlags.NONE,
 			Texture = UILib.TextureItemD2JewelBlueF,
 			MinimumLevel = 0,
-			ImplicitTypes = []
 		},
 
 		new SupportGemData {
-			BaseName = "Support Gem",
 			SkillTags = ESkillTags.None,
 			SupportType = typeof(SAddedChaos),
-			ItemSpecifierFlags = EItemBaseSpecifierFlags.NONE,
 			Texture = UILib.TextureItemD2JewelWhiteF,
 			MinimumLevel = 0,
-			ImplicitTypes = []
 		},
 
 		new SupportGemData {
-			BaseName = "Support Gem",
 			SkillTags = ESkillTags.Attack,
 			SupportType = typeof(SAttackSpeed),
-			ItemSpecifierFlags = EItemBaseSpecifierFlags.NONE,
 			Texture = UILib.TextureItemD2JewelGreenF,
 			MinimumLevel = 0,
-			ImplicitTypes = []
 		},
 
 		new SupportGemData {
-			BaseName = "Support Gem",
 			SkillTags = ESkillTags.Spell,
 			SupportType = typeof(SCastSpeed),
-			ItemSpecifierFlags = EItemBaseSpecifierFlags.NONE,
 			Texture = UILib.TextureItemD2JewelBlueF,
 			MinimumLevel = 0,
-			ImplicitTypes = []
 		},
 
 		new SupportGemData {
-			BaseName = "Support Gem",
 			SkillTags = ESkillTags.Projectile,
 			SupportType = typeof(SPierce),
-			ItemSpecifierFlags = EItemBaseSpecifierFlags.NONE,
 			Texture = UILib.TextureItemD2JewelGreenF,
 			MinimumLevel = 0,
-			ImplicitTypes = []
+		},
+
+		new SupportGemData {
+			SkillTags = ESkillTags.Duration,
+			SupportType = typeof(SIncreasedDuration),
+			Texture = UILib.TextureItemD2JewelWhiteF,
+			MinimumLevel = 0,
+		},
+
+		new SupportGemData {
+			SkillTags = ESkillTags.Duration,
+			SupportType = typeof(SLessDuration),
+			Texture = UILib.TextureItemD2JewelWhiteF,
+			MinimumLevel = 0,
 		},
 	];
 }

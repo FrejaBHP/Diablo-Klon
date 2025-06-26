@@ -3,7 +3,7 @@ using System;
 
 public partial class TestEnemy2 : EnemyBase {
     public TestEnemy2() {
-		BasicStats.BaseLife = 10;
+		BasicStats.BaseLife = 12;
 		BasicStats.BaseMana = 0;
 		RefreshLifeMana();
 
