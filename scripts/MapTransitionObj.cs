@@ -49,10 +49,10 @@ public partial class MapTransitionObj : Area3D {
         Player player = (Player)body;
         if (player.TargetedNode == this) {
             if (GoesToTown) {
-                Game.Instance.LoadAndSetMapToTown();
+                Run.Instance.LoadAndSetMapToTown();
             }
             else if (SceneToTransitionTo != null) {
-                Game.Instance.ChangeMap(SceneToTransitionTo);
+                Run.Instance.ChangeMap(SceneToTransitionTo);
             }
             else {
                 GD.PrintErr("Cannot transition to new map: Map Scene field is null");

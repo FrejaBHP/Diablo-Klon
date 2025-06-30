@@ -7,10 +7,17 @@ public enum EMovementInputMethod {
 }
 
 
+public enum EMapType {
+	Town,
+	Intermission,
+	Objective,
+	Miniboss,
+	Boss
+}
+
 public enum EMapObjective {
 	None,
-	Survival,
-	Shop
+	Survival
 }
 
 public enum EEnemyType {

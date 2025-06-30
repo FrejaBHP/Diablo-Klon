@@ -43,10 +43,10 @@ public partial class GameSettings : Node {
 
     // Currently unused
     public void ApplyPlayerSettings() { 
-        Game.Instance.PlayerActor.PlayerHUD.PlayerLowerHUD.AlwaysShowLifeManaValues = alwaysShowPlayerLifeAndManaValues;
+        Run.Instance.PlayerActor.PlayerHUD.PlayerLowerHUD.AlwaysShowLifeManaValues = alwaysShowPlayerLifeAndManaValues;
     }
 
     protected static void ShowLifeManaValuesChanged(bool state) {
-        Game.Instance.PlayerActor.PlayerHUD.PlayerLowerHUD.AlwaysShowLifeManaValues = state;
+        Run.Instance.PlayerActor.PlayerHUD.PlayerLowerHUD.AlwaysShowLifeManaValues = state;
     }
 }

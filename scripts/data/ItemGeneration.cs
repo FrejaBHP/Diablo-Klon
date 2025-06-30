@@ -9,10 +9,13 @@ public static class ItemGeneration {
 	private static readonly int rareMaxPrefixes = 3;
 	private static readonly int rareMaxSuffixes = 3;
 
-	private const int minLevel = 0; // placeholder
-
-	public static Item GenerateItemFromCategory(EItemCategory category, EItemRarity rarity = EItemRarity.None) {
+	public static Item GenerateItemFromCategory(EItemCategory category, int itemLevel = -1, EItemRarity rarity = EItemRarity.None) {
 		Item item;
+
+		if (itemLevel == -1) {
+			itemLevel = Run.Instance.AreaLevel;
+		}
+
 		if (rarity == EItemRarity.None) {
 			rarity = CalculateRarity();
 		}
@@ -25,22 +28,23 @@ public static class ItemGeneration {
 		switch (category) {
 			case EItemCategory.Weapon:
 				EItemWeaponBaseType weaponType = (EItemWeaponBaseType)Utilities.RNG.Next((int)EItemWeaponBaseType.COUNT);
-				item = GenerateWeaponItem(weaponType);
+				item = GenerateWeaponItem(weaponType, itemLevel);
 				break;
 
 			case EItemCategory.Armour:
 				EItemArmourBaseType armourType = (EItemArmourBaseType)Utilities.RNG.Next((int)EItemArmourBaseType.COUNT);
-				item = GenerateArmourItem(armourType);
+				item = GenerateArmourItem(armourType, itemLevel);
 				break;
 			
 			//case EItemCategory.Jewellery:
 			default:
 				EItemJewelleryBaseType jewelleryType = (EItemJewelleryBaseType)Utilities.RNG.Next((int)EItemJewelleryBaseType.COUNT);
-				item = GenerateJewelleryItem(jewelleryType);
+				item = GenerateJewelleryItem(jewelleryType, itemLevel);
 				break;
 		}
 
 		ApplyRarityAndAffixes(item, rarity);
+
 		return item;
 	}
 
@@ -55,15 +59,15 @@ public static class ItemGeneration {
 	private static EItemRarity CalculateRarity() {
 		WeightedList<EItemRarity> rarityList = new([
 			new WeightedListItem<EItemRarity>(EItemRarity.Common, 0),
-			new WeightedListItem<EItemRarity>(EItemRarity.Magic, 50),
-			new WeightedListItem<EItemRarity>(EItemRarity.Rare, 50),
+			new WeightedListItem<EItemRarity>(EItemRarity.Magic, 75),
+			new WeightedListItem<EItemRarity>(EItemRarity.Rare, 25),
 			new WeightedListItem<EItemRarity>(EItemRarity.Unique, 0),
 		], Utilities.RNG);
 
 		return rarityList.GetRandomItem();
 	}
 
-	private static WeaponItem GenerateWeaponItem(EItemWeaponBaseType weaponType) {
+	private static WeaponItem GenerateWeaponItem(EItemWeaponBaseType weaponType, int itemLevel) {
 		WeaponItem weaponItem;
 		WeaponItemData data;
 
@@ -72,7 +76,7 @@ public static class ItemGeneration {
 		switch (weaponType) {
 			case EItemWeaponBaseType.WeaponMelee1H:
 				weaponItem = new OneHandedSwordItem();
-				legalWeaponData = ItemDataTables.OHSwordWeaponData.Where(i => i.MinimumLevel >= minLevel).ToList();
+				legalWeaponData = ItemDataTables.OHSwordWeaponData.Where(i => i.MinimumLevel <= itemLevel).ToList();
 				data = legalWeaponData[Utilities.RNG.Next(legalWeaponData.Count)];
 				break;
 
@@ -82,13 +86,13 @@ public static class ItemGeneration {
 				switch (meleeType) {
 					case 0:
 						weaponItem = new TwoHandedSwordItem();
-						legalWeaponData = ItemDataTables.THSwordWeaponData.Where(i => i.MinimumLevel >= minLevel).ToList();
+						legalWeaponData = ItemDataTables.THSwordWeaponData.Where(i => i.MinimumLevel <= itemLevel).ToList();
 						data = legalWeaponData[Utilities.RNG.Next(legalWeaponData.Count)];
 						break;
 					
 					default:
 						weaponItem = new StaffItem();
-						legalWeaponData = ItemDataTables.StaffWeaponData.Where(i => i.MinimumLevel >= minLevel).ToList();
+						legalWeaponData = ItemDataTables.StaffWeaponData.Where(i => i.MinimumLevel <= itemLevel).ToList();
 						data = legalWeaponData[Utilities.RNG.Next(legalWeaponData.Count)];
 						break;
 				}
@@ -97,11 +101,12 @@ public static class ItemGeneration {
 			// case EItemWeaponBaseType.WeaponRanged1H & 2H:
 			default:
 				weaponItem = new BowItem();
-				legalWeaponData = ItemDataTables.BowWeaponData.Where(i => i.MinimumLevel >= minLevel).ToList();
+				legalWeaponData = ItemDataTables.BowWeaponData.Where(i => i.MinimumLevel <= itemLevel).ToList();
 				data = legalWeaponData[Utilities.RNG.Next(legalWeaponData.Count)];
 				break;
 		}
 
+		weaponItem.ItemLevel = itemLevel;
 		weaponItem.AddImplicits(data.ImplicitTypes);
 		ApplyWeaponBaseStats(weaponItem, data);
 
@@ -112,7 +117,7 @@ public static class ItemGeneration {
 		return weaponItem;
 	}
 
-	private static ArmourItem GenerateArmourItem(EItemArmourBaseType armourType) {
+	private static ArmourItem GenerateArmourItem(EItemArmourBaseType armourType, int itemLevel) {
 		ArmourItem armourItem;
 		ArmourItemData data;
 
@@ -121,25 +126,25 @@ public static class ItemGeneration {
 		switch (armourType) {
 			case EItemArmourBaseType.Helmet:
 				armourItem = new HeadItem();
-				legalArmourData = ItemDataTables.HeadArmourData.Where(i => i.MinimumLevel >= minLevel).ToList();
+				legalArmourData = ItemDataTables.HeadArmourData.Where(i => i.MinimumLevel <= itemLevel).ToList();
 				data = legalArmourData[Utilities.RNG.Next(legalArmourData.Count)];
 				break;
 			
 			case EItemArmourBaseType.Chestplate:
 				armourItem = new ChestItem();
-				legalArmourData = ItemDataTables.ChestArmourData.Where(i => i.MinimumLevel >= minLevel).ToList();
+				legalArmourData = ItemDataTables.ChestArmourData.Where(i => i.MinimumLevel <= itemLevel).ToList();
 				data = legalArmourData[Utilities.RNG.Next(legalArmourData.Count)];
 				break;
 
 			case EItemArmourBaseType.Gloves:
 				armourItem = new HandsItem();
-				legalArmourData = ItemDataTables.HandsArmourData.Where(i => i.MinimumLevel >= minLevel).ToList();
+				legalArmourData = ItemDataTables.HandsArmourData.Where(i => i.MinimumLevel <= itemLevel).ToList();
 				data = legalArmourData[Utilities.RNG.Next(legalArmourData.Count)];
 				break;
 
 			case EItemArmourBaseType.Boots:
 				armourItem = new FeetItem();
-				legalArmourData = ItemDataTables.FeetArmourData.Where(i => i.MinimumLevel >= minLevel).ToList();
+				legalArmourData = ItemDataTables.FeetArmourData.Where(i => i.MinimumLevel <= itemLevel).ToList();
 				data = legalArmourData[Utilities.RNG.Next(legalArmourData.Count)];
 				break;
 
@@ -149,13 +154,14 @@ public static class ItemGeneration {
 				switch (shieldType) {
 					default:
 						armourItem = new SmallShieldItem();
-						legalArmourData = ItemDataTables.SmallShieldArmourData.Where(i => i.MinimumLevel >= minLevel).ToList();
+						legalArmourData = ItemDataTables.SmallShieldArmourData.Where(i => i.MinimumLevel <= itemLevel).ToList();
 						data = legalArmourData[Utilities.RNG.Next(legalArmourData.Count)];
 						break;
 				}
 				break;
 		}
 
+		armourItem.ItemLevel = itemLevel;
 		armourItem.AddImplicits(data.ImplicitTypes);
 		ApplyArmourBaseStats(armourItem, data);
 
@@ -166,7 +172,7 @@ public static class ItemGeneration {
 		return armourItem;
 	}
 
-	private static JewelleryItem GenerateJewelleryItem(EItemJewelleryBaseType jewelleryType) {
+	private static JewelleryItem GenerateJewelleryItem(EItemJewelleryBaseType jewelleryType, int itemLevel) {
 		JewelleryItem jewelleryItem;
 		ItemData data;
 
@@ -175,29 +181,30 @@ public static class ItemGeneration {
 		switch (jewelleryType) {
 			case EItemJewelleryBaseType.Amulet:
 				jewelleryItem = new AmuletItem();
-				legalJewelleryData = ItemDataTables.AmuletJewelleryData.Where(i => i.MinimumLevel >= minLevel).ToList();
+				legalJewelleryData = ItemDataTables.AmuletJewelleryData.Where(i => i.MinimumLevel <= itemLevel).ToList();
 				data = legalJewelleryData[Utilities.RNG.Next(legalJewelleryData.Count)];
 				break;
 
 			case EItemJewelleryBaseType.Ring:
 				jewelleryItem = new RingItem();
-				legalJewelleryData = ItemDataTables.RingJewelleryData.Where(i => i.MinimumLevel >= minLevel).ToList();
+				legalJewelleryData = ItemDataTables.RingJewelleryData.Where(i => i.MinimumLevel <= itemLevel).ToList();
 				data = legalJewelleryData[Utilities.RNG.Next(legalJewelleryData.Count)];
 				break;
 
 			case EItemJewelleryBaseType.Belt:
 				jewelleryItem = new BeltItem();
-				legalJewelleryData = ItemDataTables.BeltJewelleryData.Where(i => i.MinimumLevel >= minLevel).ToList();
+				legalJewelleryData = ItemDataTables.BeltJewelleryData.Where(i => i.MinimumLevel <= itemLevel).ToList();
 				data = legalJewelleryData[Utilities.RNG.Next(legalJewelleryData.Count)];
 				break;
 
 			default:
 				jewelleryItem = new QuiverItem();
-				legalJewelleryData = ItemDataTables.QuiverJewelleryData.Where(i => i.MinimumLevel >= minLevel).ToList();
+				legalJewelleryData = ItemDataTables.QuiverJewelleryData.Where(i => i.MinimumLevel <= itemLevel).ToList();
 				data = legalJewelleryData[Utilities.RNG.Next(legalJewelleryData.Count)];
 				break;
 		}
 
+		jewelleryItem.ItemLevel = itemLevel;
 		jewelleryItem.AddImplicits(data.ImplicitTypes);
 		ApplyJewelleryBaseStats(jewelleryItem, data);
 
@@ -308,6 +315,8 @@ public static class ItemGeneration {
 
 		// Lav om senere, så denne gøres, når et skill gem samles op, og ikke allerede har et allokeret skill
 		Skill newSkill = (Skill)Activator.CreateInstance(item.SkillType);
+		newSkill.Level = Run.Instance.GemLevel;
+
 		item.SkillReference = newSkill;
 
 		item.ItemName = item.SkillReference.Name;
@@ -333,6 +342,8 @@ public static class ItemGeneration {
 				item.SkillType = data.SkillType;
 
 				Skill newSkill = (Skill)Activator.CreateInstance(item.SkillType);
+				newSkill.Level = Run.Instance.GemLevel;
+
 				item.SkillReference = newSkill;
 
 				item.ItemName = item.SkillReference.Name;
@@ -358,6 +369,8 @@ public static class ItemGeneration {
 		item.ItemBase = data.BaseName;
 		item.ItemTexture = data.Texture;
 
+		item.Level = Run.Instance.GemLevel;
+
 		return item;
 	}
 
@@ -376,6 +389,8 @@ public static class ItemGeneration {
 				item.ItemRarity = EItemRarity.Skill;
 				item.ItemBase = data.BaseName;
 				item.ItemTexture = data.Texture;
+
+				item.Level = Run.Instance.GemLevel;
 
 				generatedSupportGems.Add(item);
 

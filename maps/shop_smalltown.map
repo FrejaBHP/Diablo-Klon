@@ -4,7 +4,7 @@
 {
 "wad" ""
 "classname" "worldspawn"
-"_tb_textures" "textures;textures/editor;textures/world;textures/world/town"
+"_tb_textures" "textures/editor;textures/world;textures/world/town"
 }
 // entity 1
 {
@@ -24,19 +24,6 @@
 "classname" "func_worldgeo"
 // brush 0
 {
-( 128 656 -16 ) ( 128 656 0 ) ( 128 512 0 ) editor/skip 0 0 0 1 1
-( 128 512 0 ) ( 512 512 0 ) ( 512 512 -16 ) editor/skip 128 0 180 1 -1
-( 512 656 -16 ) ( 128 656 -16 ) ( 128 512 -16 ) editor/skip 0 -128 90 1 1
-( 128 512 0 ) ( 128 656 0 ) ( 512 656 0 ) world/town/grass 0 0 90 1 1
-( 512 656 0 ) ( 128 656 0 ) ( 128 656 -16 ) editor/skip 128 0 180 1 -1
-( 512 512 0 ) ( 512 656 0 ) ( 512 656 -16 ) editor/skip 0 0 0 1 1
-}
-}
-// entity 3
-{
-"classname" "func_worldgeo"
-// brush 0
-{
 ( 384 768 -16 ) ( 384 768 0 ) ( 384 656 0 ) editor/skip 0 0 0 1 1
 ( 384 656 0 ) ( 512 656 0 ) ( 512 656 -16 ) editor/skip 128 0 180 1 -1
 ( 512 768 -16 ) ( 384 768 -16 ) ( 384 656 -16 ) editor/skip 0 -128 90 1 1
@@ -45,20 +32,7 @@
 ( 512 656 0 ) ( 512 768 0 ) ( 512 768 -16 ) editor/skip 0 0 0 1 1
 }
 }
-// entity 4
-{
-"classname" "func_worldgeo"
-// brush 0
-{
-( 128 1088 -16 ) ( 128 1088 0 ) ( 128 1008 0 ) editor/skip 0 0 0 1 1
-( 128 1008 0 ) ( 384 1008 0 ) ( 384 1008 -16 ) editor/skip 128 0 180 1 -1
-( 384 1088 -16 ) ( 128 1088 -16 ) ( 128 1008 -16 ) editor/skip 0 -128 90 1 1
-( 128 1008 0 ) ( 128 1088 0 ) ( 384 1088 0 ) world/town/grass 0 0 90 1 1
-( 384 1088 0 ) ( 128 1088 0 ) ( 128 1088 -16 ) editor/skip 128 0 180 1 -1
-( 384 1008 0 ) ( 384 1088 0 ) ( 384 1088 -16 ) editor/skip 0 0 0 1 1
-}
-}
-// entity 5
+// entity 3
 {
 "classname" "func_worldgeo"
 // brush 0
@@ -71,7 +45,7 @@
 ( 576 768 0 ) ( 576 832 0 ) ( 576 832 -16 ) editor/skip 0 0 0 1 1
 }
 }
-// entity 6
+// entity 4
 {
 "classname" "func_worldgeo"
 // brush 0
@@ -84,7 +58,7 @@
 ( 576 832 0 ) ( 576 1088 0 ) ( 576 1088 -16 ) editor/skip 0 0 0 1 1
 }
 }
-// entity 7
+// entity 5
 {
 "classname" "func_worldgeo"
 // brush 0
@@ -97,7 +71,7 @@
 ( 1152 512 0 ) ( 1152 1088 0 ) ( 1152 1088 -16 ) editor/skip 0 0 0 1 1
 }
 }
-// entity 8
+// entity 6
 {
 "classname" "func_worldgeo"
 // brush 0
@@ -110,7 +84,7 @@
 ( 1152 448 0 ) ( 1152 512 0 ) ( 1152 512 -16 ) editor/skip 0 0 0 1 1
 }
 }
-// entity 9
+// entity 7
 {
 "classname" "func_worldgeo"
 // brush 0
@@ -123,7 +97,7 @@
 ( 672 256 0 ) ( 672 448 0 ) ( 672 448 -16 ) editor/skip 0 0 0 1 1
 }
 }
-// entity 10
+// entity 8
 {
 "classname" "func_worldgeo"
 // brush 0
@@ -136,7 +110,7 @@
 ( 464 0 0 ) ( 464 256 0 ) ( 464 256 -16 ) editor/skip 0 0 0 1 1
 }
 }
-// entity 11
+// entity 9
 {
 "classname" "func_worldgeo"
 // brush 0
@@ -149,7 +123,7 @@
 ( 1152 256 0 ) ( 1152 448 0 ) ( 1152 448 -16 ) editor/skip 0 0 0 1 1
 }
 }
-// entity 12
+// entity 10
 {
 "classname" "func_worldgeo"
 // brush 0
@@ -162,7 +136,7 @@
 ( 1152 0 0 ) ( 1152 256 0 ) ( 1152 256 -16 ) editor/skip 0 0 0 1 1
 }
 }
-// entity 13
+// entity 11
 {
 "classname" "func_worldgeo"
 // brush 0
@@ -175,7 +149,7 @@
 ( 736 256 0 ) ( 736 448 0 ) ( 736 448 -16 ) editor/skip 0 0 0 1 1
 }
 }
-// entity 14
+// entity 12
 {
 "classname" "func_worldgeo"
 // brush 0
@@ -188,7 +162,7 @@
 ( 576 512 0 ) ( 576 768 0 ) ( 576 768 -16 ) editor/skip 0 0 0 1 1
 }
 }
-// entity 15
+// entity 13
 {
 "classname" "func_geo"
 // brush 0
@@ -222,7 +196,7 @@
 ( 384 656 88 ) ( 384 1008 88 ) ( 384 1008 -32 ) world/brick_grey 104 -32 0 1 1
 }
 }
-// entity 16
+// entity 14
 {
 "classname" "func_geo"
 // brush 0
@@ -254,5 +228,208 @@
 ( 832 128 160 ) ( 448 128 160 ) ( 448 0 96 ) world/thatch_brightened 0 0 180 1 1
 ( 832 128 176 ) ( 448 128 176 ) ( 448 128 160 ) editor/skip 128 -32 180 1 -1
 ( 832 -16 112 ) ( 832 128 176 ) ( 832 128 160 ) world/thatch_brightened -27.712814 -16 300 1 1
+}
+}
+// entity 15
+{
+"classname" "func_worldgeo"
+// brush 0
+{
+( 128 1088 -16 ) ( 128 1088 0 ) ( 128 1008 0 ) editor/skip 0 0 0 1 1
+( 128 1008 0 ) ( 384 1008 0 ) ( 384 1008 -16 ) editor/skip 128 0 180 1 -1
+( 384 1088 -16 ) ( 128 1088 -16 ) ( 128 1008 -16 ) editor/skip 0 -128 90 1 1
+( 128 1008 0 ) ( 128 1088 0 ) ( 384 1088 0 ) world/town/grass 0 0 90 1 1
+( 384 1088 0 ) ( 128 1088 0 ) ( 128 1088 -16 ) editor/skip 128 0 180 1 -1
+( 384 1008 0 ) ( 384 1088 0 ) ( 384 1088 -16 ) editor/skip 0 0 0 1 1
+}
+}
+// entity 16
+{
+"classname" "func_worldgeo"
+// brush 0
+{
+( 128 656 -16 ) ( 128 656 0 ) ( 128 512 0 ) editor/skip 0 0 0 1 1
+( 128 512 0 ) ( 512 512 0 ) ( 512 512 -16 ) editor/skip 128 0 180 1 -1
+( 512 656 -16 ) ( 128 656 -16 ) ( 128 512 -16 ) editor/skip 0 -128 90 1 1
+( 128 512 0 ) ( 128 656 0 ) ( 512 656 0 ) world/town/grass 0 0 90 1 1
+( 512 656 0 ) ( 128 656 0 ) ( 128 656 -16 ) editor/skip 128 0 180 1 -1
+( 512 512 0 ) ( 512 656 0 ) ( 512 656 -16 ) editor/skip 0 0 0 1 1
+}
+}
+// entity 17
+{
+"classname" "func_geo"
+// brush 0
+{
+( 1128 840 48 ) ( 1128 841 48 ) ( 1128 840 49 ) world/thatch_brightened -24 0 0 1 1
+( 1136 560 32 ) ( 1135 560 32 ) ( 1136 560 33 ) world/thatch_brightened 0 0 180 1 -1
+( 1136 728 32 ) ( 1136 729 32 ) ( 1135 728 32 ) world/thatch_brightened -24 0 90 1 1
+( 1120 840 40 ) ( 1119 840 40 ) ( 1120 841 40 ) world/thatch_brightened -24 0 90 1 1
+( 1120 1072 48 ) ( 1120 1072 49 ) ( 1119 1072 48 ) world/thatch_brightened 0 0 180 1 -1
+( 1136 728 32 ) ( 1136 728 33 ) ( 1136 729 32 ) world/thatch_brightened -24 0 0 1 1
+}
+// brush 1
+{
+( 1128 840 32 ) ( 1128 841 32 ) ( 1128 840 33 ) world/thatch_brightened -24 -16 0 1 1
+( 1136 560 16 ) ( 1135 560 16 ) ( 1136 560 17 ) world/thatch_brightened 0 -16 180 1 -1
+( 1136 728 16 ) ( 1136 729 16 ) ( 1135 728 16 ) world/thatch_brightened -24 0 90 1 1
+( 1120 840 24 ) ( 1119 840 24 ) ( 1120 841 24 ) world/thatch_brightened -24 0 90 1 1
+( 1120 1072 32 ) ( 1120 1072 33 ) ( 1119 1072 32 ) world/thatch_brightened 0 -16 180 1 -1
+( 1136 728 16 ) ( 1136 728 17 ) ( 1136 729 16 ) world/thatch_brightened -24 -16 0 1 1
+}
+// brush 2
+{
+( 1136 688 16 ) ( 1136 689 16 ) ( 1136 688 17 ) world/thatch_brightened 16 0 0 1 1
+( 1152 656 0 ) ( 1151 656 0 ) ( 1152 656 1 ) world/thatch_brightened 0 0 180 1 -1
+( 1152 656 0 ) ( 1152 657 0 ) ( 1151 656 0 ) editor/skip 16 0 90 1 1
+( 1136 688 48 ) ( 1135 688 48 ) ( 1136 689 48 ) world/thatch_brightened 16 0 90 1 1
+( 1136 672 16 ) ( 1136 672 17 ) ( 1135 672 16 ) world/thatch_brightened 0 0 180 1 -1
+( 1152 656 0 ) ( 1152 656 1 ) ( 1152 657 0 ) world/thatch_brightened 16 0 0 1 1
+}
+// brush 3
+{
+( 1136 872 16 ) ( 1136 873 16 ) ( 1136 872 17 ) world/thatch_brightened 8 0 0 1 1
+( 1168 816 0 ) ( 1167 816 0 ) ( 1168 816 1 ) world/thatch_brightened -16 0 180 1 -1
+( 1168 808 0 ) ( 1168 809 0 ) ( 1167 808 0 ) editor/skip 8 16 90 1 1
+( 1136 872 48 ) ( 1135 872 48 ) ( 1136 873 48 ) world/thatch_brightened 8 16 90 1 1
+( 1136 832 16 ) ( 1136 832 17 ) ( 1135 832 16 ) world/thatch_brightened -16 0 180 1 -1
+( 1152 808 0 ) ( 1152 808 1 ) ( 1152 809 0 ) world/thatch_brightened 8 0 0 1 1
+}
+// brush 4
+{
+( 1136 1024 16 ) ( 1136 1025 16 ) ( 1136 1024 17 ) world/thatch_brightened -16 0 0 1 1
+( 1168 976 0 ) ( 1167 976 0 ) ( 1168 976 1 ) world/thatch_brightened -16 0 180 1 -1
+( 1168 960 0 ) ( 1168 961 0 ) ( 1167 960 0 ) editor/skip -16 16 90 1 1
+( 1136 1024 48 ) ( 1135 1024 48 ) ( 1136 1025 48 ) world/thatch_brightened -16 16 90 1 1
+( 1136 992 16 ) ( 1136 992 17 ) ( 1135 992 16 ) world/thatch_brightened -16 0 180 1 -1
+( 1152 960 0 ) ( 1152 960 1 ) ( 1152 961 0 ) world/thatch_brightened -16 0 0 1 1
+}
+}
+// entity 18
+{
+"classname" "func_geo"
+// brush 0
+{
+( 1120 528 0 ) ( 1120 529 0 ) ( 1120 528 1 ) world/town/stonepath 0 0 0 1 1
+( 1112 528 0 ) ( 1112 528 1 ) ( 1113 528 0 ) world/town/stonepath 0 0 0 1 1
+( 1112 528 0 ) ( 1113 528 0 ) ( 1112 529 0 ) editor/skip 0 0 0 1 1
+( 1152 560 96 ) ( 1152 561 96 ) ( 1153 560 96 ) editor/skip 0 0 0 1 1
+( 1152 552 8 ) ( 1153 552 8 ) ( 1152 552 9 ) world/town/stonepath 0 0 0 1 1
+( 1152 560 8 ) ( 1152 560 9 ) ( 1152 561 8 ) world/town/stonepath 0 0 0 1 1
+}
+// brush 1
+{
+( 1120 552 96 ) ( 1120 544 112 ) ( 1120 520 128 ) world/town/stonepath -8 0 0 1 1
+( 1152 408 96 ) ( 1120 408 96 ) ( 1120 416 112 ) world/town/stonepath 0 0 0 1 1
+( 1120 440 128 ) ( 1152 440 128 ) ( 1152 416 112 ) world/town/stonepath 0 16 0 1 1
+( 1120 464 136 ) ( 1152 464 136 ) ( 1152 440 128 ) world/town/stonepath 0 16 0 1 1
+( 1152 408 96 ) ( 1152 552 96 ) ( 1120 552 96 ) world/town/stonepath 0 8 0 1 1
+( 1120 496 136 ) ( 1152 496 136 ) ( 1152 464 136 ) world/town/stonepath -4.799988 11.200012 0 1 1
+( 1120 520 128 ) ( 1152 520 128 ) ( 1152 496 136 ) world/town/stonepath 0 18.177002 0 1 1
+( 1120 544 112 ) ( 1152 544 112 ) ( 1152 520 128 ) world/town/stonepath 0 18.177002 0 1 1
+( 1120 552 96 ) ( 1152 552 96 ) ( 1152 544 112 ) world/town/stonepath 0 0 0 1 1
+( 1152 544 112 ) ( 1152 552 96 ) ( 1152 408 96 ) world/town/stonepath -8 0 0 1 1
+}
+// brush 2
+{
+( 1120 400 0 ) ( 1120 401 0 ) ( 1120 400 1 ) world/town/stonepath 0 0 0 1 1
+( 1112 408 0 ) ( 1112 408 1 ) ( 1113 408 0 ) world/town/stonepath 0 0 0 1 1
+( 1112 400 0 ) ( 1113 400 0 ) ( 1112 401 0 ) editor/skip 0 0 0 1 1
+( 1152 432 96 ) ( 1152 433 96 ) ( 1153 432 96 ) editor/skip 0 0 0 1 1
+( 1152 432 8 ) ( 1153 432 8 ) ( 1152 432 9 ) world/town/stonepath 0 0 0 1 1
+( 1152 432 8 ) ( 1152 432 9 ) ( 1152 433 8 ) world/town/stonepath 0 0 0 1 1
+}
+}
+// entity 19
+{
+"classname" "func_geo"
+// brush 0
+{
+( 1136 352 16 ) ( 1136 353 16 ) ( 1136 352 17 ) world/thatch_brightened 16 0 0 1 1
+( 1168 304 0 ) ( 1167 304 0 ) ( 1168 304 1 ) world/thatch_brightened -16 0 180 1 -1
+( 1168 288 0 ) ( 1168 289 0 ) ( 1167 288 0 ) editor/skip 16 16 90 1 1
+( 1136 352 48 ) ( 1135 352 48 ) ( 1136 353 48 ) world/thatch_brightened 16 16 90 1 1
+( 1136 320 16 ) ( 1136 320 17 ) ( 1135 320 16 ) world/thatch_brightened -16 0 180 1 -1
+( 1152 288 0 ) ( 1152 288 1 ) ( 1152 289 0 ) world/thatch_brightened 16 0 0 1 1
+}
+// brush 1
+{
+( 1128 240 48 ) ( 1128 241 48 ) ( 1128 240 49 ) world/thatch_brightened 0 0 0 1 1
+( 1136 32 32 ) ( 1135 32 32 ) ( 1136 32 33 ) world/thatch_brightened 0 0 180 1 -1
+( 1136 128 32 ) ( 1136 129 32 ) ( 1135 128 32 ) world/thatch_brightened 0 0 90 1 1
+( 1120 240 40 ) ( 1119 240 40 ) ( 1120 241 40 ) world/thatch_brightened 0 0 90 1 1
+( 1120 400 48 ) ( 1120 400 49 ) ( 1119 400 48 ) world/thatch_brightened 0 0 180 1 -1
+( 1136 128 32 ) ( 1136 128 33 ) ( 1136 129 32 ) world/thatch_brightened 0 0 0 1 1
+}
+// brush 2
+{
+( 1128 240 32 ) ( 1128 241 32 ) ( 1128 240 33 ) world/thatch_brightened 0 -16 0 1 1
+( 1136 32 16 ) ( 1135 32 16 ) ( 1136 32 17 ) world/thatch_brightened 0 -16 180 1 -1
+( 1136 128 16 ) ( 1136 129 16 ) ( 1135 128 16 ) world/thatch_brightened 0 0 90 1 1
+( 1120 240 24 ) ( 1119 240 24 ) ( 1120 241 24 ) world/thatch_brightened 0 0 90 1 1
+( 1120 400 32 ) ( 1120 400 33 ) ( 1119 400 32 ) world/thatch_brightened 0 -16 180 1 -1
+( 1136 128 16 ) ( 1136 128 17 ) ( 1136 129 16 ) world/thatch_brightened 0 -16 0 1 1
+}
+// brush 3
+{
+( 1136 144 16 ) ( 1136 145 16 ) ( 1136 144 17 ) world/thatch_brightened -16 0 0 1 1
+( 1152 112 0 ) ( 1151 112 0 ) ( 1152 112 1 ) world/thatch_brightened 0 0 180 1 -1
+( 1152 112 0 ) ( 1152 113 0 ) ( 1151 112 0 ) editor/skip -16 0 90 1 1
+( 1136 144 48 ) ( 1135 144 48 ) ( 1136 145 48 ) world/thatch_brightened -16 0 90 1 1
+( 1136 128 16 ) ( 1136 128 17 ) ( 1135 128 16 ) world/thatch_brightened 0 0 180 1 -1
+( 1152 112 0 ) ( 1152 112 1 ) ( 1152 113 0 ) world/thatch_brightened -16 0 0 1 1
+}
+}
+// entity 20
+{
+"classname" "func_geo"
+// brush 0
+{
+( 832 16 32 ) ( 832 17 32 ) ( 832 16 33 ) world/thatch_brightened 0 0 0 1 1
+( 928 16 32 ) ( 928 16 33 ) ( 929 16 32 ) world/thatch_brightened 0 0 0 1 1
+( 928 16 32 ) ( 929 16 32 ) ( 928 17 32 ) world/thatch_brightened 0 0 0 1 1
+( 1040 32 40 ) ( 1040 33 40 ) ( 1041 32 40 ) world/thatch_brightened 0 0 0 1 1
+( 1040 24 48 ) ( 1041 24 48 ) ( 1040 24 49 ) world/thatch_brightened 0 0 0 1 1
+( 1136 32 48 ) ( 1136 32 49 ) ( 1136 33 48 ) world/thatch_brightened 0 0 0 1 1
+}
+// brush 1
+{
+( 832 16 16 ) ( 832 17 16 ) ( 832 16 17 ) world/thatch_brightened 0 -16 0 1 1
+( 928 16 16 ) ( 928 16 17 ) ( 929 16 16 ) world/thatch_brightened 0 -16 0 1 1
+( 928 16 16 ) ( 929 16 16 ) ( 928 17 16 ) world/thatch_brightened 0 0 0 1 1
+( 1040 32 24 ) ( 1040 33 24 ) ( 1041 32 24 ) world/thatch_brightened 0 0 0 1 1
+( 1040 24 32 ) ( 1041 24 32 ) ( 1040 24 33 ) world/thatch_brightened 0 -16 0 1 1
+( 1136 32 32 ) ( 1136 32 33 ) ( 1136 33 32 ) world/thatch_brightened 0 -16 0 1 1
+}
+// brush 2
+{
+( 1056 -16 0 ) ( 1056 -15 0 ) ( 1056 -16 1 ) world/thatch_brightened -16 0 0 1 1
+( 1040 0 0 ) ( 1040 0 1 ) ( 1041 0 0 ) world/thatch_brightened 0 0 0 1 1
+( 1040 -16 0 ) ( 1041 -16 0 ) ( 1040 -15 0 ) editor/skip 0 16 0 1 1
+( 1104 16 48 ) ( 1104 17 48 ) ( 1105 16 48 ) world/thatch_brightened 0 16 0 1 1
+( 1104 16 16 ) ( 1105 16 16 ) ( 1104 16 17 ) world/thatch_brightened 0 0 0 1 1
+( 1072 16 16 ) ( 1072 16 17 ) ( 1072 17 16 ) world/thatch_brightened -16 0 0 1 1
+}
+// brush 3
+{
+( 896 0 0 ) ( 896 1 0 ) ( 896 0 1 ) world/thatch_brightened 0 0 0 1 1
+( 896 0 0 ) ( 896 0 1 ) ( 897 0 0 ) world/thatch_brightened 0 0 0 1 1
+( 896 0 0 ) ( 897 0 0 ) ( 896 1 0 ) editor/skip 0 0 0 1 1
+( 928 16 48 ) ( 928 17 48 ) ( 929 16 48 ) world/thatch_brightened 0 0 0 1 1
+( 928 16 16 ) ( 929 16 16 ) ( 928 16 17 ) world/thatch_brightened 0 0 0 1 1
+( 912 16 16 ) ( 912 16 17 ) ( 912 17 16 ) world/thatch_brightened 0 0 0 1 1
+}
+}
+// entity 21
+{
+"classname" "func_geo"
+// brush 0
+{
+( 1128 432 0 ) ( 1128 433 0 ) ( 1128 432 1 ) editor/clip 0 0 0 1 1
+( 1128 432 0 ) ( 1128 432 1 ) ( 1129 432 0 ) editor/clip 0 0 0 1 1
+( 1128 432 0 ) ( 1129 432 0 ) ( 1128 433 0 ) editor/clip 0 0 0 1 1
+( 1144 528 96 ) ( 1144 529 96 ) ( 1145 528 96 ) editor/clip 0 0 0 1 1
+( 1144 528 8 ) ( 1145 528 8 ) ( 1144 528 9 ) editor/clip 0 0 0 1 1
+( 1144 528 8 ) ( 1144 528 9 ) ( 1144 529 8 ) editor/clip 0 0 0 1 1
 }
 }

@@ -226,19 +226,19 @@ public partial class Player : Actor {
 			isSkillInput4Held = false;
 		}
 		else if (@event.IsActionPressed("DebugSpawnRandomItem")) { // NUM0
-			Game.Instance.GenerateRandomItemFromCategory(EItemCategory.None, GlobalPosition);
+			Run.Instance.GenerateRandomItemFromCategory(EItemCategory.None, GlobalPosition);
 		}
 		else if (@event.IsActionPressed("DebugSpawnRandomWeapon")) { // NUM1
-			Game.Instance.GenerateRandomItemFromCategory(EItemCategory.Weapon, GlobalPosition);
+			Run.Instance.GenerateRandomItemFromCategory(EItemCategory.Weapon, GlobalPosition);
 		}
 		else if (@event.IsActionPressed("DebugSpawnRandomArmour")) { // NUM2
-			Game.Instance.GenerateRandomItemFromCategory(EItemCategory.Armour, GlobalPosition);
+			Run.Instance.GenerateRandomItemFromCategory(EItemCategory.Armour, GlobalPosition);
 		}
 		else if (@event.IsActionPressed("DebugSpawnRandomJewellery")) { // NUM3
-			Game.Instance.GenerateRandomItemFromCategory(EItemCategory.Jewellery, GlobalPosition);
+			Run.Instance.GenerateRandomItemFromCategory(EItemCategory.Jewellery, GlobalPosition);
 		}
 		else if (@event.IsActionPressed("DebugSpawnSkillItem")) { // NUM4
-			Game.Instance.GenerateRandomSkillGem(GlobalPosition);
+			Run.Instance.GenerateRandomSkillGem(GlobalPosition);
 		}
 		else if (@event.IsActionPressed("DebugHalveLifeMana")) { // NUM5
 			Gold += 1000;
@@ -246,11 +246,16 @@ public partial class Player : Actor {
 			//BasicStats.CurrentMana /= 2;
 		}
 		else if (@event.IsActionPressed("DebugRemoveWorlditems")) { // NUM6
-			Game.Instance.RemoveAllWorldItems();
+			Run.Instance.RemoveAllWorldItems();
 		}
 		else if (@event.IsActionPressed("DebugSpawnEnemy")) { // NUM7
-			Game.Instance.GenerateRandomSupportGem(GlobalPosition);
-			//Game.Instance.Test();
+			Run.Instance.GenerateRandomSupportGem(GlobalPosition);
+		}
+		else if (@event.IsActionPressed("DebugIncGemLevel")) { // KP_ADD
+			Run.Instance.GemLevel++;
+		}
+		else if (@event.IsActionPressed("DebugDecGemLevel")) { // KP_MIN
+			Run.Instance.GemLevel--;
 		}
 		else if (@event.IsActionPressed("Pause")) { // ESC
 			GetTree().Paused = true;
@@ -276,7 +281,7 @@ public partial class Player : Actor {
 		Vector3 from = PlayerCamera.ProjectRayOrigin(GetViewport().GetMousePosition());
 		Vector3 to = from + PlayerCamera.ProjectRayNormal(GetViewport().GetMousePosition()) * RayLength;
 		PhysicsDirectSpaceState3D state = GetWorld3D().DirectSpaceState;
-		PhysicsRayQueryParameters3D query = PhysicsRayQueryParameters3D.Create(from, to, CollisionMask = 2); // 3 includes walls
+		PhysicsRayQueryParameters3D query = PhysicsRayQueryParameters3D.Create(from, to, 2); // 3 includes walls
 		Godot.Collections.Dictionary result = state.IntersectRay(query);
 			
 		if (result.Count > 0) {
@@ -290,7 +295,7 @@ public partial class Player : Actor {
 		Vector3 from = PlayerCamera.ProjectRayOrigin(mbe.GlobalPosition);
 		Vector3 to = from + PlayerCamera.ProjectRayNormal(mbe.GlobalPosition) * RayLength;
 		PhysicsDirectSpaceState3D state = GetWorld3D().DirectSpaceState;
-		PhysicsRayQueryParameters3D query = PhysicsRayQueryParameters3D.Create(from, to, CollisionMask = 0b00010010); // 2 + 16, floor + object
+		PhysicsRayQueryParameters3D query = PhysicsRayQueryParameters3D.Create(from, to, 0b00010010); // 2 + 16, floor + object
 		query.CollideWithAreas = true;
 		Godot.Collections.Dictionary result = state.IntersectRay(query);
 
@@ -447,8 +452,6 @@ public partial class Player : Actor {
 			if (!IsOnFloor()) {
 				DoGravity(delta);
 			}
-
-			MoveAndSlide();
 		}
 		
 		//debugLabel.Text = $"Velocity: {Velocity.ToString("F2")}\nVel Length: {Velocity.Length():F2}\nRem. Dist: {remainingDist:F2}\nRotation: {RotationDegrees.Y:F2}";
@@ -580,7 +583,7 @@ public partial class Player : Actor {
 	}
 
 	public void DropItemOnFloor(WorldItem worldItem) {
-		Game.Instance.DropItem(worldItem, GlobalPosition);
+		Run.Instance.DropItem(worldItem, GlobalPosition);
 	}
 
 	public void ApplyItemStats(EquipmentSlot slot, Item item) {

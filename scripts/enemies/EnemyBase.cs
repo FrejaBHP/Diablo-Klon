@@ -53,54 +53,43 @@ public partial class EnemyBase : Actor {
         CallDeferred(MethodName.NavSetup);
     }
 
-    public void NavSetup() {
-        navAgent.SetNavigationMap(GetWorld3D().NavigationMap);
-        
-        // Temp
-        SetActorTarget(Game.Instance.PlayerActor);
-    }
-
     public override void _PhysicsProcess(double delta) {
         
     }
 
-    public void ApplyAreaLevelScaling() {
-        ActorLevel = Game.Instance.CurrentMap.AreaLevel;
+    public void AddSkill(Skill skill) {
+		Skills.Add(skill);
+        skill.ActorOwner = this;
+        skill.RecalculateSkillValues();
+	}
 
-        double scaling = 1 * Math.Pow(Game.EnemyScalingFactor, ActorLevel - 1);
-        BasicStats.MoreLife *= scaling;
-        DamageMods.MoreMelee *= scaling;
-        DamageMods.MoreRanged *= scaling;
-        DamageMods.MoreSpell *= scaling;
+    public void SetRarity(EEnemyRarity rarity) {
+        enemyRarity = rarity;
+    }
+
+    public void ApplyAreaLevelScaling() {
+        ActorLevel = Run.Instance.CurrentMap.LocalAreaLevel;
+
+        double damageScaling = 1 * Math.Pow(Run.Instance.Rules.EnemyDamageScalingFactor, ActorLevel - 1);
+        BasicStats.MoreLife *= 1 * Math.Pow(Run.Instance.Rules.EnemyLifeScalingFactor, ActorLevel - 1);
+        DamageMods.MoreMelee *= damageScaling;
+        DamageMods.MoreRanged *= damageScaling;
+        DamageMods.MoreSpell *= damageScaling;
+    }
+
+    // ===== Navigation =====
+    #region Navigation
+    public void NavSetup() {
+        navAgent.SetNavigationMap(GetWorld3D().NavigationMap);
+        
+        // Temp
+        SetActorTarget(Run.Instance.PlayerActor);
     }
 
     public void OnNavigationUpdateTimeout() {
         if (isChasingTarget && actorTarget != null) {
             SetNavigationTarget(actorTarget.GlobalPosition);
         }
-    }
-
-    protected override void UpdateLifeDisplay(double newCurrentLife) {
-        if (fResBars != null) {
-            fResBars.SetLifePercentage(newCurrentLife / BasicStats.TotalLife);
-        }
-    }
-
-    protected override void UpdateManaDisplay(double newCurrentMana) {
-        if (fResBars != null && BasicStats.TotalMana != 0) {
-            fResBars.SetManaPercentage(newCurrentMana / BasicStats.TotalMana);
-        }
-    }
-
-    public virtual void OnSkillTimerTimeout() {
-        if (ActorState == EActorState.UsingSkill) {
-            ActorState = EActorState.Actionable;
-            currentlyUsedSkill = null;
-        }
-    }
-
-    public virtual void OnSkillUsePointTimerTimeout() {
-
     }
 
     public void SetActorTarget(Actor target) {
@@ -151,7 +140,33 @@ public partial class EnemyBase : Actor {
             }
         }
     }
+    #endregion
 
+    protected override void UpdateLifeDisplay(double newCurrentLife) {
+        if (fResBars != null) {
+            fResBars.SetLifePercentage(newCurrentLife / BasicStats.TotalLife);
+        }
+    }
+
+    protected override void UpdateManaDisplay(double newCurrentMana) {
+        if (fResBars != null && BasicStats.TotalMana != 0) {
+            fResBars.SetManaPercentage(newCurrentMana / BasicStats.TotalMana);
+        }
+    }
+
+    public virtual void OnSkillTimerTimeout() {
+        if (ActorState == EActorState.UsingSkill) {
+            ActorState = EActorState.Actionable;
+            currentlyUsedSkill = null;
+        }
+    }
+
+    public virtual void OnSkillUsePointTimerTimeout() {
+
+    }
+
+    // ===== Combat =====
+    #region Combat
     public override void OnDamageTaken(double damage, bool isCritical, bool createDamageText) {
         if (createDamageText) {
             ShowDamageText(damage, isCritical);
@@ -216,13 +231,13 @@ public partial class EnemyBase : Actor {
         while (chance >= 1) {
             chance -= 1;
             //Game.Instance.GenerateRandomItemFromCategory(EItemCategory.None, GlobalPosition);
-            Game.Instance.CurrentMap.AddItemToRewards(ItemGeneration.GenerateItemFromCategory(EItemCategory.None));
+            Run.Instance.CurrentMap.AddItemToRewards(ItemGeneration.GenerateItemFromCategory(EItemCategory.None));
             haveItemsDropped = true;
         }
 
         if (chance != 0 && chance >= Utilities.RNG.NextDouble()) {
             //Game.Instance.GenerateRandomItemFromCategory(EItemCategory.None, GlobalPosition);
-            Game.Instance.CurrentMap.AddItemToRewards(ItemGeneration.GenerateItemFromCategory(EItemCategory.None));
+            Run.Instance.CurrentMap.AddItemToRewards(ItemGeneration.GenerateItemFromCategory(EItemCategory.None));
             haveItemsDropped = true;
         }
         
@@ -234,11 +249,11 @@ public partial class EnemyBase : Actor {
 
         if (goldBounty > 0) {
             //Game.Instance.DropGold(goldBounty, GlobalPosition, true);
-            Game.Instance.CurrentMap.AddGoldToRewards(goldBounty, true);
+            Run.Instance.CurrentMap.AddGoldToRewards(goldBounty, true);
         }
 
         if (experienceBounty > 0) {
-            Game.Instance.AwardExperience(experienceBounty);
+            Run.Instance.AwardExperience(experienceBounty);
         }
 
         if (canDropItems) {
@@ -253,14 +268,5 @@ public partial class EnemyBase : Actor {
         ActorState = EActorState.Dying;
         Die();
     }
-
-    public void AddSkill(Skill skill) {
-		Skills.Add(skill);
-        skill.ActorOwner = this;
-        skill.RecalculateSkillValues();
-	}
-
-    public void SetRarity(EEnemyRarity rarity) {
-        enemyRarity = rarity;
-    }
+    #endregion
 }

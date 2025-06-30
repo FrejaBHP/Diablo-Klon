@@ -21,7 +21,7 @@ public partial class Gold : Area3D {
 
     public void OnBodyEntered(Node3D body) {
         if (body.IsInGroup("Player")) {
-            Game.Instance.PlayerActor.Gold += goldAmount;
+            Run.Instance.PlayerActor.Gold += goldAmount;
             QueueFree();
         }
     }

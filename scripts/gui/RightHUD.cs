@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Text;
 
 public partial class RightHUD : Control {
     public Label ProgressLabel { get; protected set; }
@@ -15,7 +16,13 @@ public partial class RightHUD : Control {
     }
 
     public void UpdateProgressLabel() {
-        ProgressLabel.Text = $"Act: {Game.Instance.CurrentAct}, Area: {Game.Instance.CurrentArea}\nArea Level: {Game.Instance.CurrentMap.AreaLevel}, Scaling: {1 * Math.Pow(Game.EnemyScalingFactor, Game.Instance.CurrentMap.AreaLevel - 1)}";
+        StringBuilder sb = new();
+        sb.Append($"Act: {Run.Instance.CurrentAct}, ");
+        sb.Append($"Area: {Run.Instance.CurrentArea}\n");
+        sb.Append($"Area Level: {Run.Instance.CurrentMap.LocalAreaLevel}\n");
+        sb.Append($"Scaling L/D: {1 * Math.Pow(Run.Instance.Rules.EnemyLifeScalingFactor, Run.Instance.CurrentMap.LocalAreaLevel - 1):P1}, ");
+        sb.Append($"{1 * Math.Pow(Run.Instance.Rules.EnemyDamageScalingFactor, Run.Instance.CurrentMap.LocalAreaLevel - 1):P1}");
+        ProgressLabel.Text = sb.ToString();
     }
 
     public void UpdateEnemyDebugLabel(double denMod, int spawnAmount) {

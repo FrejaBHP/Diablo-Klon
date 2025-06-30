@@ -48,13 +48,13 @@ public abstract class Skill {
         // Indsæt tjek for cooldowns når de bliver implementeret
 
         if (ActorOwner.IsInGroup("Player") && UsesMouseAim) {
-            Vector3 pos = Game.Instance.PlayerActor.CreateCameraRaycastAndGetPosition();
+            Vector3 pos = Run.Instance.PlayerActor.CreateCameraRaycastAndGetPosition();
 
             if (pos == Vector3.Zero) {
                 return false;
             }
 
-            SetMouseAimPosition(Game.Instance.PlayerActor.CreateCameraRaycastAndGetPosition());
+            SetMouseAimPosition(Run.Instance.PlayerActor.CreateCameraRaycastAndGetPosition());
         }
 
         if (this is IAttack attack) {

@@ -56,6 +56,7 @@ public partial class InventoryItem : PanelContainer {
 				}
 			}
 		}
+
 		if (@event.IsActionPressed("RightClick")) {
 			if (!IsClicked) {
 				PrintDebug();
@@ -68,13 +69,14 @@ public partial class InventoryItem : PanelContainer {
 		sb.Append($"Name: {ItemReference.ItemName}\n");
 		sb.Append($"Base: {ItemReference.ItemBase}\n");
 		sb.Append($"Rarity: {ItemReference.ItemRarity}\n");
+		sb.Append($"Item Level: {ItemReference.ItemLevel}\n");
 		sb.Append($"No of Prefixes: {ItemReference.Prefixes.Count}\n");
 		sb.Append($"No of Suffixes: {ItemReference.Suffixes.Count}");
 		GD.Print(sb.ToString());
 	}
 
 	public void OnMouseEntered() {
-		if (!Game.Instance.PlayerActor.PlayerHUD.PlayerInventory.IsAnItemSelected) {
+		if (!Run.Instance.PlayerActor.PlayerHUD.PlayerInventory.IsAnItemSelected) {
 			itemBackground.Color = UILib.ColorItemBackgroundHovered;
 			isHovered = true;
 
@@ -92,7 +94,7 @@ public partial class InventoryItem : PanelContainer {
 	}
 
 	public void OnMouseExited() {
-		if (!Game.Instance.PlayerActor.PlayerHUD.PlayerInventory.IsAnItemSelected) {
+		if (!Run.Instance.PlayerActor.PlayerHUD.PlayerInventory.IsAnItemSelected) {
 			itemBackground.Color = UILib.ColorItemBackground;
 			isHovered = false;
 			RemoveTooltip();
@@ -100,17 +102,17 @@ public partial class InventoryItem : PanelContainer {
 	}
 
 	public void SignalCreateEquipmentTooltip(Vector2 anchor, Rect2 rect, bool rightSide) {
-		Game.Instance.PlayerActor.PlayerHUD.CreateItemTooltip(GetCustomEquipmentTooltip(), anchor, rect, rightSide);
+		Run.Instance.PlayerActor.PlayerHUD.CreateItemTooltip(GetCustomEquipmentTooltip(), anchor, rect, rightSide);
 		hasActiveTooltip = true;
 	}
 
 	public void SignalCreateSkillItemTooltip(Vector2 anchor, Rect2 rect, bool rightSide) {
-		Game.Instance.PlayerActor.PlayerHUD.CreateItemTooltip(GetCustomSkillTooltip(), anchor, rect, rightSide);
+		Run.Instance.PlayerActor.PlayerHUD.CreateItemTooltip(GetCustomSkillTooltip(), anchor, rect, rightSide);
 		hasActiveTooltip = true;
 	}
 
 	public void SignalCreateSupportItemTooltip(Vector2 anchor, Rect2 rect, bool rightSide) {
-		Game.Instance.PlayerActor.PlayerHUD.CreateItemTooltip(GetCustomSupportTooltip(), anchor, rect, rightSide);
+		Run.Instance.PlayerActor.PlayerHUD.CreateItemTooltip(GetCustomSupportTooltip(), anchor, rect, rightSide);
 		hasActiveTooltip = true;
 	}
 
@@ -124,7 +126,7 @@ public partial class InventoryItem : PanelContainer {
 	}
 
 	public void RemoveTooltip() {
-		Game.Instance.PlayerActor.PlayerHUD.RemoveItemTooltip();
+		Run.Instance.PlayerActor.PlayerHUD.RemoveItemTooltip();
 		isHovered = false;
 		hasActiveTooltip = false;
 	}

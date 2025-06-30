@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://cbi1kt3l0wpen"]
 
-[ext_resource type="Script" uid="uid://enjq0rq2sn2t" path="res://scripts/gui/ItemTooltip.cs" id="1_53ehe"]
+[ext_resource type="Script" uid="uid://enjq0rq2sn2t" path="res://scripts/gui/tooltips/ItemTooltip.cs" id="1_53ehe"]
 [ext_resource type="StyleBox" uid="uid://dwmrqk1vdeutx" path="res://styles/tooltip_style_generic.tres" id="1_a2jgh"]
 
 [node name="TooltipContainer" type="PanelContainer"]

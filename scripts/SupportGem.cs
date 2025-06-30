@@ -3,22 +3,11 @@ using System;
 using System.Collections.Generic;
 
 public partial class SupportGem : Item {
-    protected const int maxLevel = 14;
-
     protected int level = 0;
     public int Level { 
         get => level; 
         set {
-            if (value > maxLevel) {
-                level = maxLevel;
-            }
-            else if (value < 0) {
-                level = 0;
-            }
-            else {
-                level = value;
-            }
-
+            level = value;
             OnGemLevelChanged();
         } 
     }
@@ -38,7 +27,13 @@ public partial class SupportGem : Item {
 
 		gridSizeX = 1;
 		gridSizeY = 1;
+
+        Run.Instance.GemLevelChanged += SetGemLevel;
 	}
+
+    public void SetGemLevel(int level) {
+        Level = level;
+    }
 
     protected virtual void OnGemLevelChanged() {}
     protected virtual void UpdateGemEffectsDescription(){}
@@ -255,9 +250,9 @@ public partial class SIncreasedDuration : SupportGem {
 
 public partial class SLessDuration : SupportGem {
     private static readonly double[] lessDurationArray = [
-        0.50, 0.51, 0.51, 0.52, 0.53, 
-        0.53, 0.54, 0.55, 0.56, 0.57, 
-        0.57, 0.58, 0.59, 0.59, 0.60
+        0.50, 0.49, 0.49, 0.48, 0.47, 
+        0.47, 0.46, 0.45, 0.44, 0.43, 
+        0.43, 0.42, 0.41, 0.41, 0.40
     ];
 
     private double lessDuration = lessDurationArray[0];

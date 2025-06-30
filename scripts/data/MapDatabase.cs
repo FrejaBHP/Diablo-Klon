@@ -2,6 +2,11 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
+public struct MapTags(EMapType type, List<EMapObjective> objectives) {
+    public readonly EMapType Type = type;
+    public readonly List<EMapObjective> Objectives = objectives;
+}
+
 public static class MapDatabase {
     public static readonly PackedScene TownScene = GD.Load<PackedScene>("res://scenes/world/map_town.tscn");
     public static readonly PackedScene FEScene = GD.Load<PackedScene>("res://scenes/world/map_firstEncounter.tscn");
@@ -12,15 +17,14 @@ public static class MapDatabase {
         return newMap;
     }
 
-    public static void GetMapTest(PackedScene scene, out MapBase map, out EMapObjective objective) {
+    public static void GetMap(PackedScene scene, out MapBase map, out MapTags tags) {
         map = scene.Instantiate<MapBase>();
-        int randomObjective = Utilities.RNG.Next(mapMap[scene].Count);
-        objective = mapMap[scene][randomObjective];
+        tags = mapCatalogue[scene];
     }
 
-    private static readonly Dictionary<PackedScene, List<EMapObjective>> mapMap = new() {
-        { TownScene, new() { EMapObjective.None } },
-        { FEScene, new() { EMapObjective.Survival } },
-        { ShopSmallTownScene, new() { EMapObjective.Shop } },
+    private static readonly Dictionary<PackedScene, MapTags> mapCatalogue = new() {
+        { TownScene, new(EMapType.Town, [EMapObjective.None]) },
+        { FEScene, new(EMapType.Objective, [EMapObjective.Survival]) },
+        { ShopSmallTownScene, new(EMapType.Intermission, [EMapObjective.None]) },
     };
 }

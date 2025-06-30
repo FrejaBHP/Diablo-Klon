@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://tdwc2cbobqoe"]
 
-[ext_resource type="Script" uid="uid://dhjmlfc7bi0pa" path="res://scripts/gui/ItemTooltipPopup.cs" id="1_7lcjh"]
+[ext_resource type="Script" uid="uid://dhjmlfc7bi0pa" path="res://scripts/gui/tooltips/ItemTooltipPopup.cs" id="1_7lcjh"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8uv7j"]
 

@@ -21,11 +21,12 @@ public partial class MapBase : Node3D {
     public Timer ObjectiveTimer { get; protected set; }
     public CanvasLayer NameplateLayer { get; protected set; }
 
+    public EMapType MapType;
     public EMapObjective MapObjective = EMapObjective.None;
 
     // For the future when item level will be set and matter
     // Maybe I'll even add enemy scaling
-    public int AreaLevel = 1;
+    public int LocalAreaLevel = 1;
     public int GoldReward { get; protected set; } = 25;
     public int ExpReward { get; protected set; } = 5;
 
@@ -84,7 +85,7 @@ public partial class MapBase : Node3D {
                     spawnTimer += spawnInterval;
                     SpawnFromPool(GetAmountToSpawn(), false);
                     
-                    Game.Instance.PlayerActor.PlayerHUD.PlayerRightHUD.UpdateEnemyDebugLabel(
+                    Run.Instance.PlayerActor.PlayerHUD.PlayerRightHUD.UpdateEnemyDebugLabel(
                         GetDensityTimeModifier(), 
                         GetTimeAdjustedSpawnDensity(EnemySpawnDensity, GetDensityTimeModifier())
                     );
@@ -92,16 +93,16 @@ public partial class MapBase : Node3D {
             }
 
             if (ObjectiveTimer.TimeLeft > 10) {
-                Game.Instance.PlayerActor.PlayerHUD.PlayerUpperHUD.ObjTimeLabel.Text = $"{ObjectiveTimer.TimeLeft:F0}";
+                Run.Instance.PlayerActor.PlayerHUD.PlayerUpperHUD.ObjTimeLabel.Text = $"{ObjectiveTimer.TimeLeft:F0}";
             }
             else {
-                Game.Instance.PlayerActor.PlayerHUD.PlayerUpperHUD.ObjTimeLabel.Text = $"{ObjectiveTimer.TimeLeft:F1}";
+                Run.Instance.PlayerActor.PlayerHUD.PlayerUpperHUD.ObjTimeLabel.Text = $"{ObjectiveTimer.TimeLeft:F1}";
             }
         }
     }
 
     public void CalculateAndUpdateAreaLevel() {
-        AreaLevel = Game.Instance.CurrentAct * 10 + Game.Instance.CurrentArea;
+        LocalAreaLevel = Run.Instance.AreaLevel + Run.Instance.AreaLevelMod;
     }
 
     public void ClearEnemies() {
@@ -117,7 +118,7 @@ public partial class MapBase : Node3D {
     protected void OnMapReady() {
         EmitSignal(SignalName.MapReady);
 
-        if (MapObjective == EMapObjective.Shop) {
+        if (MapType == EMapType.Intermission) {
             EmitSignal(SignalName.MapObjectiveFinished);
         }
         else if (MapObjective == EMapObjective.Survival) {
@@ -130,7 +131,7 @@ public partial class MapBase : Node3D {
 
     public void CreateObjectiveGUI() {
         objective = mapObjectiveHUDScene.Instantiate<MapObjectiveHUD>();
-		Game.Instance.PlayerActor.PlayerHUD.PlayerRightHUD.ObjectiveContainer.AddChild(objective);
+		Run.Instance.PlayerActor.PlayerHUD.PlayerRightHUD.ObjectiveContainer.AddChild(objective);
         objective.SetObjectiveText(MapObjective.ToString());
         objective.SetGoldReward(GoldRewardPool);
         objective.SetItemReward(ItemRewardPool.Count);
@@ -143,13 +144,14 @@ public partial class MapBase : Node3D {
 
     public void StartObjective() {
         SetObjectiveTimerLength();
-        Game.Instance.PlayerActor.PlayerHUD.PlayerUpperHUD.ObjTimeLabel.Visible = true;
-        Game.Instance.PlayerActor.PlayerHUD.PlayerUpperHUD.ObjTimeLabel.Text = $"{Math.Round(ObjectiveTimer.WaitTime, 0)}";
+        // Timere skal flyttes til Run eller lign
+        Run.Instance.PlayerActor.PlayerHUD.PlayerUpperHUD.ObjTimeLabel.Visible = true;
+        Run.Instance.PlayerActor.PlayerHUD.PlayerUpperHUD.ObjTimeLabel.Text = $"{Math.Round(ObjectiveTimer.WaitTime, 0)}";
 
         if (MapObjective == EMapObjective.Survival) {
-            EnemySpawnCeiling = CalculateEnemySpawnCeiling(Game.Instance.CurrentAct, Game.Instance.CurrentArea, 1);
-            EnemySpawnDensity = CalculateBaseEnemySpawnDensity(Game.Instance.CurrentAct, Game.Instance.CurrentArea, 1);
-            Game.Instance.PlayerActor.PlayerHUD.PlayerRightHUD.EnemyDebugLabel.Visible = true;
+            EnemySpawnCeiling = CalculateEnemySpawnCeiling(Run.Instance.CurrentAct, Run.Instance.CurrentArea, 1);
+            EnemySpawnDensity = CalculateBaseEnemySpawnDensity(Run.Instance.CurrentAct, Run.Instance.CurrentArea, 1);
+            Run.Instance.PlayerActor.PlayerHUD.PlayerRightHUD.EnemyDebugLabel.Visible = true;
         }
 
         ObjectiveTimer.Start();
@@ -170,12 +172,12 @@ public partial class MapBase : Node3D {
     protected void SetObjectiveTimerLength() {
         double waitTime;
 
-        if (Game.Instance.CurrentAct < 2) {
-            if (Game.Instance.CurrentArea > 5) {
-                waitTime = 40 + 10 * Game.Instance.CurrentAct;
+        if (Run.Instance.CurrentAct < 2) {
+            if (Run.Instance.CurrentArea > 5) {
+                waitTime = 40 + 10 * Run.Instance.CurrentAct;
             }
             else {
-                waitTime = 30 + 10 * Game.Instance.CurrentAct;
+                waitTime = 30 + 10 * Run.Instance.CurrentAct;
             }
         }
         else {
@@ -232,21 +234,21 @@ public partial class MapBase : Node3D {
             hasMapFinished = true;
             EmitSignal(SignalName.MapObjectiveFinished);
             ClearEnemies();
-            Game.Instance.PlayerActor.PlayerHUD.PlayerUpperHUD.ObjTimeLabel.Visible = false;
+            Run.Instance.PlayerActor.PlayerHUD.PlayerUpperHUD.ObjTimeLabel.Visible = false;
 
             if (objective != null) {
-                Game.Instance.PlayerActor.PlayerHUD.PlayerRightHUD.ObjectiveContainer.RemoveChild(objective);
+                Run.Instance.PlayerActor.PlayerHUD.PlayerRightHUD.ObjectiveContainer.RemoveChild(objective);
                 objective.QueueFree();
 
-                Game.Instance.PlayerActor.PlayerHUD.PlayerRightHUD.EnemyDebugLabel.Visible = false;
+                Run.Instance.PlayerActor.PlayerHUD.PlayerRightHUD.EnemyDebugLabel.Visible = false;
             }
 
             if (GoldRewardPool > 0) {
-			    Game.Instance.DropGold(GoldRewardPool, PlayerSpawnMarker.GlobalPosition, false);
+			    Run.Instance.DropGold(GoldRewardPool, PlayerSpawnMarker.GlobalPosition, false);
 		    }
 
             if (ExpReward > 0) {
-                Game.Instance.AwardExperience(ExpReward);
+                Run.Instance.AwardExperience(ExpReward);
             }
 
             if (ItemRewardPool.Count > 0) {
@@ -257,7 +259,7 @@ public partial class MapBase : Node3D {
                     Vector3 newPos = distVec.Rotated(Vector3.Up, (float)randomAngle) + PlayerSpawnMarker.GlobalPosition;
                     
                     WorldItem wi = ItemRewardPool[i].ConvertToWorldItem();
-                    Game.Instance.DropItem(wi, newPos);
+                    Run.Instance.DropItem(wi, newPos);
                 }
             }
         }
@@ -304,7 +306,7 @@ public partial class MapBase : Node3D {
             return 0;
         }
         
-        int enemiesToSpawn = 0;
+        int enemiesToSpawn;
         int potentialMaxEnemies = ActiveEnemies + GetTimeAdjustedSpawnDensity(EnemySpawnDensity, GetDensityTimeModifier());
 
         if (potentialMaxEnemies > EnemySpawnCeiling) {

@@ -21,7 +21,7 @@ geometry_collision_mask = 4294967059
 agent_height = 3.0
 agent_radius = 0.25
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_cwkjp"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_q7u6e"]
 _surfaces = [{
 "aabb": AABB(-6, 0.25, -3, 12, 1e-05, 6),
 "attribute_data": PackedByteArray("AACQQAAAQMAAAMBAAABAwAAAwEAAAAAAAACQQAAAAAA="),
@@ -36,14 +36,14 @@ _surfaces = [{
 "vertex_data": PackedByteArray("AADAQAAAgD4AAEDAAADAQAAAgD4AAEBAAADAwAAAgD4AAEBAAADAwAAAgD4AAEDA/3////9//7//f////3//v/9/////f/+//3////9//78=")
 }]
 
-[sub_resource type="ArrayOccluder3D" id="ArrayOccluder3D_dm2gb"]
+[sub_resource type="ArrayOccluder3D" id="ArrayOccluder3D_2ie1u"]
 vertices = PackedVector3Array(6, 0.25, -3, 6, 0.25, 3, -6, 0.25, 3, -6, 0.25, -3)
 indices = PackedInt32Array(0, 1, 2, 0, 2, 3)
 
-[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_q7u6e"]
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_pnv55"]
 points = PackedVector3Array(-6, 0.25, -3, -6, -0.25, -3, 6, -0.25, -3, 6, 0.25, -3, -6, 0.25, 3, -6, -0.25, 3, 6, -0.25, 3, 6, 0.25, 3)
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_2ie1u"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_drw7y"]
 _surfaces = [{
 "aabb": AABB(-6, 0.25, -1, 12, 1e-05, 2),
 "attribute_data": PackedByteArray("AABAQAAAgEAAAEBAAACQQADWniUAAJBAADCNJQAAgEA="),
@@ -58,14 +58,14 @@ _surfaces = [{
 "vertex_data": PackedByteArray("AADAQAAAgD4AAIC/AADAQAAAgD4AAIA/AADAwAAAgD4AAIA/AADAwAAAgD4AAIC//3///wAA/7//f///AAD/v/9///8AAP+//3///wAA/78=")
 }]
 
-[sub_resource type="ArrayOccluder3D" id="ArrayOccluder3D_pnv55"]
+[sub_resource type="ArrayOccluder3D" id="ArrayOccluder3D_s1yyi"]
 vertices = PackedVector3Array(6, 0.25, -1, 6, 0.25, 1, -6, 0.25, 1, -6, 0.25, -1)
 indices = PackedInt32Array(0, 1, 2, 0, 2, 3)
 
-[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_drw7y"]
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_q7f4k"]
 points = PackedVector3Array(-6, 0.25, -1, -6, -0.25, -1, 6, -0.25, -1, 6, 0.25, -1, -6, 0.25, 1, -6, -0.25, 1, 6, -0.25, 1, 6, 0.25, 1)
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_s1yyi"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_t36bt"]
 _surfaces = [{
 "aabb": AABB(-6, 0.25, -3, 12, 1e-05, 6),
 "attribute_data": PackedByteArray("AAAgQAAAQMAAAIBAAABAwAAAgEAAAAAAAAAgQAAAAAA="),
@@ -80,14 +80,14 @@ _surfaces = [{
 "vertex_data": PackedByteArray("AADAQAAAgD4AAEDAAADAQAAAgD4AAEBAAADAwAAAgD4AAEBAAADAwAAAgD4AAEDA/3////9//7//f////3//v/9/////f/+//3////9//78=")
 }]
 
-[sub_resource type="ArrayOccluder3D" id="ArrayOccluder3D_q7f4k"]
+[sub_resource type="ArrayOccluder3D" id="ArrayOccluder3D_fm1qx"]
 vertices = PackedVector3Array(6, 0.25, -3, 6, 0.25, 3, -6, 0.25, 3, -6, 0.25, -3)
 indices = PackedInt32Array(0, 1, 2, 0, 2, 3)
 
-[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_t36bt"]
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_5jdb6"]
 points = PackedVector3Array(-6, 0.25, -3, -6, -0.25, -3, 6, -0.25, -3, 6, 0.25, -3, -6, 0.25, 3, -6, -0.25, 3, 6, -0.25, 3, 6, 0.25, 3)
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_fm1qx"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_d0mt1"]
 _surfaces = [{
 "aabb": AABB(-7, 0.25, -7, 14, 1e-05, 14),
 "attribute_data": PackedByteArray("AAAgQAAA0MAAAMBAAADQwAAAwEAAAEDAAAAgQAAAQMA="),
@@ -102,14 +102,14 @@ _surfaces = [{
 "vertex_data": PackedByteArray("AADgQAAAgD4AAODAAADgQAAAgD4AAOBAAADgwAAAgD4AAOBAAADgwAAAgD4AAODA/3////9//7//f////3//v/9/////f/+//3////9//78=")
 }]
 
-[sub_resource type="ArrayOccluder3D" id="ArrayOccluder3D_5jdb6"]
+[sub_resource type="ArrayOccluder3D" id="ArrayOccluder3D_dcgdg"]
 vertices = PackedVector3Array(7, 0.25, -7, 7, 0.25, 7, -7, 0.25, 7, -7, 0.25, -7)
 indices = PackedInt32Array(0, 1, 2, 0, 2, 3)
 
-[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_d0mt1"]
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_iyukm"]
 points = PackedVector3Array(-7, 0.25, -7, -7, -0.25, -7, 7, -0.25, -7, 7, 0.25, -7, -7, 0.25, 7, -7, -0.25, 7, 7, -0.25, 7, 7, 0.25, 7)
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_dcgdg"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_p3qhv"]
 _surfaces = [{
 "aabb": AABB(-19, 0.25, -5, 38, 1e-05, 10),
 "attribute_data": PackedByteArray("AADAQAAAGMEAAAhBAAAYwQAACEEAAAAAAADAQAAAAAA="),
@@ -124,14 +124,14 @@ _surfaces = [{
 "vertex_data": PackedByteArray("AACYQQAAgD4AAKDAAACYQQAAgD4AAKBAAACYwQAAgD4AAKBAAACYwQAAgD4AAKDA/3////9//7//f////3//v/9/////f/+//3////9//78=")
 }]
 
-[sub_resource type="ArrayOccluder3D" id="ArrayOccluder3D_iyukm"]
+[sub_resource type="ArrayOccluder3D" id="ArrayOccluder3D_jmpt1"]
 vertices = PackedVector3Array(19, 0.25, -5, 19, 0.25, 5, -19, 0.25, 5, -19, 0.25, -5)
 indices = PackedInt32Array(0, 1, 2, 0, 2, 3)
 
-[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_p3qhv"]
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_i13ae"]
 points = PackedVector3Array(-19, 0.25, -5, -19, -0.25, -5, 19, -0.25, -5, 19, 0.25, -5, -19, 0.25, 5, -19, -0.25, 5, 19, -0.25, 5, 19, 0.25, 5)
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_jmpt1"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_oqlea"]
 _surfaces = [{
 "aabb": AABB(-19, 0.25, -5, 38, 1e-05, 10),
 "attribute_data": PackedByteArray("AAAAAAAAGMEAACBAAAAYwQAAIEAAAAAAAAAAAAAAAAA="),
@@ -146,14 +146,14 @@ _surfaces = [{
 "vertex_data": PackedByteArray("AACYQQAAgD4AAKDAAACYQQAAgD4AAKBAAACYwQAAgD4AAKBAAACYwQAAgD4AAKDA/3////9//7//f////3//v/9/////f/+//3////9//78=")
 }]
 
-[sub_resource type="ArrayOccluder3D" id="ArrayOccluder3D_i13ae"]
+[sub_resource type="ArrayOccluder3D" id="ArrayOccluder3D_hduvd"]
 vertices = PackedVector3Array(19, 0.25, -5, 19, 0.25, 5, -19, 0.25, 5, -19, 0.25, -5)
 indices = PackedInt32Array(0, 1, 2, 0, 2, 3)
 
-[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_oqlea"]
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_0dll0"]
 points = PackedVector3Array(-19, 0.25, -5, -19, -0.25, -5, 19, -0.25, -5, 19, 0.25, -5, -19, 0.25, 5, -19, -0.25, 5, 19, -0.25, 5, 19, 0.25, 5)
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_hduvd"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_r0uq8"]
 _surfaces = [{
 "aabb": AABB(-6, 0.25, -7, 12, 1e-05, 14),
 "attribute_data": PackedByteArray("AAAgQAAAGMEAAMBAAAAYwQAAwEAAANDAAAAgQAAA0MA="),
@@ -168,11 +168,11 @@ _surfaces = [{
 "vertex_data": PackedByteArray("AADAQAAAgD4AAODAAADAQAAAgD4AAOBAAADAwAAAgD4AAOBAAADAwAAAgD4AAODA/3////9//7//f////3//v/9/////f/+//3////9//78=")
 }]
 
-[sub_resource type="ArrayOccluder3D" id="ArrayOccluder3D_0dll0"]
+[sub_resource type="ArrayOccluder3D" id="ArrayOccluder3D_enug2"]
 vertices = PackedVector3Array(6, 0.25, -7, 6, 0.25, 7, -6, 0.25, 7, -6, 0.25, -7)
 indices = PackedInt32Array(0, 1, 2, 0, 2, 3)
 
-[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_r0uq8"]
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_g4hbg"]
 points = PackedVector3Array(-6, 0.25, -7, -6, -0.25, -7, 6, -0.25, -7, 6, 0.25, -7, -6, 0.25, 7, -6, -0.25, 7, 6, -0.25, 7, 6, 0.25, 7)
 
 [node name="MapTown" instance=ExtResource("1_5ewx1")]
@@ -212,13 +212,13 @@ collision_layer = 2
 collision_mask = 0
 
 [node name="entity_1_mesh_instance" type="MeshInstance3D" parent="NavigationRegion3D/FuncGodotMap/entity_1_func_worldgeo" index="0"]
-mesh = SubResource("ArrayMesh_cwkjp")
+mesh = SubResource("ArrayMesh_q7u6e")
 
 [node name="entity_1_occluder_instance" type="OccluderInstance3D" parent="NavigationRegion3D/FuncGodotMap/entity_1_func_worldgeo" index="1"]
-occluder = SubResource("ArrayOccluder3D_dm2gb")
+occluder = SubResource("ArrayOccluder3D_2ie1u")
 
 [node name="entity_1_brush_0_collision_shape" type="CollisionShape3D" parent="NavigationRegion3D/FuncGodotMap/entity_1_func_worldgeo" index="2"]
-shape = SubResource("ConvexPolygonShape3D_q7u6e")
+shape = SubResource("ConvexPolygonShape3D_pnv55")
 
 [node name="entity_2_func_worldgeo" type="StaticBody3D" parent="NavigationRegion3D/FuncGodotMap" index="2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, -0.25, 17)
@@ -226,13 +226,13 @@ collision_layer = 2
 collision_mask = 0
 
 [node name="entity_2_mesh_instance" type="MeshInstance3D" parent="NavigationRegion3D/FuncGodotMap/entity_2_func_worldgeo" index="0"]
-mesh = SubResource("ArrayMesh_2ie1u")
+mesh = SubResource("ArrayMesh_drw7y")
 
 [node name="entity_2_occluder_instance" type="OccluderInstance3D" parent="NavigationRegion3D/FuncGodotMap/entity_2_func_worldgeo" index="1"]
-occluder = SubResource("ArrayOccluder3D_pnv55")
+occluder = SubResource("ArrayOccluder3D_s1yyi")
 
 [node name="entity_2_brush_0_collision_shape" type="CollisionShape3D" parent="NavigationRegion3D/FuncGodotMap/entity_2_func_worldgeo" index="2"]
-shape = SubResource("ConvexPolygonShape3D_drw7y")
+shape = SubResource("ConvexPolygonShape3D_q7f4k")
 
 [node name="entity_3_func_worldgeo" type="StaticBody3D" parent="NavigationRegion3D/FuncGodotMap" index="3"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, -0.25, 13)
@@ -240,13 +240,13 @@ collision_layer = 2
 collision_mask = 0
 
 [node name="entity_3_mesh_instance" type="MeshInstance3D" parent="NavigationRegion3D/FuncGodotMap/entity_3_func_worldgeo" index="0"]
-mesh = SubResource("ArrayMesh_s1yyi")
+mesh = SubResource("ArrayMesh_t36bt")
 
 [node name="entity_3_occluder_instance" type="OccluderInstance3D" parent="NavigationRegion3D/FuncGodotMap/entity_3_func_worldgeo" index="1"]
-occluder = SubResource("ArrayOccluder3D_q7f4k")
+occluder = SubResource("ArrayOccluder3D_fm1qx")
 
 [node name="entity_3_brush_0_collision_shape" type="CollisionShape3D" parent="NavigationRegion3D/FuncGodotMap/entity_3_func_worldgeo" index="2"]
-shape = SubResource("ConvexPolygonShape3D_t36bt")
+shape = SubResource("ConvexPolygonShape3D_5jdb6")
 
 [node name="entity_4_func_worldgeo" type="StaticBody3D" parent="NavigationRegion3D/FuncGodotMap" index="4"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, -0.25, 17)
@@ -254,13 +254,13 @@ collision_layer = 2
 collision_mask = 0
 
 [node name="entity_4_mesh_instance" type="MeshInstance3D" parent="NavigationRegion3D/FuncGodotMap/entity_4_func_worldgeo" index="0"]
-mesh = SubResource("ArrayMesh_fm1qx")
+mesh = SubResource("ArrayMesh_d0mt1")
 
 [node name="entity_4_occluder_instance" type="OccluderInstance3D" parent="NavigationRegion3D/FuncGodotMap/entity_4_func_worldgeo" index="1"]
-occluder = SubResource("ArrayOccluder3D_5jdb6")
+occluder = SubResource("ArrayOccluder3D_dcgdg")
 
 [node name="entity_4_brush_0_collision_shape" type="CollisionShape3D" parent="NavigationRegion3D/FuncGodotMap/entity_4_func_worldgeo" index="2"]
-shape = SubResource("ConvexPolygonShape3D_d0mt1")
+shape = SubResource("ConvexPolygonShape3D_iyukm")
 
 [node name="entity_5_func_worldgeo" type="StaticBody3D" parent="NavigationRegion3D/FuncGodotMap" index="5"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, -0.25, 29)
@@ -268,13 +268,13 @@ collision_layer = 2
 collision_mask = 0
 
 [node name="entity_5_mesh_instance" type="MeshInstance3D" parent="NavigationRegion3D/FuncGodotMap/entity_5_func_worldgeo" index="0"]
-mesh = SubResource("ArrayMesh_dcgdg")
+mesh = SubResource("ArrayMesh_p3qhv")
 
 [node name="entity_5_occluder_instance" type="OccluderInstance3D" parent="NavigationRegion3D/FuncGodotMap/entity_5_func_worldgeo" index="1"]
-occluder = SubResource("ArrayOccluder3D_iyukm")
+occluder = SubResource("ArrayOccluder3D_jmpt1")
 
 [node name="entity_5_brush_0_collision_shape" type="CollisionShape3D" parent="NavigationRegion3D/FuncGodotMap/entity_5_func_worldgeo" index="2"]
-shape = SubResource("ConvexPolygonShape3D_p3qhv")
+shape = SubResource("ConvexPolygonShape3D_i13ae")
 
 [node name="entity_6_func_worldgeo" type="StaticBody3D" parent="NavigationRegion3D/FuncGodotMap" index="6"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, -0.25, 5)
@@ -282,13 +282,13 @@ collision_layer = 2
 collision_mask = 0
 
 [node name="entity_6_mesh_instance" type="MeshInstance3D" parent="NavigationRegion3D/FuncGodotMap/entity_6_func_worldgeo" index="0"]
-mesh = SubResource("ArrayMesh_jmpt1")
+mesh = SubResource("ArrayMesh_oqlea")
 
 [node name="entity_6_occluder_instance" type="OccluderInstance3D" parent="NavigationRegion3D/FuncGodotMap/entity_6_func_worldgeo" index="1"]
-occluder = SubResource("ArrayOccluder3D_i13ae")
+occluder = SubResource("ArrayOccluder3D_hduvd")
 
 [node name="entity_6_brush_0_collision_shape" type="CollisionShape3D" parent="NavigationRegion3D/FuncGodotMap/entity_6_func_worldgeo" index="2"]
-shape = SubResource("ConvexPolygonShape3D_oqlea")
+shape = SubResource("ConvexPolygonShape3D_0dll0")
 
 [node name="entity_7_func_worldgeo" type="StaticBody3D" parent="NavigationRegion3D/FuncGodotMap" index="7"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32, -0.25, 17)
@@ -296,12 +296,12 @@ collision_layer = 2
 collision_mask = 0
 
 [node name="entity_7_mesh_instance" type="MeshInstance3D" parent="NavigationRegion3D/FuncGodotMap/entity_7_func_worldgeo" index="0"]
-mesh = SubResource("ArrayMesh_hduvd")
+mesh = SubResource("ArrayMesh_r0uq8")
 
 [node name="entity_7_occluder_instance" type="OccluderInstance3D" parent="NavigationRegion3D/FuncGodotMap/entity_7_func_worldgeo" index="1"]
-occluder = SubResource("ArrayOccluder3D_0dll0")
+occluder = SubResource("ArrayOccluder3D_enug2")
 
 [node name="entity_7_brush_0_collision_shape" type="CollisionShape3D" parent="NavigationRegion3D/FuncGodotMap/entity_7_func_worldgeo" index="2"]
-shape = SubResource("ConvexPolygonShape3D_r0uq8")
+shape = SubResource("ConvexPolygonShape3D_g4hbg")
 
 [editable path="MapTransition"]

@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://c3nqjt3oe05tv"]
+
+[ext_resource type="Script" uid="uid://bivepow5q5wv8" path="res://scripts/Run.cs" id="1_2d5n6"]
+
+[node name="Run" type="Node3D"]
+script = ExtResource("1_2d5n6")
+
+[node name="CurrentMapNode" type="Node3D" parent="."]
+
+[node name="WorldObjects" type="CanvasLayer" parent="."]
+layer = 0

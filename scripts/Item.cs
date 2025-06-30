@@ -248,6 +248,14 @@ public partial class SkillItem : Item {
 
 		gridSizeX = 1;
 		gridSizeY = 1;
+
+		Run.Instance.GemLevelChanged += SetGemLevel;
+	}
+
+	public void SetGemLevel(int level) {
+		if (SkillReference != null) {
+			SkillReference.Level = level;
+		}
 	}
 }
 

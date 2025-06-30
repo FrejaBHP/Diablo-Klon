@@ -60,19 +60,19 @@ public partial class ShopInventory : Control {
     }
 
     public void OnRerollButtonPressed() {
-        if (Game.Instance.PlayerActor.Gold >= rerollCost) {
-            Game.Instance.PlayerActor.Gold -= rerollCost;
+        if (Run.Instance.PlayerActor.Gold >= rerollCost) {
+            Run.Instance.PlayerActor.Gold -= rerollCost;
             InventoryGrid.ClearItems();
             PopulateShop();
         }
     }
 
     public void OnItemClicked(InventoryItem item) {
-        if (Game.Instance.PlayerActor.Gold >= item.ItemReference.Price && Game.Instance.PlayerActor.PlayerHUD.PlayerInventory.InventoryGrid.CanFitInInventory(ref item)) {
+        if (Run.Instance.PlayerActor.Gold >= item.ItemReference.Price && Run.Instance.PlayerActor.PlayerHUD.PlayerInventory.InventoryGrid.CanFitInInventory(ref item)) {
             item.IsForSale = false;
-            Game.Instance.PlayerActor.Gold -= item.ItemReference.Price;
+            Run.Instance.PlayerActor.Gold -= item.ItemReference.Price;
             InventoryGrid.RemoveItemFromInventory(item);
-            Game.Instance.PlayerActor.PlayerHUD.PlayerInventory.InventoryGrid.TryAddItemToInventory(ref item);
+            Run.Instance.PlayerActor.PlayerHUD.PlayerInventory.InventoryGrid.TryAddItemToInventory(ref item);
         }
     }
 }

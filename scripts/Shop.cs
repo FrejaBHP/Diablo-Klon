@@ -33,7 +33,7 @@ public partial class Shop : Area3D {
             if (!shopCreated) {
                 shopCreated = true;
                 shopInventory = shopInventoryScene.Instantiate<ShopInventory>();
-                Game.Instance.PlayerActor.PlayerHUD.AddChild(shopInventory);
+                Run.Instance.PlayerActor.PlayerHUD.AddChild(shopInventory);
 
                 int sizeX; int sizeY;
                 if (ShopType == EShopType.Equipment) {
