@@ -174,30 +174,6 @@ public partial class Run : Node3D {
 		//SetEnemyWave(EnemyDatabase.TestWave);
 	}
 
-	private void ProgressAct(bool doIncrementAreaLevel) {
-		CurrentArea++;
-
-		// Make sure not to increment anything upon entering the first area of an act
-		if (CurrentArea != 1) {
-			if (doIncrementAreaLevel) {
-				AreaLevel++;
-			}
-			else {
-				GemLevel++;
-			}
-		}
-	}
-
-	// Potentially add exception for the town? Just to avoid spawning in the same spot every time no matter where you came from?
-	private void OnMapLoaded() {
-		PlayerActor.ResetNodeTarget();
-		PlayerActor.Velocity = Vector3.Zero;
-		PlayerActor.GlobalPosition = CurrentMap.PlayerSpawnMarker.GlobalPosition;
-		PlayerActor.PlayerCamera.OcclusionCast.Enabled = true;
-
-		PlayerActor.PlayerHUD.PlayerRightHUD.UpdateProgressLabel();
-	}
-
 	public void SpawnPortal() {
 		MapTransitionObj transObj = mapTransScene.Instantiate<MapTransitionObj>();
 		CurrentMap.AddChild(transObj);
@@ -232,10 +208,37 @@ public partial class Run : Node3D {
 		transObj.UpdatePortalAnimationAndVisibility();
 	}
 
+	// Potentially add exception for the town? Just to avoid spawning in the same spot every time no matter where you came from?
+	private void OnMapLoaded() {
+		PlayerActor.ResetNodeTarget();
+		PlayerActor.Velocity = Vector3.Zero;
+		PlayerActor.GlobalPosition = CurrentMap.PlayerSpawnMarker.GlobalPosition;
+		PlayerActor.PlayerCamera.OcclusionCast.Enabled = true;
+
+		PlayerActor.PlayerHUD.PlayerRightHUD.UpdateProgressLabel();
+	}
+
 	public void OnMapCompletion() {
 		SpawnPortal();
     }
 
+	private void ProgressAct(bool doIncrementAreaLevel) {
+		CurrentArea++;
+
+		// Make sure not to increment anything upon entering the first area of an act
+		if (CurrentArea != 1) {
+			if (doIncrementAreaLevel) {
+				AreaLevel++;
+			}
+			else {
+				GemLevel++;
+			}
+		}
+	}
+
+
+	#region Utility
+	
 	/// <summary>
 	/// Clears all nodes in the WorldObjectsLayer and current map's NameplateLayer
 	/// </summary>
@@ -305,4 +308,6 @@ public partial class Run : Node3D {
 	public void AwardExperience(double baseAmount) {
 		PlayerActor.GainExperience(baseAmount);
 	}
+
+	#endregion
 }

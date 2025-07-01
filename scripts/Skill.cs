@@ -18,7 +18,15 @@ public abstract class Skill {
 
     public string Name { get; protected set; }
     public string Description { get; protected set; }
-    public int Level { get; set; } = 0;
+
+    protected int level = 0;
+    public int Level { 
+        get => level; 
+        set {
+            level = value;
+            OnSkillLevelChanged();
+        }
+    }
 
     public ESkillName SkillName { get; protected set; }
     public ESkillType Type { get; protected set; }
@@ -37,6 +45,9 @@ public abstract class Skill {
     public bool UsesMouseAim { get; protected set; } = true;
     public bool AimsInStraightLine { get; protected set; } = true;
     protected Vector3 mouseAimPosition = Vector3.Zero;
+
+    public abstract void UseSkill();
+    protected abstract void OnSkillLevelChanged();
 
     public virtual bool CanUseSkill() {
         if (!ActorOwner.IsIgnoringManaCosts) {
@@ -66,8 +77,6 @@ public abstract class Skill {
 
         return true;
     }
-
-    public abstract void UseSkill();
 
     public void SetMouseAimPosition(Vector3 pos) {
         if (AimsInStraightLine) {
@@ -164,14 +173,6 @@ public abstract class Skill {
                 supportGems = [];
             }
 
-            if (isPartOfCluster) {
-                foreach (SupportGem support in supportGems) {
-                    if (support.AffectsDamageModifiers) {
-                        support.ApplyToDamageModifiers(ActiveDamageModifiers);
-                    }
-                }
-            }
-
             if (this is IAttack atSkill) {
                 // Does not contain all variables needed
                 atSkill.UpdateAttackSpeedValues(ActorOwner.AttackSpeedMod);
@@ -212,6 +213,8 @@ public abstract class Skill {
             if (this is IProjectileSkill pSkill) {
                 pSkill.AddedPierces = 0;
                 pSkill.AddedProjectiles = 0;
+                pSkill.MinimumSpreadAngleOverride = 0;
+                pSkill.MaximumSpreadAngleOverride = 0;
                 
                 if (isPartOfCluster) {
                     foreach (SupportGem support in supportGems) {
@@ -248,6 +251,14 @@ public abstract class Skill {
                 }
 
                 dSkill.TotalDuration = dSkill.BaseDuration * dSkill.IncreasedDuration * dSkill.MoreDuration;
+            }
+
+            if (isPartOfCluster) {
+                foreach (SupportGem support in supportGems) {
+                    if (support.AffectsDamageModifiers) {
+                        support.ApplyToDamageModifiers(ActiveDamageModifiers);
+                    }
+                }
             }
             
             if (AddedDamageModifier != 1) {
@@ -424,7 +435,99 @@ public interface IProjectileSkill {
     int BaseProjectiles { get; protected set; }
     int AddedProjectiles { get; set; }
     int TotalProjectiles { get; set; }
+    bool CanFireSequentially { get; protected set; }
     bool FiresSequentially { get; set; }
+
+    double MinimumSpreadAngle { get; protected set; }
+    double MaximumSpreadAngle { get; protected set; }
+    double MinimumSpreadAngleOverride { get; set; }
+    double MaximumSpreadAngleOverride { get; set; }
+
+    static readonly double[] projectileMinAngles = [
+        0,                  // 1 projectile, no spread
+        Math.Tau / 12,      // 2 projectiles, 30 degrees
+        Math.Tau / 9,       // 3 projectiles, 40 degrees
+        Math.Tau / 7.5,     // 4 projectiles, 48 degrees
+        Math.Tau / 6,       // 5 projectiles, 60 degrees
+        Math.Tau / 4.5,     // 6+ projectiles, 80 degrees
+    ];
+
+    static readonly double[] projectileMaxAngles = [
+        0,                  // 1 projectile, no spread
+        Math.Tau / 8,       // 2 projectiles, 45 degrees
+        Math.Tau / 6,       // 3 projectiles, 60 degrees
+        Math.Tau / 5,       // 4 projectiles, 72 degrees
+        Math.Tau / 4,       // 5 projectiles, 90 degrees
+        Math.Tau / 3,       // 6+ projectiles, 120 degrees
+    ];
+
+    public static float GetSpreadCoefficient(Vector3 startPos, Vector3 endPos) {
+        float dist = startPos.DistanceTo(endPos);
+        float coefficient = Math.Clamp(dist / 8f, 0f, 1f);
+        GD.Print($"Coefficient: {coefficient:F2}");
+        return coefficient;
+    }
+
+    float[] GetMultipleProjectileAngles(int noOfProjectiles, float spreadCoefficient) {
+        float[] angles = new float[noOfProjectiles];
+
+        if (noOfProjectiles > 1) {
+            double usedMinSpread;
+            double usedMaxSpread;
+            float finalSpread;
+
+            if (MinimumSpreadAngleOverride != 0) {
+                usedMinSpread = MinimumSpreadAngleOverride;
+            }
+            else if (MinimumSpreadAngle != 0) {
+                usedMinSpread = MinimumSpreadAngle;
+            }
+            else {
+                if (noOfProjectiles - 1 > projectileMinAngles.Length) {
+                    usedMinSpread = projectileMinAngles.Last();
+                }
+                else {
+                    usedMinSpread = projectileMinAngles[noOfProjectiles - 1];
+                }
+            }
+
+            if (MaximumSpreadAngleOverride != 0) {
+                usedMaxSpread = MaximumSpreadAngleOverride;
+            }
+            else if (MaximumSpreadAngle != 0) {
+                usedMaxSpread = MaximumSpreadAngle;
+            }
+            else {
+                if (noOfProjectiles - 1 > projectileMaxAngles.Length) {
+                    usedMaxSpread = projectileMaxAngles.Last();
+                }
+                else {
+                    usedMaxSpread = projectileMaxAngles[noOfProjectiles - 1];
+                }
+            }
+
+            finalSpread = (float)(usedMaxSpread - ((usedMaxSpread - usedMinSpread) * spreadCoefficient));
+            float spreadSegment = finalSpread / (noOfProjectiles - 1);
+            
+            // if number of projectiles is even
+            if (noOfProjectiles % 2 == 0) {
+                for (int i = 0; i < noOfProjectiles; i++) {
+                    angles[i] = (-finalSpread / 2) + (spreadSegment * i);
+                }
+            }
+            // if number of projectiles is odd
+            else {
+                for (int i = 0; i < noOfProjectiles; i++) {
+                    angles[i] = (-finalSpread / 2) + (spreadSegment * i);
+                }
+            }
+        }
+        else {
+            angles[0] = 0;
+        }
+
+        return angles;
+    }
 }
 
 public interface IAreaSkill {

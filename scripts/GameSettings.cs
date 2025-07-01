@@ -47,6 +47,8 @@ public partial class GameSettings : Node {
     }
 
     protected static void ShowLifeManaValuesChanged(bool state) {
-        Run.Instance.PlayerActor.PlayerHUD.PlayerLowerHUD.AlwaysShowLifeManaValues = state;
+        if (Run.Instance != null && Run.Instance.PlayerActor != null) {
+            Run.Instance.PlayerActor.PlayerHUD.PlayerLowerHUD.AlwaysShowLifeManaValues = state;
+        }
     }
 }

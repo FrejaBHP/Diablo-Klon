@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public partial class SupportGem : Item {
+public abstract class SupportGem : Item {
     protected int level = 0;
     public int Level { 
         get => level; 
@@ -35,8 +35,8 @@ public partial class SupportGem : Item {
         Level = level;
     }
 
-    protected virtual void OnGemLevelChanged() {}
-    protected virtual void UpdateGemEffectsDescription(){}
+    protected abstract void OnGemLevelChanged();
+    protected abstract void UpdateGemEffectsDescription();
 
     public virtual void ApplyToDamageModifiers(DamageModifiers dmgMods) {}
     public virtual void ModifyAttackSkill(IAttack attack) {}
@@ -48,19 +48,36 @@ public partial class SupportGem : Item {
 }
 
 public partial class SAddedFire : SupportGem {
-    private const int addedMinFire = 4;
-    private const int addedMaxFire = 8;
+    private static readonly int[] minDamageArray = [
+        4, 4, 5, 6, 7,
+        8, 9, 10, 12, 14,
+        16, 19, 22, 25, 28
+    ];
+
+    private static readonly int[] maxDamageArray = [
+        8, 9, 10, 12, 14,
+        16, 18, 21, 24, 28,
+        32, 37, 43, 49, 56
+    ];
+
+    private int addedMinFire;
+    private int addedMaxFire;
 
     public SAddedFire() {
         ItemName = "Added Fire Damage Support";
         Description = "Supports Skills that deal damage";
         AffectsDamageModifiers = true;
         SkillTags = ESkillTags.None;
+    }
+
+    protected override void OnGemLevelChanged() {
+        addedMinFire = minDamageArray[level];
+        addedMaxFire = maxDamageArray[level];
         UpdateGemEffectsDescription();
     }
 
     protected override void UpdateGemEffectsDescription() {
-        DescEffects = $"Adds {addedMinFire} to {addedMaxFire} Fire Damage";
+        DescEffects = $"Supported Skill gains {addedMinFire} to {addedMaxFire} Added Fire Damage";
     }
 
     public override void ApplyToDamageModifiers(DamageModifiers dmgMods) {
@@ -70,19 +87,36 @@ public partial class SAddedFire : SupportGem {
 }
 
 public partial class SAddedCold : SupportGem {
-    private const int addedMinCold = 5;
-    private const int addedMaxCold = 7;
+    private static readonly int[] minDamageArray = [
+        5, 5, 6, 7, 8,
+        10, 11, 13, 15, 17,
+        20, 23, 26, 30, 35
+    ];
+
+    private static readonly int[] maxDamageArray = [
+        7, 8, 9, 10, 12,
+        14, 16, 18, 21, 24,
+        28, 32, 37, 43, 49
+    ];
+
+    private int addedMinCold;
+    private int addedMaxCold;
 
     public SAddedCold() {
         ItemName = "Added Cold Damage Support";
         Description = "Supports Skills that deal damage";
         AffectsDamageModifiers = true;
         SkillTags = ESkillTags.None;
+    }
+
+    protected override void OnGemLevelChanged() {
+        addedMinCold = minDamageArray[level];
+        addedMaxCold = maxDamageArray[level];
         UpdateGemEffectsDescription();
     }
 
     protected override void UpdateGemEffectsDescription() {
-        DescEffects = $"Adds {addedMinCold} to {addedMaxCold} Cold Damage";
+        DescEffects = $"Supported Skill gains {addedMinCold} to {addedMaxCold} Added Cold Damage";
     }
 
     public override void ApplyToDamageModifiers(DamageModifiers dmgMods) {
@@ -92,19 +126,36 @@ public partial class SAddedCold : SupportGem {
 }
 
 public partial class SAddedLightning : SupportGem {
-    private const int addedMinLightning = 1;
-    private const int addedMaxLightning = 10;
+    private static readonly int[] minDamageArray = [
+        1, 1, 1, 1, 1,
+        2, 2, 2, 3, 3,
+        4, 4, 5, 6, 7
+    ];
+
+    private static readonly int[] maxDamageArray = [
+        10, 11, 13, 15, 17,
+        20, 23, 26, 30, 35,
+        40, 46, 53, 61, 70
+    ];
+
+    private int addedMinLightning;
+    private int addedMaxLightning;
 
     public SAddedLightning() {
         ItemName = "Added Lightning Damage Support";
         Description = "Supports Skills that deal damage";
         AffectsDamageModifiers = true;
         SkillTags = ESkillTags.None;
+    }
+
+    protected override void OnGemLevelChanged() {
+        addedMinLightning = minDamageArray[level];
+        addedMaxLightning = maxDamageArray[level];
         UpdateGemEffectsDescription();
     }
 
     protected override void UpdateGemEffectsDescription() {
-        DescEffects = $"Adds {addedMinLightning} to {addedMaxLightning} Lightning Damage";
+        DescEffects = $"Supported Skill gains {addedMinLightning} to {addedMaxLightning} Added Lightning Damage";
     }
 
     public override void ApplyToDamageModifiers(DamageModifiers dmgMods) {
@@ -114,19 +165,36 @@ public partial class SAddedLightning : SupportGem {
 }
 
 public partial class SAddedChaos : SupportGem {
-    private const int addedMinChaos = 4;
-    private const int addedMaxChaos = 8;
+    private static readonly int[] minDamageArray = [
+        4, 4, 5, 6, 7,
+        8, 9, 10, 12, 14,
+        16, 19, 22, 25, 28
+    ];
+
+    private static readonly int[] maxDamageArray = [
+        8, 9, 10, 12, 14,
+        16, 18, 21, 24, 28,
+        32, 37, 43, 49, 56
+    ];
+
+    private int addedMinChaos;
+    private int addedMaxChaos;
 
     public SAddedChaos() {
         ItemName = "Added Chaos Damage Support";
         Description = "Supports Skills that deal damage";
         AffectsDamageModifiers = true;
         SkillTags = ESkillTags.None;
+    }
+
+    protected override void OnGemLevelChanged() {
+        addedMinChaos = minDamageArray[level];
+        addedMaxChaos = maxDamageArray[level];
         UpdateGemEffectsDescription();
     }
 
     protected override void UpdateGemEffectsDescription() {
-        DescEffects = $"Adds {addedMinChaos} to {addedMaxChaos} Chaos Damage";
+        DescEffects = $"Supported Skill gains {addedMinChaos} to {addedMaxChaos} Added Chaos Damage";
     }
 
     public override void ApplyToDamageModifiers(DamageModifiers dmgMods) {
@@ -142,14 +210,13 @@ public partial class SAttackSpeed : SupportGem {
         0.35, 0.36, 0.37, 0.38, 0.39
     ];
 
-    private double attackSpeedIncrease = increasedAttackSpeedArray[0];
+    private double attackSpeedIncrease;
 
     public SAttackSpeed() {
         ItemName = "Attack Speed Support";
         Description = "Supports Attacks";
         AffectsDamageModifiers = false;
         SkillTags = ESkillTags.Attack;
-        UpdateGemEffectsDescription();
     }
 
     protected override void OnGemLevelChanged() {
@@ -158,7 +225,7 @@ public partial class SAttackSpeed : SupportGem {
     }
 
     protected override void UpdateGemEffectsDescription() {
-        DescEffects = $"{attackSpeedIncrease:P0} increased Attack Speed";
+        DescEffects = $"Supported Skill gains {attackSpeedIncrease:P0} increased Attack Speed";
     }
 
     public override void ModifyAttackSkill(IAttack attack) {
@@ -173,14 +240,13 @@ public partial class SCastSpeed : SupportGem {
         0.35, 0.36, 0.37, 0.38, 0.39
     ];
 
-    private double castSpeedIncrease = increasedCastSpeedArray[0];
+    private double castSpeedIncrease;
 
     public SCastSpeed() {
         ItemName = "Cast Speed Support";
         Description = "Supports Spells";
         AffectsDamageModifiers = false;
         SkillTags = ESkillTags.Spell;
-        UpdateGemEffectsDescription();
     }
 
     protected override void OnGemLevelChanged() {
@@ -189,7 +255,7 @@ public partial class SCastSpeed : SupportGem {
     }
 
     protected override void UpdateGemEffectsDescription() {
-        DescEffects = $"{castSpeedIncrease:P0} increased Cast Speed";
+        DescEffects = $"Supported Skill gains {castSpeedIncrease:P0} increased Cast Speed";
     }
 
     public override void ModifySpellSkill(ISpell spell) {
@@ -198,22 +264,76 @@ public partial class SCastSpeed : SupportGem {
 }
 
 public partial class SPierce : SupportGem {
-    private const int addedPierces = 2;
+    private static readonly int[] addedPierceArray = [
+        2, 3, 4
+    ];
+
+    private int addedPierces;
 
     public SPierce() {
         ItemName = "Pierce Support";
         Description = "Supports Projectile Skills";
         AffectsDamageModifiers = false;
         SkillTags = ESkillTags.Projectile;
+    }
+
+    protected override void OnGemLevelChanged() {
+        if (level >= 10) {
+            addedPierces = addedPierceArray[2];
+        }
+        else if (level >= 5) {
+            addedPierces = addedPierceArray[1];
+        }
+        else {
+            addedPierces = addedPierceArray[0];
+        }
+
         UpdateGemEffectsDescription();
     }
 
     protected override void UpdateGemEffectsDescription() {
-        DescEffects = $"Projectiles Pierce {addedPierces} additional targets";
+        DescEffects = $"Supported Skill Pierces {addedPierces} additional targets with Projectiles";
     }
 
     public override void ModifyProjectileSkill(IProjectileSkill pSkill) {
         pSkill.AddedPierces += addedPierces;
+    }
+}
+
+public partial class SMultipleProjectiles : SupportGem {
+    private static readonly int[] addedProjectilesArray = [
+        2, 3, 4
+    ];
+
+    private int addedProjectiles;
+
+    public SMultipleProjectiles() {
+        ItemName = "Multiple Projectiles Support";
+        Description = "Supports Projectile Skills";
+        AffectsDamageModifiers = false;
+        SkillTags = ESkillTags.Projectile;
+    }
+
+    protected override void OnGemLevelChanged() {
+        if (level >= 10) {
+            addedProjectiles = addedProjectilesArray[2];
+        }
+        else if (level >= 5) {
+            addedProjectiles = addedProjectilesArray[1];
+        }
+        else {
+            addedProjectiles = addedProjectilesArray[0];
+        }
+
+        UpdateGemEffectsDescription();
+    }
+
+    protected override void UpdateGemEffectsDescription() {
+        DescEffects = $"Supported Skill fires {addedProjectiles} additional Projectiles";
+    }
+
+    public override void ModifyProjectileSkill(IProjectileSkill pSkill) {
+        pSkill.AddedProjectiles += addedProjectiles;
     }
 }
 
@@ -224,14 +344,13 @@ public partial class SIncreasedDuration : SupportGem {
         0.50, 0.51, 0.52, 0.53, 0.54
     ];
 
-    private double incDuration = increasedDurationArray[0];
+    private double incDuration;
 
     public SIncreasedDuration() {
         ItemName = "Increased Duration Support";
         Description = "Supports Duration Skills";
         AffectsDamageModifiers = false;
         SkillTags = ESkillTags.Duration;
-        UpdateGemEffectsDescription();
     }
 
     protected override void OnGemLevelChanged() {
@@ -240,7 +359,7 @@ public partial class SIncreasedDuration : SupportGem {
     }
 
     protected override void UpdateGemEffectsDescription() {
-        DescEffects = $"{incDuration:P0} increased Duration of Skill Effects";
+        DescEffects = $"Supported Skill gains {incDuration:P0} increased Duration of Skill Effects";
     }
 
     public override void ModifyDurationSkill(IDurationSkill dSkill) {
@@ -255,14 +374,13 @@ public partial class SLessDuration : SupportGem {
         0.43, 0.42, 0.41, 0.41, 0.40
     ];
 
-    private double lessDuration = lessDurationArray[0];
+    private double lessDuration;
 
     public SLessDuration() {
         ItemName = "Less Duration Support";
         Description = "Supports Duration Skills";
         AffectsDamageModifiers = false;
         SkillTags = ESkillTags.Duration;
-        UpdateGemEffectsDescription();
     }
 
     protected override void OnGemLevelChanged() {
@@ -271,7 +389,7 @@ public partial class SLessDuration : SupportGem {
     }
 
     protected override void UpdateGemEffectsDescription() {
-        DescEffects = $"{1 - lessDuration:P0} less Duration of Skill Effects";
+        DescEffects = $"Supported Skill gains {1 - lessDuration:P0} less Duration of Skill Effects";
     }
 
     public override void ModifyDurationSkill(IDurationSkill dSkill) {

@@ -55,22 +55,70 @@ public static class ItemDataTables {
 			Texture = UILib.TextureItemD2ShortSword,
 			MinimumLevel = 0,
 			BasePhysicalMinimumDamage = 5,
-			BasePhysicalMaximumDamage = 9,
+			BasePhysicalMaximumDamage = 8,
 			BaseAttackSpeed = 0.714f,
 			BaseCritChance = 0.05f,
 			ImplicitTypes = []
-		}
+		},
+		
+		new WeaponItemData {
+			BaseName = "Scimitar",
+			ItemSpecifierFlags = EItemBaseSpecifierFlags.W1HSword,
+			Texture = UILib.TextureItemD2Scimitar,
+			MinimumLevel = 5,
+			BasePhysicalMinimumDamage = 9,
+			BasePhysicalMaximumDamage = 12,
+			BaseAttackSpeed = 0.741f,
+			BaseCritChance = 0.05f,
+			ImplicitTypes = []
+		},
+
+		new WeaponItemData {
+			BaseName = "Long Sword",
+			ItemSpecifierFlags = EItemBaseSpecifierFlags.W1HSword,
+			Texture = UILib.TextureItemD2LongSword,
+			MinimumLevel = 11,
+			BasePhysicalMinimumDamage = 13,
+			BasePhysicalMaximumDamage = 17,
+			BaseAttackSpeed = 0.741f,
+			BaseCritChance = 0.05f,
+			ImplicitTypes = []
+		},
 	];
 
 	public static readonly List<WeaponItemData> THSwordWeaponData = [
 		new WeaponItemData {
-			BaseName = "Long Sword",
+			BaseName = "Two-Handed Sword",
 			ItemSpecifierFlags = EItemBaseSpecifierFlags.W2HSword,
-			Texture = UILib.TextureItemD2LongSword,
+			Texture = UILib.TextureItemD2TwoHandedSword,
 			MinimumLevel = 0,
 			BasePhysicalMinimumDamage = 7,
 			BasePhysicalMaximumDamage = 11,
 			BaseAttackSpeed = 0.769f,
+			BaseCritChance = 0.05f,
+			ImplicitTypes = []
+		},
+
+		new WeaponItemData {
+			BaseName = "Giant Sword",
+			ItemSpecifierFlags = EItemBaseSpecifierFlags.W2HSword,
+			Texture = UILib.TextureItemD2GiantSword,
+			MinimumLevel = 5,
+			BasePhysicalMinimumDamage = 13,
+			BasePhysicalMaximumDamage = 16,
+			BaseAttackSpeed = 0.800f,
+			BaseCritChance = 0.05f,
+			ImplicitTypes = []
+		},
+
+		new WeaponItemData {
+			BaseName = "Great Sword",
+			ItemSpecifierFlags = EItemBaseSpecifierFlags.W2HSword,
+			Texture = UILib.TextureItemD2GreatSword,
+			MinimumLevel = 11,
+			BasePhysicalMinimumDamage = 20,
+			BasePhysicalMaximumDamage = 24,
+			BaseAttackSpeed = 0.800f,
 			BaseCritChance = 0.05f,
 			ImplicitTypes = []
 		}
@@ -352,6 +400,13 @@ public static class ItemDataTables {
 			SkillTags = ESkillTags.Duration,
 			SupportType = typeof(SLessDuration),
 			Texture = UILib.TextureItemD2JewelWhiteF,
+			MinimumLevel = 0,
+		},
+
+		new SupportGemData {
+			SkillTags = ESkillTags.Projectile,
+			SupportType = typeof(SMultipleProjectiles),
+			Texture = UILib.TextureItemD2JewelGreenF,
 			MinimumLevel = 0,
 		},
 	];

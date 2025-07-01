@@ -10,6 +10,12 @@ public class SThrust : Skill, IAttack, IMeleeSkill {
 
     public float BaseAttackRange { get; set; } = 3f;
 
+    private static readonly double[] addedDamageModArray = [
+        1.60, 1.70, 1.82, 1.93, 2.06,
+        2.19, 2.34, 2.49, 2.65, 2.82,
+        3.00, 3.20, 3.41, 3.63, 3.86
+    ];
+
     public SThrust() {
         Name = "Thrust";
         Description = "Attacks in a straight line with a melee weapon.";
@@ -22,14 +28,16 @@ public class SThrust : Skill, IAttack, IMeleeSkill {
 
         ManaCost = 1;
 
-        AddedDamageModifier = 1.60;
-
         CastRange = BaseAttackRange;
 
         UsesMouseAim = true;
 
         //BaseDamageModifiers.IncreasedMelee = 0.35;
         //BaseDamageModifiers.MoreMelee = 1.25;
+    }
+
+    protected override void OnSkillLevelChanged() {
+        AddedDamageModifier = addedDamageModArray[level];
     }
 
     public override void UseSkill() {

@@ -281,7 +281,7 @@ public partial class Player : Actor {
 		Vector3 from = PlayerCamera.ProjectRayOrigin(GetViewport().GetMousePosition());
 		Vector3 to = from + PlayerCamera.ProjectRayNormal(GetViewport().GetMousePosition()) * RayLength;
 		PhysicsDirectSpaceState3D state = GetWorld3D().DirectSpaceState;
-		PhysicsRayQueryParameters3D query = PhysicsRayQueryParameters3D.Create(from, to, 2); // 3 includes walls
+		PhysicsRayQueryParameters3D query = PhysicsRayQueryParameters3D.Create(from, to, 0b00000010); // including 1st bit also flags walls
 		Godot.Collections.Dictionary result = state.IntersectRay(query);
 			
 		if (result.Count > 0) {
@@ -449,9 +449,8 @@ public partial class Player : Actor {
 				}
 			}
 
-			if (!IsOnFloor()) {
-				DoGravity(delta);
-			}
+			DoGravity(delta);
+			MoveAndSlide();
 		}
 		
 		//debugLabel.Text = $"Velocity: {Velocity.ToString("F2")}\nVel Length: {Velocity.Length():F2}\nRem. Dist: {remainingDist:F2}\nRotation: {RotationDegrees.Y:F2}";

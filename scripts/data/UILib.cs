@@ -28,7 +28,12 @@ public static class UILib {
 	public static readonly Texture2D TextureItemD2Quiver = GD.Load<Texture2D>("res://textures/items/d2_ArrowQuiver.png");
 
 	public static readonly Texture2D TextureItemD2ShortSword = GD.Load<Texture2D>("res://textures/items/d2_ShortSword.png");
+	public static readonly Texture2D TextureItemD2Scimitar = GD.Load<Texture2D>("res://textures/items/d2_Scimitar.png");
 	public static readonly Texture2D TextureItemD2LongSword = GD.Load<Texture2D>("res://textures/items/d2_LongSword.png");
+
+	public static readonly Texture2D TextureItemD2TwoHandedSword = GD.Load<Texture2D>("res://textures/items/d2_TwoHandedSword.png");
+	public static readonly Texture2D TextureItemD2GiantSword = GD.Load<Texture2D>("res://textures/items/d2_GiantSword.png");
+	public static readonly Texture2D TextureItemD2GreatSword = GD.Load<Texture2D>("res://textures/items/d2_GreatSword.png");
 
 	public static readonly Texture2D TextureItemD2LongStaff = GD.Load<Texture2D>("res://textures/items/d2_LongStaff.png");
 

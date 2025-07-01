@@ -14,7 +14,26 @@ public class SPrismaticBolt : Skill, ISpell, IProjectileSkill {
     public int BaseProjectiles { get; set; } = 1;
     public int AddedProjectiles { get; set; } = 0;
     public int TotalProjectiles { get; set; }
+
+    public bool CanFireSequentially { get; set; } = true;
     public bool FiresSequentially { get; set; } = false;
+
+    public double MinimumSpreadAngle { get; set; } = 0;
+    public double MaximumSpreadAngle { get; set; } = 0;
+    public double MinimumSpreadAngleOverride { get; set; } = 0;
+    public double MaximumSpreadAngleOverride { get; set; } = 0;
+
+    private static readonly double[] minDamageArray = [
+        1, 1, 2, 2, 3,
+        3, 4, 5, 6, 7,
+        9, 11, 14, 18, 22
+    ];
+
+    private static readonly double[] maxDamageArray = [
+        3, 4, 4, 6, 7,
+        9, 11, 14, 18, 22,
+        28, 35, 44, 54, 68
+    ];
 
     public SPrismaticBolt() {
         Name = "Prismatic Bolt";
@@ -34,21 +53,23 @@ public class SPrismaticBolt : Skill, ISpell, IProjectileSkill {
 
         TotalPierces = BasePierces;
         TotalProjectiles = BaseProjectiles;
+    }
 
-        BaseDamageModifiers.Physical.SMinBase = 1;
-        BaseDamageModifiers.Physical.SMaxBase = 3;
+    protected override void OnSkillLevelChanged() {
+        BaseDamageModifiers.Physical.SMinBase = minDamageArray[level];
+        BaseDamageModifiers.Physical.SMaxBase = maxDamageArray[level];
 
-        BaseDamageModifiers.Fire.SMinBase = 1;
-        BaseDamageModifiers.Fire.SMaxBase = 3;
+        BaseDamageModifiers.Fire.SMinBase = minDamageArray[level];
+        BaseDamageModifiers.Fire.SMaxBase = maxDamageArray[level];
 
-        BaseDamageModifiers.Cold.SMinBase = 1;
-        BaseDamageModifiers.Cold.SMaxBase = 3;
+        BaseDamageModifiers.Cold.SMinBase = minDamageArray[level];
+        BaseDamageModifiers.Cold.SMaxBase = maxDamageArray[level];
 
-        BaseDamageModifiers.Lightning.SMinBase = 1;
-        BaseDamageModifiers.Lightning.SMaxBase = 3;
+        BaseDamageModifiers.Lightning.SMinBase = minDamageArray[level];
+        BaseDamageModifiers.Lightning.SMaxBase = maxDamageArray[level];
 
-        BaseDamageModifiers.Chaos.SMinBase = 1;
-        BaseDamageModifiers.Chaos.SMaxBase = 3;
+        BaseDamageModifiers.Chaos.SMinBase = minDamageArray[level];
+        BaseDamageModifiers.Chaos.SMaxBase = maxDamageArray[level];
     }
 
     public override void UseSkill() {
