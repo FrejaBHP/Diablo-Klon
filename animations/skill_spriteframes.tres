@@ -1,0 +1,66 @@
+[gd_resource type="SpriteFrames" load_steps=9 format=3 uid="uid://b4j0ojeo5e024"]
+
+[ext_resource type="Texture2D" uid="uid://caj2fjojsjvwh" path="res://textures/effects/sheet_bd_nova.png" id="1_6w6o0"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3jd5j"]
+atlas = ExtResource("1_6w6o0")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h7vtt"]
+atlas = ExtResource("1_6w6o0")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_svxph"]
+atlas = ExtResource("1_6w6o0")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_625ic"]
+atlas = ExtResource("1_6w6o0")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vy14v"]
+atlas = ExtResource("1_6w6o0")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rdgah"]
+atlas = ExtResource("1_6w6o0")
+region = Rect2(320, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dvtjm"]
+atlas = ExtResource("1_6w6o0")
+region = Rect2(384, 0, 64, 64)
+
+[resource]
+resource_local_to_scene = true
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3jd5j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h7vtt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_svxph")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_625ic")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vy14v")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rdgah")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dvtjm")
+}],
+"loop": false,
+"name": &"fireNova",
+"speed": 20.0
+}, {
+"frames": [],
+"loop": false,
+"name": &"none",
+"speed": 5.0
+}]

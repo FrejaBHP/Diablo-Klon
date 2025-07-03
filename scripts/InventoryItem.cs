@@ -401,6 +401,11 @@ public partial class InventoryItem : PanelContainer {
             tooltipContent.EffectContainer.AddChild(chaosLabel);
         }
 
+		for (int i = 0; i < skillItem.SkillReference.Effects.Length; i++) {
+			Label effectLabel = GenerateAffixLabel(skillItem.SkillReference.Effects[i]);
+            tooltipContent.EffectContainer.AddChild(effectLabel);
+		}
+
 		if (IsForSale) {
 			tooltipContent.PartsContainer.AddChild(GeneratePriceTag(ItemReference.Price));
 		}

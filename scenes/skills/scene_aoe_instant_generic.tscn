@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://35jxx5bgw3he"]
+
+[ext_resource type="SpriteFrames" uid="uid://b4j0ojeo5e024" path="res://animations/skill_spriteframes.tres" id="1_c84fx"]
+[ext_resource type="Script" uid="uid://bdw0cjkrocet" path="res://scripts/AreaOfEffectInstant.cs" id="1_yohva"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_m4v3k"]
+resource_local_to_scene = true
+
+[node name="AreaOfEffectInstant" type="Node3D"]
+script = ExtResource("1_yohva")
+
+[node name="ShapeCastSweep" type="ShapeCast3D" parent="."]
+enabled = false
+shape = SubResource("CylinderShape3D_m4v3k")
+target_position = Vector3(0, 0, 0)
+collision_mask = 0
+
+[node name="AreaAnimation" type="AnimatedSprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
+visible = false
+layers = 32
+cast_shadow = 0
+pixel_size = 0.031
+axis = 1
+texture_filter = 4
+sprite_frames = ExtResource("1_c84fx")
+animation = &"fireNova"

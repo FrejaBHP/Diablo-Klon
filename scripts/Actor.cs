@@ -246,10 +246,12 @@ public class DamageModifiers() {
     public double IncreasedMelee = 0;
     public double IncreasedRanged = 0;
     public double IncreasedSpell = 0;
+    public double IncreasedAll = 0;
 
     public double MoreMelee = 1;
     public double MoreRanged = 1;
     public double MoreSpell = 1;
+    public double MoreAll = 1;
 
     public DamageModifiers ShallowCopy() {
         DamageModifiers copy = (DamageModifiers)MemberwiseClone();
@@ -274,10 +276,12 @@ public class DamageModifiers() {
         c.IncreasedMelee = a.IncreasedMelee + b.IncreasedMelee;
         c.IncreasedRanged = a.IncreasedRanged + b.IncreasedRanged;
         c.IncreasedSpell = a.IncreasedSpell + b.IncreasedSpell;
+        c.IncreasedAll = a.IncreasedAll + b.IncreasedAll;
 
         c.MoreMelee = a.MoreMelee * b.MoreMelee;
         c.MoreRanged = a.MoreRanged * b.MoreRanged;
         c.MoreSpell = a.MoreSpell * b.MoreSpell;
+        c.MoreAll = a.MoreAll * b.MoreAll;
         
         return c;
     }
@@ -294,10 +298,12 @@ public class DamageModifiers() {
         c.IncreasedMelee = a.IncreasedMelee - b.IncreasedMelee;
         c.IncreasedRanged = a.IncreasedRanged - b.IncreasedRanged;
         c.IncreasedSpell = a.IncreasedSpell - b.IncreasedSpell;
+        c.IncreasedAll = a.IncreasedAll - b.IncreasedAll;
 
         c.MoreMelee = a.MoreMelee / b.MoreMelee;
         c.MoreRanged = a.MoreRanged / b.MoreRanged;
         c.MoreSpell = a.MoreSpell / b.MoreSpell;
+        c.MoreAll = a.MoreAll / b.MoreAll;
         
         return c;
     }
@@ -482,7 +488,7 @@ public partial class Actor : CharacterBody3D {
     /// <param name="isAHit"></param>
     /// <param name="isCritical"></param>
     /// <param name="createDamageText"></param>
-    public void TakeDamage(EDamageCategory dmgCategory, SkillDamage damage, ActorPenetrations pens, bool isAHit, bool isCritical, bool createDamageText) {
+    public void TakeDamage(EDamageCategory dmgCategory, SkillDamage damage, ActorPenetrations pens, bool isAHit, bool createDamageText) {
         double physDamage = damage.Physical;
         double fireDamage = damage.Fire;
         double coldDamage = damage.Cold;
@@ -517,7 +523,7 @@ public partial class Actor : CharacterBody3D {
         totalDamage = physDamage + fireDamage + coldDamage + lightningDamage + chaosDamage;
 
         BasicStats.CurrentLife -= totalDamage;
-        EmitSignal(SignalName.DamageTaken, totalDamage, isCritical, createDamageText);
+        EmitSignal(SignalName.DamageTaken, totalDamage, damage.IsCritical, createDamageText);
     }
 
     public virtual void OnDamageTaken(double damage, bool isCritical, bool createDamageText) {

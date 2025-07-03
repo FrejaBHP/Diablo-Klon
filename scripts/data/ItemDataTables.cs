@@ -325,8 +325,15 @@ public static class ItemDataTables {
 		},
 
 		new SkillItemData {
-			SkillName = ESkillName.BasicShoot,
+			SkillName = ESkillName.PiercingShot,
 			SkillType = typeof(SShoot),
+			Texture = UILib.TextureItemD2JewelGreen,
+			MinimumLevel = 0,
+		},
+
+		new SkillItemData {
+			SkillName = ESkillName.SplitArrow,
+			SkillType = typeof(SSplitArrow),
 			Texture = UILib.TextureItemD2JewelGreen,
 			MinimumLevel = 0,
 		},
@@ -334,6 +341,13 @@ public static class ItemDataTables {
 		new SkillItemData {
 			SkillName = ESkillName.PrismaticBolt,
 			SkillType = typeof(SPrismaticBolt),
+			Texture = UILib.TextureItemD2JewelBlue,
+			MinimumLevel = 0,
+		},
+
+		new SkillItemData {
+			SkillName = ESkillName.FireNova,
+			SkillType = typeof(SFireNova),
 			Texture = UILib.TextureItemD2JewelBlue,
 			MinimumLevel = 0,
 		}
@@ -407,6 +421,13 @@ public static class ItemDataTables {
 			SkillTags = ESkillTags.Projectile,
 			SupportType = typeof(SMultipleProjectiles),
 			Texture = UILib.TextureItemD2JewelGreenF,
+			MinimumLevel = 0,
+		},
+
+		new SupportGemData {
+			SkillTags = ESkillTags.Area,
+			SupportType = typeof(SIncreasedAoE),
+			Texture = UILib.TextureItemD2JewelBlueF,
 			MinimumLevel = 0,
 		},
 	];

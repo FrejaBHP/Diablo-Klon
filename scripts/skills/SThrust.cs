@@ -19,6 +19,7 @@ public class SThrust : Skill, IAttack, IMeleeSkill {
     public SThrust() {
         Name = "Thrust";
         Description = "Attacks in a straight line with a melee weapon.";
+        Effects = [];
 
         SkillName = ESkillName.BasicThrust;
         Type = ESkillType.Attack;

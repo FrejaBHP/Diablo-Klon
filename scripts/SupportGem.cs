@@ -306,11 +306,12 @@ public partial class SMultipleProjectiles : SupportGem {
     ];
 
     private int addedProjectiles;
+    private readonly double damagePenalty = 0.75;
 
     public SMultipleProjectiles() {
         ItemName = "Multiple Projectiles Support";
         Description = "Supports Projectile Skills";
-        AffectsDamageModifiers = false;
+        AffectsDamageModifiers = true;
         SkillTags = ESkillTags.Projectile;
     }
 
@@ -329,7 +330,11 @@ public partial class SMultipleProjectiles : SupportGem {
     }
 
     protected override void UpdateGemEffectsDescription() {
-        DescEffects = $"Supported Skill fires {addedProjectiles} additional Projectiles";
+        DescEffects = $"Supported Skill fires {addedProjectiles} additional Projectiles\nSupported Skill deals {1 - damagePenalty:P0} less Damage";
+    }
+
+    public override void ApplyToDamageModifiers(DamageModifiers dmgMods) {
+        dmgMods.MoreAll *= damagePenalty;
     }
 
     public override void ModifyProjectileSkill(IProjectileSkill pSkill) {
@@ -394,5 +399,35 @@ public partial class SLessDuration : SupportGem {
 
     public override void ModifyDurationSkill(IDurationSkill dSkill) {
         dSkill.MoreDuration *= lessDuration;
+    }
+}
+
+public partial class SIncreasedAoE : SupportGem {
+    private static readonly double[] increasedAreaArray = [
+        0.40, 0.41, 0.42, 0.43, 0.44,
+        0.45, 0.46, 0.47, 0.48, 0.49,
+        0.50, 0.51, 0.52, 0.53, 0.54
+    ];
+
+    private double incArea;
+
+    public SIncreasedAoE() {
+        ItemName = "Increased Area of Effect Support";
+        Description = "Supports Area Skills";
+        AffectsDamageModifiers = false;
+        SkillTags = ESkillTags.Area;
+    }
+
+    protected override void OnGemLevelChanged() {
+        incArea = increasedAreaArray[level];
+        UpdateGemEffectsDescription();
+    }
+
+    protected override void UpdateGemEffectsDescription() {
+        DescEffects = $"Supported Skill gains {incArea:P0} increased Area of Effect";
+    }
+
+    public override void ModifyAreaSkill(IAreaSkill aSkill) {
+        aSkill.IncreasedArea += incArea;
     }
 }

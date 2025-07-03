@@ -255,6 +255,12 @@ public partial class SkillHotbar : Control {
             tooltipContent.EffectContainer.AddChild(GenerateAffixLabel(projString));
         }
 
+        if (skill.Tags.HasFlag(ESkillTags.Area)) {
+            IAreaSkill aSkill = skill as IAreaSkill;
+
+            tooltipContent.EffectContainer.AddChild(GenerateAffixLabel($"Radius is {aSkill.TotalAreaRadius:F2} metres"));
+        }
+
 		return tooltipContent;
 	}
 

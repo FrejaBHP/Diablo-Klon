@@ -339,8 +339,10 @@ public enum EDamageCategory {
 
 public enum ESkillName {
 	BasicThrust,
-	BasicShoot,
+	PiercingShot,
 	PrismaticBolt,
+	SplitArrow,
+	FireNova,
 	COUNT
 }
 

@@ -82,7 +82,7 @@ public partial class Projectile : Node3D {
     }
 
     protected virtual void OnCollideWithTarget(Actor actor) {
-        actor.TakeDamage(dmgCategory, damage, pens, true, damage.IsCritical, true);
+        actor.TakeDamage(dmgCategory, damage, pens, true, true);
 
         if (Pierces < 1) {
             QueueFree();

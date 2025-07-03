@@ -43,11 +43,12 @@ public partial class Run : Node3D {
 			PlayerActor?.UpdateSkillValues();
         } 
 	}
+	
 	public int AreaLevel { get; protected set; }
 	public int AreaLevelMod { get; protected set; } = 0;
 	public int CurrentAct { get; protected set; } = 0;
 	public int CurrentArea { get; protected set; } = 0; // When acts are properly structured, this should be set to 0 by it, and only maps past the first should increment this
-	private const int areasPerAct = 15; // Areas refer to both combat maps and shop/breather maps
+	private const int areasPerAct = 14; // Areas refer to both combat maps and shop/breather maps
 	private bool firstMapEntered = false;
 
 	public bool Act1Completed { get; private set; } = false;

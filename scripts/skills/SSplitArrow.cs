@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public class SShoot : Skill, IAttack, IProjectileSkill {
+public class SSplitArrow : Skill, IAttack, IProjectileSkill {
     public ESkillWeapons Weapons { get; set; } = ESkillWeapons.Ranged2H;
     public bool CanDualWield { get; set; } = false;
 
@@ -11,10 +11,10 @@ public class SShoot : Skill, IAttack, IProjectileSkill {
 
     public float BaseProjectileSpeed { get; set; } = 15f;
     public double BaseProjectileLifetime { get; set; } = 2f;
-    public int BasePierces { get; set; } = 2;
+    public int BasePierces { get; set; } = 0;
     public int AddedPierces { get; set; } = 0;
     public int TotalPierces { get; set; }
-    public int BaseProjectiles { get; set; } = 1;
+    public int BaseProjectiles { get; set; } = 5;
     public int AddedProjectiles { get; set; } = 0;
     public int TotalProjectiles { get; set; }
 
@@ -27,23 +27,27 @@ public class SShoot : Skill, IAttack, IProjectileSkill {
     public double MaximumSpreadAngleOverride { get; set; } = 0;
 
     private static readonly double[] addedDamageModArray = [
-        1.30, 1.38, 1.47, 1.57, 1.67,
-        1.78, 1.90, 2.02, 2.15, 2.29,
-        2.44, 2.60, 2.77, 2.95, 3.14
+        0.75, 0.80, 0.85, 0.90, 0.96,
+        1.02, 1.09, 1.16, 1.24, 1.32,
+        1.41, 1.50, 1.60, 1.70, 1.81
     ];
 
-    public SShoot() {
-        Name = "Piercing Shot";
-        Description = "Fires a penetrating arrow in a straight line with a bow.";
-        Effects = [
-            $"Pierces {BasePierces} targets"
-        ];
+    private static readonly int[] baseProjArray = [
+        5, 5, 5, 6, 6,
+        6, 7, 7, 7, 8,
+        8, 8, 9, 9, 9
+    ];
 
-        SkillName = ESkillName.PiercingShot;
+    public SSplitArrow() {
+        Name = "Split Arrow";
+        Description = "Fires a fan of multiple arrows with a bow.";
+        UpdateEffectStrings();
+
+        SkillName = ESkillName.SplitArrow;
         Type = ESkillType.Attack;
         Tags = ESkillTags.Attack | ESkillTags.Projectile | ESkillTags.Ranged;
         DamageCategory = EDamageCategory.Ranged;
-        Texture = UILib.TextureSkillShoot;
+        Texture = UILib.TextureSkillSplitArrow;
 
         ManaCost = 1;
 
@@ -55,6 +59,14 @@ public class SShoot : Skill, IAttack, IProjectileSkill {
 
     protected override void OnSkillLevelChanged() {
         AddedDamageModifier = addedDamageModArray[level];
+        BaseProjectiles = baseProjArray[level];
+        UpdateEffectStrings();
+    }
+
+    protected override void UpdateEffectStrings() {
+        Effects = [
+            $"Fires {BaseProjectiles} projectiles"
+        ];
     }
 
     public override void UseSkill() {

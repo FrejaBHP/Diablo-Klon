@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://4k6k3qtyyxi7"]
+
+[ext_resource type="Script" uid="uid://cb27soahuf54y" path="res://scripts/AreaOfEffectPersistent.cs" id="1_0mpo5"]
+[ext_resource type="SpriteFrames" uid="uid://b4j0ojeo5e024" path="res://animations/skill_spriteframes.tres" id="1_63cfc"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_v07hh"]
+
+[node name="AreaOfEffect" type="Area3D"]
+collision_layer = 0
+collision_mask = 0
+script = ExtResource("1_0mpo5")
+
+[node name="HitCollision" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CylinderShape3D_v07hh")
+
+[node name="AreaAnimation" type="AnimatedSprite3D" parent="."]
+layers = 32
+pixel_size = 0.031
+axis = 1
+texture_filter = 4
+sprite_frames = ExtResource("1_63cfc")
+animation = &"none"

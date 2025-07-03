@@ -5,8 +5,10 @@ using System.Text;
 using Godot;
 
 public abstract class Skill {
+    public static readonly PackedScene GenericProjectileScene = GD.Load<PackedScene>("res://scenes/skills/scene_projectile_generic.tscn");
+    public static readonly PackedScene GenericAreaPersistentScene = GD.Load<PackedScene>("res://scenes/skills/scene_aoe_persistent_generic.tscn");
+    public static readonly PackedScene GenericAreaInstantScene = GD.Load<PackedScene>("res://scenes/skills/scene_aoe_instant_generic.tscn");
     protected static readonly PackedScene thrustAttackScene = GD.Load<PackedScene>("res://scenes/skills/scene_thrust.tscn");
-    protected static readonly PackedScene genericProjectileScene = GD.Load<PackedScene>("res://scenes/skills/scene_projectile_generic.tscn");
 
     public Actor ActorOwner { get; set; }
     public SkillSlotCluster HousingSkillCluster = null;
@@ -18,6 +20,7 @@ public abstract class Skill {
 
     public string Name { get; protected set; }
     public string Description { get; protected set; }
+    public string[] Effects { get; protected set; }
 
     protected int level = 0;
     public int Level { 
@@ -48,6 +51,7 @@ public abstract class Skill {
 
     public abstract void UseSkill();
     protected abstract void OnSkillLevelChanged();
+    protected virtual void UpdateEffectStrings() {}
 
     public virtual bool CanUseSkill() {
         if (!ActorOwner.IsIgnoringManaCosts) {
@@ -229,6 +233,9 @@ public abstract class Skill {
             }
 
             if (this is IAreaSkill aSkill) {
+                aSkill.IncreasedArea = 0;
+                aSkill.MoreArea = 1;
+
                 if (isPartOfCluster) {
                     foreach (SupportGem support in supportGems) {
                         if (support.SkillTags.HasFlag(ESkillTags.Area)) {
@@ -236,6 +243,8 @@ public abstract class Skill {
                         }
                     }
                 }
+
+                aSkill.CalculateTotalRadius();
             }
 
             if (this is IDurationSkill dSkill) {
@@ -296,6 +305,9 @@ public abstract class Skill {
                 activeMoreMod = 1;
             }
 
+            activeIncreasedMod += ActiveDamageModifiers.IncreasedAll;
+            activeMoreMod *= ActiveDamageModifiers.MoreAll;
+
             ActiveDamageModifiers.Physical.SIncreased += activeIncreasedMod;
             ActiveDamageModifiers.Fire.SIncreased += activeIncreasedMod;
             ActiveDamageModifiers.Cold.SIncreased += activeIncreasedMod;
@@ -316,6 +328,15 @@ public abstract class Skill {
         }
         else if (ActorOwner.IsInGroup("Player")) {
             collisionArea.CollisionMask += 32;
+        }
+    }
+
+    public void SetSkillCollision(ShapeCast3D shapeCast) {
+        if (ActorOwner.IsInGroup("Enemy")) {
+            shapeCast.CollisionMask += 4;
+        }
+        else if (ActorOwner.IsInGroup("Player")) {
+            shapeCast.CollisionMask += 32;
         }
     }
 
@@ -349,6 +370,9 @@ public interface IAttack {
     Stat ActiveAttackSpeedModifiers { get; protected set; }
     bool CanDualWield { get; protected set; }
 
+    // ===== Virtual functions =====
+
+    // ===== Default functions =====
     public void UpdateAttackSpeedValues(Stat actorAS) {
         ActiveAttackSpeedModifiers = actorAS + BaseAttackSpeedModifiers;
     }
@@ -413,6 +437,9 @@ public interface ISpell {
     Stat BaseCastSpeedModifiers { get; protected set; }
     Stat ActiveCastSpeedModifiers { get; protected set; }
 
+    // ===== Virtual functions =====
+
+    // ===== Default functions =====
     public void UpdateCastSpeedValues(Stat actorCS) {
         ActiveCastSpeedModifiers = actorCS + BaseCastSpeedModifiers;
     }
@@ -461,13 +488,21 @@ public interface IProjectileSkill {
         Math.Tau / 3,       // 6+ projectiles, 120 degrees
     ];
 
+    // ===== Virtual functions =====
+
+    // ===== Default functions =====
     public static float GetSpreadCoefficient(Vector3 startPos, Vector3 endPos) {
         float dist = startPos.DistanceTo(endPos);
         float coefficient = Math.Clamp(dist / 8f, 0f, 1f);
-        GD.Print($"Coefficient: {coefficient:F2}");
         return coefficient;
     }
 
+    /// <summary>
+    /// Calculates the rotation that each projectile should have applied to form a cone.
+    /// </summary>
+    /// <param name="noOfProjectiles"></param>
+    /// <param name="spreadCoefficient"></param>
+    /// <returns>An array with the individual angle modifications in radians.</returns>
     float[] GetMultipleProjectileAngles(int noOfProjectiles, float spreadCoefficient) {
         float[] angles = new float[noOfProjectiles];
 
@@ -528,10 +563,102 @@ public interface IProjectileSkill {
 
         return angles;
     }
+
+    void BasicProjectileSkillBehaviour(Skill skill, Vector3 mouseAimPosition) {
+        float coefficient = GetSpreadCoefficient(skill.ActorOwner.GlobalPosition, mouseAimPosition);
+        Vector3 diffVector = mouseAimPosition - skill.ActorOwner.GlobalPosition;
+
+        float[] angleOffsets = GetMultipleProjectileAngles(TotalProjectiles, coefficient);
+
+        for (int i = 0; i < TotalProjectiles; i++) {
+            Projectile proj = Skill.GenericProjectileScene.Instantiate() as Projectile;
+            Run.Instance.AddChild(proj);
+            skill.SetSkillCollision(proj.Hitbox);
+
+            proj.GlobalPosition = proj.Position with { 
+                X = skill.ActorOwner.GlobalPosition.X, 
+                Y = skill.ActorOwner.GlobalPosition.Y + skill.ActorOwner.OutgoingEffectAttachmentHeight, 
+                Z = skill.ActorOwner.GlobalPosition.Z 
+            };
+
+            if (mouseAimPosition != Vector3.Zero) {
+                if (!FiresSequentially) {
+                    Vector3 newPos = diffVector.Rotated(Vector3.Up, angleOffsets[i]) + skill.ActorOwner.GlobalPosition;
+                    proj.SetFacing(newPos);
+                }
+                else {
+                    proj.SetFacing(mouseAimPosition);
+                }
+            }
+            else {
+                if (!FiresSequentially) {
+                    Vector3 rotation = skill.ActorOwner.GlobalRotation.Rotated(Vector3.Up, angleOffsets[i]);
+                    proj.SetFacing(rotation.Y);
+                }
+                else {
+                    proj.SetFacing(skill.ActorOwner.GlobalRotation.Y);
+                }
+            }
+            
+            proj.SetProperties(skill.DamageCategory, skill.RollForDamage(true), skill.ActorOwner.Penetrations, BaseProjectileSpeed, -1, TotalPierces);
+        }
+
+        skill.DeductManaFromActor();
+    }
 }
 
 public interface IAreaSkill {
-    double BaseAreaRadius { get; protected set; }
+    float BaseAreaRadius { get; protected set; }
+    double IncreasedArea { get; set; }
+    double MoreArea { get; set; }
+    float TotalAreaRadius { get; protected set; }
+    bool IsNovaSkill { get; protected set; }
+
+    // ===== Virtual functions =====
+    void ApplyAreaSkillBehaviourToTargets(List<Actor> targets);
+
+    // ===== Default functions =====
+    void BasicAreaSweepSkillBehaviour(Skill skill, string animationName, float animationPixelSize) {
+        const int casts = 1;
+        Vector3 targetPosition;
+
+        if (IsNovaSkill) {
+            targetPosition = skill.ActorOwner.GlobalPosition;
+        }
+        else {
+            targetPosition = skill.ActorOwner.GlobalPosition; // temp
+        }
+
+        for (int i = 0; i < casts; i++) {
+            AreaOfEffectInstant area = Skill.GenericAreaInstantScene.Instantiate<AreaOfEffectInstant>();
+            Run.Instance.AddChild(area);
+            skill.SetSkillCollision(area.ShapeCastSweep);
+
+            area.TargetsSwept += ApplyAreaSkillBehaviourToTargets;
+            area.GlobalPosition = targetPosition;
+            area.SetProperties(TotalAreaRadius, animationName, animationPixelSize, TotalAreaRadius / BaseAreaRadius);
+            area.Sweep();
+        }
+
+        skill.DeductManaFromActor();
+    }
+
+    /// <summary>
+    /// Calculates and sets the TotalAreaRadius with modifiers to the area.
+    /// </summary>
+    void CalculateTotalRadius() {
+        // In lieu of applying increases to Area of Effect directly to the radius, they are instead applied to the circle's calculated area, 
+        // where that circle's new radius is derived and set as the skill's total radius to avoid crazy scaling.
+        // This results in calculations such as these for a skill with a base radius of 2,50:
+        //  50% Increased Area of Effect = 2,50 -> 3,06, and not 3,75. (Area = 19,63 -> 29,45)
+        // 100% Increased Area of Effect = 2,50 -> 3,54, and not 5,00. (Area = 19,63 -> 39,27)
+        // 200% Increased Area of Effect = 2,50 -> 4,33, and not 7,50. (Area = 19,63 -> 58,91)
+
+        double area = Math.PI * Math.Pow(BaseAreaRadius, 2);
+        area *= (1 + IncreasedArea) * MoreArea;
+
+        TotalAreaRadius = (float)Math.Pow(area / Math.PI, 0.5);
+    }
 }
 
 public interface IDurationSkill {
@@ -539,4 +666,8 @@ public interface IDurationSkill {
     double IncreasedDuration { get; set; }
     double MoreDuration { get; set; }
     double TotalDuration { get; set; }
+
+    // ===== Virtual functions =====
+
+    // ===== Default functions =====
 }

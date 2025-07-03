@@ -38,6 +38,7 @@ public class SPrismaticBolt : Skill, ISpell, IProjectileSkill {
     public SPrismaticBolt() {
         Name = "Prismatic Bolt";
         Description = "Conjures a bolt that travels in a straight line, dealing damage to the first enemy hit.";
+        Effects = [];
 
         SkillName = ESkillName.PrismaticBolt;
         Type = ESkillType.Spell;
@@ -74,25 +75,8 @@ public class SPrismaticBolt : Skill, ISpell, IProjectileSkill {
 
     public override void UseSkill() {
         if (ActorOwner != null) {
-            Projectile proj = genericProjectileScene.Instantiate() as Projectile;
-            Game.Instance.AddChild(proj);
-            SetSkillCollision(proj.Hitbox);
-
-            proj.GlobalPosition = proj.Position with { 
-                X = ActorOwner.GlobalPosition.X, 
-                Y = ActorOwner.GlobalPosition.Y + ActorOwner.OutgoingEffectAttachmentHeight, 
-                Z = ActorOwner.GlobalPosition.Z 
-            };
-
-            if (mouseAimPosition != Vector3.Zero) {
-                proj.SetFacing(mouseAimPosition);
-            }
-            else {
-                proj.SetFacing(ActorOwner.GlobalRotation.Y);
-            }
-            proj.SetProperties(DamageCategory, RollForDamage(true), ActorOwner.Penetrations, BaseProjectileSpeed, -1, TotalPierces);
-
-            DeductManaFromActor();
+            IProjectileSkill pSkill = this;
+            pSkill.BasicProjectileSkillBehaviour(this, mouseAimPosition);
         }
     }
 }

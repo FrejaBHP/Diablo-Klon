@@ -46,7 +46,7 @@ public partial class SThrustScene : Node3D {
     protected void OnBodyEntered(Node3D body) {
         if (body.IsInGroup("Enemy") || body.IsInGroup("Player")) {
             Actor target = body as Actor;
-            target.TakeDamage(dmgCategory, damage, pens, true, damage.IsCritical, true); // Giv støtte til alle typer senere!!
+            target.TakeDamage(dmgCategory, damage, pens, true, true); // Giv støtte til alle typer senere!!
         }
     }
 
