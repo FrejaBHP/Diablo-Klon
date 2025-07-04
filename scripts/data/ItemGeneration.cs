@@ -239,6 +239,7 @@ public static class ItemGeneration {
 		item.BaseArmour = data.BaseArmour;
 		item.BaseEvasion = data.BaseEvasion;
 		item.BaseEnergyShield = data.BaseEnergyShield;
+		item.BaseBlockChance = data.BaseBlockChance;
 
 		item.PostGenCalculation();
 	}

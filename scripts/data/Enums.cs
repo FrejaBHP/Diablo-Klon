@@ -79,6 +79,8 @@ public enum EStatName {
 	AddedCritMulti,
 
 	IncreasedMovementSpeed,
+	BlockChance,
+	BlockEffectiveness,
 
 	FlatArmour,
 	IncreasedArmour,
@@ -168,6 +170,8 @@ public enum EAffixFamily {
 	AddedCritMulti,
 
 	IncreasedMovementSpeed,
+	AddedBlockChance,
+	IncreasedBlockChance,
 
 	FlatArmour,
 	IncreasedArmour,

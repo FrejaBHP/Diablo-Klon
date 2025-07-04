@@ -363,10 +363,13 @@ public class ActorWeaponStats {
 
 public partial class Actor : CharacterBody3D {
     [Signal]
-    public delegate void DamageTakenEventHandler(double damage, bool isCritical, bool showDamageText);
+    public delegate void DamageTakenEventHandler(double damage, bool wasBlocked, bool isCritical, bool showDamageText);
 
     [Signal]
     public delegate void DamageEvadedEventHandler();
+
+    [Signal]
+    public delegate void DamageBlockedEventHandler();
 
     protected static readonly PackedScene floatingResourceBarsScene = GD.Load<PackedScene>("res://scenes/gui/actor_floating_resource_bars.tscn");
 
@@ -379,6 +382,8 @@ public partial class Actor : CharacterBody3D {
 
     public Stat Armour = new(0, true, 0);
     public Stat Evasion = new(0, true, 0);
+    public Stat BlockChance = new(0, false, 0, 0.75);
+    public Stat BlockEffectiveness = new(0.5, false, 0, 0.8);
 
     public ActorBasicStats BasicStats = new();
     public DamageModifiers DamageMods = new();
@@ -420,6 +425,7 @@ public partial class Actor : CharacterBody3D {
         BasicStats.CurrentManaChanged += OnCurrentManaChanged;
         DamageTaken += OnDamageTaken;
         DamageEvaded += OnDamageEvaded;
+        DamageBlocked += OnDamageBlocked;
     }
 
     protected void DoGravity(double delta) {
@@ -496,6 +502,8 @@ public partial class Actor : CharacterBody3D {
         double chaosDamage = damage.Chaos;
         double totalDamage;
 
+        bool hitBlocked = false;
+
         if (isAHit) {
             if (dmgCategory != EDamageCategory.Spell) {
                 if (RollForEvade(GetEvasionChance(Evasion.STotal, ActorLevel))) {
@@ -512,6 +520,19 @@ public partial class Actor : CharacterBody3D {
             coldDamage *= halfMitigation;
             lightningDamage *= halfMitigation;
             chaosDamage *= halfMitigation;
+
+            if (RollForBlock(BlockChance.STotal)) {
+                EmitSignal(SignalName.DamageBlocked);
+                hitBlocked = true;
+
+                double blockMitigation = 1 - BlockEffectiveness.STotal;
+
+                physDamage *= blockMitigation;
+                fireDamage *= blockMitigation;
+                coldDamage *= blockMitigation;
+                lightningDamage *= blockMitigation;
+                chaosDamage *= blockMitigation;
+            }
         }
 
         physDamage *= 1 - ((Resistances.ResPhysical - Penetrations.PenPhysical) / 100);
@@ -523,14 +544,18 @@ public partial class Actor : CharacterBody3D {
         totalDamage = physDamage + fireDamage + coldDamage + lightningDamage + chaosDamage;
 
         BasicStats.CurrentLife -= totalDamage;
-        EmitSignal(SignalName.DamageTaken, totalDamage, damage.IsCritical, createDamageText);
+        EmitSignal(SignalName.DamageTaken, totalDamage, hitBlocked, damage.IsCritical, createDamageText);
     }
 
-    public virtual void OnDamageTaken(double damage, bool isCritical, bool createDamageText) {
+    public virtual void OnDamageTaken(double damage, bool wasBlocked, bool isCritical, bool createDamageText) {
 
     }
 
     public virtual void OnDamageEvaded() {
+
+    }
+
+    public virtual void OnDamageBlocked() {
 
     }
 
@@ -545,7 +570,16 @@ public partial class Actor : CharacterBody3D {
     public static bool RollForEvade(double chance) {
         double evasionRoll = Utilities.RNG.NextDouble();
 
-        if (chance >= evasionRoll) {
+        if (chance != 0 && chance >= evasionRoll) {
+            return true;
+        }
+        return false;
+    }
+
+    public static bool RollForBlock(double chance) {
+        double blockRoll = Utilities.RNG.NextDouble();
+
+        if (chance != 0 && chance >= blockRoll) {
             return true;
         }
         return false;

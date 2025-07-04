@@ -167,9 +167,9 @@ public partial class EnemyBase : Actor {
 
     // ===== Combat =====
     #region Combat
-    public override void OnDamageTaken(double damage, bool isCritical, bool createDamageText) {
+    public override void OnDamageTaken(double damage, bool wasBlocked, bool isCritical, bool createDamageText) {
         if (createDamageText) {
-            ShowDamageText(damage, isCritical);
+            ShowDamageText(damage, wasBlocked, isCritical);
         }
 
         if (BasicStats.CurrentLife <= 0) {
@@ -181,14 +181,14 @@ public partial class EnemyBase : Actor {
         Vector3 attachedPosition = resBarAnchor.GlobalPosition;
         attachedPosition.Y += 0.25f;
 
-        DamageText damageLabel = Utilities.CreateDamageNumber("Evaded!");
+        DamageText damageLabel = Utilities.CreateDamageNumber("Evaded!", false);
         GetTree().Root.GetChild(0).AddChild(damageLabel);
         damageLabel.GlobalPosition = attachedPosition;
 
         damageLabel.Start();
     }
 
-    protected void ShowDamageText(double damage, bool isCritical) {
+    protected void ShowDamageText(double damage, bool wasBlocked, bool isCritical) {
         string labelText;
         if (isCritical) {
             labelText = $"{Math.Round(damage, 0)}!";
@@ -200,7 +200,7 @@ public partial class EnemyBase : Actor {
         Vector3 attachedPosition = resBarAnchor.GlobalPosition;
         attachedPosition.Y += 0.25f;
 
-        DamageText damageLabel = Utilities.CreateDamageNumber(labelText);
+        DamageText damageLabel = Utilities.CreateDamageNumber(labelText, wasBlocked);
         GetTree().Root.GetChild(0).AddChild(damageLabel);
         damageLabel.GlobalPosition = attachedPosition;
 

@@ -15,6 +15,8 @@ public abstract class Affix {
 	public double ValueSecond { get; protected set; } 
 	public AffixData TierData { get; protected set; }
 
+	public bool IsHidden { get; protected set; } = false;
+
 	public virtual void RollAffixTier(int itemLevel) {
 		List<AffixData> legalAffixData = AffixDataTable.Where(a => a.MinimumLevel <= itemLevel).ToList();
         TierData = legalAffixData[Utilities.RNG.Next(legalAffixData.Count)];
@@ -69,6 +71,33 @@ public class BasicRingLifeImplicit : Affix {
 
 	public override string GetAffixTooltipText() {
 		return $"+{(int)ValueFirst} to Maximum Life";
+	}
+}
+
+public class BasicStaffBlockImplicit : Affix {
+	private static readonly List<AffixData> basicStaffBlockAffixData = [
+		new(0, "",
+			0.15, 0.15,
+			0, 0
+		)
+	];
+
+	public BasicStaffBlockImplicit() {
+		AffixDataTable = basicStaffBlockAffixData;
+		Family = EAffixFamily.None;
+		IsLocal = false;
+		IsMultiplicative = false;
+		StatNameFirst = EStatName.BlockChance;
+
+		SetAffixTier(0);
+	}
+
+    public override void RollAffixValue() {
+        ValueFirst = Math.Round(Utilities.RandomDouble(TierData.AffixMinFirst, TierData.AffixMaxFirst), 2);
+    }
+
+	public override string GetAffixTooltipText() {
+		return $"+{ValueFirst:P0} to Block Chance";
 	}
 }
 
@@ -902,6 +931,43 @@ public class IncreasedMovementSpeedAffix : Affix {
 	}
 }
 
+public class AddedShieldBlockAffix : Affix {
+	private static readonly List<AffixData> addedShieldBlockAffixData = [
+		new(0, "Block1",
+			0.02, 0.05,
+			0, 0
+		),
+		new(0, "Block2",
+			0.05, 0.07,
+			0, 0
+		),
+		new(0, "Block3",
+			0.07, 0.10,
+			0, 0
+		)
+	];
+
+	public AddedShieldBlockAffix() {
+		AffixDataTable = addedShieldBlockAffixData;
+		Family = EAffixFamily.AddedBlockChance;
+		IsLocal = true;
+		IsMultiplicative = false;
+		StatNameFirst = EStatName.BlockChance;
+
+		SetAffixTier(0);
+	}
+
+    public override void RollAffixValue() {
+		if (TierData != null) {
+			ValueFirst = Math.Round(Utilities.RandomDouble(TierData.AffixMinFirst, TierData.AffixMaxFirst), 2);
+		}
+    }
+
+	public override string GetAffixTooltipText() {
+		return $"+{ValueFirst:P0} to Block Chance";
+	}
+}
+
 
 
 
@@ -1250,7 +1316,7 @@ public class FireResistanceAffix : Affix {
 	}
 
 	public override string GetAffixTooltipText() {
-		return $"+{(int)ValueFirst} to Fire Resistance";
+		return $"+{(int)ValueFirst}% to Fire Resistance";
 	}
 }
 
@@ -1285,7 +1351,7 @@ public class ColdResistanceAffix : Affix {
 	}
 
 	public override string GetAffixTooltipText() {
-		return $"+{(int)ValueFirst} to Cold Resistance";
+		return $"+{(int)ValueFirst}% to Cold Resistance";
 	}
 }
 
@@ -1320,7 +1386,7 @@ public class LightningResistanceAffix : Affix {
 	}
 
 	public override string GetAffixTooltipText() {
-		return $"+{(int)ValueFirst} to Lightning Resistance";
+		return $"+{(int)ValueFirst}% to Lightning Resistance";
 	}
 }
 
@@ -1355,6 +1421,6 @@ public class ChaosResistanceAffix : Affix {
 	}
 
 	public override string GetAffixTooltipText() {
-		return $"+{(int)ValueFirst} to Chaos Resistance";
+		return $"+{(int)ValueFirst}% to Chaos Resistance";
 	}
 }

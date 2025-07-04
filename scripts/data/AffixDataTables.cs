@@ -104,6 +104,10 @@ public static class AffixDataTables {
 			EAffixItemFlags.Boots,
 			EItemBaseSpecifierFlags.NoFlags
 		),
+		new(typeof(AddedShieldBlockAffix), EAffixFamily.AddedBlockChance,
+			EAffixItemFlags.Shield,
+			EItemBaseSpecifierFlags.NoFlags
+		),
 
 		// ===== GLOBAL DAMAGE INCREASES =====
 		new(typeof(IncreasedMeleeDamageAffix), EAffixFamily.IncreasedMeleeDamage,

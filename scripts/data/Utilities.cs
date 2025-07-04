@@ -19,9 +19,14 @@ public static class Utilities {
         return (Convert.ToInt32(input) & Convert.ToInt32(comparison)) != 0;
     }
 
-	public static DamageText CreateDamageNumber(string text) {
+	// Udskift gerne wasBlocked med en enum, så der kan laves en switch over skriftfarve
+	public static DamageText CreateDamageNumber(string text, bool wasBlocked) {
 		DamageText damageLabel = damageTextScene.Instantiate<DamageText>();
 		damageLabel.Text = text;
+
+		if (wasBlocked) {
+			damageLabel.Modulate = UILib.ColorGrey;
+		}
 
 		return damageLabel;
 	}

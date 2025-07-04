@@ -23,6 +23,7 @@ public partial class TestEnemy : EnemyBase {
 
         MovementSpeed.SBase = 4;
         Evasion.SBase = 0; // 67
+        BlockChance.SBase = 0.25;
 
         Skill skillThrust = new SThrust();
         AddSkill(skillThrust);

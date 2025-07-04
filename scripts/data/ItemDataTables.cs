@@ -22,6 +22,7 @@ public class ArmourItemData : ItemData {
 	public int BaseArmour;
 	public int BaseEvasion;
 	public int BaseEnergyShield;
+	public double BaseBlockChance;
 }
 
 public class SkillItemData : ItemData {
@@ -148,7 +149,9 @@ public static class ItemDataTables {
 			BasePhysicalMaximumDamage = 11,
 			BaseAttackSpeed = 0.769f,
 			BaseCritChance = 0.07f,
-			ImplicitTypes = []
+			ImplicitTypes = [
+				typeof(BasicStaffBlockImplicit)
+			]
 		}
 	];
 
@@ -162,6 +165,7 @@ public static class ItemDataTables {
 			BaseArmour = 0,
 			BaseEvasion = 15,
 			BaseEnergyShield = 0,
+			BaseBlockChance = 0,
 			ImplicitTypes = []
 		},
 
@@ -174,6 +178,7 @@ public static class ItemDataTables {
 			BaseArmour = 15,
 			BaseEvasion = 0,
 			BaseEnergyShield = 0,
+			BaseBlockChance = 0,
 			ImplicitTypes = []
 		}
 	];
@@ -188,6 +193,7 @@ public static class ItemDataTables {
 			BaseArmour = 0,
 			BaseEvasion = 25,
 			BaseEnergyShield = 0,
+			BaseBlockChance = 0,
 			ImplicitTypes = []
 		},
 
@@ -200,6 +206,7 @@ public static class ItemDataTables {
 			BaseArmour = 25,
 			BaseEvasion = 0,
 			BaseEnergyShield = 0,
+			BaseBlockChance = 0,
 			ImplicitTypes = []
 		}
 	];
@@ -214,6 +221,7 @@ public static class ItemDataTables {
 			BaseArmour = 0,
 			BaseEvasion = 15,
 			BaseEnergyShield = 0,
+			BaseBlockChance = 0,
 			ImplicitTypes = []
 		},
 
@@ -226,6 +234,7 @@ public static class ItemDataTables {
 			BaseArmour = 15,
 			BaseEvasion = 0,
 			BaseEnergyShield = 0,
+			BaseBlockChance = 0,
 			ImplicitTypes = []
 		}
 	];
@@ -240,6 +249,7 @@ public static class ItemDataTables {
 			BaseArmour = 0,
 			BaseEvasion = 15,
 			BaseEnergyShield = 0,
+			BaseBlockChance = 0,
 			ImplicitTypes = []
 		},
 
@@ -252,6 +262,7 @@ public static class ItemDataTables {
 			BaseArmour = 15,
 			BaseEvasion = 0,
 			BaseEnergyShield = 0,
+			BaseBlockChance = 0,
 			ImplicitTypes = []
 		}
 	];
@@ -312,6 +323,7 @@ public static class ItemDataTables {
 			BaseArmour = 0,
 			BaseEvasion = 20,
 			BaseEnergyShield = 0,
+			BaseBlockChance = 0.25,
 			ImplicitTypes = []
 		}
 	];

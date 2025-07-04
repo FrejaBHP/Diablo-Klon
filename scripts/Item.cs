@@ -430,10 +430,15 @@ public partial class ArmourItem : Item {
 	public double PercentageEnergyShield = 1;
 	public int EnergyShield;
 
+	public double BaseBlockChance = 0;
+	public double AddedBlockChance = 0;
+	public double BlockChance = 0;
+
 	public ArmourItem() {
 		StatDictionary.Add(EStatName.FlatArmour, 0);
 		StatDictionary.Add(EStatName.FlatEvasion, 0);
 		StatDictionary.Add(EStatName.FlatEnergyShield, 0);
+		StatDictionary.Add(EStatName.BlockChance, 0);
 	}
 
 	public override void PostGenCalculation() {
@@ -444,10 +449,12 @@ public partial class ArmourItem : Item {
 		Armour = (int)Math.Round((BaseArmour + AddedArmour) * PercentageArmour, 0);
 		Evasion = (int)Math.Round((BaseEvasion + AddedEvasion) * PercentageEvasion, 0);
 		EnergyShield = (int)Math.Round((BaseEnergyShield + AddedEnergyShield) * PercentageEnergyShield, 0);
+		BlockChance = BaseBlockChance + AddedBlockChance;
 
 		StatDictionary[EStatName.FlatArmour] = Armour;
 		StatDictionary[EStatName.FlatEvasion] = Evasion;
 		StatDictionary[EStatName.FlatEnergyShield] = EnergyShield;
+		StatDictionary[EStatName.BlockChance] = BlockChance;
 	}
 
 	protected override void ApplyLocalAffix(Affix affix, bool add) {
@@ -508,6 +515,16 @@ public partial class ArmourItem : Item {
 				}
 				else {
 					PercentageEnergyShield -= affix.ValueFirst;
+				}
+				CalculateDefences();
+				break;
+			
+			case EAffixFamily.AddedBlockChance:
+				if (add) {
+					AddedBlockChance += affix.ValueFirst;
+				}
+				else {
+					AddedBlockChance -= affix.ValueFirst;
 				}
 				CalculateDefences();
 				break;

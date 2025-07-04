@@ -107,6 +107,7 @@ public partial class Player : Actor {
 		{ EStatName.AddedCritMulti, 				0 },
 
 		{ EStatName.IncreasedMovementSpeed, 		0 },
+		{ EStatName.BlockChance, 					0 },
 
 		{ EStatName.FlatArmour, 					0 },
 		{ EStatName.IncreasedArmour, 				0 },
@@ -719,6 +720,8 @@ public partial class Player : Actor {
 			ItemStatDictionary[EStatName.IncreasedEvasion] + DexEvasionBonus
 		);
 
+		BlockChance.SAdded = ItemStatDictionary[EStatName.BlockChance];
+
 		Resistances.ResPhysical = (int)ItemStatDictionary[EStatName.PhysicalResistance];
 		Resistances.ResFire = (int)ItemStatDictionary[EStatName.FireResistance];
 		Resistances.ResCold = (int)ItemStatDictionary[EStatName.ColdResistance];
@@ -817,6 +820,8 @@ public partial class Player : Actor {
 		PlayerHUD.PlayerPanel.DefenceTabPanel.MovementSpeed.SetValue($"{MovementSpeed.SIncreased * MovementSpeed.SMore:P0}");
 		PlayerHUD.PlayerPanel.DefenceTabPanel.Armour.SetValue($"{Math.Round(Armour.STotal, 0)} / {(1 - GetArmourMitigation(Armour.STotal, ActorLevel)):P1}");
 		PlayerHUD.PlayerPanel.DefenceTabPanel.Evasion.SetValue($"{Math.Round(Evasion.STotal, 0)} / {GetEvasionChance(Evasion.STotal, ActorLevel):P1}");
+		PlayerHUD.PlayerPanel.DefenceTabPanel.BlockChance.SetValue($"{BlockChance.STotal:P0}");
+		PlayerHUD.PlayerPanel.DefenceTabPanel.BlockEffectiveness.SetValue($"{BlockEffectiveness.STotal:P0}");
 		PlayerHUD.PlayerPanel.DefenceTabPanel.PhysRes.SetValue($"{Resistances.ResPhysical}%");
 		PlayerHUD.PlayerPanel.DefenceTabPanel.FireRes.SetValue($"{Resistances.ResFire}%");
 		PlayerHUD.PlayerPanel.DefenceTabPanel.ColdRes.SetValue($"{Resistances.ResCold}%");

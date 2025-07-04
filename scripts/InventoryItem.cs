@@ -284,6 +284,11 @@ public partial class InventoryItem : PanelContainer {
 		else if (ItemReference.GetType().IsSubclassOf(typeof(ArmourItem))) {
 			ArmourItem item = ItemReference as ArmourItem;
 
+			if (item.BlockChance != 0) {
+				HBoxContainer armourLabel = GenerateBaseStatLabel("Block Chance:", item.BlockChance.ToString("P0"), item.BlockChance > item.BaseBlockChance);
+				tooltipContent.BaseStatsContainer.AddChild(armourLabel);
+			}
+
 			if (item.ItemDefences.HasFlag(EItemDefences.Armour)) {
 				HBoxContainer armourLabel = GenerateBaseStatLabel("Armour:", item.Armour.ToString(), item.Armour > item.BaseArmour);
 				tooltipContent.BaseStatsContainer.AddChild(armourLabel);
@@ -298,13 +303,21 @@ public partial class InventoryItem : PanelContainer {
 			}
 		}
 
+		// Allows for hidden implicit modifiers, in case that's desired
+		int visibleImplicits = 0;
+
 		if (ItemReference.Implicits.Count > 0) {
 			foreach (Affix impl in ItemReference.Implicits) {
-				Label implicitLabel = GenerateAffixLabel(impl.GetAffixTooltipText());
-				tooltipContent.ImplicitContainer.AddChild(implicitLabel);
+				if (!impl.IsHidden) {
+					Label implicitLabel = GenerateAffixLabel(impl.GetAffixTooltipText());
+					tooltipContent.ImplicitContainer.AddChild(implicitLabel);
+
+					visibleImplicits++;
+				}
 			}
 		}
-		else {
+
+		if (visibleImplicits == 0) {
 			tooltipContent.ImplicitSeparator.Visible = false;
 			tooltipContent.ImplicitContainer.Visible = false;
 		}
