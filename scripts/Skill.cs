@@ -518,7 +518,7 @@ public interface IProjectileSkill {
                 usedMinSpread = MinimumSpreadAngle;
             }
             else {
-                if (noOfProjectiles - 1 > projectileMinAngles.Length) {
+                if ((noOfProjectiles - 1) >= projectileMinAngles.Length) {
                     usedMinSpread = projectileMinAngles.Last();
                 }
                 else {
@@ -533,7 +533,7 @@ public interface IProjectileSkill {
                 usedMaxSpread = MaximumSpreadAngle;
             }
             else {
-                if (noOfProjectiles - 1 > projectileMaxAngles.Length) {
+                if ((noOfProjectiles - 1) >= projectileMaxAngles.Length) {
                     usedMaxSpread = projectileMaxAngles.Last();
                 }
                 else {
@@ -619,7 +619,7 @@ public interface IAreaSkill {
 
     // ===== Default functions =====
     void BasicAreaSweepSkillBehaviour(Skill skill, string animationName, float animationPixelSize) {
-        const int casts = 1;
+        const int casts = 1; // Might allow skills to repeat in the future, but until then, this is here to make sure they only cast once
         Vector3 targetPosition;
 
         if (IsNovaSkill) {
