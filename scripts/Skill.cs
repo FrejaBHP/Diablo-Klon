@@ -451,6 +451,10 @@ public interface ISpell {
 
 public interface IMeleeSkill {
     float BaseAttackRange { get; protected set; }
+
+    // ===== Virtual functions =====
+
+    // ===== Default functions =====
 }
 
 public interface IProjectileSkill {

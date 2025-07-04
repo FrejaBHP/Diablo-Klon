@@ -24,8 +24,6 @@ public partial class MapBase : Node3D {
     public EMapType MapType;
     public EMapObjective MapObjective = EMapObjective.None;
 
-    // For the future when item level will be set and matter
-    // Maybe I'll even add enemy scaling
     public int LocalAreaLevel = 1;
     public int GoldReward { get; protected set; } = 25;
     public int ExpReward { get; protected set; } = 5;
@@ -348,6 +346,7 @@ public partial class MapBase : Node3D {
 	public void DecrementEnemyCount() {
 		ActiveEnemies--;
 
+        /*
 		if (ActiveEnemies == 0 && EnemiesToSpawn == 0) {
 			if (ActiveWaveNumber < ActiveWaveList.EnemyWaves.Count - 1) {
 				SetAndStartNextWave();
@@ -358,6 +357,7 @@ public partial class MapBase : Node3D {
 				//TestSpawnMapTrans();
 			}
 		}
+        */
 	}
 
 	public void SetAndStartNextWave() {
