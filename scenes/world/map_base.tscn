@@ -31,10 +31,6 @@ process_callback = 0
 wait_time = 2.0
 one_shot = true
 
-[node name="ObjectiveTimer" type="Timer" parent="."]
-process_callback = 0
-one_shot = true
-
 [node name="Enemies" type="Node3D" parent="."]
 
 [node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
@@ -48,4 +44,3 @@ map_settings = ExtResource("4_judmk")
 metadata/_custom_type_script = "uid://dd0nmn1ut8mlk"
 
 [connection signal="timeout" from="MapStartTimer" to="." method="OnMapStartTimerTimeout"]
-[connection signal="timeout" from="ObjectiveTimer" to="." method="OnObjectiveTimerTimeout"]

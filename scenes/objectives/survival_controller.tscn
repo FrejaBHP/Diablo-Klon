@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3 uid="uid://3xw4bok74v0t"]
+
+[ext_resource type="Script" uid="uid://wofs0f17vsl6" path="res://scripts/objectives/SurvivalController.cs" id="1_y702o"]
+
+[node name="SurvivalController" type="Node"]
+script = ExtResource("1_y702o")
+
+[node name="SurvivalTimer" type="Timer" parent="."]
+process_callback = 0
+one_shot = true
+
+[node name="SpawnTimer" type="Timer" parent="."]
+process_callback = 0
+
+[connection signal="timeout" from="SurvivalTimer" to="." method="OnSurivalTimerTimeout"]
+[connection signal="timeout" from="SpawnTimer" to="." method="OnSpawnTimerTimeout"]

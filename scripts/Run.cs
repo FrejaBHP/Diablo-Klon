@@ -64,7 +64,6 @@ public partial class Run : Node3D {
         worldObjectsLayer = GetNode<CanvasLayer>("WorldObjects");
 
 		//GameSettings.Instance.ApplyPlayerSettings();
-		//SetMapWaveList(EnemyDatabase.TestMapHorde);
 
 		StartNewRun();
     }
@@ -147,7 +146,6 @@ public partial class Run : Node3D {
 		MapBase oldMap = CurrentMap;
 		oldMap.ClearEnemies();
 
-        //CurrentMap = MapDatabase.GetMap(scene);
         MapDatabase.GetMap(scene, out CurrentMap, out MapTags tags);
 		CurrentMap.MapType = tags.Type;
 
@@ -166,13 +164,6 @@ public partial class Run : Node3D {
 		}
 
 		ProgressAct(CurrentMap.MapType == EMapType.Objective || CurrentMap.MapType == EMapType.Miniboss);
-		
-		//activeWaveNumber = 0;
-		//SetMapWaveList(EnemyDatabase.TestMapHorde);
-		//SetEnemyWave(activeWaveList.EnemyWaves[0]);
-
-		//PlayerActor.debugLabel.Text = $"Wave {CurrentMap.ActiveWaveNumber + 1} / {CurrentMap.ActiveWaveList.EnemyWaves.Count}";
-		//SetEnemyWave(EnemyDatabase.TestWave);
 	}
 
 	public void SpawnPortal() {

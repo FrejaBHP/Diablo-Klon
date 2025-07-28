@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Godot;
 
 public class ActorBasicStats {
@@ -363,7 +364,10 @@ public class ActorWeaponStats {
 
 public partial class Actor : CharacterBody3D {
     [Signal]
-    public delegate void DamageTakenEventHandler(double damage, bool wasBlocked, bool isCritical, bool showDamageText);
+    public delegate void HitTakenEventHandler(double damage, bool wasBlocked, bool isCritical, bool showDamageText);
+
+    [Signal]
+    public delegate void DamageTakenEventHandler();
 
     [Signal]
     public delegate void DamageEvadedEventHandler();
@@ -376,6 +380,18 @@ public partial class Actor : CharacterBody3D {
     public readonly float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 
     public List<Skill> Skills = new List<Skill>();
+
+    public Dictionary<EDamageType, double> PendingDamageOverTime = new() {
+        { EDamageType.Untyped,      0 },
+        { EDamageType.Physical,     0 },
+        { EDamageType.Fire,         0 },
+        { EDamageType.Cold,         0 },
+        { EDamageType.Lightning,    0 },
+        { EDamageType.Chaos,        0 },
+    };
+
+    public Dictionary<EEffectName, AttachedEffect> UniqueEffects = new();
+    public Dictionary<EEffectName, List<AttachedEffect>> StackableEffects = new();
 
     public int ActorLevel = 1;
     protected int maxLevel = 40;
@@ -423,6 +439,7 @@ public partial class Actor : CharacterBody3D {
     public override void _Ready() {
         BasicStats.CurrentLifeChanged += OnCurrentLifeChanged;
         BasicStats.CurrentManaChanged += OnCurrentManaChanged;
+        HitTaken += OnHitTaken;
         DamageTaken += OnDamageTaken;
         DamageEvaded += OnDamageEvaded;
         DamageBlocked += OnDamageBlocked;
@@ -491,10 +508,9 @@ public partial class Actor : CharacterBody3D {
     /// <param name="dmgCategory"></param>
     /// <param name="damage"></param>
     /// <param name="pens"></param>
-    /// <param name="isAHit"></param>
     /// <param name="isCritical"></param>
     /// <param name="createDamageText"></param>
-    public void TakeDamage(EDamageCategory dmgCategory, SkillDamage damage, ActorPenetrations pens, bool isAHit, bool createDamageText) {
+    public void ReceiveHit(EDamageCategory dmgCategory, SkillDamage damage, ActorPenetrations pens, bool createDamageText) {
         double physDamage = damage.Physical;
         double fireDamage = damage.Fire;
         double coldDamage = damage.Cold;
@@ -504,35 +520,33 @@ public partial class Actor : CharacterBody3D {
 
         bool hitBlocked = false;
 
-        if (isAHit) {
-            if (dmgCategory != EDamageCategory.Spell) {
-                if (RollForEvade(GetEvasionChance(Evasion.STotal, ActorLevel))) {
-                    EmitSignal(SignalName.DamageEvaded);
-                    return;
-                }
+        if (dmgCategory != EDamageCategory.Spell) {
+            if (RollForEvade(GetEvasionChance(Evasion.STotal, ActorLevel))) {
+                EmitSignal(SignalName.DamageEvaded);
+                return;
             }
+        }
 
-            double armourMitigation = GetArmourMitigation(Armour.STotal, ActorLevel);
-            double halfMitigation = armourMitigation + ((1 - armourMitigation) * 0.5);
-            
-            physDamage *= armourMitigation;
-            fireDamage *= halfMitigation;
-            coldDamage *= halfMitigation;
-            lightningDamage *= halfMitigation;
-            chaosDamage *= halfMitigation;
+        double armourMitigation = GetArmourMitigation(Armour.STotal, ActorLevel);
+        double halfMitigation = armourMitigation + ((1 - armourMitigation) * 0.5);
+        
+        physDamage *= armourMitigation;
+        fireDamage *= halfMitigation;
+        coldDamage *= halfMitigation;
+        lightningDamage *= halfMitigation;
+        chaosDamage *= halfMitigation;
 
-            if (RollForBlock(BlockChance.STotal)) {
-                EmitSignal(SignalName.DamageBlocked);
-                hitBlocked = true;
+        if (RollForBlock(BlockChance.STotal)) {
+            EmitSignal(SignalName.DamageBlocked);
+            hitBlocked = true;
 
-                double blockMitigation = 1 - BlockEffectiveness.STotal;
+            double blockMitigation = 1 - BlockEffectiveness.STotal;
 
-                physDamage *= blockMitigation;
-                fireDamage *= blockMitigation;
-                coldDamage *= blockMitigation;
-                lightningDamage *= blockMitigation;
-                chaosDamage *= blockMitigation;
-            }
+            physDamage *= blockMitigation;
+            fireDamage *= blockMitigation;
+            coldDamage *= blockMitigation;
+            lightningDamage *= blockMitigation;
+            chaosDamage *= blockMitigation;
         }
 
         physDamage *= 1 - ((Resistances.ResPhysical - Penetrations.PenPhysical) / 100);
@@ -544,10 +558,54 @@ public partial class Actor : CharacterBody3D {
         totalDamage = physDamage + fireDamage + coldDamage + lightningDamage + chaosDamage;
 
         BasicStats.CurrentLife -= totalDamage;
-        EmitSignal(SignalName.DamageTaken, totalDamage, hitBlocked, damage.IsCritical, createDamageText);
+        EmitSignal(SignalName.HitTaken, totalDamage, hitBlocked, damage.IsCritical, createDamageText);
+        EmitSignal(SignalName.DamageTaken);
     }
 
-    public virtual void OnDamageTaken(double damage, bool wasBlocked, bool isCritical, bool createDamageText) {
+    public void TallyDamageOverTimeForNextTick(EDamageType type, double damage) {
+        PendingDamageOverTime[type] += damage;
+    }
+
+    protected void TakeDamageOverTime() {
+        if (ActorState == EActorState.Dying || ActorState == EActorState.Dead) {
+            return;
+        }
+        
+        double untypedDamage = PendingDamageOverTime[EDamageType.Untyped];
+        double physDamage = PendingDamageOverTime[EDamageType.Physical];
+        double fireDamage = PendingDamageOverTime[EDamageType.Fire];
+        double coldDamage = PendingDamageOverTime[EDamageType.Cold];
+        double lightningDamage = PendingDamageOverTime[EDamageType.Lightning];
+        double chaosDamage = PendingDamageOverTime[EDamageType.Chaos];
+
+        double unprocessedDamage = untypedDamage + physDamage + fireDamage + coldDamage + lightningDamage + chaosDamage;
+
+        if (unprocessedDamage == 0) {
+            return;
+        }
+
+        physDamage *= 1 - Resistances.ResPhysical;
+        fireDamage *= 1 - Resistances.ResFire;
+        coldDamage *= 1 - Resistances.ResCold;
+        lightningDamage *= 1 - Resistances.ResLightning;
+        chaosDamage *= 1 - Resistances.ResChaos;
+
+        double processedDamage = untypedDamage + physDamage + fireDamage + coldDamage + lightningDamage + chaosDamage;
+
+        BasicStats.CurrentLife -= processedDamage;
+        EmitSignal(SignalName.DamageTaken);
+
+        foreach (EDamageType damageType in PendingDamageOverTime.Keys) {
+            PendingDamageOverTime[damageType] = 0;
+        }
+        
+    }
+
+    public virtual void OnHitTaken(double damage, bool wasBlocked, bool isCritical, bool createDamageText) {
+
+    }
+
+    public virtual void OnDamageTaken() {
 
     }
 
@@ -583,6 +641,83 @@ public partial class Actor : CharacterBody3D {
             return true;
         }
         return false;
+    }
+
+    public void ReceiveEffect(AttachedEffect incEffect) {
+        if (incEffect is IUniqueEffect ue) {
+            if (UniqueEffects.TryGetValue(incEffect.EffectName, out AttachedEffect value)) {
+                if (value == null) {
+                    UniqueEffects[incEffect.EffectName] = incEffect;
+                    incEffect.OnGained();
+                }
+                else if (ue.ShouldReplaceCurrentEffect(incEffect.RemainingTime, incEffect.EffectValue)) {
+                    UniqueEffects[incEffect.EffectName] = incEffect;
+                    //incEffect.OnGained(); // Should probably make another type of function here, since effect is never lost, but will definitely be updated
+                }
+            }
+            else if (UniqueEffects.TryAdd(incEffect.EffectName, incEffect)) {
+                incEffect.OnGained();
+            }
+        }
+        else if (incEffect is IUniqueStackableEffect use) {
+            if (UniqueEffects.TryGetValue(incEffect.EffectName, out AttachedEffect value)) {
+                if (value == null) {
+                    UniqueEffects[incEffect.EffectName] = incEffect;
+                    incEffect.OnGained();
+                }
+                else if (UniqueEffects[incEffect.EffectName] is IUniqueStackableEffect cEffect) {
+                    UniqueEffects[incEffect.EffectName].OverrideTimer(incEffect.RemainingTime);
+                    cEffect.AddStack(use.StacksPerApplication);
+                    //incEffect.OnGained(); // Should probably make another type of function here, since effect is never lost, but will definitely be updated
+                }
+            }
+            else if (UniqueEffects.TryAdd(incEffect.EffectName, incEffect)) {
+                incEffect.OnGained();
+            }
+        }
+        else if (incEffect is IRepeatableEffect re) {
+            if (StackableEffects.TryGetValue(incEffect.EffectName, out List<AttachedEffect> value)) {
+                value.Add(incEffect);
+                incEffect.OnGained();
+            }
+            else if (StackableEffects.TryAdd(incEffect.EffectName, new List<AttachedEffect>())) {
+                StackableEffects[incEffect.EffectName].Add(incEffect);
+                incEffect.OnGained();
+            }
+        }
+    }
+
+    protected void TickEffects(double delta) {
+        foreach (KeyValuePair<EEffectName, AttachedEffect> kvp in UniqueEffects) {
+            if (UniqueEffects[kvp.Key] != null) {
+                if (kvp.Value.RemainingTime > 0) {
+                    kvp.Value.Tick(delta);
+                }
+                else {
+                    kvp.Value.OnExpired();
+                    UniqueEffects[kvp.Key] = null;
+                }
+            }
+        }
+
+        foreach (KeyValuePair<EEffectName, List<AttachedEffect>> kvp in StackableEffects) {
+            bool effectHasExpired = false;
+
+            foreach (AttachedEffect effect in kvp.Value) {
+                if (effect.RemainingTime > 0) {
+                    effect.Tick(delta);
+                }
+                else {
+                    effect.OnExpired();
+                    effectHasExpired = true;
+                }
+            }
+
+            if (effectHasExpired) {
+                //StackableEffects[kvp.Key] = kvp.Value.Where(effect => !effect.HasExpired).ToList();
+                StackableEffects[kvp.Key].RemoveAll(effect => effect.HasExpired);
+            }
+        }
     }
 
     public virtual void OnNoLifeLeft() {

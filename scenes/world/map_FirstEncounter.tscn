@@ -370,7 +370,7 @@ points = PackedVector3Array(-0.25, 1.5, -12, -0.25, -1.5, -12, 0.25, -1.5, -12, 
 [node name="PlayerSpawn" parent="." index="2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 12)
 
-[node name="NavigationRegion3D" parent="." index="6"]
+[node name="NavigationRegion3D" parent="." index="5"]
 navigation_mesh = SubResource("NavigationMesh_yoycs")
 
 [node name="NavigationObstacle3D" type="NavigationObstacle3D" parent="NavigationRegion3D" index="0"]

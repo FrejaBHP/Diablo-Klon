@@ -44,7 +44,7 @@ public class SThrust : Skill, IAttack, IMeleeSkill {
     public override void UseSkill() {
         if (ActorOwner != null) {
             SThrustScene thrustScene = thrustAttackScene.Instantiate() as SThrustScene;
-            Game.Instance.AddChild(thrustScene);
+            Run.Instance.AddChild(thrustScene);
             SetSkillCollision(thrustScene.Hitbox);
 
             thrustScene.GlobalPosition = thrustScene.Position with { 

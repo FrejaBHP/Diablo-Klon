@@ -3,7 +3,7 @@ using System;
 
 public partial class TestEnemy : EnemyBase {
     public TestEnemy() {
-		BasicStats.BaseLife = 15;
+		BasicStats.BaseLife = 20;
 		BasicStats.BaseMana = 0;
 		RefreshLifeMana();
 
@@ -23,7 +23,7 @@ public partial class TestEnemy : EnemyBase {
 
         MovementSpeed.SBase = 4;
         Evasion.SBase = 0; // 67
-        BlockChance.SBase = 0.25;
+        BlockChance.SBase = 0.20;
 
         Skill skillThrust = new SThrust();
         AddSkill(skillThrust);
@@ -31,7 +31,7 @@ public partial class TestEnemy : EnemyBase {
     }
 
     public override void _PhysicsProcess(double delta) {
-        ApplyRegen(delta);
+        base._PhysicsProcess(delta);
 
         if (isChasingTarget && actorTarget != null) {
             if (GlobalPosition.DistanceTo(actorTarget.GlobalPosition) < Skills[0].CastRange - 0.25f && ActorState != EActorState.UsingSkill) {

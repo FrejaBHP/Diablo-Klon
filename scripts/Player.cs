@@ -384,6 +384,8 @@ public partial class Player : Actor {
     public override void _PhysicsProcess(double delta) {
 		if (ActorState != EActorState.Dying || ActorState != EActorState.Dead) {
 			ApplyRegen(delta);
+			TickEffects(delta);
+			TakeDamageOverTime();
 
 			if (movementInputMethod == EMovementInputMethod.Keyboard) {
 				ProcessMovementKeyInput();

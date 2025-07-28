@@ -3,7 +3,7 @@ using System;
 
 public partial class TestEnemy2 : EnemyBase {
     public TestEnemy2() {
-		BasicStats.BaseLife = 12;
+		BasicStats.BaseLife = 15;
 		BasicStats.BaseMana = 0;
 		RefreshLifeMana();
 
@@ -29,7 +29,7 @@ public partial class TestEnemy2 : EnemyBase {
     }
 
     public override void _PhysicsProcess(double delta) {
-        ApplyRegen(delta);
+        base._PhysicsProcess(delta);
 
         if (isChasingTarget && actorTarget != null) {
             if (GlobalPosition.DistanceTo(actorTarget.GlobalPosition) < Skills[0].CastRange - 0.25f && ActorState != EActorState.UsingSkill) {

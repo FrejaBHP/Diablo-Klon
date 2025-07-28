@@ -368,77 +368,77 @@ public static class ItemDataTables {
 	public static readonly List<SupportGemData> SupportGemData = [
 		new SupportGemData {
 			SkillTags = ESkillTags.None,
-			SupportType = typeof(SAddedFire),
+			SupportType = typeof(SuppAddedFire),
 			Texture = UILib.TextureItemD2JewelRedF,
 			MinimumLevel = 0,
 		},
 
 		new SupportGemData {
 			SkillTags = ESkillTags.None,
-			SupportType = typeof(SAddedCold),
+			SupportType = typeof(SuppAddedCold),
 			Texture = UILib.TextureItemD2JewelGreenF,
 			MinimumLevel = 0,
 		},
 
 		new SupportGemData {
 			SkillTags = ESkillTags.None,
-			SupportType = typeof(SAddedLightning),
+			SupportType = typeof(SuppAddedLightning),
 			Texture = UILib.TextureItemD2JewelBlueF,
 			MinimumLevel = 0,
 		},
 
 		new SupportGemData {
 			SkillTags = ESkillTags.None,
-			SupportType = typeof(SAddedChaos),
+			SupportType = typeof(SuppAddedChaos),
 			Texture = UILib.TextureItemD2JewelWhiteF,
 			MinimumLevel = 0,
 		},
 
 		new SupportGemData {
 			SkillTags = ESkillTags.Attack,
-			SupportType = typeof(SAttackSpeed),
+			SupportType = typeof(SuppAttackSpeed),
 			Texture = UILib.TextureItemD2JewelGreenF,
 			MinimumLevel = 0,
 		},
 
 		new SupportGemData {
 			SkillTags = ESkillTags.Spell,
-			SupportType = typeof(SCastSpeed),
+			SupportType = typeof(SuppCastSpeed),
 			Texture = UILib.TextureItemD2JewelBlueF,
 			MinimumLevel = 0,
 		},
 
 		new SupportGemData {
 			SkillTags = ESkillTags.Projectile,
-			SupportType = typeof(SPierce),
+			SupportType = typeof(SuppPierce),
 			Texture = UILib.TextureItemD2JewelGreenF,
 			MinimumLevel = 0,
 		},
 
 		new SupportGemData {
 			SkillTags = ESkillTags.Duration,
-			SupportType = typeof(SIncreasedDuration),
+			SupportType = typeof(SuppIncreasedDuration),
 			Texture = UILib.TextureItemD2JewelWhiteF,
 			MinimumLevel = 0,
 		},
 
 		new SupportGemData {
 			SkillTags = ESkillTags.Duration,
-			SupportType = typeof(SLessDuration),
+			SupportType = typeof(SuppLessDuration),
 			Texture = UILib.TextureItemD2JewelWhiteF,
 			MinimumLevel = 0,
 		},
 
 		new SupportGemData {
 			SkillTags = ESkillTags.Projectile,
-			SupportType = typeof(SMultipleProjectiles),
+			SupportType = typeof(SuppMultipleProjectiles),
 			Texture = UILib.TextureItemD2JewelGreenF,
 			MinimumLevel = 0,
 		},
 
 		new SupportGemData {
 			SkillTags = ESkillTags.Area,
-			SupportType = typeof(SIncreasedAoE),
+			SupportType = typeof(SuppIncreasedAoE),
 			Texture = UILib.TextureItemD2JewelBlueF,
 			MinimumLevel = 0,
 		},

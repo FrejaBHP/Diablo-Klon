@@ -7,8 +7,8 @@ public struct EnemyData(PackedScene scene, int cost) {
     public readonly int BudgetCost = cost;
 }
 
-public struct EnemyWaveComponent(PackedScene enemyScene, int count) {
-    public PackedScene EnemyScene = enemyScene;
+public struct EnemyWaveComponent(EEnemyType enemyType, int count) {
+    public EEnemyType EnemyType = enemyType;
     public int EnemyCount = count;
 }
 
@@ -58,7 +58,7 @@ public static class EnemyDatabase {
     // Waves for preset enemy spawns
 
     public static readonly EnemyWave TestWave = new([
-        new EnemyWaveComponent(TestEnemyScene, 10)
+        new EnemyWaveComponent(EEnemyType.TestEnemy, 10)
     ]);
 
     public static readonly MapEnemyWaves TestMapHorde = new([

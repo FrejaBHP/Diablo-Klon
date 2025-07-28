@@ -305,16 +305,6 @@ public partial class DamageStat() {
         c.sMaxAdded = a.sMaxAdded + b.sMaxAdded;
         c.sIncreased = a.sIncreased + b.sIncreased;
         c.SMore = a.SMore * b.SMore;
-
-        /*
-        GD.Print($"MinB: {a.sMinBase} + {b.sMinBase} = {c.sMinBase}");
-        GD.Print($"MaxB: {a.sMaxBase} + {b.sMaxBase} = {c.sMaxBase}");
-        GD.Print($"MinA: {a.sMinAdded} + {b.sMinAdded} = {c.sMinAdded}");
-        GD.Print($"MaxA: {a.sMaxAdded} + {b.sMaxAdded} = {c.sMaxAdded}");
-        GD.Print($"Inc: {a.sIncreased} + {b.sIncreased} = {c.sIncreased}");
-        GD.Print($"More: {a.sMore} + {b.sMore} = {c.sMore}");
-        GD.Print($"Total: {c.sMinTotal} - {c.sMaxTotal}");
-        */
         
         return c;
     }

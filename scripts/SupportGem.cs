@@ -47,7 +47,7 @@ public abstract class SupportGem : Item {
     public virtual void ModifyDurationSkill(IDurationSkill dSkill) {}
 }
 
-public partial class SAddedFire : SupportGem {
+public partial class SuppAddedFire : SupportGem {
     private static readonly int[] minDamageArray = [
         4, 4, 5, 6, 7,
         8, 9, 10, 12, 14,
@@ -63,7 +63,7 @@ public partial class SAddedFire : SupportGem {
     private int addedMinFire;
     private int addedMaxFire;
 
-    public SAddedFire() {
+    public SuppAddedFire() {
         ItemName = "Added Fire Damage Support";
         Description = "Supports Skills that deal damage";
         AffectsDamageModifiers = true;
@@ -86,7 +86,7 @@ public partial class SAddedFire : SupportGem {
     }
 }
 
-public partial class SAddedCold : SupportGem {
+public partial class SuppAddedCold : SupportGem {
     private static readonly int[] minDamageArray = [
         5, 5, 6, 7, 8,
         10, 11, 13, 15, 17,
@@ -102,7 +102,7 @@ public partial class SAddedCold : SupportGem {
     private int addedMinCold;
     private int addedMaxCold;
 
-    public SAddedCold() {
+    public SuppAddedCold() {
         ItemName = "Added Cold Damage Support";
         Description = "Supports Skills that deal damage";
         AffectsDamageModifiers = true;
@@ -125,7 +125,7 @@ public partial class SAddedCold : SupportGem {
     }
 }
 
-public partial class SAddedLightning : SupportGem {
+public partial class SuppAddedLightning : SupportGem {
     private static readonly int[] minDamageArray = [
         1, 1, 1, 1, 1,
         2, 2, 2, 3, 3,
@@ -141,7 +141,7 @@ public partial class SAddedLightning : SupportGem {
     private int addedMinLightning;
     private int addedMaxLightning;
 
-    public SAddedLightning() {
+    public SuppAddedLightning() {
         ItemName = "Added Lightning Damage Support";
         Description = "Supports Skills that deal damage";
         AffectsDamageModifiers = true;
@@ -164,7 +164,7 @@ public partial class SAddedLightning : SupportGem {
     }
 }
 
-public partial class SAddedChaos : SupportGem {
+public partial class SuppAddedChaos : SupportGem {
     private static readonly int[] minDamageArray = [
         4, 4, 5, 6, 7,
         8, 9, 10, 12, 14,
@@ -180,7 +180,7 @@ public partial class SAddedChaos : SupportGem {
     private int addedMinChaos;
     private int addedMaxChaos;
 
-    public SAddedChaos() {
+    public SuppAddedChaos() {
         ItemName = "Added Chaos Damage Support";
         Description = "Supports Skills that deal damage";
         AffectsDamageModifiers = true;
@@ -203,7 +203,7 @@ public partial class SAddedChaos : SupportGem {
     }
 }
 
-public partial class SAttackSpeed : SupportGem {
+public partial class SuppAttackSpeed : SupportGem {
     private static readonly double[] increasedAttackSpeedArray = [
         0.25, 0.26, 0.27, 0.28, 0.29,
         0.30, 0.31, 0.32, 0.33, 0.34,
@@ -212,7 +212,7 @@ public partial class SAttackSpeed : SupportGem {
 
     private double attackSpeedIncrease;
 
-    public SAttackSpeed() {
+    public SuppAttackSpeed() {
         ItemName = "Attack Speed Support";
         Description = "Supports Attacks";
         AffectsDamageModifiers = false;
@@ -233,7 +233,7 @@ public partial class SAttackSpeed : SupportGem {
     }
 }
 
-public partial class SCastSpeed : SupportGem {
+public partial class SuppCastSpeed : SupportGem {
     private static readonly double[] increasedCastSpeedArray = [
         0.25, 0.26, 0.27, 0.28, 0.29,
         0.30, 0.31, 0.32, 0.33, 0.34,
@@ -242,7 +242,7 @@ public partial class SCastSpeed : SupportGem {
 
     private double castSpeedIncrease;
 
-    public SCastSpeed() {
+    public SuppCastSpeed() {
         ItemName = "Cast Speed Support";
         Description = "Supports Spells";
         AffectsDamageModifiers = false;
@@ -263,14 +263,14 @@ public partial class SCastSpeed : SupportGem {
     }
 }
 
-public partial class SPierce : SupportGem {
+public partial class SuppPierce : SupportGem {
     private static readonly int[] addedPierceArray = [
         2, 3, 4
     ];
 
     private int addedPierces;
 
-    public SPierce() {
+    public SuppPierce() {
         ItemName = "Pierce Support";
         Description = "Supports Projectile Skills";
         AffectsDamageModifiers = false;
@@ -300,7 +300,7 @@ public partial class SPierce : SupportGem {
     }
 }
 
-public partial class SMultipleProjectiles : SupportGem {
+public partial class SuppMultipleProjectiles : SupportGem {
     private static readonly int[] addedProjectilesArray = [
         2, 3, 4
     ];
@@ -308,7 +308,7 @@ public partial class SMultipleProjectiles : SupportGem {
     private int addedProjectiles;
     private readonly double damagePenalty = 0.75;
 
-    public SMultipleProjectiles() {
+    public SuppMultipleProjectiles() {
         ItemName = "Multiple Projectiles Support";
         Description = "Supports Projectile Skills";
         AffectsDamageModifiers = true;
@@ -342,7 +342,7 @@ public partial class SMultipleProjectiles : SupportGem {
     }
 }
 
-public partial class SIncreasedDuration : SupportGem {
+public partial class SuppIncreasedDuration : SupportGem {
     private static readonly double[] increasedDurationArray = [
         0.40, 0.41, 0.42, 0.43, 0.44,
         0.45, 0.46, 0.47, 0.48, 0.49,
@@ -351,7 +351,7 @@ public partial class SIncreasedDuration : SupportGem {
 
     private double incDuration;
 
-    public SIncreasedDuration() {
+    public SuppIncreasedDuration() {
         ItemName = "Increased Duration Support";
         Description = "Supports Duration Skills";
         AffectsDamageModifiers = false;
@@ -372,7 +372,7 @@ public partial class SIncreasedDuration : SupportGem {
     }
 }
 
-public partial class SLessDuration : SupportGem {
+public partial class SuppLessDuration : SupportGem {
     private static readonly double[] lessDurationArray = [
         0.50, 0.49, 0.49, 0.48, 0.47, 
         0.47, 0.46, 0.45, 0.44, 0.43, 
@@ -381,7 +381,7 @@ public partial class SLessDuration : SupportGem {
 
     private double lessDuration;
 
-    public SLessDuration() {
+    public SuppLessDuration() {
         ItemName = "Less Duration Support";
         Description = "Supports Duration Skills";
         AffectsDamageModifiers = false;
@@ -402,7 +402,7 @@ public partial class SLessDuration : SupportGem {
     }
 }
 
-public partial class SIncreasedAoE : SupportGem {
+public partial class SuppIncreasedAoE : SupportGem {
     private static readonly double[] increasedAreaArray = [
         0.40, 0.41, 0.42, 0.43, 0.44,
         0.45, 0.46, 0.47, 0.48, 0.49,
@@ -411,7 +411,7 @@ public partial class SIncreasedAoE : SupportGem {
 
     private double incArea;
 
-    public SIncreasedAoE() {
+    public SuppIncreasedAoE() {
         ItemName = "Increased Area of Effect Support";
         Description = "Supports Area Skills";
         AffectsDamageModifiers = false;

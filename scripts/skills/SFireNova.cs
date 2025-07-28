@@ -69,7 +69,11 @@ public class SFireNova : Skill, ISpell, IAreaSkill {
         SkillDamage damage = RollForDamage(true);
 
         foreach (Actor actor in targets) {
-            actor.TakeDamage(DamageCategory, damage, ActorOwner.Penetrations, true, true);
+            actor.ReceiveHit(DamageCategory, damage, ActorOwner.Penetrations, true);
+            
+            if (actor.BasicStats.CurrentLife > 0) {
+                actor.ReceiveEffect(new IgniteEffect(actor, 1, damage.Fire));
+            }
         }
     }
 }

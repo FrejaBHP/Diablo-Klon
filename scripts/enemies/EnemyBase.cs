@@ -54,7 +54,9 @@ public partial class EnemyBase : Actor {
     }
 
     public override void _PhysicsProcess(double delta) {
-        
+        ApplyRegen(delta);
+        TickEffects(delta);
+        TakeDamageOverTime();
     }
 
     public void AddSkill(Skill skill) {
@@ -167,11 +169,13 @@ public partial class EnemyBase : Actor {
 
     // ===== Combat =====
     #region Combat
-    public override void OnDamageTaken(double damage, bool wasBlocked, bool isCritical, bool createDamageText) {
+    public override void OnHitTaken(double damage, bool wasBlocked, bool isCritical, bool createDamageText) {
         if (createDamageText) {
             ShowDamageText(damage, wasBlocked, isCritical);
         }
+    }
 
+    public override void OnDamageTaken() {
         if (BasicStats.CurrentLife <= 0) {
             OnNoLifeLeft();
         }
@@ -230,26 +234,28 @@ public partial class EnemyBase : Actor {
 
         while (chance >= 1) {
             chance -= 1;
-            //Game.Instance.GenerateRandomItemFromCategory(EItemCategory.None, GlobalPosition);
-            Run.Instance.CurrentMap.AddItemToRewards(ItemGeneration.GenerateItemFromCategory(EItemCategory.None));
+            Run.Instance.CurrentMap.ObjectiveController?.AddItemToRewards(ItemGeneration.GenerateItemFromCategory(EItemCategory.None));
             haveItemsDropped = true;
         }
 
         if (chance != 0 && chance >= Utilities.RNG.NextDouble()) {
-            //Game.Instance.GenerateRandomItemFromCategory(EItemCategory.None, GlobalPosition);
-            Run.Instance.CurrentMap.AddItemToRewards(ItemGeneration.GenerateItemFromCategory(EItemCategory.None));
+            Run.Instance.CurrentMap.ObjectiveController?.AddItemToRewards(ItemGeneration.GenerateItemFromCategory(EItemCategory.None));
             haveItemsDropped = true;
         }
         
         return haveItemsDropped;
     }
 
+    public override void OnNoLifeLeft() {
+        ActorState = EActorState.Dying;
+        Die();
+    }
+
     public void Die() {
         ActorState = EActorState.Dead;
 
         if (goldBounty > 0) {
-            //Game.Instance.DropGold(goldBounty, GlobalPosition, true);
-            Run.Instance.CurrentMap.AddGoldToRewards(goldBounty, true);
+            Run.Instance.CurrentMap.ObjectiveController?.AddGoldToRewards(goldBounty, true);
         }
 
         if (experienceBounty > 0) {
@@ -264,9 +270,5 @@ public partial class EnemyBase : Actor {
         QueueFree();
     }
 
-    public override void OnNoLifeLeft() {
-        ActorState = EActorState.Dying;
-        Die();
-    }
     #endregion
 }

@@ -1,7 +1,11 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public partial class Projectile : Node3D {
+    public delegate void TargetHitEventHandler(Actor target);
+    public event TargetHitEventHandler TargetHit;
+
     public Area3D Hitbox;
     private CollisionShape3D hitboxCollision;
     private CapsuleShape3D collisionCapsule;
@@ -15,10 +19,9 @@ public partial class Projectile : Node3D {
     public double ProjTimeAlive { get; protected set; } = 0;
     public float Range { get; protected set; } = 0f;
     public float DistanceTravelled { get; protected set; } = 0f;
+    public bool CanShotgun { get; protected set; } = false;
 
-    private SkillDamage damage;
-    private ActorPenetrations pens;
-    private EDamageCategory dmgCategory;
+    public HashSet<Actor> ActorsHitThisGroup;
 
     public override void _Ready() {
         Hitbox = GetNode<Area3D>("Hitbox");
@@ -60,21 +63,26 @@ public partial class Projectile : Node3D {
         direction = Transform.Basis * new Vector3(0f, 0f, 1f).Normalized();
     }
 
-    public void SetProperties(EDamageCategory dmgCat, SkillDamage sDamage, ActorPenetrations sPens, float speed = 10f, double lifetime = 0, int pierce = 0, float range = 15f) {
-        damage = sDamage;
-        pens = sPens;
-        dmgCategory = dmgCat;
-
+    public void SetProperties(float speed = 10f, double lifetime = 0, int pierce = 0, float range = 15f, bool canShotgun = false) {
         ProjSpeed = speed;
         Pierces = pierce;
         ProjLifetime = lifetime;
         Range = range;
+        CanShotgun = canShotgun;
     }
 
     protected void OnBodyEntered(Node3D body) {
         if (body.IsInGroup("Enemy") || body.IsInGroup("Player")) {
             Actor target = body as Actor;
-            OnCollideWithTarget(target);
+
+            if (ActorsHitThisGroup != null && !CanShotgun) {
+                if (ActorsHitThisGroup.Add(target)) {
+                    OnCollideWithTarget(target);
+                }
+            }
+            else {
+                OnCollideWithTarget(target);
+            }
         }
         else {
             QueueFree();
@@ -82,7 +90,7 @@ public partial class Projectile : Node3D {
     }
 
     protected virtual void OnCollideWithTarget(Actor actor) {
-        actor.TakeDamage(dmgCategory, damage, pens, true, true);
+        TargetHit?.Invoke(actor);
 
         if (Pierces < 1) {
             QueueFree();

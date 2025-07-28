@@ -25,7 +25,11 @@ public partial class RightHUD : Control {
         ProgressLabel.Text = sb.ToString();
     }
 
-    public void UpdateEnemyDebugLabel(double denMod, int spawnAmount) {
+    public void UpdateEnemyDebugLabelSurvival(double denMod, int spawnAmount) {
         EnemyDebugLabel.Text = $"Den. Mod: {denMod:F2}, Amount: {spawnAmount}";
+    }
+
+    public void UpdateEnemyDebugLabelWaves(int enemiesLeft, int total) {
+        EnemyDebugLabel.Text = $"Left: {enemiesLeft}, Total: {total}";
     }
 }

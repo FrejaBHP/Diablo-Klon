@@ -24,7 +24,7 @@ public static class MapDatabase {
 
     private static readonly Dictionary<PackedScene, MapTags> mapCatalogue = new() {
         { TownScene, new(EMapType.Town, [EMapObjective.None]) },
-        { FEScene, new(EMapType.Objective, [EMapObjective.Survival]) },
+        { FEScene, new(EMapType.Objective, [EMapObjective.Survival, EMapObjective.Waves]) },
         { ShopSmallTownScene, new(EMapType.Intermission, [EMapObjective.None]) },
     };
 }

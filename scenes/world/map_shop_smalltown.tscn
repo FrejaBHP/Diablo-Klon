@@ -546,7 +546,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 0, 22)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, 0, 14.5)
 ShopType = 1
 
-[node name="NavigationRegion3D" parent="." index="9"]
+[node name="NavigationRegion3D" parent="." index="8"]
 navigation_mesh = SubResource("NavigationMesh_xixgl")
 
 [node name="NavigationObstacle3D" type="NavigationObstacle3D" parent="NavigationRegion3D" index="0"]

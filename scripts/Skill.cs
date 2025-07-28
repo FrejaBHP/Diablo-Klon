@@ -493,6 +493,7 @@ public interface IProjectileSkill {
     ];
 
     // ===== Virtual functions =====
+    void ApplyProjectileSkillBehaviourToTarget(Actor target);
 
     // ===== Default functions =====
     public static float GetSpreadCoefficient(Vector3 startPos, Vector3 endPos) {
@@ -573,11 +574,14 @@ public interface IProjectileSkill {
         Vector3 diffVector = mouseAimPosition - skill.ActorOwner.GlobalPosition;
 
         float[] angleOffsets = GetMultipleProjectileAngles(TotalProjectiles, coefficient);
+        HashSet<Actor> ActorsHitByThisInstance = new();
 
         for (int i = 0; i < TotalProjectiles; i++) {
             Projectile proj = Skill.GenericProjectileScene.Instantiate() as Projectile;
             Run.Instance.AddChild(proj);
             skill.SetSkillCollision(proj.Hitbox);
+            proj.TargetHit += ApplyProjectileSkillBehaviourToTarget;
+            proj.ActorsHitThisGroup = ActorsHitByThisInstance;
 
             proj.GlobalPosition = proj.Position with { 
                 X = skill.ActorOwner.GlobalPosition.X, 
@@ -604,7 +608,7 @@ public interface IProjectileSkill {
                 }
             }
             
-            proj.SetProperties(skill.DamageCategory, skill.RollForDamage(true), skill.ActorOwner.Penetrations, BaseProjectileSpeed, -1, TotalPierces);
+            proj.SetProperties(BaseProjectileSpeed, -1, TotalPierces, 15f, false);
         }
 
         skill.DeductManaFromActor();
