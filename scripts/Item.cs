@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 public partial class Item {
 	PackedScene worldItemScene = GD.Load<PackedScene>("res://scenes/worlditem.tscn");
@@ -139,22 +140,32 @@ public partial class Item {
 
 		if (position == EAffixPosition.Prefix) {
 			Prefixes.Add(newAffix);
-
-			if (ItemRarity == EItemRarity.Magic) {
-				string newName = $"{newAffix.GetAffixName()} {ItemName}";
-				ItemName = newName;
-			}
 		}
 		else {
 			Suffixes.Add(newAffix);
+		}
 
-			if (ItemRarity == EItemRarity.Magic) {
-				string newName = $"{ItemName} {newAffix.GetAffixName()}";
-				ItemName = newName;
-			}
+		if (ItemRarity == EItemRarity.Magic) {
+			UpdateMagicItemName();
 		}
 
 		ApplyAffixToDictionary(newAffix, true);
+	}
+
+	protected void UpdateMagicItemName() {
+		StringBuilder sb = new();
+
+		if (Prefixes.Count > 0) {
+			sb.Append(Prefixes[0].GetAffixName() + " ");
+		}
+
+		sb.Append(ItemBase);
+
+		if (Suffixes.Count > 0) {
+			sb.Append(" " + Suffixes[0].GetAffixName());
+		}
+
+		ItemName = sb.ToString();
 	}
 
 	protected virtual void ApplyAffixToDictionary(Affix affix, bool add) {

@@ -46,6 +46,7 @@ public static class EnemyDatabase {
         { EEnemyType.TestEnemy2, TestEnemy2Data }
     };
 
+
     // Spawn pools for random endless enemy spawns
 
     public static readonly WeightedList<EEnemyType> TestSurvivalSpawnPool = new([
