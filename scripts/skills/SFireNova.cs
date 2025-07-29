@@ -16,15 +16,15 @@ public class SFireNova : Skill, ISpell, IAreaSkill {
     private const float pixelSize = 0.125f;
 
     private static readonly double[] minDamageArray = [
-        10, 12, 15, 19, 24,
-        30, 38, 47, 59, 74,
-        93, 116, 145, 181, 227
+        10, 12, 14, 17, 20,
+        24, 29, 35, 43, 51,
+        61, 74, 89, 106, 128
     ];
 
     private static readonly double[] maxDamageArray = [
-        13, 16, 20, 25, 31,
-        39, 49, 61, 77, 96,
-        121, 151, 189, 236, 295
+        13, 15, 18, 22, 26,
+        32, 38, 46, 55, 67,
+        80, 96, 115, 139, 166
     ];
 
     public SFireNova() {
@@ -40,7 +40,7 @@ public class SFireNova : Skill, ISpell, IAreaSkill {
 
         ManaCost = 1;
 
-        AddedDamageModifier = 2.50;
+        AddedDamageModifier = 2;
 
         TotalAreaRadius = BaseAreaRadius;
         CastRange = TotalAreaRadius - 0.5f;
@@ -49,6 +49,7 @@ public class SFireNova : Skill, ISpell, IAreaSkill {
     protected override void OnSkillLevelChanged() {
         BaseDamageModifiers.Fire.SMinBase = minDamageArray[level];
         BaseDamageModifiers.Fire.SMaxBase = maxDamageArray[level];
+        
         UpdateEffectStrings();
     }
 

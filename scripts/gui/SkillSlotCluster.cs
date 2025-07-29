@@ -13,10 +13,16 @@ public partial class SkillSlotCluster : Control {
     public delegate void ActiveSkillUnequippedEventHandler(SkillSlotCluster cluster, Control slot, InventoryItem skill);
 
 	[Signal]
-    public delegate void SupportEquippedEventHandler(Control slot, InventoryItem support);
+    public delegate void ActiveSkillsSwappedEventHandler(SkillSlotCluster cluster, Control slot, InventoryItem oldSkill, InventoryItem newSkill);
 
 	[Signal]
-    public delegate void SupportUnequippedEventHandler(Control slot, InventoryItem support);
+    public delegate void SupportGemEquippedEventHandler(SkillSlotSupport slot, InventoryItem support);
+
+	[Signal]
+    public delegate void SupportGemUnequippedEventHandler(SkillSlotSupport slot, InventoryItem support);
+
+	[Signal]
+    public delegate void SupportGemsSwappedEventHandler(SkillSlotSupport slot, InventoryItem oldSupport, InventoryItem newSupport);
 
 	public SkillSlotActive ActiveSlot { get; protected set; }
 	public SkillSlotSupport[] SupportSlots { get; protected set; } = new SkillSlotSupport[3];
@@ -30,12 +36,16 @@ public partial class SkillSlotCluster : Control {
 		SupportSlots[1] = GetNode<SkillSlotSupport>("SupportSlotMiddle");
 		SupportSlots[2] = GetNode<SkillSlotSupport>("SupportSlotRight");
 
+		ActiveSlot.SkillChanged += UpdateCluster;
 		ActiveSlot.SkillEquipped += OnActiveSkillEquipped;
 		ActiveSlot.SkillUnequipped += OnActiveSkillUnequipped;
+		ActiveSlot.SkillsSwapped += OnActiveSkillsSwapped;
 
 		for (int i = 0; i < SupportSlots.Length; i++) {
+			SupportSlots[i].SupportChanged += UpdateCluster;
 			SupportSlots[i].SupportEquipped += OnSupportEquipped;
 			SupportSlots[i].SupportUnequipped += OnSupportUnequipped;
+			SupportSlots[i].SupportsSwapped += OnSupportsSwapped;
 		}
 	}
 
@@ -60,36 +70,35 @@ public partial class SkillSlotCluster : Control {
 
 	}
 
+	public void UpdateCluster() {
+		if (ActiveSlot.ItemInSlot != null) {
+			SkillItem skillItem = (SkillItem)ActiveSlot.ItemInSlot.ItemReference;
+			skillItem.SkillReference.RecalculateSkillValues();
+		}
+	}
+
 	public void OnActiveSkillEquipped(Control slot, InventoryItem item) {
 		EmitSignal(SignalName.ActiveSkillEquipped, this, slot, item);
-
-		SkillItem skillItem = (SkillItem)item.ItemReference;
-		skillItem.SkillReference.RecalculateSkillValues();
 	}
 
 	public void OnActiveSkillUnequipped(Control slot, InventoryItem item) {
 		EmitSignal(SignalName.ActiveSkillUnequipped, this, slot, item);
+	}
 
-		SkillItem skillItem = (SkillItem)item.ItemReference;
-		skillItem.SkillReference.RecalculateSkillValues();
+	public void OnActiveSkillsSwapped(Control slot, InventoryItem oldSkill, InventoryItem newSkill) {
+		EmitSignal(SignalName.ActiveSkillsSwapped, this, slot, oldSkill, newSkill);
 	}
 
 	public void OnSupportEquipped(Control slot, InventoryItem item) {
-		EmitSignal(SignalName.SupportEquipped, slot, item);
-
-		if (ActiveSlot.ItemInSlot != null) {
-			SkillItem skillItem = (SkillItem)ActiveSlot.ItemInSlot.ItemReference;
-			skillItem.SkillReference.RecalculateSkillValues();
-		}
+		EmitSignal(SignalName.SupportGemEquipped, slot, item);
 	}
 
 	public void OnSupportUnequipped(Control slot, InventoryItem item) {
-		EmitSignal(SignalName.SupportUnequipped, slot, item);
+		EmitSignal(SignalName.SupportGemUnequipped, slot, item);
+	}
 
-		if (ActiveSlot.ItemInSlot != null) {
-			SkillItem skillItem = (SkillItem)ActiveSlot.ItemInSlot.ItemReference;
-			skillItem.SkillReference.RecalculateSkillValues();
-		}
+	public void OnSupportsSwapped(SkillSlotSupport slot, InventoryItem oldSupport, InventoryItem newSupport) {
+		EmitSignal(SignalName.SupportGemsSwapped, slot, oldSupport, newSupport);
 	}
 
 	public List<SupportGem> GetSupports() {

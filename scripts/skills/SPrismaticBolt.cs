@@ -24,25 +24,25 @@ public class SPrismaticBolt : Skill, ISpell, IProjectileSkill {
     public double MaximumSpreadAngleOverride { get; set; } = 0;
 
     private static readonly double[] minDamageArray = [
-        1, 1, 2, 2, 3,
-        3, 4, 5, 6, 7,
-        9, 11, 14, 18, 22
+        3, 3, 4, 5, 6,
+        7, 8, 10, 12, 15,
+        18, 22, 26, 32, 38
     ];
 
     private static readonly double[] maxDamageArray = [
-        3, 4, 4, 6, 7,
-        9, 11, 14, 18, 22,
-        28, 35, 44, 54, 68
+        5, 6, 7, 8, 10,
+        12, 14, 17, 21, 25,
+        30, 37, 44, 53, 64
     ];
 
     public SPrismaticBolt() {
         Name = "Prismatic Bolt";
-        Description = "Conjures a bolt that travels in a straight line, dealing damage to the first enemy hit.";
+        Description = "Conjures an elemental bolt that travels in a straight line, dealing damage to the first enemy hit.";
         Effects = [];
 
         SkillName = ESkillName.PrismaticBolt;
         Type = ESkillType.Spell;
-        Tags = ESkillTags.Spell | ESkillTags.Projectile | ESkillTags.Physical | ESkillTags.Fire | ESkillTags.Cold | ESkillTags.Lightning | ESkillTags.Chaos;
+        Tags = ESkillTags.Spell | ESkillTags.Projectile | ESkillTags.Fire | ESkillTags.Cold | ESkillTags.Lightning;
         DamageCategory = EDamageCategory.Spell;
         Texture = UILib.TextureSkillPrismaticBolt;
 
@@ -57,9 +57,6 @@ public class SPrismaticBolt : Skill, ISpell, IProjectileSkill {
     }
 
     protected override void OnSkillLevelChanged() {
-        BaseDamageModifiers.Physical.SMinBase = minDamageArray[level];
-        BaseDamageModifiers.Physical.SMaxBase = maxDamageArray[level];
-
         BaseDamageModifiers.Fire.SMinBase = minDamageArray[level];
         BaseDamageModifiers.Fire.SMaxBase = maxDamageArray[level];
 
@@ -68,9 +65,6 @@ public class SPrismaticBolt : Skill, ISpell, IProjectileSkill {
 
         BaseDamageModifiers.Lightning.SMinBase = minDamageArray[level];
         BaseDamageModifiers.Lightning.SMaxBase = maxDamageArray[level];
-
-        BaseDamageModifiers.Chaos.SMinBase = minDamageArray[level];
-        BaseDamageModifiers.Chaos.SMaxBase = maxDamageArray[level];
     }
 
     public override void UseSkill() {

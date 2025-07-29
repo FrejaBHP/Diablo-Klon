@@ -49,15 +49,15 @@ public abstract class SupportGem : Item {
 
 public partial class SuppAddedFire : SupportGem {
     private static readonly int[] minDamageArray = [
-        4, 4, 5, 6, 7,
-        8, 9, 10, 12, 14,
-        16, 19, 22, 25, 28
+        4, 4, 5, 5, 6,
+        7, 8, 9, 10, 11,
+        12, 13, 15, 17, 19
     ];
 
     private static readonly int[] maxDamageArray = [
-        8, 9, 10, 12, 14,
-        16, 18, 21, 24, 28,
-        32, 37, 43, 49, 56
+        8, 9, 10, 11, 12,
+        13, 15, 17, 19, 22,
+        25, 28, 31, 35, 39
     ];
 
     private int addedMinFire;
@@ -89,14 +89,14 @@ public partial class SuppAddedFire : SupportGem {
 public partial class SuppAddedCold : SupportGem {
     private static readonly int[] minDamageArray = [
         5, 5, 6, 7, 8,
-        10, 11, 13, 15, 17,
-        20, 23, 26, 30, 35
+        9, 10, 11, 12, 13,
+        15, 17, 19, 21, 24
     ];
 
     private static readonly int[] maxDamageArray = [
-        7, 8, 9, 10, 12,
-        14, 16, 18, 21, 24,
-        28, 32, 37, 43, 49
+        7, 8, 8, 9, 10,
+        11, 13, 15, 17, 19,
+        21, 24, 27, 30, 34
     ];
 
     private int addedMinCold;
@@ -128,14 +128,14 @@ public partial class SuppAddedCold : SupportGem {
 public partial class SuppAddedLightning : SupportGem {
     private static readonly int[] minDamageArray = [
         1, 1, 1, 1, 1,
-        2, 2, 2, 3, 3,
-        4, 4, 5, 6, 7
+        1, 1, 2, 2, 2,
+        2, 3, 3, 4, 4
     ];
 
     private static readonly int[] maxDamageArray = [
-        10, 11, 13, 15, 17,
-        20, 23, 26, 30, 35,
-        40, 46, 53, 61, 70
+        10, 11, 12, 13, 15,
+        17, 19, 21, 24, 27,
+        30, 34, 38, 43, 48
     ];
 
     private int addedMinLightning;
@@ -166,15 +166,15 @@ public partial class SuppAddedLightning : SupportGem {
 
 public partial class SuppAddedChaos : SupportGem {
     private static readonly int[] minDamageArray = [
-        4, 4, 5, 6, 7,
-        8, 9, 10, 12, 14,
-        16, 19, 22, 25, 28
+        4, 4, 5, 5, 6,
+        7, 8, 9, 10, 11,
+        12, 13, 15, 17, 19
     ];
 
     private static readonly int[] maxDamageArray = [
-        8, 9, 10, 12, 14,
-        16, 18, 21, 24, 28,
-        32, 37, 43, 49, 56
+        8, 9, 10, 11, 12,
+        13, 15, 17, 19, 22,
+        25, 28, 31, 35, 39
     ];
 
     private int addedMinChaos;

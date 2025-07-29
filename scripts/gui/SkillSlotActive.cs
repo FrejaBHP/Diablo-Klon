@@ -3,6 +3,9 @@ using System;
 
 public partial class SkillSlotActive : Control {
 	[Signal]
+    public delegate void SkillChangedEventHandler();
+
+	[Signal]
     public delegate void SkillEquippedEventHandler(Control slot, InventoryItem skill);
 
 	[Signal]
@@ -36,17 +39,20 @@ public partial class SkillSlotActive : Control {
 				if (itemInSlot == null) {
 					SetSkill(InventoryReference.SelectedItem);
 					EmitSignal(SignalName.SkillEquipped, this, itemInSlot);
+					EmitSignal(SignalName.SkillChanged);
 				}
 				else {
 					InventoryItem temp = InventoryReference.SelectedItem;
 					EmitSignal(SignalName.SkillsSwapped, this, itemInSlot, InventoryReference.SelectedItem);
 					SetSkill(temp);
+					EmitSignal(SignalName.SkillChanged);
 				}
 			}
 			else if (!InventoryReference.IsAnItemSelected && itemInSlot != null) {
 				RemoveHighlight();
 				EmitSignal(SignalName.SkillUnequipped, this, itemInSlot);
 				SetSkill(null);
+				EmitSignal(SignalName.SkillChanged);
 			}
 		}
 	}

@@ -13,9 +13,11 @@ public partial class SkillPanel : Control {
             SkillSlotClusters[i].ClusterChanged += OnSkillSlotClusterChanged;
             SkillSlotClusters[i].ActiveSkillEquipped += OnSkillEquippedFromInventory;
             SkillSlotClusters[i].ActiveSkillUnequipped += OnSkillUnequipped;
+            SkillSlotClusters[i].ActiveSkillsSwapped += OnSkillsSwapped;
             
-            SkillSlotClusters[i].SupportEquipped += OnSupportEquippedFromInventory;
-            SkillSlotClusters[i].SupportUnequipped += OnSupportUnequipped;
+            SkillSlotClusters[i].SupportGemEquipped += OnSupportEquippedFromInventory;
+            SkillSlotClusters[i].SupportGemUnequipped += OnSupportUnequipped;
+            SkillSlotClusters[i].SupportGemsSwapped += OnSupportsSwapped;
         }
     }
 
@@ -74,14 +76,43 @@ public partial class SkillPanel : Control {
         PlayerOwner.RemoveSkill(skillItem.SkillReference);
     }
 
-    public void OnSupportEquippedFromInventory(Control slot, InventoryItem item) {
+    public void OnSkillsSwapped(SkillSlotCluster cluster, Control slot, InventoryItem oldSkill, InventoryItem newSkill) {
+        oldSkill.RemoveTooltip();
+
+        newSkill.ClearOccupiedSlots();
+        slot.RemoveChild(oldSkill);
+        newSkill.GetParent().RemoveChild(newSkill);
+        slot.AddChild(newSkill);
+        
+        if (!PlayerOwner.PlayerHUD.PlayerInventory.InventoryGrid.TryAddItemToInventory(ref oldSkill)) {
+            PlayerOwner.DropItemOnFloor(oldSkill.ItemReference.ConvertToWorldItem());
+        }
+        else {
+            oldSkill.ToggleClickable();
+            oldSkill.ToggleBackground();
+        }
+
+        PlayerOwner.PlayerHUD.PlayerInventory.ClearSelectedItem();
+
+        SkillItem oldSkillItem = (SkillItem)oldSkill.ItemReference;
+        oldSkillItem.SkillReference.ActorOwner = null;
+        oldSkillItem.SkillReference.HousingSkillCluster = null;
+        PlayerOwner.RemoveSkill(oldSkillItem.SkillReference);
+
+        SkillItem newSkillItem = (SkillItem)newSkill.ItemReference;
+        newSkillItem.SkillReference.ActorOwner = PlayerOwner;
+        newSkillItem.SkillReference.HousingSkillCluster = cluster;
+        PlayerOwner.AddSkill(newSkillItem.SkillReference);
+    }
+
+    public void OnSupportEquippedFromInventory(SkillSlotSupport slot, InventoryItem item) {
         item.GetParent().RemoveChild(item);
         slot.AddChild(item);
 
         PlayerOwner.PlayerHUD.PlayerInventory.ClearSelectedItem();
     }
 
-    public void OnSupportUnequipped(Control slot, InventoryItem item) {
+    public void OnSupportUnequipped(SkillSlotSupport slot, InventoryItem item) {
         item.RemoveTooltip();
         slot.RemoveChild(item);
         
@@ -92,5 +123,24 @@ public partial class SkillPanel : Control {
             item.ToggleClickable();
             item.ToggleBackground();
         }
+    }
+
+    public void OnSupportsSwapped(SkillSlotSupport slot, InventoryItem oldSupport, InventoryItem newSupport) {
+        oldSupport.RemoveTooltip();
+        
+        newSupport.ClearOccupiedSlots();
+        slot.RemoveChild(oldSupport);
+        newSupport.GetParent().RemoveChild(newSupport);
+        slot.AddChild(newSupport);
+        
+        if (!PlayerOwner.PlayerHUD.PlayerInventory.InventoryGrid.TryAddItemToInventory(ref oldSupport)) {
+            PlayerOwner.DropItemOnFloor(oldSupport.ItemReference.ConvertToWorldItem());
+        }
+        else {
+            oldSupport.ToggleClickable();
+            oldSupport.ToggleBackground();
+        }
+
+        PlayerOwner.PlayerHUD.PlayerInventory.ClearSelectedItem();
     }
 }

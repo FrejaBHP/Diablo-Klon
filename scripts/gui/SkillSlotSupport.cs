@@ -3,13 +3,16 @@ using System;
 
 public partial class SkillSlotSupport : Control {
 	[Signal]
+    public delegate void SupportChangedEventHandler();
+
+	[Signal]
     public delegate void SupportEquippedEventHandler(SkillSlotSupport slot, InventoryItem skill);
 
 	[Signal]
     public delegate void SupportUnequippedEventHandler(SkillSlotSupport slot, InventoryItem skill);
 
 	[Signal]
-    public delegate void SupportsSwappedEventHandler(SkillSlotSupport slot, InventoryItem oldSkill, InventoryItem newSkill);
+    public delegate void SupportsSwappedEventHandler(SkillSlotSupport slot, InventoryItem oldSupport, InventoryItem newSupport);
 
 	public PlayerInventory InventoryReference;
 	
@@ -36,18 +39,20 @@ public partial class SkillSlotSupport : Control {
 				if (itemInSlot == null) {
 					SetSupport(InventoryReference.SelectedItem);
 					EmitSignal(SignalName.SupportEquipped, this, itemInSlot);
+					EmitSignal(SignalName.SupportChanged);
 				}
 				else {
 					InventoryItem temp = InventoryReference.SelectedItem;
-					SetSupport(temp);
 					EmitSignal(SignalName.SupportsSwapped, this, itemInSlot, InventoryReference.SelectedItem);
+					SetSupport(temp);
+					EmitSignal(SignalName.SupportChanged);
 				}
 			}
 			else if (!InventoryReference.IsAnItemSelected && itemInSlot != null) {
 				RemoveHighlight();
-				InventoryItem temp = itemInSlot;
+				EmitSignal(SignalName.SupportUnequipped, this, itemInSlot);
 				SetSupport(null);
-				EmitSignal(SignalName.SupportUnequipped, this, temp);
+				EmitSignal(SignalName.SupportChanged);
 			}
 		}
 	}
