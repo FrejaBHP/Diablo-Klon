@@ -237,79 +237,6 @@ public class ActorBasicStats {
     }
 }
 
-public class DamageModifiers() {
-    public DamageStat Physical { get; protected set; } = new();
-    public DamageStat Fire { get; protected set; } = new();
-    public DamageStat Cold { get; protected set; } = new();
-    public DamageStat Lightning { get; protected set; } = new();
-    public DamageStat Chaos { get; protected set; } = new();
-
-    public double IncreasedMelee = 0;
-    public double IncreasedRanged = 0;
-    public double IncreasedSpell = 0;
-    public double IncreasedAll = 0;
-
-    public double MoreMelee = 1;
-    public double MoreRanged = 1;
-    public double MoreSpell = 1;
-    public double MoreAll = 1;
-
-    public DamageModifiers ShallowCopy() {
-        DamageModifiers copy = (DamageModifiers)MemberwiseClone();
-        copy.Physical = Physical.ShallowCopy();
-        copy.Fire = Fire.ShallowCopy();
-        copy.Cold = Cold.ShallowCopy();
-        copy.Lightning = Lightning.ShallowCopy();
-        copy.Chaos = Chaos.ShallowCopy();
-
-        return copy;
-    }
-
-    public static DamageModifiers operator +(DamageModifiers a, DamageModifiers b) {
-        DamageModifiers c = new DamageModifiers();
-
-        c.Physical = a.Physical + b.Physical;
-        c.Fire = a.Fire + b.Fire;
-        c.Cold = a.Cold + b.Cold;
-        c.Lightning = a.Lightning + b.Lightning;
-        c.Chaos = a.Chaos + b.Chaos;
-
-        c.IncreasedMelee = a.IncreasedMelee + b.IncreasedMelee;
-        c.IncreasedRanged = a.IncreasedRanged + b.IncreasedRanged;
-        c.IncreasedSpell = a.IncreasedSpell + b.IncreasedSpell;
-        c.IncreasedAll = a.IncreasedAll + b.IncreasedAll;
-
-        c.MoreMelee = a.MoreMelee * b.MoreMelee;
-        c.MoreRanged = a.MoreRanged * b.MoreRanged;
-        c.MoreSpell = a.MoreSpell * b.MoreSpell;
-        c.MoreAll = a.MoreAll * b.MoreAll;
-        
-        return c;
-    }
-
-    public static DamageModifiers operator -(DamageModifiers a, DamageModifiers b) {
-        DamageModifiers c = new DamageModifiers();
-
-        c.Physical = a.Physical - b.Physical;
-        c.Fire = a.Fire - b.Fire;
-        c.Cold = a.Cold - b.Cold;
-        c.Lightning = a.Lightning - b.Lightning;
-        c.Chaos = a.Chaos - b.Chaos;
-
-        c.IncreasedMelee = a.IncreasedMelee - b.IncreasedMelee;
-        c.IncreasedRanged = a.IncreasedRanged - b.IncreasedRanged;
-        c.IncreasedSpell = a.IncreasedSpell - b.IncreasedSpell;
-        c.IncreasedAll = a.IncreasedAll - b.IncreasedAll;
-
-        c.MoreMelee = a.MoreMelee / b.MoreMelee;
-        c.MoreRanged = a.MoreRanged / b.MoreRanged;
-        c.MoreSpell = a.MoreSpell / b.MoreSpell;
-        c.MoreAll = a.MoreAll / b.MoreAll;
-        
-        return c;
-    }
-}
-
 public class ActorResistances {
     public int ResPhysical;
     public int ResFire;
@@ -403,6 +330,7 @@ public partial class Actor : CharacterBody3D {
 
     public ActorBasicStats BasicStats = new();
     public DamageModifiers DamageMods = new();
+    public StatusEffectModifiers StatusMods = new();
     public ActorResistances Resistances = new();
     public ActorPenetrations Penetrations = new();
 
@@ -510,12 +438,12 @@ public partial class Actor : CharacterBody3D {
     /// <param name="pens"></param>
     /// <param name="isCritical"></param>
     /// <param name="createDamageText"></param>
-    public void ReceiveHit(EDamageCategory dmgCategory, SkillDamage damage, ActorPenetrations pens, bool createDamageText) {
-        double physDamage = damage.Physical;
-        double fireDamage = damage.Fire;
-        double coldDamage = damage.Cold;
-        double lightningDamage = damage.Lightning;
-        double chaosDamage = damage.Chaos;
+    public void ReceiveHit(EDamageCategory dmgCategory, SkillInfo info, ActorPenetrations pens, bool createDamageText) {
+        double physDamage = info.DamageInfo.Physical;
+        double fireDamage = info.DamageInfo.Fire;
+        double coldDamage = info.DamageInfo.Cold;
+        double lightningDamage = info.DamageInfo.Lightning;
+        double chaosDamage = info.DamageInfo.Chaos;
         double totalDamage;
 
         bool hitBlocked = false;
@@ -558,8 +486,15 @@ public partial class Actor : CharacterBody3D {
         totalDamage = physDamage + fireDamage + coldDamage + lightningDamage + chaosDamage;
 
         BasicStats.CurrentLife -= totalDamage;
-        EmitSignal(SignalName.HitTaken, totalDamage, hitBlocked, damage.IsCritical, createDamageText);
+        EmitSignal(SignalName.HitTaken, totalDamage, hitBlocked, info.InfoFlags.HasFlag(EDamageInfoFlags.Critical), createDamageText);
         EmitSignal(SignalName.DamageTaken);
+        
+        if (info.StatusInfo.StatusEffects.Count != 0) {
+            foreach (AttachedEffect status in info.StatusInfo.StatusEffects) {
+                status.AffectedActor = this;
+                ReceiveEffect(status);
+            }
+        }
     }
 
     public void TallyDamageOverTimeForNextTick(EDamageType type, double damage) {

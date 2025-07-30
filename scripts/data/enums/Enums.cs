@@ -85,6 +85,7 @@ public enum ESkillName {
 	PrismaticBolt,
 	SplitArrow,
 	FireNova,
+	CobraShot,
 	COUNT
 }
 
@@ -111,6 +112,17 @@ public enum ESkillTags {
 	Cold = 1 << 9,
 	Lightning = 1 << 10,
 	Chaos = 1 << 11
+}
+
+[Flags]
+public enum ESkillStatusEffectFlags {
+	None = 0,
+	CanBleed = 1 << 0,
+	CanIgnite = 1 << 1,
+	CanChill = 1 << 2,
+	CanShock = 1 << 3,
+	CanPoison = 1 << 4,
+	CanSlow = 1 << 5,
 }
 
 [Flags]

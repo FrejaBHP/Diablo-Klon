@@ -362,7 +362,14 @@ public static class ItemDataTables {
 			SkillType = typeof(SFireNova),
 			Texture = UILib.TextureItemD2JewelBlue,
 			MinimumLevel = 0,
-		}
+		},
+
+		new SkillItemData {
+			SkillName = ESkillName.CobraShot,
+			SkillType = typeof(SCobraShot),
+			Texture = UILib.TextureItemD2JewelGreen,
+			MinimumLevel = 0,
+		},
 	];
 
 	public static readonly List<SupportGemData> SupportGemData = [
@@ -439,6 +446,13 @@ public static class ItemDataTables {
 		new SupportGemData {
 			SkillTags = ESkillTags.Area,
 			SupportType = typeof(SuppIncreasedAoE),
+			Texture = UILib.TextureItemD2JewelBlueF,
+			MinimumLevel = 0,
+		},
+
+		new SupportGemData {
+			SkillTags = ESkillTags.None,
+			SupportType = typeof(SuppPoisonChance),
 			Texture = UILib.TextureItemD2JewelBlueF,
 			MinimumLevel = 0,
 		},

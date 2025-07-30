@@ -292,6 +292,17 @@ public partial class DamageStat() {
         }
     }
 
+    public bool IsNonZero() {
+        CalculateTotal(out double min, out double max);
+
+        if (min == 0 && max == 0) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
     public DamageStat ShallowCopy() {
         return (DamageStat)MemberwiseClone();
     }
@@ -324,5 +335,122 @@ public partial class DamageStat() {
 
     public override string ToString() {
         return $"Base: {SMinBase} - {sMaxBase}\nAdded: {SMinAdded} - {sMaxAdded}\nInc: {SIncreased}% / More: {SMore}%";
+    }
+}
+
+
+
+
+public partial class StatusEffectStats() {
+    private double sBaseChance = 0;
+	public double SBaseChance {
+		get => sBaseChance;
+		set {
+            sBaseChance = value;
+		}
+	}
+
+    private double sAddedChance = 0;
+	public double SAddedChance {
+		get => sAddedChance;
+		set {
+            sAddedChance = value;
+		}
+	}
+
+    private double sIncreasedChance = 0;
+	public double SIncreasedChance {
+		get => sIncreasedChance;
+		set {
+			sIncreasedChance = value;
+		}
+	}
+
+    private double sMoreChance = 1;
+	public double SMoreChance {
+		get => sMoreChance;
+		set {
+			sMoreChance = value;
+		}
+	}
+
+    public void SetAddedIncreasedMoreChance(double added, double increased = 0, double more = 1) {
+        sAddedChance = added;
+        sIncreasedChance = increased;
+        sMoreChance = more;
+    }
+
+    public double CalculateTotalChance() {
+        double totalChance = (sBaseChance + sAddedChance) * (1 + sIncreasedChance) * sMoreChance;
+
+        if (totalChance < 0) {
+            totalChance = 0;
+        }
+        else if (totalChance > 1) {
+            totalChance = 1;
+        }
+
+        return totalChance;
+    }
+
+    public bool RollForProc() {
+        double chance = CalculateTotalChance();
+        return Utilities.RollForChance(chance);
+    }
+
+    public StatusEffectStats ShallowCopy() {
+        return (StatusEffectStats)MemberwiseClone();
+    }
+
+    private double sIncreasedDuration = 0;
+	public double SIncreasedDuration {
+		get => sIncreasedDuration;
+		set {
+			sIncreasedDuration = value;
+		}
+	}
+
+    private double sMoreDuration = 1;
+	public double SMoreDuration {
+		get => sMoreDuration;
+		set {
+			sMoreDuration = value;
+		}
+	}
+
+    public double CalculateDurationModifier() {
+        return (1 + sIncreasedDuration) * sMoreDuration;
+    }
+
+    public static StatusEffectStats operator +(StatusEffectStats a, StatusEffectStats b) {
+        StatusEffectStats c = new StatusEffectStats();
+
+        c.sBaseChance = a.sBaseChance + b.sBaseChance;
+        c.sAddedChance = a.sAddedChance + b.sAddedChance;
+        c.sIncreasedChance = a.sIncreasedChance + b.sIncreasedChance;
+        c.SMoreChance = a.SMoreChance * b.SMoreChance;
+
+        c.sIncreasedDuration = a.sIncreasedDuration + b.sIncreasedDuration;
+        c.sMoreDuration = a.sMoreDuration * b.sMoreDuration;
+        
+        return c;
+    }
+
+    public static StatusEffectStats operator -(StatusEffectStats a, StatusEffectStats b) {
+        StatusEffectStats c = new StatusEffectStats();
+
+        c.sBaseChance = a.sBaseChance - b.sBaseChance;
+        c.sAddedChance = a.sAddedChance - b.sAddedChance;
+        c.sIncreasedChance = a.sIncreasedChance - b.sIncreasedChance;
+        c.SMoreChance = a.SMoreChance / b.SMoreChance;
+
+        c.sIncreasedDuration = a.sIncreasedDuration - b.sIncreasedDuration;
+        c.sMoreDuration = a.sMoreDuration / b.sMoreDuration;
+        
+        return c;
+    }
+
+    public override string ToString() {
+        return $"BaseC: {SBaseChance}\nAddedC: {sAddedChance}\nIncC: {SIncreasedChance}% / MoreC: {SMoreChance}%";
     }
 }

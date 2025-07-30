@@ -15,6 +15,8 @@ public abstract class Skill {
 
     public DamageModifiers BaseDamageModifiers { get; protected set; } = new(); // Kan måske erstattes med nogle mere simple værdier
     public DamageModifiers ActiveDamageModifiers { get; protected set; } = new(); // Som fx bare have en double der hedder "IncreasedPhys" og lægge det til i det relevante sted i et skill
+    public StatusEffectModifiers BaseStatusEffectModifiers { get; protected set; } = new();
+    public StatusEffectModifiers ActiveStatusEffectModifiers { get; protected set; } = new();
     public double BaseCriticalStrikeChance;
     public double CriticalStrikeMulti;
 
@@ -36,6 +38,8 @@ public abstract class Skill {
     public ESkillTags Tags { get; protected set; }
     public EDamageCategory DamageCategory { get; protected set; }
     public Texture2D Texture { get; protected set; }
+
+    public ESkillStatusEffectFlags StatusEffectFlags = new();
 
     public double ManaCost { get; protected set; } = 0;
     public float ManaCostMultiplier { get; protected set; } = 1f;
@@ -158,6 +162,141 @@ public abstract class Skill {
         return new SkillDamage(physical, fire, cold, lightning, chaos, isCritical);
     }
 
+    public SkillInfo CalculateOutgoingValuesIntoInfo(bool canCrit) {
+        EDamageInfoFlags damageInfoFlags = new();
+
+        double basePhysical = 0;
+        double baseFire = 0;
+        double baseCold = 0;
+        double baseLightning = 0;
+        double baseChaos = 0;
+        bool isCritical = false;
+
+        if (this is IAttack attack) {
+            attack.GetUsedWeaponStats(ActorOwner, out ActorWeaponStats wStats);
+
+            if (canCrit) {
+                isCritical = RollForCritical(wStats.CritChance * ActorOwner.CritChanceMod.STotal);
+            }
+
+            ActiveDamageModifiers.Physical.CalculateTotalWithBase(wStats.PhysMinDamage, wStats.PhysMaxDamage, AddedDamageModifier, out double pMin, out double pMax);
+            basePhysical = Utilities.RandomDouble(pMin, pMax);
+            ActiveDamageModifiers.Fire.CalculateTotalWithBase(wStats.FireMinDamage, wStats.FireMaxDamage, AddedDamageModifier, out double fMin, out double fMax);
+            baseFire = Utilities.RandomDouble(fMin, fMax);
+            ActiveDamageModifiers.Cold.CalculateTotalWithBase(wStats.ColdMinDamage, wStats.ColdMaxDamage, AddedDamageModifier, out double cMin, out double cMax);
+            baseCold = Utilities.RandomDouble(cMin, cMax);
+            ActiveDamageModifiers.Lightning.CalculateTotalWithBase(wStats.LightningMinDamage, wStats.LightningMaxDamage, AddedDamageModifier, out double lMin, out double lMax);
+            baseLightning = Utilities.RandomDouble(lMin, lMax);
+            ActiveDamageModifiers.Chaos.CalculateTotalWithBase(wStats.ChaosMinDamage, wStats.ChaosMaxDamage, AddedDamageModifier, out double chMin, out double chMax);
+            baseChaos = Utilities.RandomDouble(chMin, chMax);
+        }
+        else if (this is ISpell spell) {
+            if (canCrit) {
+                isCritical = RollForCritical(BaseCriticalStrikeChance * ActorOwner.CritChanceMod.STotal);
+            }
+
+            ActiveDamageModifiers.Physical.CalculateTotal(out double pMin, out double pMax);
+            basePhysical = Utilities.RandomDouble(pMin, pMax);
+            ActiveDamageModifiers.Fire.CalculateTotal(out double fMin, out double fMax);
+            baseFire = Utilities.RandomDouble(fMin, fMax);
+            ActiveDamageModifiers.Cold.CalculateTotal(out double cMin, out double cMax);
+            baseCold = Utilities.RandomDouble(cMin, cMax);
+            ActiveDamageModifiers.Lightning.CalculateTotal(out double lMin, out double lMax);
+            baseLightning = Utilities.RandomDouble(lMin, lMax);
+            ActiveDamageModifiers.Chaos.CalculateTotal(out double chMin, out double chMax);
+            baseChaos = Utilities.RandomDouble(chMin, chMax);
+        }
+
+        double hitPhysical = basePhysical;
+        double hitFire = baseFire;
+        double hitCold = baseCold;
+        double hitLightning = baseLightning;
+        double hitChaos = baseChaos;
+
+        if (isCritical) {
+            damageInfoFlags |= EDamageInfoFlags.Critical;
+
+            hitPhysical *= CriticalStrikeMulti;
+            hitFire *= CriticalStrikeMulti;
+            hitCold *= CriticalStrikeMulti;
+            hitLightning *= CriticalStrikeMulti;
+            hitChaos *= CriticalStrikeMulti;
+        }
+
+        SkillHitDamageInfo hitDamageInfo = new(hitPhysical, hitFire, hitCold, hitLightning, hitChaos);
+
+        List<AttachedEffect> statusEffects = new();
+        /*
+        if (StatusEffectFlags.HasFlag(ESkillStatusEffectFlags.CanBleed)) {
+            if (ActiveStatusEffectModifiers.Bleed.RollForProc()) {
+                // TODO
+            }
+        }
+        if (StatusEffectFlags.HasFlag(ESkillStatusEffectFlags.CanIgnite)) {
+            if (ActiveStatusEffectModifiers.Ignite.RollForProc()) {
+                statusEffects.Add(new IgniteEffect(null, 1, baseFire));
+            }
+        }
+        if (StatusEffectFlags.HasFlag(ESkillStatusEffectFlags.CanChill)) {
+            if (ActiveStatusEffectModifiers.Chill.RollForProc()) {
+                // TODO
+            }
+        }
+        if (StatusEffectFlags.HasFlag(ESkillStatusEffectFlags.CanShock)) {
+            if (ActiveStatusEffectModifiers.Shock.RollForProc()) {
+                // TODO
+            }
+        }
+
+        GD.Print($"Can Poison: {StatusEffectFlags.HasFlag(ESkillStatusEffectFlags.CanPoison)}");
+        if (StatusEffectFlags.HasFlag(ESkillStatusEffectFlags.CanPoison)) {
+            if (ActiveStatusEffectModifiers.Poison.RollForProc()) {
+                statusEffects.Add(new PoisonEffect(null, 1, basePhysical + baseChaos));
+            }
+        }
+        if (StatusEffectFlags.HasFlag(ESkillStatusEffectFlags.CanSlow)) {
+            if (ActiveStatusEffectModifiers.Slow.RollForProc()) {
+                // TODO
+            }
+        }*/
+        if (basePhysical > 0) {
+            if (ActiveStatusEffectModifiers.Bleed.RollForProc()) {
+                // TODO
+            }
+        }
+        if (baseFire > 0) {
+            if (ActiveStatusEffectModifiers.Ignite.RollForProc()) {
+                statusEffects.Add(new IgniteEffect(null, ActiveStatusEffectModifiers.Ignite.CalculateDurationModifier(), baseFire));
+            }
+        }
+        if (baseCold > 0) {
+            if (ActiveStatusEffectModifiers.Chill.RollForProc()) {
+                // TODO
+            }
+        }
+        if (baseLightning > 0) {
+            if (ActiveStatusEffectModifiers.Shock.RollForProc()) {
+                // TODO
+            }
+        }
+
+        if ((basePhysical + baseChaos) > 0) {
+            if (ActiveStatusEffectModifiers.Poison.RollForProc()) {
+                statusEffects.Add(new PoisonEffect(null, ActiveStatusEffectModifiers.Poison.CalculateDurationModifier(), basePhysical + baseChaos));
+            }
+        }
+
+        if (true) {
+            if (ActiveStatusEffectModifiers.Slow.RollForProc()) {
+                // TODO
+            }
+        }
+
+        SkillStatusInfo statusInfo = new(statusEffects);
+
+        return new SkillInfo(hitDamageInfo, statusInfo, damageInfoFlags);
+    }
+
     public static bool RollForCritical(double chance) {
         double critRoll = Utilities.RNG.NextDouble();
         return chance >= critRoll;
@@ -166,6 +305,7 @@ public abstract class Skill {
     public virtual void RecalculateSkillValues() {
         if (ActorOwner != null) {
             ActiveDamageModifiers = ActorOwner.DamageMods + BaseDamageModifiers;
+            ActiveStatusEffectModifiers = ActorOwner.StatusMods + BaseStatusEffectModifiers;
 
             List<SupportGem> supportGems;
 
@@ -267,8 +407,50 @@ public abstract class Skill {
                     if (support.AffectsDamageModifiers) {
                         support.ApplyToDamageModifiers(ActiveDamageModifiers);
                     }
+                    if (support.AffectsStatusModifiers) {
+                        support.ApplyToStatusModifiers(ActiveStatusEffectModifiers);
+                    }
                 }
             }
+
+            /*
+            if (ActiveDamageModifiers.Physical.IsNonZero()) {
+                StatusEffectFlags |= ESkillStatusEffectFlags.CanBleed;
+                StatusEffectFlags |= ESkillStatusEffectFlags.CanPoison;
+            }
+            else {
+                StatusEffectFlags &= ~ESkillStatusEffectFlags.CanBleed;
+                StatusEffectFlags &= ~ESkillStatusEffectFlags.CanPoison;
+            }
+
+            if (ActiveDamageModifiers.Fire.IsNonZero()) {
+                StatusEffectFlags |= ESkillStatusEffectFlags.CanIgnite;
+            }
+            else {
+                StatusEffectFlags &= ~ESkillStatusEffectFlags.CanIgnite;
+            }
+
+            if (ActiveDamageModifiers.Cold.IsNonZero()) {
+                StatusEffectFlags |= ESkillStatusEffectFlags.CanChill;
+            }
+            else {
+                StatusEffectFlags &= ~ESkillStatusEffectFlags.CanChill;
+            }
+
+            if (ActiveDamageModifiers.Lightning.IsNonZero()) {
+                StatusEffectFlags |= ESkillStatusEffectFlags.CanShock;
+            }
+            else {
+                StatusEffectFlags &= ~ESkillStatusEffectFlags.CanShock;
+            }
+
+            if (ActiveDamageModifiers.Chaos.IsNonZero()) {
+                StatusEffectFlags |= ESkillStatusEffectFlags.CanPoison;
+            }
+            else {
+                StatusEffectFlags &= ~ESkillStatusEffectFlags.CanPoison;
+            }
+            */
             
             if (AddedDamageModifier != 1) {
                 ActiveDamageModifiers.Physical.SMinAdded *= AddedDamageModifier;
@@ -453,6 +635,7 @@ public interface IMeleeSkill {
     float BaseAttackRange { get; protected set; }
 
     // ===== Virtual functions =====
+    void ApplyMeleeSkillBehaviourToTarget(Actor target);
 
     // ===== Default functions =====
 }

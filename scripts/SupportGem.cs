@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 public abstract class SupportGem : Item {
     protected int level = 0;
@@ -15,6 +16,7 @@ public abstract class SupportGem : Item {
     public string Description { get; protected set; }
     public string DescEffects { get; protected set; }
     public bool AffectsDamageModifiers { get; protected set; }
+    public bool AffectsStatusModifiers { get; protected set; }
 	public ESkillTags SkillTags { get; protected set; }
 
 	public SupportGem() {
@@ -39,6 +41,7 @@ public abstract class SupportGem : Item {
     protected abstract void UpdateGemEffectsDescription();
 
     public virtual void ApplyToDamageModifiers(DamageModifiers dmgMods) {}
+    public virtual void ApplyToStatusModifiers(StatusEffectModifiers seMods) {}
     public virtual void ModifyAttackSkill(IAttack attack) {}
     public virtual void ModifySpellSkill(ISpell spell) {}
     public virtual void ModifyMeleeSkill(IMeleeSkill mSkill) {}
@@ -67,6 +70,7 @@ public partial class SuppAddedFire : SupportGem {
         ItemName = "Added Fire Damage Support";
         Description = "Supports Skills that deal damage";
         AffectsDamageModifiers = true;
+        AffectsStatusModifiers = false;
         SkillTags = ESkillTags.None;
     }
 
@@ -106,6 +110,7 @@ public partial class SuppAddedCold : SupportGem {
         ItemName = "Added Cold Damage Support";
         Description = "Supports Skills that deal damage";
         AffectsDamageModifiers = true;
+        AffectsStatusModifiers = false;
         SkillTags = ESkillTags.None;
     }
 
@@ -145,6 +150,7 @@ public partial class SuppAddedLightning : SupportGem {
         ItemName = "Added Lightning Damage Support";
         Description = "Supports Skills that deal damage";
         AffectsDamageModifiers = true;
+        AffectsStatusModifiers = false;
         SkillTags = ESkillTags.None;
     }
 
@@ -184,6 +190,7 @@ public partial class SuppAddedChaos : SupportGem {
         ItemName = "Added Chaos Damage Support";
         Description = "Supports Skills that deal damage";
         AffectsDamageModifiers = true;
+        AffectsStatusModifiers = false;
         SkillTags = ESkillTags.None;
     }
 
@@ -216,6 +223,7 @@ public partial class SuppAttackSpeed : SupportGem {
         ItemName = "Attack Speed Support";
         Description = "Supports Attacks";
         AffectsDamageModifiers = false;
+        AffectsStatusModifiers = false;
         SkillTags = ESkillTags.Attack;
     }
 
@@ -246,6 +254,7 @@ public partial class SuppCastSpeed : SupportGem {
         ItemName = "Cast Speed Support";
         Description = "Supports Spells";
         AffectsDamageModifiers = false;
+        AffectsStatusModifiers = false;
         SkillTags = ESkillTags.Spell;
     }
 
@@ -274,6 +283,7 @@ public partial class SuppPierce : SupportGem {
         ItemName = "Pierce Support";
         Description = "Supports Projectile Skills";
         AffectsDamageModifiers = false;
+        AffectsStatusModifiers = false;
         SkillTags = ESkillTags.Projectile;
     }
 
@@ -312,6 +322,7 @@ public partial class SuppMultipleProjectiles : SupportGem {
         ItemName = "Multiple Projectiles Support";
         Description = "Supports Projectile Skills";
         AffectsDamageModifiers = true;
+        AffectsStatusModifiers = false;
         SkillTags = ESkillTags.Projectile;
     }
 
@@ -355,6 +366,7 @@ public partial class SuppIncreasedDuration : SupportGem {
         ItemName = "Increased Duration Support";
         Description = "Supports Duration Skills";
         AffectsDamageModifiers = false;
+        AffectsStatusModifiers = false;
         SkillTags = ESkillTags.Duration;
     }
 
@@ -385,6 +397,7 @@ public partial class SuppLessDuration : SupportGem {
         ItemName = "Less Duration Support";
         Description = "Supports Duration Skills";
         AffectsDamageModifiers = false;
+        AffectsStatusModifiers = false;
         SkillTags = ESkillTags.Duration;
     }
 
@@ -415,6 +428,7 @@ public partial class SuppIncreasedAoE : SupportGem {
         ItemName = "Increased Area of Effect Support";
         Description = "Supports Area Skills";
         AffectsDamageModifiers = false;
+        AffectsStatusModifiers = false;
         SkillTags = ESkillTags.Area;
     }
 
@@ -429,5 +443,44 @@ public partial class SuppIncreasedAoE : SupportGem {
 
     public override void ModifyAreaSkill(IAreaSkill aSkill) {
         aSkill.IncreasedArea += incArea;
+    }
+}
+
+public partial class SuppPoisonChance : SupportGem {
+    private static readonly double[] increasedPoisonDurationArray = [
+        0.00, 0.02, 0.04, 0.06, 0.08,
+        0.10, 0.12, 0.14, 0.16, 0.18,
+        0.20, 0.22, 0.24, 0.26, 0.28
+    ];
+
+    private double incPoisonDuration;
+    private const double addedPoisonChance = 0.5;
+
+    public SuppPoisonChance() {
+        ItemName = "Poison Support";
+        Description = "Supports Skills that deal damage";
+        AffectsDamageModifiers = false;
+        AffectsStatusModifiers = true;
+        SkillTags = ESkillTags.None;
+    }
+
+    protected override void OnGemLevelChanged() {
+        incPoisonDuration = increasedPoisonDurationArray[level];
+        UpdateGemEffectsDescription();
+    }
+
+    protected override void UpdateGemEffectsDescription() {
+        StringBuilder sb = new();
+        sb.Append($"Supported Skill has {addedPoisonChance:P0} chance to Poison on Hit");
+        if (level > 0) {
+            sb.Append($"\nSupported Skill has {incPoisonDuration:P0} increased Poison duration");
+        }
+
+        DescEffects = sb.ToString();
+    }
+
+    public override void ApplyToStatusModifiers(StatusEffectModifiers seMods) {
+        seMods.Poison.SAddedChance += addedPoisonChance;
+        seMods.Poison.SIncreasedDuration += incPoisonDuration;
     }
 }

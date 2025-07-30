@@ -2,6 +2,9 @@ using Godot;
 using System;
 
 public partial class SThrustScene : Node3D {
+    public delegate void TargetHitEventHandler(Actor target);
+    public event TargetHitEventHandler TargetHit;
+
     public Area3D Hitbox;
     private CollisionShape3D hitboxCollision;
     private CapsuleShape3D collisionCapsule;
@@ -45,8 +48,8 @@ public partial class SThrustScene : Node3D {
 
     protected void OnBodyEntered(Node3D body) {
         if (body.IsInGroup("Enemy") || body.IsInGroup("Player")) {
-            Actor target = body as Actor;
-            target.ReceiveHit(dmgCategory, damage, pens, true); // Giv støtte til alle typer senere!!
+            Actor actor = body as Actor;
+            TargetHit?.Invoke(actor);
         }
     }
 

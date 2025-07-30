@@ -77,11 +77,7 @@ public class SSplitArrow : Skill, IAttack, IProjectileSkill {
     }
 
     public void ApplyProjectileSkillBehaviourToTarget(Actor target) {
-        SkillDamage damage = RollForDamage(true);
-        target.ReceiveHit(DamageCategory, damage, ActorOwner.Penetrations, true);
-
-        if (target.BasicStats.CurrentLife > 0 && (damage.Physical + damage.Chaos) > 0) {
-            target.ReceiveEffect(new PoisonEffect(target, 1, damage.Physical + damage.Chaos));
-        }
+        SkillInfo info = CalculateOutgoingValuesIntoInfo(true);
+        target.ReceiveHit(DamageCategory, info, ActorOwner.Penetrations, true);
     }
 }

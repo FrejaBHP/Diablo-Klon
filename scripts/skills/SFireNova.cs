@@ -28,9 +28,11 @@ public class SFireNova : Skill, ISpell, IAreaSkill {
     ];
 
     public SFireNova() {
+        BaseStatusEffectModifiers.Ignite.SBaseChance = 0.25;
+
         Name = "Fire Nova";
         Description = "Casts a nova of flame, dealing Fire damage to all surrounding enemies.";
-        Effects = [];
+        UpdateEffectStrings();
 
         SkillName = ESkillName.FireNova;
         Type = ESkillType.Spell;
@@ -55,7 +57,8 @@ public class SFireNova : Skill, ISpell, IAreaSkill {
 
     protected override void UpdateEffectStrings() {
         Effects = [
-            $"Base radius is {BaseAreaRadius} metres"
+            $"Base radius is {BaseAreaRadius} metres",
+            $"{BaseStatusEffectModifiers.Ignite.SBaseChance:P0} chance to Ignite on Hit"
         ];
     }
 
@@ -67,14 +70,10 @@ public class SFireNova : Skill, ISpell, IAreaSkill {
     }
 
     public void ApplyAreaSkillBehaviourToTargets(List<Actor> targets) {
-        SkillDamage damage = RollForDamage(true);
+        SkillInfo info = CalculateOutgoingValuesIntoInfo(true);
 
         foreach (Actor actor in targets) {
-            actor.ReceiveHit(DamageCategory, damage, ActorOwner.Penetrations, true);
-            
-            if (actor.BasicStats.CurrentLife > 0) {
-                actor.ReceiveEffect(new IgniteEffect(actor, 1, damage.Fire));
-            }
+            actor.ReceiveHit(DamageCategory, info, ActorOwner.Penetrations, true);
         }
     }
 }

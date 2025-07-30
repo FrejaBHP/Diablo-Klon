@@ -45,6 +45,7 @@ public class SThrust : Skill, IAttack, IMeleeSkill {
         if (ActorOwner != null) {
             SThrustScene thrustScene = thrustAttackScene.Instantiate() as SThrustScene;
             Run.Instance.AddChild(thrustScene);
+            thrustScene.TargetHit += ApplyMeleeSkillBehaviourToTarget;
             SetSkillCollision(thrustScene.Hitbox);
 
             thrustScene.GlobalPosition = thrustScene.Position with { 
@@ -64,5 +65,10 @@ public class SThrust : Skill, IAttack, IMeleeSkill {
 
             DeductManaFromActor();
         }
+    }
+
+    public void ApplyMeleeSkillBehaviourToTarget(Actor target) {
+        SkillInfo info = CalculateOutgoingValuesIntoInfo(true); // Rerolls for every target atm
+        target.ReceiveHit(DamageCategory, info, ActorOwner.Penetrations, true);
     }
 }

@@ -30,4 +30,17 @@ public static class Utilities {
 
 		return damageLabel;
 	}
+
+	public static bool RollForChance(double chance) {
+		if (chance == 1) {
+			return true;
+		}
+		else if (chance == 0) {
+			return false;
+		}
+		else {
+			double roll = RNG.NextDouble();
+			return chance >= roll;
+		}
+	}
 }

@@ -33,7 +33,7 @@ public partial class AreaOfEffectPersistent : Area3D {
     }
 
     protected virtual void OnCollideWithTarget(Actor actor) {
-        actor.ReceiveHit(dmgCategory, damage, pens, true);
+        //actor.ReceiveHit(dmgCategory, damage, pens, true);
     }
 
     protected void OnBodyExited(Node3D body) {

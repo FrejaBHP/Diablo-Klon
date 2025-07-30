@@ -263,6 +263,14 @@ public partial class SkillHotbar : Control {
             tooltipContent.EffectContainer.AddChild(GenerateAffixLabel($"Radius is {aSkill.TotalAreaRadius:F2} metres"));
         }
 
+        if (skill.ActiveStatusEffectModifiers.Ignite.CalculateTotalChance() != 0) {
+            tooltipContent.EffectContainer.AddChild(GenerateAffixLabel($"{skill.ActiveStatusEffectModifiers.Ignite.CalculateTotalChance():P0} chance to Ignite on Hit"));
+        }
+
+        if (skill.ActiveStatusEffectModifiers.Poison.CalculateTotalChance() != 0) {
+            tooltipContent.EffectContainer.AddChild(GenerateAffixLabel($"{skill.ActiveStatusEffectModifiers.Poison.CalculateTotalChance():P0} chance to Poison on Hit"));
+        }
+
 		return tooltipContent;
 	}
 

@@ -75,7 +75,7 @@ public class SPrismaticBolt : Skill, ISpell, IProjectileSkill {
     }
 
     public void ApplyProjectileSkillBehaviourToTarget(Actor target) {
-        SkillDamage damage = RollForDamage(true);
-        target.ReceiveHit(DamageCategory, damage, ActorOwner.Penetrations, true);
+        SkillInfo info = CalculateOutgoingValuesIntoInfo(true);
+        target.ReceiveHit(DamageCategory, info, ActorOwner.Penetrations, true);
     }
 }

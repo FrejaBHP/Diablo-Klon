@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public class SShoot : Skill, IAttack, IProjectileSkill {
+public class SCobraShot : Skill, IAttack, IProjectileSkill {
     public ESkillWeapons Weapons { get; set; } = ESkillWeapons.Ranged2H;
     public bool CanDualWield { get; set; } = false;
 
@@ -11,10 +11,10 @@ public class SShoot : Skill, IAttack, IProjectileSkill {
 
     public float BaseProjectileSpeed { get; set; } = 15f;
     public double BaseProjectileLifetime { get; set; } = 2f;
-    public int BasePierces { get; set; } = 2;
+    public int BasePierces { get; set; } = 0;
     public int AddedPierces { get; set; } = 0;
     public int TotalPierces { get; set; }
-    public int BaseProjectiles { get; set; } = 1;
+    public int BaseProjectiles { get; set; } = 2;
     public int AddedProjectiles { get; set; } = 0;
     public int TotalProjectiles { get; set; }
 
@@ -32,18 +32,23 @@ public class SShoot : Skill, IAttack, IProjectileSkill {
         2.44, 2.60, 2.77, 2.95, 3.14
     ];
 
-    public SShoot() {
-        Name = "Piercing Shot";
-        Description = "Fires a penetrating arrow in a straight line with a bow.";
+    public SCobraShot() {
+        BaseStatusEffectModifiers.Poison.SBaseChance = 0.5;
+        BaseStatusEffectModifiers.Poison.SMoreDuration = 1.5;
+
+        Name = "Cobra Shot";
+        Description = "Fires twin arrows with a chance to Poison. Requires a bow.";
         Effects = [
-            $"Pierces {BasePierces} targets"
+            $"Fires {BaseProjectiles} projectiles",
+            $"{BaseStatusEffectModifiers.Poison.SBaseChance:P0} chance to Poison on Hit",
+            $"{BaseStatusEffectModifiers.Poison.SMoreDuration - 1:P0} more Poison duration"
         ];
 
-        SkillName = ESkillName.PiercingShot;
+        SkillName = ESkillName.CobraShot;
         Type = ESkillType.Attack;
-        Tags = ESkillTags.Attack | ESkillTags.Projectile | ESkillTags.Ranged;
+        Tags = ESkillTags.Attack | ESkillTags.Projectile | ESkillTags.Ranged | ESkillTags.Chaos;
         DamageCategory = EDamageCategory.Ranged;
-        Texture = UILib.TextureSkillShoot;
+        Texture = UILib.TextureSkillCobraShot;
 
         ManaCost = 1;
 
