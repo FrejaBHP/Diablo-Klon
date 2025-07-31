@@ -9,7 +9,7 @@ public partial class SkillPanel : Control {
 
     public override void _Ready() {
         for (int i = 0; i < SkillSlotClusters.Length; i++) {
-            SkillSlotClusters[i] = GetNode<SkillSlotCluster>($"SkillSlotCluster{i + 1}");
+            SkillSlotClusters[i] = GetNode<SkillSlotCluster>($"ClusterScrollContainer/ClusterMargin/ClusterContainer/SkillSlotCluster{i + 1}");
             SkillSlotClusters[i].ClusterChanged += OnSkillSlotClusterChanged;
             SkillSlotClusters[i].ActiveSkillEquipped += OnSkillEquippedFromInventory;
             SkillSlotClusters[i].ActiveSkillUnequipped += OnSkillUnequipped;

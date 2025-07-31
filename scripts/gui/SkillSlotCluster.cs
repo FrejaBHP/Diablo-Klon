@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public partial class SkillSlotCluster : Control {
+public partial class SkillSlotCluster : VBoxContainer {
 	[Signal]
     public delegate void ClusterChangedEventHandler(SkillSlotCluster cluster);
 
@@ -24,6 +24,8 @@ public partial class SkillSlotCluster : Control {
 	[Signal]
     public delegate void SupportGemsSwappedEventHandler(SkillSlotSupport slot, InventoryItem oldSupport, InventoryItem newSupport);
 
+	public Label SkillNameLabel { get; protected set; }
+
 	public SkillSlotActive ActiveSlot { get; protected set; }
 	public SkillSlotSupport[] SupportSlots { get; protected set; } = new SkillSlotSupport[3];
 
@@ -31,10 +33,13 @@ public partial class SkillSlotCluster : Control {
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready() {
-		ActiveSlot = GetNode<SkillSlotActive>("ActiveSlot");
-		SupportSlots[0] = GetNode<SkillSlotSupport>("SupportSlotLeft");
-		SupportSlots[1] = GetNode<SkillSlotSupport>("SupportSlotMiddle");
-		SupportSlots[2] = GetNode<SkillSlotSupport>("SupportSlotRight");
+		SkillNameLabel = GetNode<Label>("InfoMargin/InfoContainer/SkillName");
+		SkillNameLabel.Text = "Unassigned";
+
+		ActiveSlot = GetNode<SkillSlotActive>("SlotsMargin/SlotsContainer/ActiveSlot");
+		SupportSlots[0] = GetNode<SkillSlotSupport>("SlotsMargin/SlotsContainer/SupportSlotsContainer/SupportSlotLeft");
+		SupportSlots[1] = GetNode<SkillSlotSupport>("SlotsMargin/SlotsContainer/SupportSlotsContainer/SupportSlotMiddle");
+		SupportSlots[2] = GetNode<SkillSlotSupport>("SlotsMargin/SlotsContainer/SupportSlotsContainer/SupportSlotRight");
 
 		ActiveSlot.SkillChanged += UpdateCluster;
 		ActiveSlot.SkillEquipped += OnActiveSkillEquipped;
@@ -73,7 +78,11 @@ public partial class SkillSlotCluster : Control {
 	public void UpdateCluster() {
 		if (ActiveSlot.ItemInSlot != null) {
 			SkillItem skillItem = (SkillItem)ActiveSlot.ItemInSlot.ItemReference;
+			SkillNameLabel.Text = skillItem.ItemName;
 			skillItem.SkillReference.RecalculateSkillValues();
+		}
+		else {
+			SkillNameLabel.Text = "Unassigned";
 		}
 	}
 

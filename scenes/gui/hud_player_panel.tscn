@@ -64,7 +64,7 @@ corner_radius_top_right = 4
 corner_detail = 5
 
 [node name="PlayerPanel" type="Control"]
-custom_minimum_size = Vector2(512, 0)
+custom_minimum_size = Vector2(480, 0)
 layout_mode = 3
 anchors_preset = 9
 anchor_bottom = 1.0

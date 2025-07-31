@@ -1,12 +1,15 @@
-[gd_scene load_steps=5 format=3 uid="uid://com0l155ax0xj"]
+[gd_scene load_steps=6 format=3 uid="uid://com0l155ax0xj"]
 
 [ext_resource type="Script" uid="uid://ciixvlnrc5iww" path="res://scripts/gui/SkillPanel.cs" id="1_eaaf1"]
 [ext_resource type="Texture2D" uid="uid://fhobutpfvwf2" path="res://textures/ui/inventoryPanelShort2x.png" id="2_3xe8f"]
 [ext_resource type="Texture2D" uid="uid://byijg62afsl55" path="res://textures/ui/inventoryPanelDecoration2x.png" id="3_vvktn"]
 [ext_resource type="PackedScene" uid="uid://c55mrlsjhudwq" path="res://scenes/gui/hud_skill_slot_cluster.tscn" id="4_ok7ci"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ok7ci"]
+bg_color = Color(0.227451, 0.227451, 0.227451, 0.294118)
+
 [node name="SkillPanel" type="Control"]
-custom_minimum_size = Vector2(512, 0)
+custom_minimum_size = Vector2(480, 0)
 layout_mode = 3
 anchors_preset = 9
 anchor_bottom = 1.0
@@ -34,7 +37,7 @@ grow_vertical = 2
 texture = ExtResource("3_vvktn")
 expand_mode = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="ClusterScrollContainer" type="ScrollContainer" parent="."]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.1
@@ -44,28 +47,30 @@ offset_left = 15.0
 offset_top = 20.0
 offset_right = -15.0
 offset_bottom = -20.0
-theme_override_constants/separation = 16
+theme_override_styles/panel = SubResource("StyleBoxFlat_ok7ci")
 
-[node name="SkillSlotCluster1" parent="." instance=ExtResource("4_ok7ci")]
-offset_left = 80.0
-offset_top = 128.0
-offset_right = 80.0
-offset_bottom = 128.0
+[node name="ClusterMargin" type="MarginContainer" parent="ClusterScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
 
-[node name="SkillSlotCluster2" parent="." instance=ExtResource("4_ok7ci")]
-offset_left = 302.0
-offset_top = 128.0
-offset_right = 302.0
-offset_bottom = 128.0
+[node name="ClusterContainer" type="VBoxContainer" parent="ClusterScrollContainer/ClusterMargin"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 8
 
-[node name="SkillSlotCluster3" parent="." instance=ExtResource("4_ok7ci")]
-offset_left = 80.0
-offset_top = 256.0
-offset_right = 80.0
-offset_bottom = 256.0
+[node name="SkillSlotCluster1" parent="ClusterScrollContainer/ClusterMargin/ClusterContainer" instance=ExtResource("4_ok7ci")]
+layout_mode = 2
 
-[node name="SkillSlotCluster4" parent="." instance=ExtResource("4_ok7ci")]
-offset_left = 302.0
-offset_top = 256.0
-offset_right = 302.0
-offset_bottom = 256.0
+[node name="SkillSlotCluster2" parent="ClusterScrollContainer/ClusterMargin/ClusterContainer" instance=ExtResource("4_ok7ci")]
+layout_mode = 2
+
+[node name="SkillSlotCluster3" parent="ClusterScrollContainer/ClusterMargin/ClusterContainer" instance=ExtResource("4_ok7ci")]
+layout_mode = 2
+
+[node name="SkillSlotCluster4" parent="ClusterScrollContainer/ClusterMargin/ClusterContainer" instance=ExtResource("4_ok7ci")]
+layout_mode = 2

@@ -1,99 +1,112 @@
-[gd_scene load_steps=5 format=3 uid="uid://c55mrlsjhudwq"]
+[gd_scene load_steps=6 format=3 uid="uid://c55mrlsjhudwq"]
 
 [ext_resource type="Script" uid="uid://ctg6wd5c5riic" path="res://scripts/gui/SkillSlotCluster.cs" id="1_lypup"]
+[ext_resource type="StyleBox" uid="uid://wtncbxwhhfs7" path="res://styles/skill_panel_style_slot_active.tres" id="2_3r5c7"]
+[ext_resource type="StyleBox" uid="uid://cukjov3ik75rt" path="res://styles/skill_panel_style_slot_support.tres" id="2_32hln"]
 [ext_resource type="Script" uid="uid://c6vbkh20733sa" path="res://scripts/gui/SkillSlotActive.cs" id="2_y7504"]
 [ext_resource type="Script" uid="uid://cakgcyiqg2ug8" path="res://scripts/gui/SkillSlotSupport.cs" id="3_0i4km"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jqxhb"]
-bg_color = Color(0.227451, 0.227451, 0.227451, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.136826, 0.136826, 0.136826, 1)
-border_blend = true
-corner_radius_top_left = 1
-corner_radius_top_right = 1
-corner_radius_bottom_right = 1
-corner_radius_bottom_left = 1
-
-[node name="SkillSlotCluster" type="Control"]
-layout_mode = 3
-anchors_preset = 0
+[node name="SkillSlotCluster" type="VBoxContainer"]
+offset_right = 172.0
+offset_bottom = 48.0
 mouse_filter = 2
+theme_override_constants/separation = 0
 script = ExtResource("1_lypup")
 
-[node name="ActiveSlot" type="PanelContainer" parent="."]
-layout_mode = 0
-offset_left = 46.0
-offset_right = 84.0
-offset_bottom = 38.0
+[node name="InfoMargin" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 2
+
+[node name="InfoContainer" type="HBoxContainer" parent="InfoMargin"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+
+[node name="SkillName" type="Label" parent="InfoMargin/InfoContainer"]
+layout_mode = 2
+
+[node name="SlotsMargin" type="MarginContainer" parent="."]
+layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="SlotsContainer" type="HBoxContainer" parent="SlotsMargin"]
+layout_mode = 2
+theme_override_constants/separation = 48
+
+[node name="ActiveSlot" type="PanelContainer" parent="SlotsMargin/SlotsContainer"]
+custom_minimum_size = Vector2(46, 46)
+layout_mode = 2
 size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_jqxhb")
+theme_override_styles/panel = ExtResource("2_3r5c7")
 script = ExtResource("2_y7504")
+metadata/_edit_group_ = true
 
-[node name="Highlight" type="ColorRect" parent="ActiveSlot"]
+[node name="Highlight" type="ColorRect" parent="SlotsMargin/SlotsContainer/ActiveSlot"]
 layout_mode = 2
 mouse_filter = 1
 color = Color(1, 1, 1, 0)
 
-[node name="SupportSlotLeft" type="PanelContainer" parent="."]
+[node name="SupportSlotsContainer" type="HBoxContainer" parent="SlotsMargin/SlotsContainer"]
 layout_mode = 2
-offset_top = 30.0
-offset_right = 38.0
-offset_bottom = 68.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_jqxhb")
+theme_override_constants/separation = 28
+
+[node name="SupportSlotLeft" type="PanelContainer" parent="SlotsMargin/SlotsContainer/SupportSlotsContainer"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = ExtResource("2_32hln")
 script = ExtResource("3_0i4km")
+metadata/_edit_group_ = true
 
-[node name="Highlight" type="ColorRect" parent="SupportSlotLeft"]
+[node name="Highlight" type="ColorRect" parent="SlotsMargin/SlotsContainer/SupportSlotsContainer/SupportSlotLeft"]
 layout_mode = 2
 mouse_filter = 1
 color = Color(1, 1, 1, 0)
 
-[node name="SupportSlotMiddle" type="PanelContainer" parent="."]
+[node name="SupportSlotMiddle" type="PanelContainer" parent="SlotsMargin/SlotsContainer/SupportSlotsContainer"]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-offset_left = 46.0
-offset_top = 46.0
-offset_right = 84.0
-offset_bottom = 84.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_jqxhb")
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = ExtResource("2_32hln")
 script = ExtResource("3_0i4km")
+metadata/_edit_group_ = true
 
-[node name="Highlight" type="ColorRect" parent="SupportSlotMiddle"]
+[node name="Highlight" type="ColorRect" parent="SlotsMargin/SlotsContainer/SupportSlotsContainer/SupportSlotMiddle"]
 layout_mode = 2
 mouse_filter = 1
 color = Color(1, 1, 1, 0)
 
-[node name="SupportSlotRight" type="PanelContainer" parent="."]
+[node name="SupportSlotRight" type="PanelContainer" parent="SlotsMargin/SlotsContainer/SupportSlotsContainer"]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-offset_left = 92.0
-offset_top = 30.0
-offset_right = 130.0
-offset_bottom = 68.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_jqxhb")
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = ExtResource("2_32hln")
 script = ExtResource("3_0i4km")
+metadata/_edit_group_ = true
 
-[node name="Highlight" type="ColorRect" parent="SupportSlotRight"]
+[node name="Highlight" type="ColorRect" parent="SlotsMargin/SlotsContainer/SupportSlotsContainer/SupportSlotRight"]
 layout_mode = 2
 mouse_filter = 1
 color = Color(1, 1, 1, 0)
 
-[connection signal="gui_input" from="ActiveSlot" to="ActiveSlot" method="GUIInput"]
-[connection signal="mouse_entered" from="ActiveSlot" to="ActiveSlot" method="OnMouseEntered"]
-[connection signal="mouse_exited" from="ActiveSlot" to="ActiveSlot" method="OnMouseExited"]
-[connection signal="gui_input" from="SupportSlotLeft" to="SupportSlotLeft" method="GUIInput"]
-[connection signal="mouse_entered" from="SupportSlotLeft" to="SupportSlotLeft" method="OnMouseEntered"]
-[connection signal="mouse_exited" from="SupportSlotLeft" to="SupportSlotLeft" method="OnMouseExited"]
-[connection signal="gui_input" from="SupportSlotMiddle" to="SupportSlotMiddle" method="GUIInput"]
-[connection signal="mouse_entered" from="SupportSlotMiddle" to="SupportSlotMiddle" method="OnMouseEntered"]
-[connection signal="mouse_exited" from="SupportSlotMiddle" to="SupportSlotMiddle" method="OnMouseExited"]
-[connection signal="gui_input" from="SupportSlotRight" to="SupportSlotRight" method="GUIInput"]
-[connection signal="mouse_entered" from="SupportSlotRight" to="SupportSlotRight" method="OnMouseEntered"]
-[connection signal="mouse_exited" from="SupportSlotRight" to="SupportSlotRight" method="OnMouseExited"]
+[connection signal="gui_input" from="SlotsMargin/SlotsContainer/ActiveSlot" to="SlotsMargin/SlotsContainer/ActiveSlot" method="GUIInput"]
+[connection signal="mouse_entered" from="SlotsMargin/SlotsContainer/ActiveSlot" to="SlotsMargin/SlotsContainer/ActiveSlot" method="OnMouseEntered"]
+[connection signal="mouse_exited" from="SlotsMargin/SlotsContainer/ActiveSlot" to="SlotsMargin/SlotsContainer/ActiveSlot" method="OnMouseExited"]
+[connection signal="gui_input" from="SlotsMargin/SlotsContainer/SupportSlotsContainer/SupportSlotLeft" to="SlotsMargin/SlotsContainer/SupportSlotsContainer/SupportSlotLeft" method="GUIInput"]
+[connection signal="mouse_entered" from="SlotsMargin/SlotsContainer/SupportSlotsContainer/SupportSlotLeft" to="SlotsMargin/SlotsContainer/SupportSlotsContainer/SupportSlotLeft" method="OnMouseEntered"]
+[connection signal="mouse_exited" from="SlotsMargin/SlotsContainer/SupportSlotsContainer/SupportSlotLeft" to="SlotsMargin/SlotsContainer/SupportSlotsContainer/SupportSlotLeft" method="OnMouseExited"]
+[connection signal="gui_input" from="SlotsMargin/SlotsContainer/SupportSlotsContainer/SupportSlotMiddle" to="SlotsMargin/SlotsContainer/SupportSlotsContainer/SupportSlotMiddle" method="GUIInput"]
+[connection signal="mouse_entered" from="SlotsMargin/SlotsContainer/SupportSlotsContainer/SupportSlotMiddle" to="SlotsMargin/SlotsContainer/SupportSlotsContainer/SupportSlotMiddle" method="OnMouseEntered"]
+[connection signal="mouse_exited" from="SlotsMargin/SlotsContainer/SupportSlotsContainer/SupportSlotMiddle" to="SlotsMargin/SlotsContainer/SupportSlotsContainer/SupportSlotMiddle" method="OnMouseExited"]
+[connection signal="gui_input" from="SlotsMargin/SlotsContainer/SupportSlotsContainer/SupportSlotRight" to="SlotsMargin/SlotsContainer/SupportSlotsContainer/SupportSlotRight" method="GUIInput"]
+[connection signal="mouse_entered" from="SlotsMargin/SlotsContainer/SupportSlotsContainer/SupportSlotRight" to="SlotsMargin/SlotsContainer/SupportSlotsContainer/SupportSlotRight" method="OnMouseEntered"]
+[connection signal="mouse_exited" from="SlotsMargin/SlotsContainer/SupportSlotsContainer/SupportSlotRight" to="SlotsMargin/SlotsContainer/SupportSlotsContainer/SupportSlotRight" method="OnMouseExited"]
