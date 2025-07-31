@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public class SShoot : Skill, IAttack, IProjectileSkill {
+public class SPiercingShot : Skill, IAttack, IProjectileSkill {
     public ESkillWeapons Weapons { get; set; } = ESkillWeapons.Ranged2H;
     public bool CanDualWield { get; set; } = false;
 
@@ -32,7 +32,7 @@ public class SShoot : Skill, IAttack, IProjectileSkill {
         2.44, 2.60, 2.77, 2.95, 3.14
     ];
 
-    public SShoot() {
+    public SPiercingShot() {
         Name = "Piercing Shot";
         Description = "Fires a penetrating arrow in a straight line with a bow.";
         Effects = [
@@ -43,7 +43,7 @@ public class SShoot : Skill, IAttack, IProjectileSkill {
         Type = ESkillType.Attack;
         Tags = ESkillTags.Attack | ESkillTags.Projectile | ESkillTags.Ranged;
         DamageCategory = EDamageCategory.Ranged;
-        Texture = UILib.TextureSkillShoot;
+        Texture = UILib.TextureSkillPiercingShot;
 
         ManaCost = 1;
 

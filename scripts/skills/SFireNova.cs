@@ -32,7 +32,10 @@ public class SFireNova : Skill, ISpell, IAreaSkill {
 
         Name = "Fire Nova";
         Description = "Casts a nova of flame, dealing Fire damage to all surrounding enemies.";
-        UpdateEffectStrings();
+        Effects = [
+            $"Base radius is {BaseAreaRadius} metres",
+            $"{BaseStatusEffectModifiers.Ignite.SBaseChance:P0} chance to Ignite on Hit"
+        ];
 
         SkillName = ESkillName.FireNova;
         Type = ESkillType.Spell;
@@ -51,15 +54,6 @@ public class SFireNova : Skill, ISpell, IAreaSkill {
     protected override void OnSkillLevelChanged() {
         BaseDamageModifiers.Fire.SMinBase = minDamageArray[level];
         BaseDamageModifiers.Fire.SMaxBase = maxDamageArray[level];
-        
-        UpdateEffectStrings();
-    }
-
-    protected override void UpdateEffectStrings() {
-        Effects = [
-            $"Base radius is {BaseAreaRadius} metres",
-            $"{BaseStatusEffectModifiers.Ignite.SBaseChance:P0} chance to Ignite on Hit"
-        ];
     }
 
     public override void UseSkill() {

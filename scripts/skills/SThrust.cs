@@ -10,6 +10,8 @@ public class SThrust : Skill, IAttack, IMeleeSkill {
 
     public float BaseAttackRange { get; set; } = 3f;
 
+    private const float speed = 25f;
+
     private static readonly double[] addedDamageModArray = [
         1.60, 1.70, 1.82, 1.93, 2.06,
         2.19, 2.34, 2.49, 2.65, 2.82,
@@ -32,9 +34,6 @@ public class SThrust : Skill, IAttack, IMeleeSkill {
         CastRange = BaseAttackRange;
 
         UsesMouseAim = true;
-
-        //BaseDamageModifiers.IncreasedMelee = 0.35;
-        //BaseDamageModifiers.MoreMelee = 1.25;
     }
 
     protected override void OnSkillLevelChanged() {
@@ -61,7 +60,7 @@ public class SThrust : Skill, IAttack, IMeleeSkill {
                 thrustScene.RotateY(ActorOwner.GlobalRotation.Y);
             }
 
-            thrustScene.StartAttack(DamageCategory, RollForDamage(true), ActorOwner.Penetrations, 2f, BaseAttackRange, 25f);
+            thrustScene.StartAttack(2f, BaseAttackRange, speed);
 
             DeductManaFromActor();
         }

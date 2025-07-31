@@ -24,7 +24,7 @@ public partial class TestEnemy2 : EnemyBase {
         MovementSpeed.SBase = 4;
         Evasion.SBase = 0; // 67
 
-        Skill skillShoot = new SShoot();
+        Skill skillShoot = new SPiercingShot();
         AddSkill(skillShoot);
     }
 

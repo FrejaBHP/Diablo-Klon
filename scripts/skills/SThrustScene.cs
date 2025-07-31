@@ -12,10 +12,6 @@ public partial class SThrustScene : Node3D {
 
     private Tween tween;
 
-    private SkillDamage damage;
-    private ActorPenetrations pens;
-    private EDamageCategory dmgCategory;
-
     public override void _Ready() {
         Hitbox = GetNode<Area3D>("Hitbox");
         hitboxCollision = Hitbox.GetNode<CollisionShape3D>("HitCollision");
@@ -23,11 +19,7 @@ public partial class SThrustScene : Node3D {
         effectSprite = Hitbox.GetNode<Sprite3D>("EffectSprite");
     }
 
-    public void StartAttack(EDamageCategory dmgCat, SkillDamage sDamage, ActorPenetrations sPens, float scale, float range, float speed) {
-        damage = sDamage;
-        pens = sPens;
-        dmgCategory = dmgCat;
-
+    public void StartAttack(float scale, float range, float speed) {
         Hitbox.Scale = new Vector3(scale, scale, scale);
         Hitbox.Position = Hitbox.Position with { Z = Hitbox.Position.Z + (collisionCapsule.Height / 2) * (scale - 1) };
         float travelTime = range / speed;

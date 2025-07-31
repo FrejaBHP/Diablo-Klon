@@ -85,7 +85,6 @@ public class PoisonEffect : AttachedEffect, IRepeatableEffect, IDamageOverTimeEf
     private const double damageFactor = 0.2;
     private const double poisonDuration = 2;
 
-    // duration should be changed to a multiplier, and a base duration should be set here instead
     public PoisonEffect(Actor actor, double durationModifier, double dps) {
         EffectName = EEffectName.Ignite;
 

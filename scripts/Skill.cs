@@ -108,60 +108,6 @@ public abstract class Skill {
         }
     }
 
-    public SkillDamage RollForDamage(bool canCrit) {
-        double physical = 0;
-        double fire = 0;
-        double cold = 0;
-        double lightning = 0;
-        double chaos = 0;
-        bool isCritical = false;
-
-        if (this is IAttack attack) {
-            attack.GetUsedWeaponStats(ActorOwner, out ActorWeaponStats wStats);
-
-            if (canCrit) {
-                isCritical = RollForCritical(wStats.CritChance * ActorOwner.CritChanceMod.STotal);
-            }
-
-            ActiveDamageModifiers.Physical.CalculateTotalWithBase(wStats.PhysMinDamage, wStats.PhysMaxDamage, AddedDamageModifier, out double pMin, out double pMax);
-            physical = Utilities.RandomDouble(pMin, pMax);
-            ActiveDamageModifiers.Fire.CalculateTotalWithBase(wStats.FireMinDamage, wStats.FireMaxDamage, AddedDamageModifier, out double fMin, out double fMax);
-            fire = Utilities.RandomDouble(fMin, fMax);
-            ActiveDamageModifiers.Cold.CalculateTotalWithBase(wStats.ColdMinDamage, wStats.ColdMaxDamage, AddedDamageModifier, out double cMin, out double cMax);
-            cold = Utilities.RandomDouble(cMin, cMax);
-            ActiveDamageModifiers.Lightning.CalculateTotalWithBase(wStats.LightningMinDamage, wStats.LightningMaxDamage, AddedDamageModifier, out double lMin, out double lMax);
-            lightning = Utilities.RandomDouble(lMin, lMax);
-            ActiveDamageModifiers.Chaos.CalculateTotalWithBase(wStats.ChaosMinDamage, wStats.ChaosMaxDamage, AddedDamageModifier, out double chMin, out double chMax);
-            chaos = Utilities.RandomDouble(chMin, chMax);
-        }
-        else if (this is ISpell spell) {
-            if (canCrit) {
-                isCritical = RollForCritical(BaseCriticalStrikeChance * ActorOwner.CritChanceMod.STotal);
-            }
-
-            ActiveDamageModifiers.Physical.CalculateTotal(out double pMin, out double pMax);
-            physical = Utilities.RandomDouble(pMin, pMax);
-            ActiveDamageModifiers.Fire.CalculateTotal(out double fMin, out double fMax);
-            fire = Utilities.RandomDouble(fMin, fMax);
-            ActiveDamageModifiers.Cold.CalculateTotal(out double cMin, out double cMax);
-            cold = Utilities.RandomDouble(cMin, cMax);
-            ActiveDamageModifiers.Lightning.CalculateTotal(out double lMin, out double lMax);
-            lightning = Utilities.RandomDouble(lMin, lMax);
-            ActiveDamageModifiers.Chaos.CalculateTotal(out double chMin, out double chMax);
-            chaos = Utilities.RandomDouble(chMin, chMax);
-        }
-
-        if (isCritical) {
-            physical *= CriticalStrikeMulti;
-            fire *= CriticalStrikeMulti;
-            cold *= CriticalStrikeMulti;
-            lightning *= CriticalStrikeMulti;
-            chaos *= CriticalStrikeMulti;
-        }
-
-        return new SkillDamage(physical, fire, cold, lightning, chaos, isCritical);
-    }
-
     public SkillInfo CalculateOutgoingValuesIntoInfo(bool canCrit) {
         EDamageInfoFlags damageInfoFlags = new();
 

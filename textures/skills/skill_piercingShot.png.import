@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dh6cubbjecyqe"
-path="res://.godot/imported/skill_shoot.png-544b93176cdb53249d8453c686b20429.ctex"
+uid="uid://ddf1wha6nm651"
+path="res://.godot/imported/skill_piercingShot.png-176959ae7d27350d3d684cbe753eaa6b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://textures/skills/skill_shoot.png"
-dest_files=["res://.godot/imported/skill_shoot.png-544b93176cdb53249d8453c686b20429.ctex"]
+source_file="res://textures/skills/skill_piercingShot.png"
+dest_files=["res://.godot/imported/skill_piercingShot.png-176959ae7d27350d3d684cbe753eaa6b.ctex"]
 
 [params]
 

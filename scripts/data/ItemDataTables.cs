@@ -338,7 +338,7 @@ public static class ItemDataTables {
 
 		new SkillItemData {
 			SkillName = ESkillName.PiercingShot,
-			SkillType = typeof(SShoot),
+			SkillType = typeof(SPiercingShot),
 			Texture = UILib.TextureItemD2JewelGreen,
 			MinimumLevel = 0,
 		},

@@ -109,14 +109,12 @@ public class StatusEffectModifiers() {
     }
 }
 
-
-public class SkillDamage(double phys, double fire, double cold, double lightning, double chaos, bool isCritical) {
+public readonly struct SkillHitDamageInfo(double phys, double fire, double cold, double lightning, double chaos) {
     public readonly double Physical = phys;
     public readonly double Fire = fire;
     public readonly double Cold = cold;
     public readonly double Lightning = lightning;
     public readonly double Chaos = chaos;
-    public readonly bool IsCritical = isCritical;
 
     public override string ToString() {
         StringBuilder sb = new();
@@ -137,17 +135,9 @@ public class SkillDamage(double phys, double fire, double cold, double lightning
             sb.Append($"Chaos: {Chaos:F2}\n");
         }
 
-        sb.Append($"Total: {Physical + Fire + Cold + Lightning + Chaos:F2}\nCritical: {IsCritical}");
+        sb.Append($"Total: {Physical + Fire + Cold + Lightning + Chaos:F2}");
         return sb.ToString();
     }
-}
-
-public readonly struct SkillHitDamageInfo(double phys, double fire, double cold, double lightning, double chaos) {
-    public readonly double Physical = phys;
-    public readonly double Fire = fire;
-    public readonly double Cold = cold;
-    public readonly double Lightning = lightning;
-    public readonly double Chaos = chaos;
 }
 
 public readonly struct SkillStatusInfo(List<AttachedEffect> effects) {
