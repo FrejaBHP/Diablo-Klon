@@ -1,0 +1,101 @@
+[gd_scene load_steps=16 format=3 uid="uid://dv2j15wgp4287"]
+
+[ext_resource type="PackedScene" uid="uid://crxui3bhb6cxg" path="res://scenes/skills/scene_projectile_generic.tscn" id="1_o1len"]
+[ext_resource type="Texture2D" uid="uid://1ccabqu5yhn7" path="res://textures/effects/soulrendProj.png" id="2_1s1cj"]
+[ext_resource type="Script" uid="uid://dqtnh2hxxmktu" path="res://scripts/skills/SSoulrendProjectile.cs" id="2_7yhsu"]
+[ext_resource type="PackedScene" uid="uid://4k6k3qtyyxi7" path="res://scenes/skills/scene_aoe_persistent_generic.tscn" id="3_atsvy"]
+[ext_resource type="Texture2D" uid="uid://caj2fjojsjvwh" path="res://textures/effects/sheet_bd_nova.png" id="4_ihy65"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_7yhsu"]
+radius = 0.3
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3jd5j"]
+atlas = ExtResource("4_ihy65")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h7vtt"]
+atlas = ExtResource("4_ihy65")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_svxph"]
+atlas = ExtResource("4_ihy65")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_625ic"]
+atlas = ExtResource("4_ihy65")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vy14v"]
+atlas = ExtResource("4_ihy65")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rdgah"]
+atlas = ExtResource("4_ihy65")
+region = Rect2(320, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dvtjm"]
+atlas = ExtResource("4_ihy65")
+region = Rect2(384, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_qw75f"]
+resource_local_to_scene = true
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3jd5j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h7vtt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_svxph")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_625ic")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vy14v")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rdgah")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dvtjm")
+}],
+"loop": false,
+"name": &"fireNova",
+"speed": 20.0
+}, {
+"frames": [],
+"loop": false,
+"name": &"none",
+"speed": 5.0
+}]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_ihy65"]
+radius = 4.0
+
+[node name="Projectile" instance=ExtResource("1_o1len")]
+script = ExtResource("2_7yhsu")
+
+[node name="ProjectileSprite" parent="Hitbox" index="1"]
+texture = ExtResource("2_1s1cj")
+
+[node name="AreaOfEffect" parent="." index="1" instance=ExtResource("3_atsvy")]
+
+[node name="HitCollision" parent="AreaOfEffect" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+shape = SubResource("SphereShape3D_7yhsu")
+
+[node name="AreaAnimation" parent="AreaOfEffect" index="1"]
+sprite_frames = SubResource("SpriteFrames_qw75f")
+
+[node name="SeekerRadius" type="Area3D" parent="." index="2"]
+
+[node name="SeekerShape" type="CollisionShape3D" parent="SeekerRadius" index="0"]
+shape = SubResource("SphereShape3D_ihy65")
+
+[connection signal="body_entered" from="SeekerRadius" to="." method="OnSeekerRadiusBodyEntered"]
+[connection signal="body_exited" from="SeekerRadius" to="." method="OnSeekerRadiusBodyExited"]
+
+[editable path="AreaOfEffect"]

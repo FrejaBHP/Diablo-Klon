@@ -166,6 +166,8 @@ public partial class Player : Actor {
 		PlayerHUD.PlayerLowerHUD.UpdateLevelLabel(ActorLevel);
 		PlayerHUD.PlayerLowerHUD.SetExperienceBarLimit(experienceRequirements[ActorLevel - 1]);
 		PlayerHUD.PlayerLowerHUD.UpdateExperienceBar(Experience);
+
+		Gold = 1000;
 		
 		CalculateStats();
 
@@ -304,7 +306,15 @@ public partial class Player : Actor {
 			Node3D collider = (Node3D)result["collider"];
 			if (collider.IsInGroup("Interactable")) {
 				isLeftClickHeldForInteraction = true;
-				SetDestinationNode(collider);
+
+				if (collider.IsInGroup("Shop")) {
+					Shop shop = collider as Shop;
+					shop.OnClickedByPlayer(this);
+				}
+				else {
+					SetDestinationNode(collider);
+				}
+
 				GetTree().Root.SetInputAsHandled();
 			}
 			else if (movementInputMethod == EMovementInputMethod.Mouse) {

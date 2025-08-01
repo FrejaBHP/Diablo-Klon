@@ -5,7 +5,6 @@ using System.Text;
 using Godot;
 
 public abstract class Skill {
-    public static readonly PackedScene GenericProjectileScene = GD.Load<PackedScene>("res://scenes/skills/scene_projectile_generic.tscn");
     public static readonly PackedScene GenericAreaPersistentScene = GD.Load<PackedScene>("res://scenes/skills/scene_aoe_persistent_generic.tscn");
     public static readonly PackedScene GenericAreaInstantScene = GD.Load<PackedScene>("res://scenes/skills/scene_aoe_instant_generic.tscn");
     protected static readonly PackedScene thrustAttackScene = GD.Load<PackedScene>("res://scenes/skills/scene_thrust.tscn");
@@ -56,6 +55,9 @@ public abstract class Skill {
     public abstract void UseSkill();
     protected abstract void OnSkillLevelChanged();
     protected virtual void UpdateEffectStrings() {}
+    public virtual string[] GetSecondaryEffectStrings() {
+        return null;
+    }
 
     public virtual bool CanUseSkill() {
         if (!ActorOwner.IsIgnoringManaCosts) {
@@ -589,9 +591,11 @@ public interface IMeleeSkill {
 public interface IProjectileSkill {
     float BaseProjectileSpeed { get; protected set; }
     double BaseProjectileLifetime { get; protected set; }
+    ESkillProjectileType ProjectileType { get; protected set; }
     int BasePierces { get; protected set; }
     int AddedPierces { get; set; }
     int TotalPierces { get; set; }
+    bool AlwaysPierces { get; set; }
     int BaseProjectiles { get; protected set; }
     int AddedProjectiles { get; set; }
     int TotalProjectiles { get; set; }
@@ -698,7 +702,9 @@ public interface IProjectileSkill {
         return angles;
     }
 
-    void BasicProjectileSkillBehaviour(Skill skill, Vector3 mouseAimPosition) {
+    List<Projectile> BasicProjectileSkillBehaviour(Skill skill, Vector3 mouseAimPosition) {
+        List<Projectile> projectiles = new();
+
         float coefficient = GetSpreadCoefficient(skill.ActorOwner.GlobalPosition, mouseAimPosition);
         Vector3 diffVector = mouseAimPosition - skill.ActorOwner.GlobalPosition;
 
@@ -706,7 +712,7 @@ public interface IProjectileSkill {
         HashSet<Actor> ActorsHitByThisInstance = new();
 
         for (int i = 0; i < TotalProjectiles; i++) {
-            Projectile proj = Skill.GenericProjectileScene.Instantiate() as Projectile;
+            Projectile proj = ProjectileDatabase.GetProjectile(ProjectileType);
             Run.Instance.AddChild(proj);
             skill.SetSkillCollision(proj.Hitbox);
             proj.TargetHit += ApplyProjectileSkillBehaviourToTarget;
@@ -736,11 +742,21 @@ public interface IProjectileSkill {
                     proj.SetFacing(skill.ActorOwner.GlobalRotation.Y);
                 }
             }
+
+            int effectivePierces;
+            if (AlwaysPierces) {
+                effectivePierces = 999;
+            }
+            else {
+                effectivePierces = TotalPierces;
+            }
             
-            proj.SetProperties(BaseProjectileSpeed, -1, TotalPierces, 15f, false);
+            proj.SetProperties(BaseProjectileSpeed, -1, effectivePierces, 15f, false);
+            projectiles.Add(proj);
         }
 
         skill.DeductManaFromActor();
+        return projectiles;
     }
 }
 

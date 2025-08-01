@@ -9,7 +9,7 @@ public struct MapTags(EMapType type, List<EMapObjective> objectives) {
 
 public static class MapDatabase {
     public static readonly PackedScene TownScene = GD.Load<PackedScene>("res://scenes/world/map_town.tscn");
-    public static readonly PackedScene FEScene = GD.Load<PackedScene>("res://scenes/world/map_firstEncounter.tscn");
+    public static readonly PackedScene FEScene = GD.Load<PackedScene>("res://scenes/world/map_FirstEncounter.tscn");
     public static readonly PackedScene ShopSmallTownScene = GD.Load<PackedScene>("res://scenes/world/map_shop_smalltown.tscn");
 
     public static MapBase GetMap(PackedScene scene) {

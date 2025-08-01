@@ -31,26 +31,35 @@ public partial class Projectile : Node3D {
     }
 
     public override void _PhysicsProcess(double delta) {
+        if (!ShouldExpire()) {
+            MoveStraightAhead(delta);
+            ProjTimeAlive += delta;
+        }
+    }
+
+    protected bool ShouldExpire() {
         if (Range > 0f) {
             if (DistanceTravelled >= Range) {
                 QueueFree();
-                return;
+                return true;
             }
         }
         else if (ProjLifetime > 0) {
             if (ProjTimeAlive >= ProjLifetime) {
                 QueueFree();
-                return;
+                return true;
             }
         }
         
+        return false;
+    }
+
+    protected void MoveStraightAhead(double delta) {
         Vector3 newPos = GlobalPosition;
         float distanceCovered = (float)(ProjSpeed * delta);
         newPos += direction * distanceCovered;
         GlobalPosition = newPos;
-
         DistanceTravelled += distanceCovered;
-        ProjTimeAlive += delta;
     }
 
     public void SetFacing(float angle) {
@@ -71,7 +80,7 @@ public partial class Projectile : Node3D {
         CanShotgun = canShotgun;
     }
 
-    protected void OnBodyEntered(Node3D body) {
+    protected virtual void OnBodyEntered(Node3D body) {
         if (body.IsInGroup("Enemy") || body.IsInGroup("Player")) {
             Actor target = body as Actor;
 
@@ -91,7 +100,7 @@ public partial class Projectile : Node3D {
 
     protected virtual void OnCollideWithTarget(Actor actor) {
         TargetHit?.Invoke(actor);
-
+        
         if (Pierces < 1) {
             QueueFree();
         }
@@ -100,7 +109,7 @@ public partial class Projectile : Node3D {
         }
     }
 
-    protected void OnBodyExited(Node3D body) {
+    protected virtual void OnBodyExited(Node3D body) {
         
     }
 }

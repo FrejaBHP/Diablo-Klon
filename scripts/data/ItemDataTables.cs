@@ -370,6 +370,13 @@ public static class ItemDataTables {
 			Texture = UILib.TextureItemD2JewelGreen,
 			MinimumLevel = 0,
 		},
+
+		new SkillItemData {
+			SkillName = ESkillName.Soulrend,
+			SkillType = typeof(SSoulrend),
+			Texture = UILib.TextureItemD2JewelBlue,
+			MinimumLevel = 0,
+		},
 	];
 
 	public static readonly List<SupportGemData> SupportGemData = [
@@ -453,7 +460,7 @@ public static class ItemDataTables {
 		new SupportGemData {
 			SkillTags = ESkillTags.None,
 			SupportType = typeof(SuppPoisonChance),
-			Texture = UILib.TextureItemD2JewelBlueF,
+			Texture = UILib.TextureItemD2JewelGreenF,
 			MinimumLevel = 0,
 		},
 	];

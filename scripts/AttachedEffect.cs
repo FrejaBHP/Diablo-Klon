@@ -86,7 +86,7 @@ public class PoisonEffect : AttachedEffect, IRepeatableEffect, IDamageOverTimeEf
     private const double poisonDuration = 2;
 
     public PoisonEffect(Actor actor, double durationModifier, double dps) {
-        EffectName = EEffectName.Ignite;
+        EffectName = EEffectName.Poison;
 
         AffectedActor = actor;
         EffectLength = poisonDuration * durationModifier;

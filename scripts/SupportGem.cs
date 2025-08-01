@@ -457,7 +457,7 @@ public partial class SuppPoisonChance : SupportGem {
     private const double addedPoisonChance = 0.5;
 
     public SuppPoisonChance() {
-        ItemName = "Poison Support";
+        ItemName = "Chance to Poison Support";
         Description = "Supports Skills that deal damage";
         AffectsDamageModifiers = false;
         AffectsStatusModifiers = true;

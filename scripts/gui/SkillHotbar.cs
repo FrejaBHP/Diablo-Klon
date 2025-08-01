@@ -230,10 +230,19 @@ public partial class SkillHotbar : Control {
             tooltipContent.DamageContainer.AddChild(spellDmgCon);
 		}
 
+        if (skill.GetSecondaryEffectStrings() != null) {
+            foreach (string effectString in skill.GetSecondaryEffectStrings()) {
+                tooltipContent.EffectContainer.AddChild(GenerateAffixLabel(effectString));
+            }
+        }
+
         if (skill.Tags.HasFlag(ESkillTags.Projectile)) {
             IProjectileSkill ps = skill as IProjectileSkill;
 
-            if (ps.TotalPierces != 0) {
+            if (ps.AlwaysPierces) {
+                tooltipContent.EffectContainer.AddChild(GenerateAffixLabel("Pierces all targets"));
+            }
+            else if (ps.TotalPierces != 0) {
                 string pierceString;
 
                 if (ps.TotalPierces == 1) {
@@ -261,6 +270,12 @@ public partial class SkillHotbar : Control {
             IAreaSkill aSkill = skill as IAreaSkill;
 
             tooltipContent.EffectContainer.AddChild(GenerateAffixLabel($"Radius is {aSkill.TotalAreaRadius:F2} metres"));
+        }
+
+        if (skill.Tags.HasFlag(ESkillTags.Duration)) {
+            IDurationSkill dSkill = skill as IDurationSkill;
+
+            tooltipContent.EffectContainer.AddChild(GenerateAffixLabel($"Duration is {dSkill.TotalDuration:F2} seconds"));
         }
 
         if (skill.ActiveStatusEffectModifiers.Ignite.CalculateTotalChance() != 0) {

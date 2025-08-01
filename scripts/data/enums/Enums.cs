@@ -11,7 +11,9 @@ public enum EDamageType {
 }
 
 public enum EEffectName {
-	Ignite
+	Ignite,
+	Poison,
+	Soulrend
 }
 
 [Flags]
@@ -86,6 +88,7 @@ public enum ESkillName {
 	SplitArrow,
 	FireNova,
 	CobraShot,
+	Soulrend,
 	COUNT
 }
 
@@ -123,6 +126,11 @@ public enum ESkillStatusEffectFlags {
 	CanShock = 1 << 3,
 	CanPoison = 1 << 4,
 	CanSlow = 1 << 5,
+}
+
+public enum ESkillProjectileType {
+	Default,
+	Soulrend,
 }
 
 [Flags]

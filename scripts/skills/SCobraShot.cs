@@ -11,9 +11,12 @@ public class SCobraShot : Skill, IAttack, IProjectileSkill {
 
     public float BaseProjectileSpeed { get; set; } = 15f;
     public double BaseProjectileLifetime { get; set; } = 2f;
+    public ESkillProjectileType ProjectileType { get; set; } = ESkillProjectileType.Default;
+    
     public int BasePierces { get; set; } = 0;
     public int AddedPierces { get; set; } = 0;
     public int TotalPierces { get; set; }
+    public bool AlwaysPierces { get; set; } = false;
     public int BaseProjectiles { get; set; } = 2;
     public int AddedProjectiles { get; set; } = 0;
     public int TotalProjectiles { get; set; }
