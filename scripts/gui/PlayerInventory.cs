@@ -145,8 +145,16 @@ public partial class PlayerInventory : Control {
             item.ZIndex = 5;
             item.ToggleClickable();
 
-            foreach (EquipmentSlot slot in GetEquipmentSlots(item.ItemReference.ItemAllBaseType)) {
-                slot.HighlightSlot();
+            if (item.ItemReference.ItemAllBaseType == EItemAllBaseType.SkillActive) {
+                PlayerOwner.PlayerHUD.PlayerSkillPanel.HighlightActiveSlots();
+            }
+            else if (item.ItemReference.ItemAllBaseType == EItemAllBaseType.SkillSupport) {
+                PlayerOwner.PlayerHUD.PlayerSkillPanel.HighlightSupportSlots();
+            }
+            else {
+                foreach (EquipmentSlot slot in GetEquipmentSlots(item.ItemReference.ItemAllBaseType)) {
+                    slot.HighlightSlot();
+                }
             }
         }
     }
@@ -164,8 +172,13 @@ public partial class PlayerInventory : Control {
             item.ZIndex = 1;
             item.ToggleClickable();
 
-            foreach (EquipmentSlot slot in GetEquipmentSlots(item.ItemReference.ItemAllBaseType)) {
-                slot.RemoveHighlight();
+            if (item.ItemReference.ItemAllBaseType == EItemAllBaseType.SkillActive || item.ItemReference.ItemAllBaseType == EItemAllBaseType.SkillSupport) {
+                PlayerOwner.PlayerHUD.PlayerSkillPanel.RemoveAllHighlights();
+            }
+            else {
+                foreach (EquipmentSlot slot in GetEquipmentSlots(item.ItemReference.ItemAllBaseType)) {
+                    slot.RemoveHighlight();
+                }
             }
         }
     }

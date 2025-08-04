@@ -30,8 +30,8 @@ public partial class SSoulrendProjectile : Projectile {
         if (!ShouldExpire()) {
             if (updateTimer <= 0) {
                 updateTimer += SeekerUpdateInterval;
-                validSeekerActors = UpdateValidSeekerTargets();
-                
+                validSeekerActors = GetValidSeekerTargets();
+
                 if (validSeekerActors.Count != 0) {
                     seekerGoal = GetClosestSeekerTarget().GlobalPosition with { Y = GlobalPosition.Y };
                 }
@@ -67,7 +67,7 @@ public partial class SSoulrendProjectile : Projectile {
         }
     }
 
-    protected List<Node3D> UpdateValidSeekerTargets() {
+    protected List<Node3D> GetValidSeekerTargets() {
         List<Node3D> validActors = new();
 
         if (actorsInSeekerRadius.Count == 0) {

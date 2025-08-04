@@ -122,12 +122,4 @@ public partial class SkillSlotCluster : VBoxContainer {
 
 		return supports;
 	}
-
-	public void HighlightSlot() {
-		//highlight.Color = UILib.ColorItemBackgroundHovered;
-	}
-
-	public void RemoveHighlight() {
-		//highlight.Color = UILib.ColorTransparent;
-	}
 }

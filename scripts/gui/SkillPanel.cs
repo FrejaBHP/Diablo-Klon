@@ -55,6 +55,8 @@ public partial class SkillPanel : Control {
         skillItem.SkillReference.ActorOwner = PlayerOwner;
         skillItem.SkillReference.HousingSkillCluster = cluster;
         PlayerOwner.AddSkill(skillItem.SkillReference);
+
+        RemoveAllHighlights();
     }
 
     public void OnSkillUnequipped(SkillSlotCluster cluster, Control slot, InventoryItem item) {
@@ -103,6 +105,8 @@ public partial class SkillPanel : Control {
         newSkillItem.SkillReference.ActorOwner = PlayerOwner;
         newSkillItem.SkillReference.HousingSkillCluster = cluster;
         PlayerOwner.AddSkill(newSkillItem.SkillReference);
+
+        RemoveAllHighlights();
     }
 
     public void OnSupportEquippedFromInventory(SkillSlotSupport slot, InventoryItem item) {
@@ -110,6 +114,8 @@ public partial class SkillPanel : Control {
         slot.AddChild(item);
 
         PlayerOwner.PlayerHUD.PlayerInventory.ClearSelectedItem();
+        
+        RemoveAllHighlights();
     }
 
     public void OnSupportUnequipped(SkillSlotSupport slot, InventoryItem item) {
@@ -142,5 +148,31 @@ public partial class SkillPanel : Control {
         }
 
         PlayerOwner.PlayerHUD.PlayerInventory.ClearSelectedItem();
+
+        RemoveAllHighlights();
+    }
+
+    public void HighlightActiveSlots() {
+        foreach (SkillSlotCluster cluster in SkillSlotClusters) {
+            cluster.ActiveSlot.HighlightSlot();
+        }
+    }
+
+    public void HighlightSupportSlots() {
+        foreach (SkillSlotCluster cluster in SkillSlotClusters) {
+            foreach (SkillSlotSupport suppSlot in cluster.SupportSlots) {
+                suppSlot.HighlightSlot();
+            }
+        }
+    }
+
+    public void RemoveAllHighlights() {
+        foreach (SkillSlotCluster cluster in SkillSlotClusters) {
+            cluster.ActiveSlot.RemoveHighlight();
+
+            foreach (SkillSlotSupport suppSlot in cluster.SupportSlots) {
+                suppSlot.RemoveHighlight();
+            }
+        }
     }
 }
