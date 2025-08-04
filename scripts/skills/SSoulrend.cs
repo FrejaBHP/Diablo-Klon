@@ -119,6 +119,7 @@ public class SSoulrend : Skill, ISpell, IProjectileSkill, IAreaSkill, IDurationS
                 SSoulrendProjectile srProj = proj as SSoulrendProjectile;
                 srProj.SetAoEProperties(TotalAreaRadius);
                 SetSkillCollision(srProj.AoE);
+                SetSkillCollision(srProj.SeekerRadius);
                 srProj.AoE.TargetsAffected += ApplyAreaSkillBehaviourToTargets;
             }
         }

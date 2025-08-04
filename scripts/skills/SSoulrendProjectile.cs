@@ -3,14 +3,14 @@ using System;
 using System.Collections.Generic;
 
 public partial class SSoulrendProjectile : Projectile {
-        public AreaOfEffectPersistent AoE { get; protected set; }
+    public AreaOfEffectPersistent AoE { get; protected set; }
     public Area3D SeekerRadius { get; protected set; }
 
     public double SeekerUpdateInterval { get; protected set; } = 0.1;
     protected double updateTimer = 0;
 
-    const double turnConeMinimum = 0.5;
-    const float turnRate = 0.03f;
+    const double turnConeMinimum = 0.33;
+    const float turnRate = 0.0225f;
 
     protected List<Node3D> actorsInSeekerRadius = new();
     protected List<Node3D> validSeekerActors = new();
@@ -31,7 +31,8 @@ public partial class SSoulrendProjectile : Projectile {
             if (updateTimer <= 0) {
                 updateTimer += SeekerUpdateInterval;
                 validSeekerActors = UpdateValidSeekerTargets();
-                if (ShouldTurn()) {
+                
+                if (validSeekerActors.Count != 0) {
                     seekerGoal = GetClosestSeekerTarget().GlobalPosition with { Y = GlobalPosition.Y };
                 }
             }
@@ -55,13 +56,14 @@ public partial class SSoulrendProjectile : Projectile {
     }
 
     public void Turn() {
-        float goalAngleDiff = GlobalTransform.Basis.Z.SignedAngleTo(seekerGoal, Vector3.Up);
+        Vector3 target = GlobalPosition.DirectionTo(seekerGoal);
+        float dotX = GlobalTransform.Basis.X.Dot(target);
 
-        if (goalAngleDiff > turnRate) {
-            RotateY(turnRate);
+        if (dotX > 0.005) {
+            SetFacing(turnRate);
         }
-        else if (goalAngleDiff < -turnRate) {
-            RotateY(-turnRate);
+        else if (dotX < -0.005) {
+            SetFacing(-turnRate);
         }
     }
 
