@@ -24,7 +24,7 @@ public static class AffixDataTables {
 			EItemBaseSpecifierFlags.NoFlags
 		),
 		new(typeof(FlatManaAffix), EAffixFamily.FlatMaxMana,
-			EAffixItemFlags.Armour | EAffixItemFlags.Jewellery | EAffixItemFlags.Staff,
+			EAffixItemFlags.Armour | EAffixItemFlags.Jewellery | EAffixItemFlags.Staff | EAffixItemFlags.Wand,
 			EItemBaseSpecifierFlags.NoFlags
 		),
 
@@ -119,12 +119,22 @@ public static class AffixDataTables {
 			EItemBaseSpecifierFlags.NoFlags
 		),
 		new(typeof(IncreasedSpellDamageAffix), EAffixFamily.IncreasedSpellDamage,
-			EAffixItemFlags.Staff, // In the future, should roll on catalysts or other spell-related offhand items
+			EAffixItemFlags.Staff | EAffixItemFlags.Wand, // In the future, should roll on catalysts or other spell-related offhand items
 			EItemBaseSpecifierFlags.NoFlags
 		),
 	];
 
 	public static readonly List<AffixTableType> SuffixData = [
+		// ===== REGENERATION =====
+		new(typeof(AddedLifeRegenAffix), EAffixFamily.AddedLifeRegen,
+			EAffixItemFlags.Jewellery,
+			EItemBaseSpecifierFlags.NoFlags
+		),
+		new(typeof(IncreasedManaRegenAffix), EAffixFamily.IncreasedManaRegen,
+			EAffixItemFlags.Jewellery | EAffixItemFlags.Staff | EAffixItemFlags.Wand,
+			EItemBaseSpecifierFlags.NoFlags
+		),
+
 		// ===== LOCAL WEAPON STATS =====
 		new(typeof(Local1HIncreasedAttackSpeedAffix), EAffixFamily.LocalIncreasedAttackSpeed,
 			EAffixItemFlags.OHWeapon,
@@ -145,7 +155,11 @@ public static class AffixDataTables {
 			EItemBaseSpecifierFlags.NoFlags
 		),
 		new(typeof(IncreasedCastSpeedAffix), EAffixFamily.IncreasedCastSpeed,
-			EAffixItemFlags.Ring | EAffixItemFlags.Amulet | EAffixItemFlags.Staff,
+			EAffixItemFlags.Ring | EAffixItemFlags.Amulet | EAffixItemFlags.Wand,
+			EItemBaseSpecifierFlags.NoFlags
+		),
+		new(typeof(IncreasedCastSpeedStaffAffix), EAffixFamily.IncreasedCastSpeed,
+			EAffixItemFlags.Staff,
 			EItemBaseSpecifierFlags.NoFlags
 		),
 		new(typeof(IncreasedCritChanceAffix), EAffixFamily.IncreasedCritChance,
@@ -163,7 +177,7 @@ public static class AffixDataTables {
 			EItemBaseSpecifierFlags.NoFlags
 		),
 		new(typeof(FlatIntelligenceAffix), EAffixFamily.AddedIntelligence,
-			EAffixItemFlags.Jewellery | EAffixItemFlags.Staff,
+			EAffixItemFlags.Jewellery | EAffixItemFlags.Staff | EAffixItemFlags.Wand,
 			EItemBaseSpecifierFlags.NoFlags
 		),
 

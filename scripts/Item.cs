@@ -576,6 +576,17 @@ public partial class TwoHandedSwordItem : WeaponItem {
 	}
 }
 
+public partial class WandItem : WeaponItem {
+	public WandItem() {
+		gridSizeX = 1;
+		gridSizeY = 3;
+		ItemAllBaseType = EItemAllBaseType.Weapon1H;
+		ItemWeaponBaseType = EItemWeaponBaseType.WeaponRanged1H;
+		ItemAffixFlags = EAffixItemFlags.OHWeapon | EAffixItemFlags.Weapon | EAffixItemFlags.Wand;
+		WeaponClass = "Wand";
+	}
+}
+
 public partial class StaffItem : WeaponItem {
 	public StaffItem() {
 		gridSizeX = 2;

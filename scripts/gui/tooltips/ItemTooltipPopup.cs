@@ -19,11 +19,11 @@ public partial class ItemTooltipPopup : PopupPanel {
 		Vector2I windowSize = GetTree().Root.GetViewport().GetWindow().Size;
 
 		// If tooltip would extend past the right side of the window
-		if (correctedPosition.X + GetContentsMinimumSize().X > windowSize.X) {
+		if (!RightSide && (correctedPosition.X + GetContentsMinimumSize().X > windowSize.X)) {
 			correctedPosition.X += windowSize.X - (correctedPosition.X + GetContentsMinimumSize().X);
 		}
 		// If tooltip would extend past the left side of the window
-		else if (correctedPosition.X < 0) {
+		else if (RightSide && (correctedPosition.X < 0)) {
 			correctedPosition.X -= correctedPosition.X;
 		}
 
@@ -49,7 +49,7 @@ public partial class ItemTooltipPopup : PopupPanel {
 		else if (correctedPosition.Y + GetContentsMinimumSize().Y > windowSize.Y) {
 			correctedPosition.Y += windowSize.Y - (correctedPosition.Y + GetContentsMinimumSize().Y);
 		}
-
+		
 		Position = (Vector2I)correctedPosition;
 	}
 }

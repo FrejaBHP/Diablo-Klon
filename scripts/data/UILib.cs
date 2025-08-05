@@ -35,6 +35,8 @@ public static class UILib {
 	public static readonly Texture2D TextureItemD2GiantSword = GD.Load<Texture2D>("res://textures/items/d2_GiantSword.png");
 	public static readonly Texture2D TextureItemD2GreatSword = GD.Load<Texture2D>("res://textures/items/d2_GreatSword.png");
 
+	public static readonly Texture2D TextureItemD2Wand = GD.Load<Texture2D>("res://textures/items/d2_Wand.png");
+
 	public static readonly Texture2D TextureItemD2LongStaff = GD.Load<Texture2D>("res://textures/items/d2_LongStaff.png");
 
 	public static readonly Texture2D TextureItemD2ShortBow = GD.Load<Texture2D>("res://textures/items/d2_ShortBow.png");
@@ -57,8 +59,9 @@ public static class UILib {
 	public static readonly Texture2D TextureSkillSplitArrow = GD.Load<Texture2D>("res://textures/skills/skill_splitArrow.png");
 	public static readonly Texture2D TextureSkillCobraShot = GD.Load<Texture2D>("res://textures/skills/skill_cobraShot.png");
 	
-	public static readonly Texture2D TextureSkillPrismaticBolt = GD.Load<Texture2D>("res://textures/skills/skill_prismatic.png");
+	public static readonly Texture2D TextureSkillPrismaticBolt = GD.Load<Texture2D>("res://textures/skills/skill_prismaticBolt.png");
 	public static readonly Texture2D TextureSkillFireNova = GD.Load<Texture2D>("res://textures/skills/skill_fireNova.png");
+	public static readonly Texture2D TextureSkillSoulrend = GD.Load<Texture2D>("res://textures/skills/skill_soulrend.png");
 
 	public static readonly Texture2D GoldPileTiny = GD.Load<Texture2D>("res://textures/goldDrop0.png");
 	public static readonly Texture2D GoldPileSmall = GD.Load<Texture2D>("res://textures/goldDrop1.png");

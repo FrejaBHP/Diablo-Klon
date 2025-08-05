@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bbnk7sejdbgcx"
-path="res://.godot/imported/skill_prismatic.png-04ca781882f140de23a7bfb1684e323e.ctex"
+uid="uid://1dllnt2ol37f"
+path="res://.godot/imported/d2_Wand.png-e0340d223a7453be465f2a39511e14e9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://textures/skills/skill_prismatic.png"
-dest_files=["res://.godot/imported/skill_prismatic.png-04ca781882f140de23a7bfb1684e323e.ctex"]
+source_file="res://textures/items/d2_Wand.png"
+dest_files=["res://.godot/imported/d2_Wand.png-e0340d223a7453be465f2a39511e14e9.ctex"]
 
 [params]
 

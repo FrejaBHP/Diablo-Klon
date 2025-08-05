@@ -79,6 +79,30 @@ public enum EItemCategory {
 }
 
 [Flags]
+public enum EAffixItemFlags {
+	None = 		0,
+	Helmet = 	1 << 0,
+	Chest = 	1 << 1,
+	Gloves = 	1 << 2,
+	Boots = 	1 << 3,
+	Belt = 		1 << 4,
+	Ring = 		1 << 5,
+	Amulet = 	1 << 6,
+	OHWeapon = 	1 << 7,
+	THWeapon = 	1 << 8,
+	Bow = 		1 << 9,
+	Staff = 	1 << 10,
+	Wand = 		1 << 11,
+
+	Shield = 	1 << 12,
+	Quiver = 	1 << 13,
+
+	Armour = 	1 << 14,
+	Jewellery = 1 << 15,
+	Weapon = 	1 << 16,
+}
+
+[Flags]
 public enum EItemBaseSpecifierFlags {
 	NONE = 0,
 	NoFlags = 1 << 0,
@@ -94,6 +118,7 @@ public enum EItemBaseSpecifierFlags {
 	W2HSword = 1 << 9,
 	WBow = 1 << 10,
 	WStaff = 1 << 11,
+	WWand = 1 << 12,
 }
 
 [Flags]

@@ -30,7 +30,9 @@ public abstract class SupportGem : Item {
 		gridSizeX = 1;
 		gridSizeY = 1;
 
-        Run.Instance.GemLevelChanged += SetGemLevel;
+        if (Run.Instance.Rules.ExistingGemsScaleWithGameProgress) {
+			Run.Instance.GemLevelChanged += SetGemLevel;
+		}
 	}
 
     public void SetGemLevel(int level) {

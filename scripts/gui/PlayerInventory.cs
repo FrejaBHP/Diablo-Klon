@@ -184,6 +184,9 @@ public partial class PlayerInventory : Control {
     }
 
     public void ItemClickDrop(InventoryItem item) {
+        if (item.ItemReference.ItemAllBaseType == EItemAllBaseType.SkillActive || item.ItemReference.ItemAllBaseType == EItemAllBaseType.SkillSupport) {
+            PlayerOwner.PlayerHUD.PlayerSkillPanel.RemoveAllHighlights();
+        }
         foreach (EquipmentSlot slot in GetEquipmentSlots(item.ItemReference.ItemAllBaseType)) {
             slot.RemoveHighlight();
         }

@@ -139,6 +139,22 @@ public static class ItemDataTables {
 		}
 	];
 
+	public static readonly List<WeaponItemData> WandWeaponData = [
+		new WeaponItemData {
+			BaseName = "Wand",
+			ItemSpecifierFlags = EItemBaseSpecifierFlags.WWand,
+			Texture = UILib.TextureItemD2Wand,
+			MinimumLevel = 0,
+			BasePhysicalMinimumDamage = 5,
+			BasePhysicalMaximumDamage = 9,
+			BaseAttackSpeed = 0.741f,
+			BaseCritChance = 0.08f,
+			ImplicitTypes = [
+				typeof(BasicWandSpellDamageAffix)
+			]
+		}
+	];
+
 	public static readonly List<WeaponItemData> StaffWeaponData = [
 		new WeaponItemData {
 			BaseName = "Long Staff",

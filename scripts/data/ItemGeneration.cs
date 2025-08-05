@@ -98,7 +98,13 @@ public static class ItemGeneration {
 				}
 				break;
 
-			// case EItemWeaponBaseType.WeaponRanged1H & 2H:
+			case EItemWeaponBaseType.WeaponRanged1H:
+				weaponItem = new WandItem();
+				legalWeaponData = ItemDataTables.WandWeaponData.Where(i => i.MinimumLevel <= itemLevel).ToList();
+				data = legalWeaponData[Utilities.RNG.Next(legalWeaponData.Count)];
+				break;
+
+			// case EItemWeaponBaseType.WeaponRanged2H:
 			default:
 				weaponItem = new BowItem();
 				legalWeaponData = ItemDataTables.BowWeaponData.Where(i => i.MinimumLevel <= itemLevel).ToList();

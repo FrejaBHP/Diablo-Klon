@@ -53,7 +53,7 @@ public class SSoulrend : Skill, ISpell, IProjectileSkill, IAreaSkill, IDurationS
     ];
 
     private static readonly double[] dotDamageArray = [
-        15, 71, 20, 25, 30,
+        15, 17, 20, 25, 30,
         36, 43, 53, 63, 76,
         92, 110, 133, 170, 192
     ];
@@ -66,7 +66,7 @@ public class SSoulrend : Skill, ISpell, IProjectileSkill, IAreaSkill, IDurationS
         Type = ESkillType.Spell;
         Tags = ESkillTags.Spell | ESkillTags.Projectile | ESkillTags.Area | ESkillTags.Duration | ESkillTags.Chaos;
         DamageCategory = EDamageCategory.Spell;
-        Texture = UILib.TextureSkillPrismaticBolt;
+        Texture = UILib.TextureSkillSoulrend;
 
         ManaCost = 1;
 

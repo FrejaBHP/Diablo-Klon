@@ -130,6 +130,34 @@ public class BasicAmuletPhysImplicit : Affix {
 	}
 }
 
+public class BasicWandSpellDamageAffix : Affix {
+	private static readonly List<AffixData> increasedSpellDamageAffixData = [
+		new(0, "", 
+			0.08, 0.15, 
+			0, 0
+		)
+	];
+
+	public BasicWandSpellDamageAffix() {
+		AffixDataTable = increasedSpellDamageAffixData;
+		Family = EAffixFamily.IncreasedSpellDamage;
+		IsLocal = false;
+		IsMultiplicative = false;
+		StatNameFirst = EStatName.IncreasedSpellDamage;
+
+		SetAffixTier(0);
+	}
+
+	public override void RollAffixValue() {
+		if (TierData != null) {
+			ValueFirst = Math.Round(Utilities.RandomDouble(TierData.AffixMinFirst, TierData.AffixMaxFirst), 2);
+		}
+	}
+
+	public override string GetAffixTooltipText() {
+		return $"{ValueFirst:P0} increased Spell Damage";
+	}
+}
 
 // =========== PREFIXES ===========
 
@@ -973,6 +1001,76 @@ public class AddedShieldBlockAffix : Affix {
 
 // =========== SUFFIXES ===========
 
+public class AddedLifeRegenAffix : Affix {
+	private static readonly List<AffixData> addedLifeRegenAffixData = [
+		new(0, "of Recovery", 
+			1.5, 3, 
+			0, 0
+		),
+		new(0, "of Healing", 
+			3, 5, 
+			0, 0
+		),
+		new(0, "of Regeneration", 
+			5, 8, 
+			0, 0
+		)
+	];
+
+	public AddedLifeRegenAffix() {
+		AffixDataTable = addedLifeRegenAffixData;
+		Family = EAffixFamily.AddedLifeRegen;
+		IsLocal = false;
+		IsMultiplicative = false;
+		StatNameFirst = EStatName.AddedLifeRegen;
+	}
+
+	public override void RollAffixValue() {
+		if (TierData != null) {
+			ValueFirst = Utilities.RandomDouble(TierData.AffixMinFirst, TierData.AffixMaxFirst);
+		}
+	}
+
+	public override string GetAffixTooltipText() {
+		return $"+{Math.Round(ValueFirst, 1)} Life Regenerated per second";
+	}
+}
+
+public class IncreasedManaRegenAffix : Affix {
+	private static readonly List<AffixData> increasedManaRegenAffixData = [
+		new(0, "of the Pupil", 
+			0.1, 0.2, 
+			0, 0
+		),
+		new(0, "of the Student", 
+			0.2, 0.3, 
+			0, 0
+		),
+		new(0, "of Clarity", 
+			0.3, 0.4, 
+			0, 0
+		)
+	];
+
+	public IncreasedManaRegenAffix() {
+		AffixDataTable = increasedManaRegenAffixData;
+		Family = EAffixFamily.IncreasedManaRegen;
+		IsLocal = false;
+		IsMultiplicative = false;
+		StatNameFirst = EStatName.IncreasedManaRegen;
+	}
+
+	public override void RollAffixValue() {
+		if (TierData != null) {
+			ValueFirst = Utilities.RandomDouble(TierData.AffixMinFirst, TierData.AffixMaxFirst);
+		}
+	}
+
+	public override string GetAffixTooltipText() {
+		return $"{ValueFirst:P0} increased Mana Regeneration";
+	}
+}
+
 public class Local1HIncreasedAttackSpeedAffix : Affix {
 	private static readonly List<AffixData> local1HIncreasedAttackSpeedAffixData = [
 		new(0, "of AS1", 
@@ -1128,6 +1226,41 @@ public class IncreasedCastSpeedAffix : Affix {
 
 	public IncreasedCastSpeedAffix() {
 		AffixDataTable = increasedCastSpeedAffixData;
+		Family = EAffixFamily.IncreasedCastSpeed;
+		IsLocal = false;
+		IsMultiplicative = false;
+		StatNameFirst = EStatName.IncreasedCastSpeed;
+	}
+
+	public override void RollAffixValue() {
+		if (TierData != null) {
+			ValueFirst = Math.Round(Utilities.RandomDouble(TierData.AffixMinFirst, TierData.AffixMaxFirst), 2);
+		}
+	}
+
+	public override string GetAffixTooltipText() {
+		return $"{ValueFirst:P0} increased Cast Speed";
+	}
+}
+
+public class IncreasedCastSpeedStaffAffix : Affix {
+	private static readonly List<AffixData> increasedCastSpeedStaffAffixData = [
+		new(0, "of CS1", 
+			0.12, 0.18, 
+			0, 0
+		),
+		new(0, "of CS2", 
+			0.19, 0.26, 
+			0, 0
+		),
+		new(0, "of CS3", 
+			0.27, 0.35, 
+			0, 0
+		)
+	];
+
+	public IncreasedCastSpeedStaffAffix() {
+		AffixDataTable = increasedCastSpeedStaffAffixData;
 		Family = EAffixFamily.IncreasedCastSpeed;
 		IsLocal = false;
 		IsMultiplicative = false;
