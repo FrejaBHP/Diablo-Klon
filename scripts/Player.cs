@@ -166,8 +166,6 @@ public partial class Player : Actor {
 		PlayerHUD.PlayerLowerHUD.UpdateLevelLabel(ActorLevel);
 		PlayerHUD.PlayerLowerHUD.SetExperienceBarLimit(experienceRequirements[ActorLevel - 1]);
 		PlayerHUD.PlayerLowerHUD.UpdateExperienceBar(Experience);
-
-		Gold = 1000;
 		
 		CalculateStats();
 

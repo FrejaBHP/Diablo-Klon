@@ -169,3 +169,11 @@ public enum EShopType {
 	Equipment,
 	Gems
 }
+
+public enum EItemRewardType {
+	Weapons,
+	Armour,
+	Accessories,
+	Skills,
+	Supports
+}

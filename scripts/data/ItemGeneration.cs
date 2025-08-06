@@ -48,13 +48,56 @@ public static class ItemGeneration {
 		return item;
 	}
 
-	/*
-	public static Item GenerateItemFromSlot(EItemEquipmentSlot slot) {
-		if (slot == EItemEquipmentSlot.None) {
-			slot = (EItemEquipmentSlot)rnd.Next((int)EItemEquipmentSlot.COUNT);
+	public static Item GenerateWeaponFromType(EItemWeaponBaseType weaponType, int itemLevel = -1, EItemRarity rarity = EItemRarity.None) {
+		Item item;
+
+		if (itemLevel == -1) {
+			itemLevel = Run.Instance.AreaLevel;
 		}
+
+		if (rarity == EItemRarity.None) {
+			rarity = CalculateRarity();
+		}
+
+		item = GenerateWeaponItem(weaponType, itemLevel);
+		ApplyRarityAndAffixes(item, rarity);
+
+		return item;
 	}
-	*/
+
+	public static Item GenerateArmourFromType(EItemArmourBaseType armourType, int itemLevel = -1, EItemRarity rarity = EItemRarity.None) {
+		Item item;
+
+		if (itemLevel == -1) {
+			itemLevel = Run.Instance.AreaLevel;
+		}
+
+		if (rarity == EItemRarity.None) {
+			rarity = CalculateRarity();
+		}
+
+		item = GenerateArmourItem(armourType, itemLevel);
+		ApplyRarityAndAffixes(item, rarity);
+
+		return item;
+	}
+
+	public static Item GenerateAccessoryFromType(EItemJewelleryBaseType accessoryType, int itemLevel = -1, EItemRarity rarity = EItemRarity.None) {
+		Item item;
+
+		if (itemLevel == -1) {
+			itemLevel = Run.Instance.AreaLevel;
+		}
+
+		if (rarity == EItemRarity.None) {
+			rarity = CalculateRarity();
+		}
+
+		item = GenerateJewelleryItem(accessoryType, itemLevel);
+		ApplyRarityAndAffixes(item, rarity);
+
+		return item;
+	}
 
 	private static EItemRarity CalculateRarity() {
 		WeightedList<EItemRarity> rarityList = new([
@@ -314,19 +357,7 @@ public static class ItemGeneration {
 		List<SkillItemData> legalSkillItemData = ItemDataTables.SkillData.ToList();
 		SkillItemData data = legalSkillItemData[Utilities.RNG.Next(legalSkillItemData.Count)];
 
-		item.ItemRarity = EItemRarity.Skill;
-		item.ItemBase = data.BaseName;
-		item.SkillName = data.SkillName;
-		item.ItemTexture = data.Texture;
-		item.SkillType = data.SkillType;
-
-		// Lav om senere, så denne gøres, når et skill gem samles op, og ikke allerede har et allokeret skill
-		Skill newSkill = (Skill)Activator.CreateInstance(item.SkillType);
-		newSkill.Level = Run.Instance.GemLevel;
-
-		item.SkillReference = newSkill;
-
-		item.ItemName = item.SkillReference.Name;
+		ProcessSkillGem(ref item, ref data);
 
 		return item;
 	}
@@ -339,21 +370,9 @@ public static class ItemGeneration {
 			if (legalSkillGemData.Count != 0) {
 				SkillItem item = new();
 				int index = Utilities.RNG.Next(legalSkillGemData.Count);
-
 				SkillItemData data = legalSkillGemData[index];
 
-				item.ItemRarity = EItemRarity.Skill;
-				item.ItemBase = data.BaseName;
-				item.SkillName = data.SkillName;
-				item.ItemTexture = data.Texture;
-				item.SkillType = data.SkillType;
-
-				Skill newSkill = (Skill)Activator.CreateInstance(item.SkillType);
-				newSkill.Level = Run.Instance.GemLevel;
-
-				item.SkillReference = newSkill;
-
-				item.ItemName = item.SkillReference.Name;
+				ProcessSkillGem(ref item, ref data);
 
 				generatedSkillGems.Add(item);
 
@@ -364,6 +383,21 @@ public static class ItemGeneration {
 		}
 		
 		return generatedSkillGems;
+	}
+
+	private static void ProcessSkillGem(ref SkillItem item, ref SkillItemData data) {
+		item.ItemRarity = EItemRarity.Skill;
+		item.ItemBase = data.BaseName;
+		item.SkillName = data.SkillName;
+		item.ItemTexture = data.Texture;
+		item.SkillType = data.SkillType;
+
+		Skill newSkill = (Skill)Activator.CreateInstance(item.SkillType);
+		newSkill.Level = Run.Instance.GemLevel;
+
+		item.SkillReference = newSkill;
+
+		item.ItemName = item.SkillReference.Name;
 	}
 
 	public static SupportGem GenerateRandomSupportGem() {

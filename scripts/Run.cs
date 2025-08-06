@@ -9,6 +9,8 @@ public partial class Run : Node3D {
     protected static readonly PackedScene goldScene = GD.Load<PackedScene>("res://scenes/worldgold.tscn");
 	protected static readonly PackedScene mapTransScene = GD.Load<PackedScene>("res://scenes/map_transition.tscn");
 
+	protected static readonly PackedScene itemRewardPanelScene = GD.Load<PackedScene>("res://scenes/gui/item_reward_panel.tscn");
+
 	[Signal]
     public delegate void GemLevelChangedEventHandler(int newLevel);
     
@@ -85,6 +87,22 @@ public partial class Run : Node3D {
         PlayerActor.GlobalPosition = CurrentMap.PlayerSpawnMarker.GlobalPosition;
 
 		PlayerActor.PlayerHUD.PlayerRightHUD.UpdateProgressLabel();
+
+		CreateStarterWeaponPanel();
+	}
+
+	protected void CreateStarterWeaponPanel() {
+		ItemRewardPanel starterWeaponPanel = itemRewardPanelScene.Instantiate<ItemRewardPanel>();
+		Run.Instance.PlayerActor.PlayerHUD.AddChild(starterWeaponPanel);
+		starterWeaponPanel.RewardTaken += CreateStarterSkillPanel;
+		starterWeaponPanel.GenerateStarterWeapons();
+	}
+
+	// This will not show up immediately afterwards at a later point, so signal can safely be removed then
+	protected void CreateStarterSkillPanel() {
+		ItemRewardPanel starterSkillPanel = itemRewardPanelScene.Instantiate<ItemRewardPanel>();
+		Run.Instance.PlayerActor.PlayerHUD.AddChild(starterSkillPanel);
+		starterSkillPanel.GenerateStarterSkills();
 	}
 	
 	public void StartAct(int actNo) {

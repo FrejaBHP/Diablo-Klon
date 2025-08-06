@@ -47,6 +47,7 @@ public partial class SSoulrendProjectile : Projectile {
         }
     }
 
+    // Just in case this logic gets expanded beyond the check for actor count
     protected bool ShouldTurn() {
         if (validSeekerActors.Count == 0) {
             return false;

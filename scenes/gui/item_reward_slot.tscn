@@ -1,0 +1,32 @@
+[gd_scene load_steps=3 format=3 uid="uid://berwl4lf30iqd"]
+
+[ext_resource type="Script" uid="uid://d1if5agal0yv0" path="res://scripts/gui/ItemRewardSlot.cs" id="1_axjjb"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jqxhb"]
+bg_color = Color(0.227451, 0.227451, 0.227451, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.136826, 0.136826, 0.136826, 1)
+border_blend = true
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+
+[node name="EquipmentSlot" type="PanelContainer"]
+offset_right = 6.0
+offset_bottom = 6.0
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_jqxhb")
+script = ExtResource("1_axjjb")
+
+[node name="Highlight" type="ColorRect" parent="."]
+layout_mode = 2
+mouse_filter = 1
+color = Color(1, 1, 1, 0)
+
+[connection signal="gui_input" from="." to="." method="GUIInput"]
+[connection signal="mouse_entered" from="." to="." method="OnMouseEntered"]
+[connection signal="mouse_exited" from="." to="." method="OnMouseExited"]

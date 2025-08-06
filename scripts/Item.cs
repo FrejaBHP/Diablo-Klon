@@ -83,6 +83,17 @@ public partial class Item {
 		}
 	}
 
+	public InventoryItem ConvertToRewardItem() {
+		InventoryItem inventoryItem = inventoryItemScene.Instantiate<InventoryItem>();
+		inventoryItem.SetItemReference(this);
+		inventoryItem.SetGridSize(gridSizeX, gridSizeY);
+
+		IsPickedUp = true;
+		invItemRef = inventoryItem;
+
+		return inventoryItem;
+	}
+
 	public List<AffixTableType> GetValidPrefixTypes() {
 		List<AffixTableType> validPrefixes = AffixDataTables.PrefixData.Where(p => Utilities.HasAnyFlags(ItemAffixFlags, p.AffixItemFlags)).ToList();
 		validPrefixes.RemoveAll(p => !Utilities.HasAnyFlags(ItemBaseSpecifierFlags, p.AffixItemSpecifierFlags));

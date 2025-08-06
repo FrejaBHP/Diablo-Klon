@@ -13,6 +13,7 @@ public partial class InventoryItem : PanelContainer {
 	public InventoryGrid InventoryReference;
 	public bool IsClicked = false;
 	public bool IsForSale = false;
+	public bool IsAReward = false;
 
 	public Item ItemReference;
 
@@ -21,7 +22,6 @@ public partial class InventoryItem : PanelContainer {
 
 	protected TextureRect itemTexture;
 	protected ColorRect itemBackground;
-	protected ItemTooltip itemTooltip;
 	protected bool hasActiveTooltip = false;
 
 	protected List<InventoryGridCell> occupiedInventorySlots = new List<InventoryGridCell>();
@@ -50,9 +50,16 @@ public partial class InventoryItem : PanelContainer {
 	public void GUIInput(InputEvent @event) {
 		if (@event.IsActionPressed("LeftClick")) {
 			if (!IsClicked) {
-				InventoryReference.OnItemClicked(this);
-				if (!IsForSale) {
-					RemoveTooltip();
+				if (!IsAReward) {
+					InventoryReference.OnItemClicked(this);
+					if (!IsForSale) {
+						RemoveTooltip();
+					}
+				}
+				else {
+					// Dirty
+					//ItemRewardSlot rewardSlot = GetParent<ItemRewardSlot>();
+					//rewardSlot.EmitSignal(ItemRewardSlot.SignalName.RewardSelected, this);
 				}
 			}
 		}
