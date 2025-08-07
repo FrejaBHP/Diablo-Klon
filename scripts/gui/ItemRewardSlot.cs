@@ -14,9 +14,8 @@ public partial class ItemRewardSlot : Control {
 
     public void SetItem(InventoryItem item) {
         AddChild(item);
+		item.ToggleIsReward(); // This is called here instead of in the ConvertToRewardItem() function, because it is an orphan at the time, and will not work
         itemInSlot = item;
-        itemInSlot.IsAReward = true;
-        itemInSlot.MouseFilter = MouseFilterEnum.Ignore;
     }
 
     public void GUIInput(InputEvent @event) {

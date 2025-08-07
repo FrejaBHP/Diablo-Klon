@@ -132,6 +132,19 @@ public partial class InventoryItem : PanelContainer {
 		}
 	}
 
+	public void ToggleIsReward() {
+		if (!IsAReward) {
+			IsAReward = true;
+			MouseFilter = MouseFilterEnum.Ignore;
+			itemBackground.Color = UILib.ColorTransparent;
+		}
+		else {
+			IsAReward = false;
+			MouseFilter = MouseFilterEnum.Stop;
+			itemBackground.Color = UILib.ColorItemBackground;
+		}
+	}
+
 	public void RemoveTooltip() {
 		Run.Instance.PlayerActor.PlayerHUD.RemoveItemTooltip();
 		isHovered = false;

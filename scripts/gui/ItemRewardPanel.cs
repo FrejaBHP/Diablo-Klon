@@ -21,18 +21,19 @@ public partial class ItemRewardPanel : Control {
         rewardLabel.Text = "Choose a starting weapon";
 
         ItemRewardSlot melee1HSlot = itemRewardSlotScene.Instantiate<ItemRewardSlot>();
-        melee1HSlot.SetItem(ItemGeneration.GenerateWeaponFromType(EItemWeaponBaseType.WeaponMelee1H, -1, EItemRarity.Common).ConvertToRewardItem());
         ItemRewardSlot melee2HSlot = itemRewardSlotScene.Instantiate<ItemRewardSlot>();
-        melee2HSlot.SetItem(ItemGeneration.GenerateWeaponFromType(EItemWeaponBaseType.WeaponMelee2H, -1, EItemRarity.Common).ConvertToRewardItem());
         ItemRewardSlot ranged1HSlot = itemRewardSlotScene.Instantiate<ItemRewardSlot>();
-        ranged1HSlot.SetItem(ItemGeneration.GenerateWeaponFromType(EItemWeaponBaseType.WeaponRanged1H, -1, EItemRarity.Common).ConvertToRewardItem());
         ItemRewardSlot ranged2HSlot = itemRewardSlotScene.Instantiate<ItemRewardSlot>();
-        ranged2HSlot.SetItem(ItemGeneration.GenerateWeaponFromType(EItemWeaponBaseType.WeaponRanged2H, -1, EItemRarity.Common).ConvertToRewardItem());
 
         rewardContainer.AddChild(melee1HSlot);
         rewardContainer.AddChild(melee2HSlot);
         rewardContainer.AddChild(ranged1HSlot);
         rewardContainer.AddChild(ranged2HSlot);
+
+        melee1HSlot.SetItem(ItemGeneration.GenerateWeaponFromType(EItemWeaponBaseType.WeaponMelee1H, -1, EItemRarity.Common).ConvertToRewardItem());
+        melee2HSlot.SetItem(ItemGeneration.GenerateWeaponFromType(EItemWeaponBaseType.WeaponMelee2H, -1, EItemRarity.Common).ConvertToRewardItem());
+        ranged1HSlot.SetItem(ItemGeneration.GenerateWeaponFromType(EItemWeaponBaseType.WeaponRanged1H, -1, EItemRarity.Common).ConvertToRewardItem());
+        ranged2HSlot.SetItem(ItemGeneration.GenerateWeaponFromType(EItemWeaponBaseType.WeaponRanged2H, -1, EItemRarity.Common).ConvertToRewardItem());
 
         melee1HSlot.RewardSelected += RewardSelected;
         melee2HSlot.RewardSelected += RewardSelected;
@@ -47,8 +48,8 @@ public partial class ItemRewardPanel : Control {
 
         foreach (SkillItem skillGem in skillGems) {
             ItemRewardSlot skillGemSlot = itemRewardSlotScene.Instantiate<ItemRewardSlot>();
-            skillGemSlot.SetItem(skillGem.ConvertToRewardItem());
             rewardContainer.AddChild(skillGemSlot);
+            skillGemSlot.SetItem(skillGem.ConvertToRewardItem());
             skillGemSlot.RewardSelected += RewardSelected;
         }
     }
@@ -70,8 +71,7 @@ public partial class ItemRewardPanel : Control {
         if (!rewardSelected) {
             rewardSelected = true;
             item.Owner = Run.Instance.PlayerActor;
-            item.MouseFilter = MouseFilterEnum.Stop;
-            item.IsAReward = false;
+            item.ToggleIsReward();
             item.GetParent().RemoveChild(item);
             Run.Instance.PlayerActor.PlayerHUD.PlayerInventory.InventoryGrid.TryAddItemToInventory(ref item);
 
