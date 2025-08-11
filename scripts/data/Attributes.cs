@@ -178,87 +178,32 @@ public partial class Stat {
     }
 }
 
-public partial class DamageStat() {
-    public readonly bool ShouldRoundToWholeNumber = false;
+public partial class DamageTypeStat() {
+	public double SMinBase { get; set; } = 0;
+	public double SMaxBase { get; set; } = 0;
+    public double SMinAdded { get; set; } = 0;
+	public double SMaxAdded { get; set; } = 0;
+	public double SAttackMinAdded { get; set; } = 0;
+	public double SAttackMaxAdded { get; set; } = 0;
+	public double SSpellMinAdded { get; set; } = 0;
+	public double SSpellMaxAdded { get; set; } = 0;
+	public double SIncreased { get; set; } = 0;
+    public double SMore { get; set; } = 1;
 
-    private double sMinBase = 0;
-	public double SMinBase {
-		get => sMinBase;
-		set {
-            if (ShouldRoundToWholeNumber) {
-                sMinBase = Math.Round(value, 0);
-            }
-            else {
-                sMinBase = value;
-            }
-		}
-	}
-
-    private double sMaxBase = 0;
-	public double SMaxBase {
-		get => sMaxBase;
-		set {
-            if (ShouldRoundToWholeNumber) {
-                sMaxBase = Math.Round(value, 0);
-            }
-            else {
-                sMaxBase = value;
-            }
-		}
-	}
-
-    private double sMinAdded = 0;
-	public double SMinAdded {
-		get => sMinAdded;
-		set {
-			if (ShouldRoundToWholeNumber) {
-                sMinAdded = Math.Round(value, 0);
-            }
-            else {
-                sMinAdded = value;
-            }
-		}
-	}
-
-    private double sMaxAdded = 0;
-	public double SMaxAdded {
-		get => sMaxAdded;
-		set {
-			if (ShouldRoundToWholeNumber) {
-                sMaxAdded = Math.Round(value, 0);
-            }
-            else {
-                sMaxAdded = value;
-            }
-		}
-	}
-
-    private double sIncreased = 0;
-	public double SIncreased {
-		get => sIncreased;
-		set {
-			sIncreased = value;
-		}
-	}
-
-    private double sMore = 1;
-	public double SMore {
-		get => sMore;
-		set {
-			sMore = value;
-		}
-	}
-
-    public void SetAddedIncreasedMore(double minAdded, double maxAdded, double increased = 0, double more = 1) {
-        sMinAdded = minAdded;
-        sMaxAdded = maxAdded;
-        sIncreased = increased;
-        sMore = more;
+    public void SetAddedIncreasedMore(double minAdded, double maxAdded, double minAtkAdded, double maxAtkAdded, double minSpeAdded, double maxSpeAdded, double increased = 0, double more = 1) {
+        SMinAdded = minAdded;
+        SMaxAdded = maxAdded;
+        SAttackMinAdded = minAtkAdded;
+        SAttackMaxAdded = maxAtkAdded;
+        SSpellMinAdded = minSpeAdded;
+        SSpellMaxAdded = maxSpeAdded;
+        SIncreased = increased;
+        SMore = more;
     }
 
     public void CalculateTotal(out double totalMin, out double totalMax) {
-        totalMin = (sMinBase + sMinAdded) * (1 + sIncreased) * sMore;
-        totalMax = (sMaxBase + sMaxAdded) * (1 + sIncreased) * sMore;
+        totalMin = (SMinBase + SMinAdded + SAttackMinAdded) * (1 + SIncreased) * SMore;
+        totalMax = (SMaxBase + SMaxAdded + SAttackMaxAdded) * (1 + SIncreased) * SMore;
 
         if (totalMin < 0) {
             totalMin = 0;
@@ -266,17 +211,12 @@ public partial class DamageStat() {
 
         if (totalMax < 0) {
             totalMax = 0;
-        }
-
-        if (ShouldRoundToWholeNumber) {
-            totalMin = Math.Round(totalMin, 0);
-            totalMax = Math.Round(totalMax, 0);
         }
     }
 
     public void CalculateTotalWithBase(double baseMin, double baseMax, double multiplier, out double totalMin, out double totalMax) {
-        totalMin = ((baseMin * multiplier) + sMinAdded) * (1 + sIncreased) * sMore;
-        totalMax = ((baseMax * multiplier) + sMaxAdded) * (1 + sIncreased) * sMore;
+        totalMin = ((baseMin * multiplier) + SMinAdded + SAttackMinAdded) * (1 + SIncreased) * SMore;
+        totalMax = ((baseMax * multiplier) + SMaxAdded + SAttackMaxAdded) * (1 + SIncreased) * SMore;
 
         if (totalMin < 0) {
             totalMin = 0;
@@ -284,11 +224,6 @@ public partial class DamageStat() {
 
         if (totalMax < 0) {
             totalMax = 0;
-        }
-
-        if (ShouldRoundToWholeNumber) {
-            totalMin = Math.Round(totalMin, 0);
-            totalMax = Math.Round(totalMax, 0);
         }
     }
 
@@ -303,38 +238,46 @@ public partial class DamageStat() {
         }
     }
 
-    public DamageStat ShallowCopy() {
-        return (DamageStat)MemberwiseClone();
+    public DamageTypeStat ShallowCopy() {
+        return (DamageTypeStat)MemberwiseClone();
     }
 
-    public static DamageStat operator +(DamageStat a, DamageStat b) {
-        DamageStat c = new DamageStat();
+    public static DamageTypeStat operator +(DamageTypeStat a, DamageTypeStat b) {
+        DamageTypeStat c = new DamageTypeStat();
 
-        c.sMinBase = a.sMinBase + b.sMinBase;
-        c.sMaxBase = a.sMaxBase + b.sMaxBase;
-        c.sMinAdded = a.sMinAdded + b.sMinAdded;
-        c.sMaxAdded = a.sMaxAdded + b.sMaxAdded;
-        c.sIncreased = a.sIncreased + b.sIncreased;
+        c.SMinBase = a.SMinBase + b.SMinBase;
+        c.SMaxBase = a.SMaxBase + b.SMaxBase;
+        c.SMinAdded = a.SMinAdded + b.SMinAdded;
+        c.SMaxAdded = a.SMaxAdded + b.SMaxAdded;
+        c.SAttackMinAdded = a.SAttackMinAdded + b.SAttackMinAdded;
+        c.SAttackMaxAdded = a.SAttackMaxAdded + b.SAttackMaxAdded;
+        c.SSpellMinAdded = a.SSpellMinAdded + b.SSpellMinAdded;
+        c.SSpellMaxAdded = a.SSpellMaxAdded + b.SSpellMaxAdded;
+        c.SIncreased = a.SIncreased + b.SIncreased;
         c.SMore = a.SMore * b.SMore;
         
         return c;
     }
 
-    public static DamageStat operator -(DamageStat a, DamageStat b) {
-        DamageStat c = new DamageStat();
+    public static DamageTypeStat operator -(DamageTypeStat a, DamageTypeStat b) {
+        DamageTypeStat c = new DamageTypeStat();
 
-        c.sMinBase = a.sMinBase - b.sMinBase;
-        c.sMaxBase = a.sMaxBase - b.sMaxBase;
-        c.sMinAdded = a.sMinAdded - b.sMinAdded;
-        c.sMaxAdded = a.sMaxAdded - b.sMaxAdded;
-        c.sIncreased = a.sIncreased - b.sIncreased;
+        c.SMinBase = a.SMinBase - b.SMinBase;
+        c.SMaxBase = a.SMaxBase - b.SMaxBase;
+        c.SMinAdded = a.SMinAdded - b.SMinAdded;
+        c.SMaxAdded = a.SMaxAdded - b.SMaxAdded;
+        c.SAttackMinAdded = a.SAttackMinAdded - b.SAttackMinAdded;
+        c.SAttackMaxAdded = a.SAttackMaxAdded - b.SAttackMaxAdded;
+        c.SSpellMinAdded = a.SSpellMinAdded - b.SSpellMinAdded;
+        c.SSpellMaxAdded = a.SSpellMaxAdded - b.SSpellMaxAdded;
+        c.SIncreased = a.SIncreased - b.SIncreased;
         c.SMore = a.SMore / b.SMore;
         
         return c;
     }
 
     public override string ToString() {
-        return $"Base: {SMinBase} - {sMaxBase}\nAdded: {SMinAdded} - {sMaxAdded}\nInc: {SIncreased}% / More: {SMore}%";
+        return $"Base: {SMinBase} - {SMaxBase}\nAdded: {SAttackMinAdded} - {SAttackMaxAdded}\nInc: {SIncreased}% / More: {SMore}%";
     }
 }
 

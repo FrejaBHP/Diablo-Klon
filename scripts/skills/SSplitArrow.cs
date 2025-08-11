@@ -49,6 +49,7 @@ public class SSplitArrow : Skill, IAttack, IProjectileSkill {
         SkillName = ESkillName.SplitArrow;
         Type = ESkillType.Attack;
         Tags = ESkillTags.Attack | ESkillTags.Projectile | ESkillTags.Ranged;
+        SkillDamageTags = ESkillDamageTags.Attack | ESkillDamageTags.Projectile;
         DamageCategory = EDamageCategory.Ranged;
         Texture = UILib.TextureSkillSplitArrow;
 

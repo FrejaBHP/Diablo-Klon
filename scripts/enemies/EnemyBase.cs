@@ -75,7 +75,7 @@ public partial class EnemyBase : Actor {
         double damageScaling = 1 * Math.Pow(Run.Instance.Rules.EnemyDamageScalingFactor, ActorLevel - 1);
         BasicStats.MoreLife *= 1 * Math.Pow(Run.Instance.Rules.EnemyLifeScalingFactor, ActorLevel - 1);
         DamageMods.MoreMelee *= damageScaling;
-        DamageMods.MoreRanged *= damageScaling;
+        DamageMods.MoreProjectile *= damageScaling;
         DamageMods.MoreSpell *= damageScaling;
     }
 

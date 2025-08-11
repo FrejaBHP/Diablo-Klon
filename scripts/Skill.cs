@@ -35,6 +35,7 @@ public abstract class Skill {
     public ESkillName SkillName { get; protected set; }
     public ESkillType Type { get; protected set; }
     public ESkillTags Tags { get; protected set; }
+    public ESkillDamageTags SkillDamageTags { get; protected set; }
     public EDamageCategory DamageCategory { get; protected set; }
     public Texture2D Texture { get; protected set; }
 
@@ -113,12 +114,18 @@ public abstract class Skill {
     public SkillInfo CalculateOutgoingValuesIntoInfo(bool canCrit) {
         EDamageInfoFlags damageInfoFlags = new();
 
-        double basePhysical = 0;
-        double baseFire = 0;
-        double baseCold = 0;
-        double baseLightning = 0;
-        double baseChaos = 0;
         bool isCritical = false;
+
+        double physMin = 0;
+        double physMax = 0;
+        double fireMin = 0;
+        double fireMax = 0;
+        double coldMin = 0;
+        double coldMax = 0;
+        double lightningMin = 0;
+        double lightningMax = 0;
+        double chaosMin = 0;
+        double chaosMax = 0;
 
         if (this is IAttack attack) {
             attack.GetUsedWeaponStats(ActorOwner, out ActorWeaponStats wStats);
@@ -127,40 +134,44 @@ public abstract class Skill {
                 isCritical = RollForCritical(wStats.CritChance * ActorOwner.CritChanceMod.STotal);
             }
 
-            ActiveDamageModifiers.Physical.CalculateTotalWithBase(wStats.PhysMinDamage, wStats.PhysMaxDamage, AddedDamageModifier, out double pMin, out double pMax);
-            basePhysical = Utilities.RandomDouble(pMin, pMax);
-            ActiveDamageModifiers.Fire.CalculateTotalWithBase(wStats.FireMinDamage, wStats.FireMaxDamage, AddedDamageModifier, out double fMin, out double fMax);
-            baseFire = Utilities.RandomDouble(fMin, fMax);
-            ActiveDamageModifiers.Cold.CalculateTotalWithBase(wStats.ColdMinDamage, wStats.ColdMaxDamage, AddedDamageModifier, out double cMin, out double cMax);
-            baseCold = Utilities.RandomDouble(cMin, cMax);
-            ActiveDamageModifiers.Lightning.CalculateTotalWithBase(wStats.LightningMinDamage, wStats.LightningMaxDamage, AddedDamageModifier, out double lMin, out double lMax);
-            baseLightning = Utilities.RandomDouble(lMin, lMax);
-            ActiveDamageModifiers.Chaos.CalculateTotalWithBase(wStats.ChaosMinDamage, wStats.ChaosMaxDamage, AddedDamageModifier, out double chMin, out double chMax);
-            baseChaos = Utilities.RandomDouble(chMin, chMax);
+            DamageModifiers.CalculatePreAttackDamageWithType(ActiveDamageModifiers.Physical, wStats.PhysMinDamage, wStats.PhysMaxDamage, AddedDamageModifier, out physMin, out physMax);
+            DamageModifiers.CalculatePreAttackDamageWithType(ActiveDamageModifiers.Fire, wStats.FireMinDamage, wStats.FireMaxDamage, AddedDamageModifier, out fireMin, out fireMax);
+            DamageModifiers.CalculatePreAttackDamageWithType(ActiveDamageModifiers.Cold, wStats.ColdMinDamage, wStats.ColdMaxDamage, AddedDamageModifier, out coldMin, out coldMax);
+            DamageModifiers.CalculatePreAttackDamageWithType(ActiveDamageModifiers.Lightning, wStats.LightningMinDamage, wStats.LightningMaxDamage, AddedDamageModifier, out lightningMin, out lightningMax);
+            DamageModifiers.CalculatePreAttackDamageWithType(ActiveDamageModifiers.Chaos, wStats.ChaosMinDamage, wStats.ChaosMaxDamage, AddedDamageModifier, out chaosMin, out chaosMax);
         }
         else if (this is ISpell spell) {
             if (canCrit) {
                 isCritical = RollForCritical(BaseCriticalStrikeChance * ActorOwner.CritChanceMod.STotal);
             }
 
-            ActiveDamageModifiers.Physical.CalculateTotal(out double pMin, out double pMax);
-            basePhysical = Utilities.RandomDouble(pMin, pMax);
-            ActiveDamageModifiers.Fire.CalculateTotal(out double fMin, out double fMax);
-            baseFire = Utilities.RandomDouble(fMin, fMax);
-            ActiveDamageModifiers.Cold.CalculateTotal(out double cMin, out double cMax);
-            baseCold = Utilities.RandomDouble(cMin, cMax);
-            ActiveDamageModifiers.Lightning.CalculateTotal(out double lMin, out double lMax);
-            baseLightning = Utilities.RandomDouble(lMin, lMax);
-            ActiveDamageModifiers.Chaos.CalculateTotal(out double chMin, out double chMax);
-            baseChaos = Utilities.RandomDouble(chMin, chMax);
+            DamageModifiers.CalculatePreSpellDamageWithType(ActiveDamageModifiers.Physical, AddedDamageModifier, out physMin, out physMax);
+            DamageModifiers.CalculatePreSpellDamageWithType(ActiveDamageModifiers.Fire, AddedDamageModifier, out fireMin, out fireMax);
+            DamageModifiers.CalculatePreSpellDamageWithType(ActiveDamageModifiers.Cold, AddedDamageModifier, out coldMin, out coldMax);
+            DamageModifiers.CalculatePreSpellDamageWithType(ActiveDamageModifiers.Lightning, AddedDamageModifier, out lightningMin, out lightningMax);
+            DamageModifiers.CalculatePreSpellDamageWithType(ActiveDamageModifiers.Chaos, AddedDamageModifier, out chaosMin, out chaosMax);
         }
 
-        double hitPhysical = basePhysical;
-        double hitFire = baseFire;
-        double hitCold = baseCold;
-        double hitLightning = baseLightning;
-        double hitChaos = baseChaos;
+        double basePhysical = DamageModifiers.RollPreDamage(physMin, physMax);
+        ActiveDamageModifiers.CalculateMultipliersWithType(ActiveDamageModifiers.Physical, SkillDamageTags, out double increasedPhysMultiplier, out double morePhysMultiplier);
+        double hitPhysical = basePhysical * (1 + increasedPhysMultiplier) * morePhysMultiplier;
 
+        double baseFire = DamageModifiers.RollPreDamage(fireMin, fireMax);
+        ActiveDamageModifiers.CalculateMultipliersWithType(ActiveDamageModifiers.Fire, SkillDamageTags, out double increasedFireMultiplier, out double moreFireMultiplier);
+        double hitFire = baseFire * (1 + increasedFireMultiplier) * moreFireMultiplier;
+
+        double baseCold = DamageModifiers.RollPreDamage(coldMin, coldMax);
+        ActiveDamageModifiers.CalculateMultipliersWithType(ActiveDamageModifiers.Cold, SkillDamageTags, out double increasedColdMultiplier, out double moreColdMultiplier);
+        double hitCold = baseCold * (1 + increasedColdMultiplier) * moreColdMultiplier;
+
+        double baseLightning = DamageModifiers.RollPreDamage(lightningMin, lightningMax);
+        ActiveDamageModifiers.CalculateMultipliersWithType(ActiveDamageModifiers.Lightning, SkillDamageTags, out double increasedLightningMultiplier, out double moreLightningMultiplier);
+        double hitLightning = baseLightning * (1 + increasedLightningMultiplier) * moreLightningMultiplier;
+
+        double baseChaos = DamageModifiers.RollPreDamage(chaosMin, chaosMax);
+        ActiveDamageModifiers.CalculateMultipliersWithType(ActiveDamageModifiers.Chaos, SkillDamageTags, out double increasedChaosMultiplier, out double moreChaosMultiplier);
+        double hitChaos = baseChaos * (1 + increasedChaosMultiplier) * moreChaosMultiplier;
+        
         if (isCritical) {
             damageInfoFlags |= EDamageInfoFlags.Critical;
 
@@ -214,7 +225,9 @@ public abstract class Skill {
         }
         if (baseFire > 0) {
             if (ActiveStatusEffectModifiers.Ignite.RollForProc()) {
-                statusEffects.Add(new IgniteEffect(null, ActiveStatusEffectModifiers.Ignite.CalculateDurationModifier(), baseFire));
+                ActiveDamageModifiers.CalculateMultipliersWithType(ActiveDamageModifiers.Fire, IgniteEffect.DamageTags, out double incMult, out double moreMult);
+                double damage = baseFire * (1 + incMult) * moreMult;
+                statusEffects.Add(new IgniteEffect(null, ActiveStatusEffectModifiers.Ignite.CalculateDurationModifier(), damage));
             }
         }
         if (baseCold > 0) {
@@ -230,7 +243,9 @@ public abstract class Skill {
 
         if ((basePhysical + baseChaos) > 0) {
             if (ActiveStatusEffectModifiers.Poison.RollForProc()) {
-                statusEffects.Add(new PoisonEffect(null, ActiveStatusEffectModifiers.Poison.CalculateDurationModifier(), basePhysical + baseChaos));
+                ActiveDamageModifiers.CalculateMultipliersWithType(ActiveDamageModifiers.Chaos, PoisonEffect.DamageTags, out double incMult, out double moreMult);
+                double damage = (basePhysical + baseChaos) * (1 + incMult) * moreMult;
+                statusEffects.Add(new PoisonEffect(null, ActiveStatusEffectModifiers.Poison.CalculateDurationModifier(), damage));
             }
         }
 
@@ -361,6 +376,8 @@ public abstract class Skill {
                 }
             }
 
+            CriticalStrikeMulti = ActorOwner.CritMultiplier.STotal;
+
             /*
             if (ActiveDamageModifiers.Physical.IsNonZero()) {
                 StatusEffectFlags |= ESkillStatusEffectFlags.CanBleed;
@@ -399,56 +416,6 @@ public abstract class Skill {
                 StatusEffectFlags &= ~ESkillStatusEffectFlags.CanPoison;
             }
             */
-            
-            if (AddedDamageModifier != 1) {
-                ActiveDamageModifiers.Physical.SMinAdded *= AddedDamageModifier;
-                ActiveDamageModifiers.Physical.SMaxAdded *= AddedDamageModifier;
-                ActiveDamageModifiers.Fire.SMinAdded *= AddedDamageModifier;
-                ActiveDamageModifiers.Fire.SMaxAdded *= AddedDamageModifier;
-                ActiveDamageModifiers.Cold.SMinAdded *= AddedDamageModifier;
-                ActiveDamageModifiers.Cold.SMaxAdded *= AddedDamageModifier;
-                ActiveDamageModifiers.Lightning.SMinAdded *= AddedDamageModifier;
-                ActiveDamageModifiers.Lightning.SMaxAdded *= AddedDamageModifier;
-                ActiveDamageModifiers.Chaos.SMinAdded *= AddedDamageModifier;
-                ActiveDamageModifiers.Chaos.SMaxAdded *= AddedDamageModifier;
-            }
-
-            CriticalStrikeMulti = ActorOwner.CritMultiplier.STotal;
-
-            double activeIncreasedMod;
-            double activeMoreMod;
-
-            if (DamageCategory == EDamageCategory.Melee) {
-                activeIncreasedMod = ActiveDamageModifiers.IncreasedMelee;
-                activeMoreMod = ActiveDamageModifiers.MoreMelee;
-            }
-            else if (DamageCategory == EDamageCategory.Ranged) {
-                activeIncreasedMod = ActiveDamageModifiers.IncreasedRanged;
-                activeMoreMod = ActiveDamageModifiers.MoreRanged;
-            }
-            else if (DamageCategory == EDamageCategory.Spell) {
-                activeIncreasedMod = ActiveDamageModifiers.IncreasedSpell;
-                activeMoreMod = ActiveDamageModifiers.MoreSpell;
-            }
-            else {
-                activeIncreasedMod = 0;
-                activeMoreMod = 1;
-            }
-
-            activeIncreasedMod += ActiveDamageModifiers.IncreasedAll;
-            activeMoreMod *= ActiveDamageModifiers.MoreAll;
-
-            ActiveDamageModifiers.Physical.SIncreased += activeIncreasedMod;
-            ActiveDamageModifiers.Fire.SIncreased += activeIncreasedMod;
-            ActiveDamageModifiers.Cold.SIncreased += activeIncreasedMod;
-            ActiveDamageModifiers.Lightning.SIncreased += activeIncreasedMod;
-            ActiveDamageModifiers.Chaos.SIncreased += activeIncreasedMod;
-
-            ActiveDamageModifiers.Physical.SMore *= activeMoreMod;
-            ActiveDamageModifiers.Fire.SMore *= activeMoreMod;
-            ActiveDamageModifiers.Cold.SMore *= activeMoreMod;
-            ActiveDamageModifiers.Lightning.SMore *= activeMoreMod;
-            ActiveDamageModifiers.Chaos.SMore *= activeMoreMod;
         }
     }
 

@@ -114,8 +114,8 @@ public class BasicAmuletPhysImplicit : Affix {
 		Family = EAffixFamily.None;
 		IsLocal = false;
 		IsMultiplicative = false;
-		StatNameFirst = EStatName.FlatMinPhysDamage;
-		StatNameSecond = EStatName.FlatMaxPhysDamage;
+		StatNameFirst = EStatName.FlatAttackMinPhysDamage;
+		StatNameSecond = EStatName.FlatAttackMaxPhysDamage;
 
 		SetAffixTier(0);
 	}
@@ -126,7 +126,7 @@ public class BasicAmuletPhysImplicit : Affix {
     }
 
 	public override string GetAffixTooltipText() {
-		return $"Adds {(int)ValueFirst} to {(int)ValueSecond} Physical Damage";
+		return $"Adds {(int)ValueFirst} to {(int)ValueSecond} Physical Damage to Attacks";
 	}
 }
 
@@ -545,6 +545,228 @@ public class Local2HFlatChaosDamageAffix : Affix {
 	}
 }
 
+public class FlatSpellFireDamageWandAffix : Affix {
+	private static readonly List<AffixData> flatSpellFireDamageAffixData = [
+		new(0, "Heated", 
+			2, 4, 
+			5, 7
+		),
+		new(0, "Smoking", 
+			5, 7, 
+			9, 12
+		),
+		new(0, "Scorching", 
+			8, 11, 
+			12, 15
+		)
+	];
+
+	public FlatSpellFireDamageWandAffix() {
+		AffixDataTable = flatSpellFireDamageAffixData;
+		Family = EAffixFamily.LocalFlatFireDamage;
+		IsLocal = false;
+		IsMultiplicative = false;
+		StatNameFirst = EStatName.FlatSpellMinFireDamage;
+		StatNameSecond = EStatName.FlatSpellMaxFireDamage;
+	}
+
+	public override void RollAffixValue() {
+		if (TierData != null) {
+			ValueFirst = Utilities.RandomDoubleInclusiveToInt(TierData.AffixMinFirst, TierData.AffixMaxFirst);
+			ValueSecond = Utilities.RandomDoubleInclusiveToInt(TierData.AffixMinSecond, TierData.AffixMaxSecond);
+		}
+	}
+
+    public override string GetAffixTooltipText() {
+		return $"Adds {(int)ValueFirst} to {(int)ValueSecond} Fire Damage to Spells";
+	}
+}
+
+public class FlatSpellColdDamageWandAffix : Affix {
+	private static readonly List<AffixData> flatSpellColdDamageAffixData = [
+		new(0, "Chilled", 
+			2, 4, 
+			5, 7
+		),
+		new(0, "Frigid", 
+			5, 7, 
+			9, 12
+		),
+		new(0, "Frozen", 
+			8, 11, 
+			12, 15
+		)
+	];
+
+	public FlatSpellColdDamageWandAffix() {
+		AffixDataTable = flatSpellColdDamageAffixData;
+		Family = EAffixFamily.LocalFlatColdDamage;
+		IsLocal = false;
+		IsMultiplicative = false;
+		StatNameFirst = EStatName.FlatSpellMinColdDamage;
+		StatNameSecond = EStatName.FlatSpellMaxColdDamage;
+	}
+
+	public override void RollAffixValue() {
+		if (TierData != null) {
+			ValueFirst = Utilities.RandomDoubleInclusiveToInt(TierData.AffixMinFirst, TierData.AffixMaxFirst);
+			ValueSecond = Utilities.RandomDoubleInclusiveToInt(TierData.AffixMinSecond, TierData.AffixMaxSecond);
+		}
+	}
+
+    public override string GetAffixTooltipText() {
+		return $"Adds {(int)ValueFirst} to {(int)ValueSecond} Cold Damage to Spells";
+	}
+}
+
+public class FlatSpellLightningDamageWandAffix : Affix {
+	private static readonly List<AffixData> flatSpellLightningDamageAffixData = [
+		new(0, "Humming", 
+			2, 4, 
+			5, 7
+		),
+		new(0, "Crackling", 
+			5, 7, 
+			9, 12
+		),
+		new(0, "Sparking", 
+			8, 11, 
+			12, 15
+		)
+	];
+
+	public FlatSpellLightningDamageWandAffix() {
+		AffixDataTable = flatSpellLightningDamageAffixData;
+		Family = EAffixFamily.LocalFlatLightningDamage;
+		IsLocal = false;
+		IsMultiplicative = false;
+		StatNameFirst = EStatName.FlatSpellMinLightningDamage;
+		StatNameSecond = EStatName.FlatSpellMaxLightningDamage;
+	}
+
+	public override void RollAffixValue() {
+		if (TierData != null) {
+			ValueFirst = Utilities.RandomDoubleInclusiveToInt(TierData.AffixMinFirst, TierData.AffixMaxFirst);
+			ValueSecond = Utilities.RandomDoubleInclusiveToInt(TierData.AffixMinSecond, TierData.AffixMaxSecond);
+		}
+	}
+
+    public override string GetAffixTooltipText() {
+		return $"Adds {(int)ValueFirst} to {(int)ValueSecond} Lightning Damage to Spells";
+	}
+}
+
+public class FlatSpellFireDamageStaffAffix : Affix {
+	private static readonly List<AffixData> flatSpellFireDamageAffixData = [
+		new(0, "Heated", 
+			4, 8, 
+			10, 14
+		),
+		new(0, "Smoking", 
+			10, 14, 
+			18, 24
+		),
+		new(0, "Scorching", 
+			16, 22, 
+			24, 30
+		)
+	];
+
+	public FlatSpellFireDamageStaffAffix() {
+		AffixDataTable = flatSpellFireDamageAffixData;
+		Family = EAffixFamily.LocalFlatFireDamage;
+		IsLocal = false;
+		IsMultiplicative = false;
+		StatNameFirst = EStatName.FlatSpellMinFireDamage;
+		StatNameSecond = EStatName.FlatSpellMaxFireDamage;
+	}
+
+	public override void RollAffixValue() {
+		if (TierData != null) {
+			ValueFirst = Utilities.RandomDoubleInclusiveToInt(TierData.AffixMinFirst, TierData.AffixMaxFirst);
+			ValueSecond = Utilities.RandomDoubleInclusiveToInt(TierData.AffixMinSecond, TierData.AffixMaxSecond);
+		}
+	}
+
+    public override string GetAffixTooltipText() {
+		return $"Adds {(int)ValueFirst} to {(int)ValueSecond} Fire Damage to Spells";
+	}
+}
+
+public class FlatSpellColdDamageStaffAffix : Affix {
+	private static readonly List<AffixData> flatSpellColdDamageAffixData = [
+		new(0, "Chilled", 
+			4, 8, 
+			10, 14
+		),
+		new(0, "Frigid", 
+			10, 14, 
+			18, 24
+		),
+		new(0, "Frozen", 
+			16, 22, 
+			24, 30
+		)
+	];
+
+	public FlatSpellColdDamageStaffAffix() {
+		AffixDataTable = flatSpellColdDamageAffixData;
+		Family = EAffixFamily.LocalFlatColdDamage;
+		IsLocal = false;
+		IsMultiplicative = false;
+		StatNameFirst = EStatName.FlatSpellMinColdDamage;
+		StatNameSecond = EStatName.FlatSpellMaxColdDamage;
+	}
+
+	public override void RollAffixValue() {
+		if (TierData != null) {
+			ValueFirst = Utilities.RandomDoubleInclusiveToInt(TierData.AffixMinFirst, TierData.AffixMaxFirst);
+			ValueSecond = Utilities.RandomDoubleInclusiveToInt(TierData.AffixMinSecond, TierData.AffixMaxSecond);
+		}
+	}
+
+    public override string GetAffixTooltipText() {
+		return $"Adds {(int)ValueFirst} to {(int)ValueSecond} Cold Damage to Spells";
+	}
+}
+
+public class FlatSpellLightningDamageStaffAffix : Affix {
+	private static readonly List<AffixData> flatSpellLightningDamageAffixData = [
+		new(0, "Humming", 
+			4, 8, 
+			10, 14
+		),
+		new(0, "Crackling", 
+			10, 14, 
+			18, 24
+		),
+		new(0, "Sparking", 
+			16, 22, 
+			24, 30
+		)
+	];
+
+	public FlatSpellLightningDamageStaffAffix() {
+		AffixDataTable = flatSpellLightningDamageAffixData;
+		Family = EAffixFamily.LocalFlatLightningDamage;
+		IsLocal = false;
+		IsMultiplicative = false;
+		StatNameFirst = EStatName.FlatSpellMinLightningDamage;
+		StatNameSecond = EStatName.FlatSpellMaxLightningDamage;
+	}
+
+	public override void RollAffixValue() {
+		if (TierData != null) {
+			ValueFirst = Utilities.RandomDoubleInclusiveToInt(TierData.AffixMinFirst, TierData.AffixMaxFirst);
+			ValueSecond = Utilities.RandomDoubleInclusiveToInt(TierData.AffixMinSecond, TierData.AffixMaxSecond);
+		}
+	}
+
+    public override string GetAffixTooltipText() {
+		return $"Adds {(int)ValueFirst} to {(int)ValueSecond} Lightning Damage to Spells";
+	}
+}
+
 public class FlatLifeAffix : Affix {
 	private static readonly List<AffixData> flatLifeAffixData = [
 		new(0, "Healthy", 
@@ -854,28 +1076,28 @@ public class IncreasedMeleeDamageAffix : Affix {
 	}
 }
 
-public class IncreasedRangedDamageAffix : Affix {
-	private static readonly List<AffixData> increasedRangedDamageAffixData = [
-		new(0, "Ranged1", 
+public class IncreasedProjectileDamageAffix : Affix {
+	private static readonly List<AffixData> increasedProjectileDamageAffixData = [
+		new(0, "Projectile1", 
 			0.10, 0.16, 
 			0, 0
 		),
-		new(0, "Ranged2", 
+		new(0, "Projectile2", 
 			0.17, 0.23, 
 			0, 0
 		),
-		new(0, "Ranged3", 
+		new(0, "Projectile3", 
 			0.24, 0.30, 
 			0, 0
 		)
 	];
 
-	public IncreasedRangedDamageAffix() {
-		AffixDataTable = increasedRangedDamageAffixData;
-		Family = EAffixFamily.IncreasedRangedDamage;
+	public IncreasedProjectileDamageAffix() {
+		AffixDataTable = increasedProjectileDamageAffixData;
+		Family = EAffixFamily.IncreasedProjectileDamage;
 		IsLocal = false;
 		IsMultiplicative = false;
-		StatNameFirst = EStatName.IncreasedRangedDamage;
+		StatNameFirst = EStatName.IncreasedProjectileDamage;
 	}
 
 	public override void RollAffixValue() {
@@ -885,11 +1107,11 @@ public class IncreasedRangedDamageAffix : Affix {
 	}
 
 	public override string GetAffixTooltipText() {
-		return $"{ValueFirst:P0} increased Ranged Damage";
+		return $"{ValueFirst:P0} increased Projectile Damage";
 	}
 }
 
-public class IncreasedSpellDamageAffix : Affix {
+public class IncreasedSpellDamageWandAffix : Affix {
 	private static readonly List<AffixData> increasedSpellDamageAffixData = [
 		new(0, "Spell1", 
 			0.10, 0.16, 
@@ -905,7 +1127,7 @@ public class IncreasedSpellDamageAffix : Affix {
 		)
 	];
 
-	public IncreasedSpellDamageAffix() {
+	public IncreasedSpellDamageWandAffix() {
 		AffixDataTable = increasedSpellDamageAffixData;
 		Family = EAffixFamily.IncreasedSpellDamage;
 		IsLocal = false;
@@ -921,6 +1143,286 @@ public class IncreasedSpellDamageAffix : Affix {
 
 	public override string GetAffixTooltipText() {
 		return $"{ValueFirst:P0} increased Spell Damage";
+	}
+}
+
+public class IncreasedSpellDamageStaffAffix : Affix {
+	private static readonly List<AffixData> increasedSpellDamageAffixData = [
+		new(0, "Spell1", 
+			0.20, 0.32, 
+			0, 0
+		),
+		new(0, "Spell2", 
+			0.34, 0.46, 
+			0, 0
+		),
+		new(0, "Spell3", 
+			0.48, 0.60, 
+			0, 0
+		)
+	];
+
+	public IncreasedSpellDamageStaffAffix() {
+		AffixDataTable = increasedSpellDamageAffixData;
+		Family = EAffixFamily.IncreasedSpellDamage;
+		IsLocal = false;
+		IsMultiplicative = false;
+		StatNameFirst = EStatName.IncreasedSpellDamage;
+	}
+
+	public override void RollAffixValue() {
+		if (TierData != null) {
+			ValueFirst = Math.Round(Utilities.RandomDouble(TierData.AffixMinFirst, TierData.AffixMaxFirst), 2);
+		}
+	}
+
+	public override string GetAffixTooltipText() {
+		return $"{ValueFirst:P0} increased Spell Damage";
+	}
+}
+
+public class IncreasedFireDamageWandAffix : Affix {
+	private static readonly List<AffixData> increasedFireDamageAffixData = [
+		new(0, "Fire1", 
+			0.10, 0.16, 
+			0, 0
+		),
+		new(0, "Fire2", 
+			0.17, 0.23, 
+			0, 0
+		),
+		new(0, "Fire3", 
+			0.24, 0.30, 
+			0, 0
+		)
+	];
+
+	public IncreasedFireDamageWandAffix() {
+		AffixDataTable = increasedFireDamageAffixData;
+		Family = EAffixFamily.IncreasedFireDamage;
+		IsLocal = false;
+		IsMultiplicative = false;
+		StatNameFirst = EStatName.IncreasedFireDamage;
+	}
+
+	public override void RollAffixValue() {
+		if (TierData != null) {
+			ValueFirst = Math.Round(Utilities.RandomDouble(TierData.AffixMinFirst, TierData.AffixMaxFirst), 2);
+		}
+	}
+
+	public override string GetAffixTooltipText() {
+		return $"{ValueFirst:P0} increased Fire Damage";
+	}
+}
+
+public class IncreasedColdDamageWandAffix : Affix {
+	private static readonly List<AffixData> increasedColdDamageAffixData = [
+		new(0, "Cold1", 
+			0.10, 0.16, 
+			0, 0
+		),
+		new(0, "Cold2", 
+			0.17, 0.23, 
+			0, 0
+		),
+		new(0, "Cold3", 
+			0.24, 0.30, 
+			0, 0
+		)
+	];
+
+	public IncreasedColdDamageWandAffix() {
+		AffixDataTable = increasedColdDamageAffixData;
+		Family = EAffixFamily.IncreasedColdDamage;
+		IsLocal = false;
+		IsMultiplicative = false;
+		StatNameFirst = EStatName.IncreasedColdDamage;
+	}
+
+	public override void RollAffixValue() {
+		if (TierData != null) {
+			ValueFirst = Math.Round(Utilities.RandomDouble(TierData.AffixMinFirst, TierData.AffixMaxFirst), 2);
+		}
+	}
+
+	public override string GetAffixTooltipText() {
+		return $"{ValueFirst:P0} increased Cold Damage";
+	}
+}
+
+public class IncreasedLightningDamageWandAffix : Affix {
+	private static readonly List<AffixData> increasedLightningDamageAffixData = [
+		new(0, "Lightning1", 
+			0.10, 0.16, 
+			0, 0
+		),
+		new(0, "Lightning2", 
+			0.17, 0.23, 
+			0, 0
+		),
+		new(0, "Lightning3", 
+			0.24, 0.30, 
+			0, 0
+		)
+	];
+
+	public IncreasedLightningDamageWandAffix() {
+		AffixDataTable = increasedLightningDamageAffixData;
+		Family = EAffixFamily.IncreasedLightningDamage;
+		IsLocal = false;
+		IsMultiplicative = false;
+		StatNameFirst = EStatName.IncreasedLightningDamage;
+	}
+
+	public override void RollAffixValue() {
+		if (TierData != null) {
+			ValueFirst = Math.Round(Utilities.RandomDouble(TierData.AffixMinFirst, TierData.AffixMaxFirst), 2);
+		}
+	}
+
+	public override string GetAffixTooltipText() {
+		return $"{ValueFirst:P0} increased Lightning Damage";
+	}
+}
+
+public class IncreasedFireDamageStaffAffix : Affix {
+	private static readonly List<AffixData> increasedFireDamageAffixData = [
+		new(0, "Fire1", 
+			0.20, 0.32, 
+			0, 0
+		),
+		new(0, "Fire2", 
+			0.34, 0.46, 
+			0, 0
+		),
+		new(0, "Fire3", 
+			0.48, 0.60, 
+			0, 0
+		)
+	];
+
+	public IncreasedFireDamageStaffAffix() {
+		AffixDataTable = increasedFireDamageAffixData;
+		Family = EAffixFamily.IncreasedFireDamage;
+		IsLocal = false;
+		IsMultiplicative = false;
+		StatNameFirst = EStatName.IncreasedFireDamage;
+	}
+
+	public override void RollAffixValue() {
+		if (TierData != null) {
+			ValueFirst = Math.Round(Utilities.RandomDouble(TierData.AffixMinFirst, TierData.AffixMaxFirst), 2);
+		}
+	}
+
+	public override string GetAffixTooltipText() {
+		return $"{ValueFirst:P0} increased Fire Damage";
+	}
+}
+
+public class IncreasedColdDamageStaffAffix : Affix {
+	private static readonly List<AffixData> increasedColdDamageAffixData = [
+		new(0, "Cold1", 
+			0.20, 0.32, 
+			0, 0
+		),
+		new(0, "Cold2", 
+			0.34, 0.46, 
+			0, 0
+		),
+		new(0, "Cold3", 
+			0.48, 0.60, 
+			0, 0
+		)
+	];
+
+	public IncreasedColdDamageStaffAffix() {
+		AffixDataTable = increasedColdDamageAffixData;
+		Family = EAffixFamily.IncreasedColdDamage;
+		IsLocal = false;
+		IsMultiplicative = false;
+		StatNameFirst = EStatName.IncreasedColdDamage;
+	}
+
+	public override void RollAffixValue() {
+		if (TierData != null) {
+			ValueFirst = Math.Round(Utilities.RandomDouble(TierData.AffixMinFirst, TierData.AffixMaxFirst), 2);
+		}
+	}
+
+	public override string GetAffixTooltipText() {
+		return $"{ValueFirst:P0} increased Cold Damage";
+	}
+}
+
+public class IncreasedLightningDamageStaffAffix : Affix {
+	private static readonly List<AffixData> increasedLightningDamageAffixData = [
+		new(0, "Lightning1", 
+			0.20, 0.32, 
+			0, 0
+		),
+		new(0, "Lightning2", 
+			0.34, 0.46, 
+			0, 0
+		),
+		new(0, "Lightning3", 
+			0.48, 0.60, 
+			0, 0
+		)
+	];
+
+	public IncreasedLightningDamageStaffAffix() {
+		AffixDataTable = increasedLightningDamageAffixData;
+		Family = EAffixFamily.IncreasedLightningDamage;
+		IsLocal = false;
+		IsMultiplicative = false;
+		StatNameFirst = EStatName.IncreasedLightningDamage;
+	}
+
+	public override void RollAffixValue() {
+		if (TierData != null) {
+			ValueFirst = Math.Round(Utilities.RandomDouble(TierData.AffixMinFirst, TierData.AffixMaxFirst), 2);
+		}
+	}
+
+	public override string GetAffixTooltipText() {
+		return $"{ValueFirst:P0} increased Lightning Damage";
+	}
+}
+
+public class IncreasedDamageOverTimeAccessoryAffix : Affix {
+	private static readonly List<AffixData> increasedDoTAffixData = [
+		new(0, "DoT1", 
+			0.14, 0.22, 
+			0, 0
+		),
+		new(0, "DoT2", 
+			0.23, 0.30, 
+			0, 0
+		),
+		new(0, "DoT3", 
+			0.31, 0.43, 
+			0, 0
+		)
+	];
+
+	public IncreasedDamageOverTimeAccessoryAffix() {
+		AffixDataTable = increasedDoTAffixData;
+		Family = EAffixFamily.IncreasedDamageOverTime;
+		IsLocal = false;
+		IsMultiplicative = false;
+		StatNameFirst = EStatName.IncreasedDamageOverTime;
+	}
+
+	public override void RollAffixValue() {
+		if (TierData != null) {
+			ValueFirst = Math.Round(Utilities.RandomDouble(TierData.AffixMinFirst, TierData.AffixMaxFirst), 2);
+		}
+	}
+
+	public override string GetAffixTooltipText() {
+		return $"{ValueFirst:P0} increased Damage Over Time";
 	}
 }
 

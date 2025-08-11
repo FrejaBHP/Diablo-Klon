@@ -50,6 +50,7 @@ public class SCobraShot : Skill, IAttack, IProjectileSkill {
         SkillName = ESkillName.CobraShot;
         Type = ESkillType.Attack;
         Tags = ESkillTags.Attack | ESkillTags.Projectile | ESkillTags.Ranged | ESkillTags.Chaos;
+        SkillDamageTags = ESkillDamageTags.Attack | ESkillDamageTags.Projectile;
         DamageCategory = EDamageCategory.Ranged;
         Texture = UILib.TextureSkillCobraShot;
 

@@ -343,11 +343,11 @@ public partial class SuppMultipleProjectiles : SupportGem {
     }
 
     protected override void UpdateGemEffectsDescription() {
-        DescEffects = $"Supported Skill fires {addedProjectiles} additional Projectiles\nSupported Skill deals {1 - damagePenalty:P0} less Damage";
+        DescEffects = $"Supported Skill fires {addedProjectiles} additional Projectiles\nSupported Skill deals {1 - damagePenalty:P0} less Projectile Damage";
     }
 
     public override void ApplyToDamageModifiers(DamageModifiers dmgMods) {
-        dmgMods.MoreAll *= damagePenalty;
+        dmgMods.MoreProjectile *= damagePenalty;
     }
 
     public override void ModifyProjectileSkill(IProjectileSkill pSkill) {

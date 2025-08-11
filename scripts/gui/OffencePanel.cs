@@ -2,20 +2,28 @@ using Godot;
 using System;
 
 public partial class OffencePanel : StatPanel {
-    public StatTableEntry AddedPhysDamage;
+    public StatTableEntry AddedAttackPhysDamage;
+    public StatTableEntry AddedSpellPhysDamage;
     public StatTableEntry IncreasedPhysDamage;
-    public StatTableEntry AddedFireDamage;
+    public StatTableEntry AddedAttackFireDamage;
+    public StatTableEntry AddedSpellFireDamage;
     public StatTableEntry IncreasedFireDamage;
-    public StatTableEntry AddedColdDamage;
+    public StatTableEntry AddedAttackColdDamage;
+    public StatTableEntry AddedSpellColdDamage;
     public StatTableEntry IncreasedColdDamage;
-    public StatTableEntry AddedLightningDamage;
+    public StatTableEntry AddedAttackLightningDamage;
+    public StatTableEntry AddedSpellLightningDamage;
     public StatTableEntry IncreasedLightningDamage;
-    public StatTableEntry AddedChaosDamage;
+    public StatTableEntry AddedAttackChaosDamage;
+    public StatTableEntry AddedSpellChaosDamage;
     public StatTableEntry IncreasedChaosDamage;
 
-    public StatTableEntry IncreasedMeleeDamage;
-    public StatTableEntry IncreasedRangedDamage;
+    public StatTableEntry IncreasedAttackDamage;
     public StatTableEntry IncreasedSpellDamage;
+    public StatTableEntry IncreasedMeleeDamage;
+    public StatTableEntry IncreasedProjectileDamage;
+    public StatTableEntry IncreasedAreaDamage;
+    public StatTableEntry IncreasedDamageOverTime;
 
     public StatTableEntry IncreasedAttackSpeed;
     public StatTableEntry IncreasedCastSpeed;
@@ -47,20 +55,28 @@ public partial class OffencePanel : StatPanel {
     }
 
     private void BuildTable() {
-        AddEntry(ref AddedPhysDamage, "Added Physical Damage");
+        AddEntry(ref AddedAttackPhysDamage, "Added Physical Damage to Attacks");
+        AddEntry(ref AddedSpellPhysDamage, "Added Physical Damage to Spells");
         AddEntry(ref IncreasedPhysDamage, "Physical Damage Modifier");
-        AddEntry(ref AddedFireDamage, "Added Fire Damage");
+        AddEntry(ref AddedAttackFireDamage, "Added Fire Damage to Attacks");
+        AddEntry(ref AddedSpellFireDamage, "Added Fire Damage to Spells");
         AddEntry(ref IncreasedFireDamage, "Fire Damage Modifier");
-        AddEntry(ref AddedColdDamage, "Added Cold Damage");
+        AddEntry(ref AddedAttackColdDamage, "Added Cold Damage to Attacks");
+        AddEntry(ref AddedSpellColdDamage, "Added Cold Damage to Spells");
         AddEntry(ref IncreasedColdDamage, "Cold Damage Modifier");
-        AddEntry(ref AddedLightningDamage, "Added Lightning Damage");
+        AddEntry(ref AddedAttackLightningDamage, "Added Lightning Damage to Attacks");
+        AddEntry(ref AddedSpellLightningDamage, "Added Lightning Damage to Spells");
         AddEntry(ref IncreasedLightningDamage, "Lightning Damage Modifier");
-        AddEntry(ref AddedChaosDamage, "Added Chaos Damage");
+        AddEntry(ref AddedAttackChaosDamage, "Added Chaos Damage to Attacks");
+        AddEntry(ref AddedSpellChaosDamage, "Added Chaos Damage to Spells");
         AddEntry(ref IncreasedChaosDamage, "Chaos Damage Modifier");
 
-        AddEntry(ref IncreasedMeleeDamage, "Melee Damage Modifier");
-        AddEntry(ref IncreasedRangedDamage, "Ranged Damage Modifier");
+        AddEntry(ref IncreasedAttackDamage, "Attack Damage Modifier");
         AddEntry(ref IncreasedSpellDamage, "Spell Damage Modifier");
+        AddEntry(ref IncreasedMeleeDamage, "Melee Damage Modifier");
+        AddEntry(ref IncreasedProjectileDamage, "Projectile Damage Modifier");
+        AddEntry(ref IncreasedAreaDamage, "Area Damage Modifier");
+        AddEntry(ref IncreasedDamageOverTime, "Damage Over Time Modifier");
 
         AddEntry(ref IncreasedAttackSpeed, "Attack Speed Modifier");
         AddEntry(ref IncreasedCastSpeed, "Cast Speed Modifier");

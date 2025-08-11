@@ -40,6 +40,7 @@ public class SFireNova : Skill, ISpell, IAreaSkill {
         SkillName = ESkillName.FireNova;
         Type = ESkillType.Spell;
         Tags = ESkillTags.Spell | ESkillTags.Area | ESkillTags.Fire;
+        SkillDamageTags = ESkillDamageTags.Spell | ESkillDamageTags.Area;
         DamageCategory = EDamageCategory.Spell;
         Texture = UILib.TextureSkillFireNova;
 

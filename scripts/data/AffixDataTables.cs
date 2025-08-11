@@ -74,6 +74,32 @@ public static class AffixDataTables {
 			EItemBaseSpecifierFlags.NoFlags
 		),
 
+		// ===== FLAT SPELL DAMAGE =====
+		new(typeof(FlatSpellFireDamageWandAffix), EAffixFamily.FlatFireDamage,
+			EAffixItemFlags.Wand,
+			EItemBaseSpecifierFlags.NoFlags
+		),
+		new(typeof(FlatSpellColdDamageWandAffix), EAffixFamily.FlatColdDamage,
+			EAffixItemFlags.Wand,
+			EItemBaseSpecifierFlags.NoFlags
+		),
+		new(typeof(FlatSpellLightningDamageWandAffix), EAffixFamily.FlatLightningDamage,
+			EAffixItemFlags.Wand,
+			EItemBaseSpecifierFlags.NoFlags
+		),
+		new(typeof(FlatSpellFireDamageStaffAffix), EAffixFamily.FlatFireDamage,
+			EAffixItemFlags.Staff,
+			EItemBaseSpecifierFlags.NoFlags
+		),
+		new(typeof(FlatSpellColdDamageStaffAffix), EAffixFamily.FlatColdDamage,
+			EAffixItemFlags.Staff,
+			EItemBaseSpecifierFlags.NoFlags
+		),
+		new(typeof(FlatSpellLightningDamageStaffAffix), EAffixFamily.FlatLightningDamage,
+			EAffixItemFlags.Staff,
+			EItemBaseSpecifierFlags.NoFlags
+		),
+
 		// ===== LOCAL DEFENCES =====
 		new(typeof(LocalFlatArmourAffix), EAffixFamily.LocalFlatArmour,
 			EAffixItemFlags.Armour,
@@ -114,12 +140,44 @@ public static class AffixDataTables {
 			EAffixItemFlags.Shield,
 			EItemBaseSpecifierFlags.NoFlags
 		),
-		new(typeof(IncreasedRangedDamageAffix), EAffixFamily.IncreasedRangedDamage,
+		new(typeof(IncreasedProjectileDamageAffix), EAffixFamily.IncreasedProjectileDamage,
 			EAffixItemFlags.Quiver,
 			EItemBaseSpecifierFlags.NoFlags
 		),
-		new(typeof(IncreasedSpellDamageAffix), EAffixFamily.IncreasedSpellDamage,
-			EAffixItemFlags.Staff | EAffixItemFlags.Wand, // In the future, should roll on catalysts or other spell-related offhand items
+		new(typeof(IncreasedSpellDamageWandAffix), EAffixFamily.IncreasedSpellDamage,
+			EAffixItemFlags.Wand, // In the future, should roll on catalysts or other spell-related offhand items
+			EItemBaseSpecifierFlags.NoFlags
+		),
+		new(typeof(IncreasedSpellDamageStaffAffix), EAffixFamily.IncreasedSpellDamage,
+			EAffixItemFlags.Staff, // In the future, should roll on catalysts or other spell-related offhand items
+			EItemBaseSpecifierFlags.NoFlags
+		),
+		new(typeof(IncreasedFireDamageWandAffix), EAffixFamily.IncreasedFireDamage,
+			EAffixItemFlags.Wand,
+			EItemBaseSpecifierFlags.NoFlags
+		),
+		new(typeof(IncreasedFireDamageStaffAffix), EAffixFamily.IncreasedFireDamage,
+			EAffixItemFlags.Staff,
+			EItemBaseSpecifierFlags.NoFlags
+		),
+		new(typeof(IncreasedColdDamageWandAffix), EAffixFamily.IncreasedColdDamage,
+			EAffixItemFlags.Wand,
+			EItemBaseSpecifierFlags.NoFlags
+		),
+		new(typeof(IncreasedColdDamageStaffAffix), EAffixFamily.IncreasedColdDamage,
+			EAffixItemFlags.Staff,
+			EItemBaseSpecifierFlags.NoFlags
+		),
+		new(typeof(IncreasedLightningDamageWandAffix), EAffixFamily.IncreasedLightningDamage,
+			EAffixItemFlags.Wand,
+			EItemBaseSpecifierFlags.NoFlags
+		),
+		new(typeof(IncreasedLightningDamageStaffAffix), EAffixFamily.IncreasedLightningDamage,
+			EAffixItemFlags.Staff,
+			EItemBaseSpecifierFlags.NoFlags
+		),
+		new(typeof(IncreasedDamageOverTimeAccessoryAffix), EAffixFamily.IncreasedDamageOverTime,
+			EAffixItemFlags.Ring | EAffixItemFlags.Amulet,
 			EItemBaseSpecifierFlags.NoFlags
 		),
 	];

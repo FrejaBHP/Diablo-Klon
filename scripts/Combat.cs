@@ -1,22 +1,170 @@
 using System.Collections.Generic;
 using System.Text;
+using Godot;
 
 public class DamageModifiers() {
-    public DamageStat Physical { get; protected set; } = new();
-    public DamageStat Fire { get; protected set; } = new();
-    public DamageStat Cold { get; protected set; } = new();
-    public DamageStat Lightning { get; protected set; } = new();
-    public DamageStat Chaos { get; protected set; } = new();
+    public DamageTypeStat Physical { get; protected set; } = new();
+    public DamageTypeStat Fire { get; protected set; } = new();
+    public DamageTypeStat Cold { get; protected set; } = new();
+    public DamageTypeStat Lightning { get; protected set; } = new();
+    public DamageTypeStat Chaos { get; protected set; } = new();
 
-    public double IncreasedMelee = 0;
-    public double IncreasedRanged = 0;
+    public double IncreasedAttack = 0;
     public double IncreasedSpell = 0;
+    public double IncreasedMelee = 0;
+    public double IncreasedProjectile = 0;
+    public double IncreasedArea = 0;
+    public double IncreasedDoT = 0;
     public double IncreasedAll = 0;
 
-    public double MoreMelee = 1;
-    public double MoreRanged = 1;
+    public double MoreAttack = 1;
     public double MoreSpell = 1;
+    public double MoreMelee = 1;
+    public double MoreProjectile = 1;
+    public double MoreArea = 1;
+    public double MoreDoT = 1;
     public double MoreAll = 1;
+
+    protected DamageTypeStat GetDamageTypeStat(EDamageType damageType) {
+        DamageTypeStat damageStat;
+
+        switch (damageType) {
+            case EDamageType.Physical:
+                damageStat = Physical;
+                break;
+
+            case EDamageType.Fire:
+                damageStat = Fire;
+                break;
+            
+            case EDamageType.Cold:
+                damageStat = Cold;
+                break;
+            
+            case EDamageType.Lightning:
+                damageStat = Lightning;
+                break;
+            
+            case EDamageType.Chaos:
+                damageStat = Chaos;
+                break;
+
+            // Failsafe
+            default:
+                damageStat = Physical;
+                break;
+        }
+
+        return damageStat;
+    }
+
+    public static void CalculatePreAttackDamageWithType(DamageTypeStat damageStat, double baseMin, double baseMax, double addedMultiplier, out double minDamage, out double maxDamage) {
+        minDamage = (baseMin + damageStat.SMinAdded + damageStat.SAttackMinAdded) * addedMultiplier;
+        maxDamage = (baseMax + damageStat.SMaxAdded + damageStat.SAttackMaxAdded) * addedMultiplier;
+    }
+
+    public static void CalculatePreSpellDamageWithType(DamageTypeStat damageStat, double addedMultiplier, out double minDamage, out double maxDamage) {
+        minDamage = damageStat.SMinBase + ((damageStat.SMinAdded + damageStat.SSpellMinAdded) * addedMultiplier);
+        maxDamage = damageStat.SMaxBase + ((damageStat.SMaxAdded + damageStat.SSpellMaxAdded) * addedMultiplier);
+    }
+
+    public static double RollPreDamage(double preMin, double preMax) {
+        return Utilities.RandomDouble(preMin, preMax);
+    }
+
+    public void CalculateMultipliers(ESkillDamageTags damageTags, out double increasedMultiplier, out double moreMultiplier) {
+        increasedMultiplier = 0;
+        moreMultiplier = 1;
+
+        if (damageTags.HasFlag(ESkillDamageTags.Attack)) {
+            increasedMultiplier += IncreasedAttack;
+            moreMultiplier *= MoreAttack;
+        }
+        if (damageTags.HasFlag(ESkillDamageTags.Spell)) {
+            increasedMultiplier += IncreasedSpell;
+            moreMultiplier *= MoreSpell;
+        }
+        if (damageTags.HasFlag(ESkillDamageTags.Melee)) {
+            increasedMultiplier += IncreasedMelee;
+            moreMultiplier *= MoreMelee;
+        }
+        if (damageTags.HasFlag(ESkillDamageTags.Projectile)) {
+            increasedMultiplier += IncreasedProjectile;
+            moreMultiplier *= MoreProjectile;
+        }
+        if (damageTags.HasFlag(ESkillDamageTags.Area)) {
+            increasedMultiplier += IncreasedArea;
+            moreMultiplier *= MoreArea;
+        }
+        if (damageTags.HasFlag(ESkillDamageTags.DoT)) {
+            increasedMultiplier += IncreasedDoT;
+            moreMultiplier *= MoreDoT;
+        }
+
+        increasedMultiplier += IncreasedAll;
+        moreMultiplier *= MoreAll;
+    }
+
+    public void CalculateMultipliersWithType(DamageTypeStat damageStat, ESkillDamageTags damageTags, out double increasedMultiplier, out double moreMultiplier) {
+        increasedMultiplier = damageStat.SIncreased;
+        moreMultiplier = damageStat.SMore;
+
+        if (damageTags.HasFlag(ESkillDamageTags.Attack)) {
+            increasedMultiplier += IncreasedAttack;
+            moreMultiplier *= MoreAttack;
+        }
+        if (damageTags.HasFlag(ESkillDamageTags.Spell)) {
+            increasedMultiplier += IncreasedSpell;
+            moreMultiplier *= MoreSpell;
+        }
+        if (damageTags.HasFlag(ESkillDamageTags.Melee)) {
+            increasedMultiplier += IncreasedMelee;
+            moreMultiplier *= MoreMelee;
+        }
+        if (damageTags.HasFlag(ESkillDamageTags.Projectile)) {
+            increasedMultiplier += IncreasedProjectile;
+            moreMultiplier *= MoreProjectile;
+        }
+        if (damageTags.HasFlag(ESkillDamageTags.Area)) {
+            increasedMultiplier += IncreasedArea;
+            moreMultiplier *= MoreArea;
+        }
+        if (damageTags.HasFlag(ESkillDamageTags.DoT)) {
+            increasedMultiplier += IncreasedDoT;
+            moreMultiplier *= MoreDoT;
+        }
+
+        increasedMultiplier += IncreasedAll;
+        moreMultiplier *= MoreAll;
+    }
+
+    public double GetTotalDamageWithType(DamageTypeStat damageStat, ESkillDamageTags damageTags, double preDamage) {
+        CalculateMultipliersWithType(damageStat, damageTags, out double increasedMultiplier, out double moreMultiplier);
+
+        double totalDamage = preDamage * (1 + increasedMultiplier) * moreMultiplier;
+
+        if (totalDamage < 0) {
+            totalDamage = 0;
+        }
+
+        return totalDamage;
+    }
+
+    public void CalculateTotalAttackDamageWithType(DamageTypeStat damageStat, ESkillDamageTags damageTags, double baseMin, double baseMax, double addedMultiplier, out double totalMin, out double totalMax) {
+        CalculatePreAttackDamageWithType(damageStat, baseMin, baseMax, addedMultiplier, out double preMin, out double preMax);
+        CalculateMultipliersWithType(damageStat, damageTags, out double increasedMultiplier, out double moreMultiplier);
+
+        totalMin = preMin * (1 + increasedMultiplier) * moreMultiplier;
+        totalMax = preMax * (1 + increasedMultiplier) * moreMultiplier;
+    }
+
+    public void CalculateTotalSpellDamageWithType(DamageTypeStat damageStat, ESkillDamageTags damageTags, double addedMultiplier, out double totalMin, out double totalMax) {
+        CalculatePreSpellDamageWithType(damageStat, addedMultiplier, out double preMin, out double preMax);
+        CalculateMultipliersWithType(damageStat, damageTags, out double increasedMultiplier, out double moreMultiplier);
+
+        totalMin = preMin * (1 + increasedMultiplier) * moreMultiplier;
+        totalMax = preMax * (1 + increasedMultiplier) * moreMultiplier;
+    }
 
     public DamageModifiers ShallowCopy() {
         DamageModifiers copy = (DamageModifiers)MemberwiseClone();
@@ -38,14 +186,20 @@ public class DamageModifiers() {
         c.Lightning = a.Lightning + b.Lightning;
         c.Chaos = a.Chaos + b.Chaos;
 
-        c.IncreasedMelee = a.IncreasedMelee + b.IncreasedMelee;
-        c.IncreasedRanged = a.IncreasedRanged + b.IncreasedRanged;
+        c.IncreasedAttack = a.IncreasedAttack + b.IncreasedAttack;
         c.IncreasedSpell = a.IncreasedSpell + b.IncreasedSpell;
+        c.IncreasedMelee = a.IncreasedMelee + b.IncreasedMelee;
+        c.IncreasedProjectile = a.IncreasedProjectile + b.IncreasedProjectile;
+        c.IncreasedArea = a.IncreasedArea + b.IncreasedArea;
+        c.IncreasedDoT = a.IncreasedDoT + b.IncreasedDoT;
         c.IncreasedAll = a.IncreasedAll + b.IncreasedAll;
 
-        c.MoreMelee = a.MoreMelee * b.MoreMelee;
-        c.MoreRanged = a.MoreRanged * b.MoreRanged;
+        c.MoreAttack = a.MoreAttack * b.MoreAttack;
         c.MoreSpell = a.MoreSpell * b.MoreSpell;
+        c.MoreMelee = a.MoreMelee * b.MoreMelee;
+        c.MoreProjectile = a.MoreProjectile * b.MoreProjectile;
+        c.MoreArea = a.MoreArea * b.MoreArea;
+        c.MoreDoT = a.MoreDoT * b.MoreDoT;
         c.MoreAll = a.MoreAll * b.MoreAll;
         
         return c;
@@ -60,14 +214,20 @@ public class DamageModifiers() {
         c.Lightning = a.Lightning - b.Lightning;
         c.Chaos = a.Chaos - b.Chaos;
 
-        c.IncreasedMelee = a.IncreasedMelee - b.IncreasedMelee;
-        c.IncreasedRanged = a.IncreasedRanged - b.IncreasedRanged;
+        c.IncreasedAttack = a.IncreasedAttack - b.IncreasedAttack;
         c.IncreasedSpell = a.IncreasedSpell - b.IncreasedSpell;
+        c.IncreasedMelee = a.IncreasedMelee - b.IncreasedMelee;
+        c.IncreasedProjectile = a.IncreasedProjectile - b.IncreasedProjectile;
+        c.IncreasedArea = a.IncreasedArea - b.IncreasedArea;
+        c.IncreasedDoT = a.IncreasedDoT - b.IncreasedDoT;
         c.IncreasedAll = a.IncreasedAll - b.IncreasedAll;
 
-        c.MoreMelee = a.MoreMelee / b.MoreMelee;
-        c.MoreRanged = a.MoreRanged / b.MoreRanged;
+        c.MoreAttack = a.MoreAttack / b.MoreAttack;
         c.MoreSpell = a.MoreSpell / b.MoreSpell;
+        c.MoreMelee = a.MoreMelee / b.MoreMelee;
+        c.MoreProjectile = a.MoreProjectile / b.MoreProjectile;
+        c.MoreArea = a.MoreArea / b.MoreArea;
+        c.MoreDoT = a.MoreDoT / b.MoreDoT;
         c.MoreAll = a.MoreAll / b.MoreAll;
         
         return c;

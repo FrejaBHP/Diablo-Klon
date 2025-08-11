@@ -118,6 +118,17 @@ public enum ESkillTags {
 }
 
 [Flags]
+public enum ESkillDamageTags {
+	None = 0,
+	Attack = 1 << 0,
+    Spell = 1 << 1,
+	Melee = 1 << 2,
+	Projectile = 1 << 3,
+    Area = 1 << 4,
+	DoT = 1 << 5,
+}
+
+[Flags]
 public enum ESkillStatusEffectFlags {
 	None = 0,
 	CanBleed = 1 << 0,

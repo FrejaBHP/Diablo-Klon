@@ -43,15 +43,13 @@ public interface IRepeatableEffect {
 }
 
 public interface IDamageOverTimeEffect {
-    static EDamageType DamageType { get; protected set; }
+    
 }
 
 
-
-
-
 public class IgniteEffect : AttachedEffect, IUniqueEffect, IDamageOverTimeEffect {
-    public EDamageType DamageType { get; set; } = EDamageType.Fire;
+    public static EDamageType DamageType { get; protected set; } = EDamageType.Fire;
+    public static ESkillDamageTags DamageTags { get; protected set; } = ESkillDamageTags.DoT;
     private const double damageFactor = 0.5;
     private const double igniteDuration = 4;
 
@@ -81,7 +79,8 @@ public class IgniteEffect : AttachedEffect, IUniqueEffect, IDamageOverTimeEffect
 }
 
 public class PoisonEffect : AttachedEffect, IRepeatableEffect, IDamageOverTimeEffect {
-    public EDamageType DamageType { get; set; } = EDamageType.Chaos;
+    public static EDamageType DamageType { get; protected set; } = EDamageType.Chaos;
+    public static ESkillDamageTags DamageTags { get; protected set; } = ESkillDamageTags.DoT;
     private const double damageFactor = 0.2;
     private const double poisonDuration = 2;
 

@@ -45,6 +45,7 @@ public class SPiercingShot : Skill, IAttack, IProjectileSkill {
         SkillName = ESkillName.PiercingShot;
         Type = ESkillType.Attack;
         Tags = ESkillTags.Attack | ESkillTags.Projectile | ESkillTags.Ranged;
+        SkillDamageTags = ESkillDamageTags.Attack | ESkillDamageTags.Projectile;
         DamageCategory = EDamageCategory.Ranged;
         Texture = UILib.TextureSkillPiercingShot;
 

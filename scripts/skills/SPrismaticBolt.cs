@@ -46,6 +46,7 @@ public class SPrismaticBolt : Skill, ISpell, IProjectileSkill {
         SkillName = ESkillName.PrismaticBolt;
         Type = ESkillType.Spell;
         Tags = ESkillTags.Spell | ESkillTags.Projectile | ESkillTags.Fire | ESkillTags.Cold | ESkillTags.Lightning;
+        SkillDamageTags = ESkillDamageTags.Spell | ESkillDamageTags.Projectile;
         DamageCategory = EDamageCategory.Spell;
         Texture = UILib.TextureSkillPrismaticBolt;
 

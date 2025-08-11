@@ -38,6 +38,7 @@ public class SSoulrend : Skill, ISpell, IProjectileSkill, IAreaSkill, IDurationS
     public double MoreDuration { get; set; } = 1;
     public double TotalDuration { get; set; }
 
+    protected ESkillDamageTags areaDamageTags = ESkillDamageTags.Spell | ESkillDamageTags.DoT;
     protected double totalDamageOverTimeDPS;
 
     private static readonly double[] minDamageArray = [
@@ -65,6 +66,7 @@ public class SSoulrend : Skill, ISpell, IProjectileSkill, IAreaSkill, IDurationS
         SkillName = ESkillName.Soulrend;
         Type = ESkillType.Spell;
         Tags = ESkillTags.Spell | ESkillTags.Projectile | ESkillTags.Area | ESkillTags.Duration | ESkillTags.Chaos;
+        SkillDamageTags = ESkillDamageTags.Spell | ESkillDamageTags.Projectile;
         DamageCategory = EDamageCategory.Spell;
         Texture = UILib.TextureSkillSoulrend;
 
@@ -97,8 +99,7 @@ public class SSoulrend : Skill, ISpell, IProjectileSkill, IAreaSkill, IDurationS
     public override void RecalculateSkillValues() {
         base.RecalculateSkillValues();
 
-        double increasedMultiplier = ActiveDamageModifiers.Chaos.SIncreased + ActiveDamageModifiers.IncreasedSpell;
-        double moreMultiplier = ActiveDamageModifiers.Chaos.SMore * ActiveDamageModifiers.MoreSpell;
+        ActiveDamageModifiers.CalculateMultipliersWithType(ActiveDamageModifiers.Chaos, areaDamageTags, out double increasedMultiplier, out double moreMultiplier);
         totalDamageOverTimeDPS = dotDamageArray[level] * (increasedMultiplier + 1) * moreMultiplier;
     }
 
