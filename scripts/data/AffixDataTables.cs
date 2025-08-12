@@ -74,6 +74,20 @@ public static class AffixDataTables {
 			EItemBaseSpecifierFlags.NoFlags
 		),
 
+		// ===== FLAT ATTACK DAMAGE =====
+		new(typeof(FlatAttackFireDamageAccessoryAffix), EAffixFamily.FlatFireDamage,
+			EAffixItemFlags.Ring | EAffixItemFlags.Amulet,
+			EItemBaseSpecifierFlags.NoFlags
+		),
+		new(typeof(FlatAttackColdDamageAccessoryAffix), EAffixFamily.FlatColdDamage,
+			EAffixItemFlags.Ring | EAffixItemFlags.Amulet,
+			EItemBaseSpecifierFlags.NoFlags
+		),
+		new(typeof(FlatAttackLightningDamageAccessoryAffix), EAffixFamily.FlatLightningDamage,
+			EAffixItemFlags.Ring | EAffixItemFlags.Amulet,
+			EItemBaseSpecifierFlags.NoFlags
+		),
+
 		// ===== FLAT SPELL DAMAGE =====
 		new(typeof(FlatSpellFireDamageWandAffix), EAffixFamily.FlatFireDamage,
 			EAffixItemFlags.Wand,

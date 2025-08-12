@@ -1,11 +1,15 @@
 using Godot;
 using System;
 
-public partial class TestEnemy : EnemyBase {
-    public TestEnemy() {
-		BasicStats.BaseLife = 18;
+public partial class TestEnemy3 : EnemyBase {
+    private double baseCastTime;
+
+    public TestEnemy3() {
+		BasicStats.BaseLife = 10;
 		BasicStats.BaseMana = 0;
 		RefreshLifeMana();
+
+        CastSpeedMod.SMore = 0.8;
 
         goldBounty = 3;
         experienceBounty = 1;
@@ -14,22 +18,13 @@ public partial class TestEnemy : EnemyBase {
     public override void _Ready() {
         base._Ready();
 
-        // Thrust dmg% = 160%
-        UnarmedMinDamage = 4;
-        UnarmedMaxDamage = 7;
-        UnarmedAttackSpeed = 1.1;
-
-        MainHandStats.PhysMinDamage = UnarmedMinDamage;
-        MainHandStats.PhysMaxDamage = UnarmedMaxDamage;
-
-        MovementSpeed.SBase = 4;
+        MovementSpeed.SBase = 3.25;
         Evasion.SBase = 0; // 67
-        BlockChance.SBase = 0.20;
 
-        Skill skillThrust = new SThrust();
-        skillThrust.Level = 0;
-        AddSkill(skillThrust);
-        //CalculateStats();
+        Skill skillSoulrend = new SSoulrend();
+        skillSoulrend.Level = 0;
+        baseCastTime = ((ISpell)skillSoulrend).BaseCastTime;
+        AddSkill(skillSoulrend);
     }
 
     public override void _PhysicsProcess(double delta) {
@@ -41,7 +36,7 @@ public partial class TestEnemy : EnemyBase {
         currentlyUsedSkill = Skills[0];
 
         ActorState = EActorState.UsingSkill;
-        skillTimer.WaitTime = UnarmedAttackSpeed / AttackSpeedMod.STotal;
+        skillTimer.WaitTime = baseCastTime / CastSpeedMod.STotal;
         skillUsePointTimer.WaitTime = skillTimer.WaitTime * 0.70;
         skillTimer.Start();
         skillUsePointTimer.Start();
@@ -57,6 +52,4 @@ public partial class TestEnemy : EnemyBase {
             currentlyUsedSkill.UseSkill();
         }
     }
-
-    //public override void OnNoLifeLeft() {}
 }

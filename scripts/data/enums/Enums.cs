@@ -54,6 +54,7 @@ public enum EMapObjective {
 public enum EEnemyType {
 	TestEnemy,
 	TestEnemy2,
+	TestEnemy3,
 }
 
 

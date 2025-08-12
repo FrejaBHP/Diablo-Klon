@@ -3,7 +3,7 @@ using System;
 
 public partial class TestEnemy2 : EnemyBase {
     public TestEnemy2() {
-		BasicStats.BaseLife = 15;
+		BasicStats.BaseLife = 14;
 		BasicStats.BaseMana = 0;
 		RefreshLifeMana();
 
@@ -14,47 +14,33 @@ public partial class TestEnemy2 : EnemyBase {
     public override void _Ready() {
         base._Ready();
 
-        UnarmedMinDamage = 8;
-        UnarmedMaxDamage = 12;
+        // PS dmg% = 130%
+        UnarmedMinDamage = 5;
+        UnarmedMaxDamage = 8;
         UnarmedAttackSpeed = 1;
 
         MainHandStats.PhysMinDamage = UnarmedMinDamage;
         MainHandStats.PhysMaxDamage = UnarmedMaxDamage;
 
-        MovementSpeed.SBase = 4;
+        MovementSpeed.SBase = 3.5;
         Evasion.SBase = 0; // 67
 
-        Skill skillShoot = new SPiercingShot();
-        AddSkill(skillShoot);
+        Skill skillPiercingShot = new SPiercingShot();
+        skillPiercingShot.Level = 0;
+        AddSkill(skillPiercingShot);
     }
 
     public override void _PhysicsProcess(double delta) {
         base._PhysicsProcess(delta);
-
-        if (isChasingTarget && actorTarget != null) {
-            if (GlobalPosition.DistanceTo(actorTarget.GlobalPosition) < Skills[0].CastRange - 0.25f && ActorState != EActorState.UsingSkill) {
-                lineOfSightCast.ForceRaycastUpdate();
-
-                if (lineOfSightCast.IsColliding()) {
-                    UseShoot();
-                }
-            }
-        }
-
-        if (ActorState == EActorState.Actionable) {
-            ProcessNavigation();
-        }
-
-        DoGravity(delta);
-        MoveAndSlide();
+        BasicChaseAIProcess(delta);
     }
 
-    public void UseShoot() {
+    protected override void UsePrimarySkill() {
         currentlyUsedSkill = Skills[0];
 
         ActorState = EActorState.UsingSkill;
         skillTimer.WaitTime = UnarmedAttackSpeed / AttackSpeedMod.STotal;
-        skillUsePointTimer.WaitTime = skillTimer.WaitTime / 2;
+        skillUsePointTimer.WaitTime = skillTimer.WaitTime * 0.70;
         skillTimer.Start();
         skillUsePointTimer.Start();
 

@@ -37,13 +37,16 @@ public class MapEnemyWaves(List<EnemyWave> enemyWaves) {
 public static class EnemyDatabase {
     public static readonly PackedScene TestEnemyScene = GD.Load<PackedScene>("res://scenes/enemy_test.tscn");
     public static readonly PackedScene TestEnemy2Scene = GD.Load<PackedScene>("res://scenes/enemy_test_2.tscn");
+    public static readonly PackedScene TestEnemy3Scene = GD.Load<PackedScene>("res://scenes/enemy_test_3.tscn");
 
     public static readonly EnemyData TestEnemyData = new(TestEnemyScene, 2);
     public static readonly EnemyData TestEnemy2Data = new(TestEnemy2Scene, 2);
+    public static readonly EnemyData TestEnemy3Data = new(TestEnemy3Scene, 2);
 
     public static readonly Dictionary<EEnemyType, EnemyData> EnemyDictionary = new() {
         { EEnemyType.TestEnemy, TestEnemyData },
-        { EEnemyType.TestEnemy2, TestEnemy2Data }
+        { EEnemyType.TestEnemy2, TestEnemy2Data },
+        { EEnemyType.TestEnemy3, TestEnemy3Data }
     };
 
 
@@ -52,6 +55,7 @@ public static class EnemyDatabase {
     public static readonly WeightedList<EEnemyType> TestSurvivalSpawnPool = new([
         new WeightedListItem<EEnemyType>(EEnemyType.TestEnemy, 100),
         new WeightedListItem<EEnemyType>(EEnemyType.TestEnemy2, 25),
+        new WeightedListItem<EEnemyType>(EEnemyType.TestEnemy2, 15),
     ], Utilities.RNG);
 
 
@@ -59,7 +63,9 @@ public static class EnemyDatabase {
     // Waves for preset enemy spawns
 
     public static readonly EnemyWave TestWave = new([
-        new EnemyWaveComponent(EEnemyType.TestEnemy, 10)
+        new EnemyWaveComponent(EEnemyType.TestEnemy, 5),
+        new EnemyWaveComponent(EEnemyType.TestEnemy2, 2),
+        new EnemyWaveComponent(EEnemyType.TestEnemy3, 1)
     ]);
 
     public static readonly MapEnemyWaves TestMapHorde = new([

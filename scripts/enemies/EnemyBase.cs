@@ -169,6 +169,29 @@ public partial class EnemyBase : Actor {
 
     // ===== Combat =====
     #region Combat
+    protected virtual void UsePrimarySkill() {
+
+    }
+
+    protected void BasicChaseAIProcess(double delta) {
+        if (isChasingTarget && actorTarget != null) {
+            if (GlobalPosition.DistanceTo(actorTarget.GlobalPosition) < Skills[0].CastRange - 0.25f && ActorState != EActorState.UsingSkill) {
+                lineOfSightCast.ForceRaycastUpdate();
+
+                if (lineOfSightCast.IsColliding()) {
+                    UsePrimarySkill();
+                }
+            }
+        }
+
+        if (ActorState == EActorState.Actionable) {
+            ProcessNavigation();
+        }
+
+        DoGravity(delta);
+        MoveAndSlide();
+    }
+
     public override void OnHitTaken(double damage, bool wasBlocked, bool isCritical, bool createDamageText) {
         if (createDamageText) {
             ShowDamageText(damage, wasBlocked, isCritical);
