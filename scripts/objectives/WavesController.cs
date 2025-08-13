@@ -23,7 +23,7 @@ public partial class WavesController : ObjectiveController {
     // Generics
     public override void CreateObjectiveGUI() {
         ObjectiveHUD = mapObjectiveHUDScene.Instantiate<MapObjectiveHUD>();
-		Run.Instance.PlayerActor.PlayerHUD.PlayerRightHUD.ObjectiveContainer.AddChild(ObjectiveHUD);
+		Run.Instance.PlayerActor.PlayerHUD.RightHUD.ObjectiveContainer.AddChild(ObjectiveHUD);
         ObjectiveHUD.SetObjectiveText(MapObjective.ToString());
         ObjectiveHUD.SetGoldReward(GoldRewardPool);
         ObjectiveHUD.SetItemReward(ItemRewardPool.Count);
@@ -31,13 +31,13 @@ public partial class WavesController : ObjectiveController {
     }
 
     public override void StartObjective() {
-        Run.Instance.PlayerActor.PlayerHUD.PlayerUpperHUD.ObjTimeLabel.Visible = true;
-        Run.Instance.PlayerActor.PlayerHUD.PlayerUpperHUD.ObjTimeLabel.Text = $"Wave {ActiveWaveNumber + 1} / {ActiveWaveList.EnemyWaves.Count}";
+        Run.Instance.PlayerActor.PlayerHUD.UpperHUD.ObjTimeLabel.Visible = true;
+        Run.Instance.PlayerActor.PlayerHUD.UpperHUD.ObjTimeLabel.Text = $"Wave {ActiveWaveNumber + 1} / {ActiveWaveList.EnemyWaves.Count}";
 
         SpawnWave();
 
-        Run.Instance.PlayerActor.PlayerHUD.PlayerRightHUD.UpdateEnemyDebugLabelWaves(RemainingEnemies, ActiveWave.GetWaveSpawnCount());
-        Run.Instance.PlayerActor.PlayerHUD.PlayerRightHUD.EnemyDebugLabel.Visible = true;
+        Run.Instance.PlayerActor.PlayerHUD.RightHUD.UpdateEnemyDebugLabelWaves(RemainingEnemies, ActiveWave.GetWaveSpawnCount());
+        Run.Instance.PlayerActor.PlayerHUD.RightHUD.EnemyDebugLabel.Visible = true;
 
         IsObjectiveActive = true;
     }
@@ -46,13 +46,13 @@ public partial class WavesController : ObjectiveController {
         IsObjectiveActive = false;
         
         LinkedMap.ClearEnemies();
-        Run.Instance.PlayerActor.PlayerHUD.PlayerUpperHUD.ObjTimeLabel.Visible = false;
+        Run.Instance.PlayerActor.PlayerHUD.UpperHUD.ObjTimeLabel.Visible = false;
 
         if (ObjectiveHUD != null) {
-            Run.Instance.PlayerActor.PlayerHUD.PlayerRightHUD.ObjectiveContainer.RemoveChild(ObjectiveHUD);
+            Run.Instance.PlayerActor.PlayerHUD.RightHUD.ObjectiveContainer.RemoveChild(ObjectiveHUD);
             ObjectiveHUD.QueueFree();
 
-            Run.Instance.PlayerActor.PlayerHUD.PlayerRightHUD.EnemyDebugLabel.Visible = false;
+            Run.Instance.PlayerActor.PlayerHUD.RightHUD.EnemyDebugLabel.Visible = false;
         }
 
         if (GoldRewardPool > 0) {
@@ -79,7 +79,7 @@ public partial class WavesController : ObjectiveController {
     public override void OnEnemyKilled() {
         RemainingEnemies--;
 
-        Run.Instance.PlayerActor.PlayerHUD.PlayerRightHUD.UpdateEnemyDebugLabelWaves(RemainingEnemies, ActiveWave.GetWaveSpawnCount());
+        Run.Instance.PlayerActor.PlayerHUD.RightHUD.UpdateEnemyDebugLabelWaves(RemainingEnemies, ActiveWave.GetWaveSpawnCount());
 
         if (RemainingEnemies == 0 && EnemiesToSpawn == 0) {
 			if (ActiveWaveNumber < ActiveWaveList.EnemyWaves.Count - 1) {
@@ -116,7 +116,7 @@ public partial class WavesController : ObjectiveController {
 
     public void SetAndStartNextWave() {
 		ActiveWaveNumber++;
-        Run.Instance.PlayerActor.PlayerHUD.PlayerUpperHUD.ObjTimeLabel.Text = $"Wave {ActiveWaveNumber + 1} / {ActiveWaveList.EnemyWaves.Count}";
+        Run.Instance.PlayerActor.PlayerHUD.UpperHUD.ObjTimeLabel.Text = $"Wave {ActiveWaveNumber + 1} / {ActiveWaveList.EnemyWaves.Count}";
 		SetEnemyWave(ActiveWaveList.EnemyWaves[ActiveWaveNumber]);
 		SpawnWave();
 	}

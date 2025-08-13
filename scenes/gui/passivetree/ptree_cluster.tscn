@@ -1,0 +1,83 @@
+[gd_scene load_steps=3 format=3 uid="uid://08nys5h31q60"]
+
+[ext_resource type="Script" uid="uid://d3j4hcwx12b4o" path="res://scripts/gui/passivetree/PTreeCluster.cs" id="1_aw6ie"]
+[ext_resource type="PackedScene" uid="uid://dcgmyorlf0ptm" path="res://scenes/gui/passivetree/ptree_node.tscn" id="1_rdq3k"]
+
+[node name="PTreeCluster" type="Control"]
+layout_mode = 3
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+grow_horizontal = 2
+script = ExtResource("1_aw6ie")
+
+[node name="PTreeNodeRoot" parent="." instance=ExtResource("1_rdq3k")]
+layout_mode = 0
+offset_left = -24.0
+offset_right = 24.0
+
+[node name="PTreeNodeBranch1" parent="." instance=ExtResource("1_rdq3k")]
+layout_mode = 0
+offset_left = -88.0
+offset_top = 72.0
+offset_right = -40.0
+offset_bottom = 120.0
+
+[node name="PTreeNodeBranch2" parent="." instance=ExtResource("1_rdq3k")]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 72.0
+offset_right = 88.0
+offset_bottom = 120.0
+
+[node name="PTreeNodeSplit1Node1" parent="." instance=ExtResource("1_rdq3k")]
+layout_mode = 0
+offset_left = -176.0
+offset_top = 120.0
+offset_right = -128.0
+offset_bottom = 168.0
+
+[node name="PTreeNodeSplit1Node2" parent="." instance=ExtResource("1_rdq3k")]
+layout_mode = 0
+offset_left = -100.0
+offset_top = 160.0
+offset_right = -52.0
+offset_bottom = 208.0
+
+[node name="PTreeNodeSplit2Node1" parent="." instance=ExtResource("1_rdq3k")]
+layout_mode = 0
+offset_left = 52.0
+offset_top = 160.0
+offset_right = 100.0
+offset_bottom = 208.0
+
+[node name="PTreeNodeSplit2Node2" parent="." instance=ExtResource("1_rdq3k")]
+layout_mode = 0
+offset_left = 128.0
+offset_top = 120.0
+offset_right = 176.0
+offset_bottom = 168.0
+
+[node name="PTreeNodeNotable1" parent="." instance=ExtResource("1_rdq3k")]
+layout_mode = 0
+offset_left = -192.0
+offset_top = 200.0
+offset_right = -128.0
+offset_bottom = 264.0
+TreeNodeType = 1
+
+[node name="PTreeNodeNotable2" parent="." instance=ExtResource("1_rdq3k")]
+layout_mode = 0
+offset_left = 128.0
+offset_top = 200.0
+offset_right = 192.0
+offset_bottom = 264.0
+TreeNodeType = 1
+
+[node name="PTreeNodeKeystone" parent="." instance=ExtResource("1_rdq3k")]
+layout_mode = 0
+offset_left = -40.0
+offset_top = 256.0
+offset_right = 40.0
+offset_bottom = 336.0
+TreeNodeType = 2

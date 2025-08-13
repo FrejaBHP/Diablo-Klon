@@ -83,7 +83,7 @@ public partial class InventoryItem : PanelContainer {
 	}
 
 	public void OnMouseEntered() {
-		if (!Run.Instance.PlayerActor.PlayerHUD.PlayerInventory.IsAnItemSelected) {
+		if (!Run.Instance.PlayerActor.PlayerHUD.Inventory.IsAnItemSelected) {
 			itemBackground.Color = UILib.ColorItemBackgroundHovered;
 			isHovered = true;
 
@@ -101,7 +101,7 @@ public partial class InventoryItem : PanelContainer {
 	}
 
 	public void OnMouseExited() {
-		if (!Run.Instance.PlayerActor.PlayerHUD.PlayerInventory.IsAnItemSelected) {
+		if (!Run.Instance.PlayerActor.PlayerHUD.Inventory.IsAnItemSelected) {
 			itemBackground.Color = UILib.ColorItemBackground;
 			isHovered = false;
 			RemoveTooltip();

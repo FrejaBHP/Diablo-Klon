@@ -101,11 +101,12 @@ public partial class Player : Actor {
 		PlayerHUD.PlayerPanel.OffenceTabPanel.SetOffhandVisibility(false);
 		PlayerHUD.PlayerPanel.CharacterLevelLabel.Text = $"Level {ActorLevel} Creature";
 
-		PlayerHUD.PlayerLowerHUD.SetGoldAmount(Gold);
-		PlayerHUD.PlayerLowerHUD.UpdateLevelLabel(ActorLevel);
-		PlayerHUD.PlayerLowerHUD.SetExperienceBarLimit(experienceRequirements[ActorLevel - 1]);
-		PlayerHUD.PlayerLowerHUD.UpdateExperienceBar(Experience);
+		PlayerHUD.LowerHUD.SetGoldAmount(Gold);
+		PlayerHUD.LowerHUD.UpdateLevelLabel(ActorLevel);
+		PlayerHUD.LowerHUD.SetExperienceBarLimit(experienceRequirements[ActorLevel - 1]);
+		PlayerHUD.LowerHUD.UpdateExperienceBar(Experience);
 		
+		PlayerHUD.PassiveTreePanel.PassiveTreeChanged += CalculateStats;
 		CalculateStats();
 
 		AddToGroup("Player");
@@ -115,14 +116,14 @@ public partial class Player : Actor {
         if (@event is InputEventMouseButton mbe) {
 			// On left click outside of UI elements
 			if (@event.IsActionPressed("LeftClick")) {
-				if (PlayerHUD.PlayerLowerHUD.GetSkillHotbar().IsSkillBeingSelected) {
-					PlayerHUD.PlayerLowerHUD.GetSkillHotbar().DestroySkillAssignmentMenu();
+				if (PlayerHUD.LowerHUD.GetSkillHotbar().IsSkillBeingSelected) {
+					PlayerHUD.LowerHUD.GetSkillHotbar().DestroySkillAssignmentMenu();
 				}
 				// If an item is currently selected
-				if (PlayerHUD.PlayerInventory.IsAnItemSelected && PlayerHUD.PlayerInventory.SelectedItem != null) {
+				if (PlayerHUD.Inventory.IsAnItemSelected && PlayerHUD.Inventory.SelectedItem != null) {
 					// If click is outside the inventory panel, drop it on the floor
-					if (!PlayerHUD.PlayerInventory.GetGlobalRect().HasPoint(mbe.GlobalPosition) || !PlayerHUD.PlayerInventory.IsOpen) {
-						PlayerHUD.PlayerInventory.ItemClickDrop(PlayerHUD.PlayerInventory.SelectedItem);
+					if (!PlayerHUD.Inventory.GetGlobalRect().HasPoint(mbe.GlobalPosition) || !PlayerHUD.Inventory.IsOpen) {
+						PlayerHUD.Inventory.ItemClickDrop(PlayerHUD.Inventory.SelectedItem);
 					}
 				}
 				else {
@@ -152,6 +153,9 @@ public partial class Player : Actor {
 		}
 		else if (@event.IsActionPressed("SkillPanelKey")) {
 			PlayerHUD.ToggleSkillPanel();
+		}
+		else if (@event.IsActionPressed("PassiveTreePanelKey")) {
+			PlayerHUD.TogglePassiveTree();
 		}
 		else if (@event.IsActionPressed("SkillInput3")) {
 			isSkillInput3Held = true;
@@ -414,13 +418,13 @@ public partial class Player : Actor {
 	}
 
 	public void RemoveSkill(Skill skill) {
-		PlayerHUD.PlayerLowerHUD.GetSkillHotbar().ClearInvalidSkills(skill.SkillName);
+		PlayerHUD.LowerHUD.GetSkillHotbar().ClearInvalidSkills(skill.SkillName);
 		Skills.Remove(skill);
 	}
 
 	public void UseSkill(int skillNo) {
-		if (PlayerHUD.PlayerLowerHUD.GetSkillHotbar().SkillHotbarSlots[skillNo].AssignedSkill != null && ActorState == EActorState.Actionable) {
-			Skill skill = PlayerHUD.PlayerLowerHUD.GetSkillHotbar().SkillHotbarSlots[skillNo].AssignedSkill;
+		if (PlayerHUD.LowerHUD.GetSkillHotbar().SkillHotbarSlots[skillNo].AssignedSkill != null && ActorState == EActorState.Actionable) {
+			Skill skill = PlayerHUD.LowerHUD.GetSkillHotbar().SkillHotbarSlots[skillNo].AssignedSkill;
 			bool canUseSkill = skill.CanUseSkill();
 
 			if (!canUseSkill) {
@@ -458,26 +462,26 @@ public partial class Player : Actor {
 
 	public void OnSkillTimerTimeout() {
 		if (ActorState != EActorState.Dying || ActorState != EActorState.Dead || ActorState != EActorState.Stunned) { // Currently, stunned is not a reachable state and can be ignored
-			PlayerHUD.PlayerLowerHUD.GetSkillHotbar().SkillHotbarSlots[skillInProgressNo].TryUseSkill();
+			PlayerHUD.LowerHUD.GetSkillHotbar().SkillHotbarSlots[skillInProgressNo].TryUseSkill();
 
 			// A "refire" check occurs here to smoothen out sustained action (and stops movement from stuttering)
 			bool isSkillHeld = false;
 			int skillNoHeld = -1;
 			
 			if (movementInputMethod == EMovementInputMethod.Keyboard) {
-				if (isLeftClickHeld && PlayerHUD.PlayerLowerHUD.GetSkillHotbar().SkillHotbarSlots[0].AssignedSkill != null) {
+				if (isLeftClickHeld && PlayerHUD.LowerHUD.GetSkillHotbar().SkillHotbarSlots[0].AssignedSkill != null) {
 					isSkillHeld = true;
 					skillNoHeld = 0;
 				}
-				else if (isRightClickHeld && PlayerHUD.PlayerLowerHUD.GetSkillHotbar().SkillHotbarSlots[1].AssignedSkill != null) {
+				else if (isRightClickHeld && PlayerHUD.LowerHUD.GetSkillHotbar().SkillHotbarSlots[1].AssignedSkill != null) {
 					isSkillHeld = true;
 					skillNoHeld = 1;
 				}
-				else if (isSkillInput3Held && PlayerHUD.PlayerLowerHUD.GetSkillHotbar().SkillHotbarSlots[2].AssignedSkill != null) {
+				else if (isSkillInput3Held && PlayerHUD.LowerHUD.GetSkillHotbar().SkillHotbarSlots[2].AssignedSkill != null) {
 					isSkillHeld = true;
 					skillNoHeld = 2;
 				}
-				else if (isSkillInput4Held && PlayerHUD.PlayerLowerHUD.GetSkillHotbar().SkillHotbarSlots[3].AssignedSkill != null) {
+				else if (isSkillInput4Held && PlayerHUD.LowerHUD.GetSkillHotbar().SkillHotbarSlots[3].AssignedSkill != null) {
 					isSkillHeld = true;
 					skillNoHeld = 3;
 				}
@@ -527,7 +531,7 @@ public partial class Player : Actor {
 	}
 
 	public bool PickupItem(ref WorldItem item) {
-		item.ItemReference.ConvertToInventoryItem(PlayerHUD.PlayerInventory.InventoryGrid, this);
+		item.ItemReference.ConvertToInventoryItem(PlayerHUD.Inventory.InventoryGrid, this);
 		return true;
 	}
 
@@ -556,7 +560,7 @@ public partial class Player : Actor {
 			ItemStatDictionary[key] = 0;
 		}
 		
-		foreach (var slot in PlayerHUD.PlayerInventory.GetEquipmentSlots()) {
+		foreach (var slot in PlayerHUD.Inventory.GetEquipmentSlots()) {
 			if (slot.ItemInSlot != null) {
 				foreach (var stat in slot.ItemInSlot.ItemReference.StatDictionary) {
 					ItemStatDictionary[stat.Key] += stat.Value;
@@ -641,7 +645,7 @@ public partial class Player : Actor {
 			(int)ItemStatDictionary[EStatName.FlatMinFireDamage], (int)ItemStatDictionary[EStatName.FlatMaxFireDamage],
 			(int)ItemStatDictionary[EStatName.FlatAttackMinFireDamage], (int)ItemStatDictionary[EStatName.FlatAttackMaxFireDamage],
 			(int)ItemStatDictionary[EStatName.FlatSpellMinFireDamage], (int)ItemStatDictionary[EStatName.FlatSpellMaxFireDamage],
-			ItemStatDictionary[EStatName.IncreasedFireDamage]
+			ItemStatDictionary[EStatName.IncreasedFireDamage] + PlayerHUD.PassiveTreePanel.PassiveTreeStatDictionary[EStatName.IncreasedFireDamage]
 		);
 
 		DamageMods.Cold.SetAddedIncreasedMore(
@@ -807,12 +811,12 @@ public partial class Player : Actor {
 
 	protected override void UpdateLifeDisplay(double newCurrentLife) {
 		double newValue = newCurrentLife / BasicStats.TotalLife * 100;
-        PlayerHUD.PlayerLowerHUD.UpdateLifeOrb(newValue);
+        PlayerHUD.LowerHUD.UpdateLifeOrb(newValue);
     }
 
 	protected override void UpdateManaDisplay(double newCurrentMana) {
 		double newValue = newCurrentMana / BasicStats.TotalMana * 100;
-        PlayerHUD.PlayerLowerHUD.UpdateManaOrb(newValue);
+        PlayerHUD.LowerHUD.UpdateManaOrb(newValue);
     }
 
 	public void AssignMainHand(WeaponItem item) {
@@ -852,11 +856,11 @@ public partial class Player : Actor {
 	}
 
 	protected void GoldCountChanged() {
-		PlayerHUD.PlayerLowerHUD.SetGoldAmount(Gold);
+		PlayerHUD.LowerHUD.SetGoldAmount(Gold);
 	}
 
 	protected void ExperienceChanged() {
-		PlayerHUD.PlayerLowerHUD.UpdateExperienceBar(Experience);
+		PlayerHUD.LowerHUD.UpdateExperienceBar(Experience);
 	}
 
 	public void GainExperience(double experienceGain) {
@@ -878,13 +882,15 @@ public partial class Player : Actor {
 	public void LevelUp() {
 		if (ActorLevel < maxLevel) {
 			ActorLevel++;
-			PlayerHUD.PlayerLowerHUD.SetExperienceBarLimit(experienceRequirements[ActorLevel - 1]);
-			PlayerHUD.PlayerLowerHUD.UpdateLevelLabel(ActorLevel);
+			PlayerHUD.LowerHUD.SetExperienceBarLimit(experienceRequirements[ActorLevel - 1]);
+			PlayerHUD.LowerHUD.UpdateLevelLabel(ActorLevel);
 			PlayerHUD.PlayerPanel.CharacterLevelLabel.Text = $"Level {ActorLevel} Creature";
 
 			CalculateMaxLifeAndMana();
 			PlayerHUD.PlayerPanel.DefenceTabPanel.Armour.SetValue($"{Math.Round(Armour.STotal, 0)} / {(1 - GetArmourMitigation(Armour.STotal, ActorLevel)):P1}");
 			PlayerHUD.PlayerPanel.DefenceTabPanel.Evasion.SetValue($"{Math.Round(Evasion.STotal, 0)} / {GetEvasionChance(Evasion.STotal, ActorLevel):P1}");
+
+			PlayerHUD.PassiveTreePanel.PassiveTreePoints++;
 		}
 	}
 

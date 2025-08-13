@@ -146,10 +146,10 @@ public partial class PlayerInventory : Control {
             item.ToggleClickable();
 
             if (item.ItemReference.ItemAllBaseType == EItemAllBaseType.SkillActive) {
-                PlayerOwner.PlayerHUD.PlayerSkillPanel.HighlightActiveSlots();
+                PlayerOwner.PlayerHUD.SkillPanel.HighlightActiveSlots();
             }
             else if (item.ItemReference.ItemAllBaseType == EItemAllBaseType.SkillSupport) {
-                PlayerOwner.PlayerHUD.PlayerSkillPanel.HighlightSupportSlots();
+                PlayerOwner.PlayerHUD.SkillPanel.HighlightSupportSlots();
             }
             else {
                 foreach (EquipmentSlot slot in GetEquipmentSlots(item.ItemReference.ItemAllBaseType)) {
@@ -173,7 +173,7 @@ public partial class PlayerInventory : Control {
             item.ToggleClickable();
 
             if (item.ItemReference.ItemAllBaseType == EItemAllBaseType.SkillActive || item.ItemReference.ItemAllBaseType == EItemAllBaseType.SkillSupport) {
-                PlayerOwner.PlayerHUD.PlayerSkillPanel.RemoveAllHighlights();
+                PlayerOwner.PlayerHUD.SkillPanel.RemoveAllHighlights();
             }
             else {
                 foreach (EquipmentSlot slot in GetEquipmentSlots(item.ItemReference.ItemAllBaseType)) {
@@ -185,7 +185,7 @@ public partial class PlayerInventory : Control {
 
     public void ItemClickDrop(InventoryItem item) {
         if (item.ItemReference.ItemAllBaseType == EItemAllBaseType.SkillActive || item.ItemReference.ItemAllBaseType == EItemAllBaseType.SkillSupport) {
-            PlayerOwner.PlayerHUD.PlayerSkillPanel.RemoveAllHighlights();
+            PlayerOwner.PlayerHUD.SkillPanel.RemoveAllHighlights();
         }
         foreach (EquipmentSlot slot in GetEquipmentSlots(item.ItemReference.ItemAllBaseType)) {
             slot.RemoveHighlight();

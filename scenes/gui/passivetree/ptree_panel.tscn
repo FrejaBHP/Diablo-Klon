@@ -1,0 +1,35 @@
+[gd_scene load_steps=3 format=3 uid="uid://cloxgko8jdd5k"]
+
+[ext_resource type="Script" uid="uid://dng1mot8t0vb0" path="res://scripts/gui/passivetree/PTreePanel.cs" id="1_1nxrq"]
+[ext_resource type="PackedScene" uid="uid://cyvleihiw6px" path="res://scenes/gui/passivetree/clusters/cluster_burn.tscn" id="2_vytqh"]
+
+[node name="PtreePanel" type="PanelContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_1nxrq")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="PointLabel" type="Label" parent="MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+horizontal_alignment = 1
+
+[node name="Control" type="Control" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="ClusterBurn" parent="MarginContainer/Control" instance=ExtResource("2_vytqh")]
+layout_mode = 1
+anchors_preset = 8
+anchor_top = 0.5
+anchor_bottom = 0.5
+grow_vertical = 2

@@ -68,11 +68,11 @@ public partial class ShopInventory : Control {
     }
 
     public void OnItemClicked(InventoryItem item) {
-        if (Run.Instance.PlayerActor.Gold >= item.ItemReference.Price && Run.Instance.PlayerActor.PlayerHUD.PlayerInventory.InventoryGrid.CanFitInInventory(ref item)) {
+        if (Run.Instance.PlayerActor.Gold >= item.ItemReference.Price && Run.Instance.PlayerActor.PlayerHUD.Inventory.InventoryGrid.CanFitInInventory(ref item)) {
             item.IsForSale = false;
             Run.Instance.PlayerActor.Gold -= item.ItemReference.Price;
             InventoryGrid.RemoveItemFromInventory(item);
-            Run.Instance.PlayerActor.PlayerHUD.PlayerInventory.InventoryGrid.TryAddItemToInventory(ref item);
+            Run.Instance.PlayerActor.PlayerHUD.Inventory.InventoryGrid.TryAddItemToInventory(ref item);
         }
     }
 }

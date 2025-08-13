@@ -33,7 +33,7 @@ public partial class FloatingLabel : Control {
 	public void OnClicked(InputEvent @event) {
 		if (@event is InputEventMouseButton mbe && mbe.ButtonIndex == MouseButton.Left && mbe.Pressed) {
 			Player player = camera.GetParent<Player>();
-			if (!player.PlayerHUD.PlayerInventory.IsAnItemSelected) {
+			if (!player.PlayerHUD.Inventory.IsAnItemSelected) {
 				player.SetDestinationNode(parentAnchor.GetParent<Node3D>());
 			}
 		}

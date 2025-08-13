@@ -25,7 +25,7 @@ public partial class SkillPanel : Control {
         PlayerOwner = player;
 
         for (int i = 0; i < SkillSlotClusters.Length; i++) {
-            SkillSlotClusters[i].SetInventoryReference(PlayerOwner.PlayerHUD.PlayerInventory);
+            SkillSlotClusters[i].SetInventoryReference(PlayerOwner.PlayerHUD.Inventory);
         }
     }
 
@@ -48,7 +48,7 @@ public partial class SkillPanel : Control {
         item.GetParent().RemoveChild(item);
         slot.AddChild(item);
 
-        PlayerOwner.PlayerHUD.PlayerInventory.ClearSelectedItem();
+        PlayerOwner.PlayerHUD.Inventory.ClearSelectedItem();
 
         SkillItem skillItem = (SkillItem)item.ItemReference;
 
@@ -63,7 +63,7 @@ public partial class SkillPanel : Control {
         item.RemoveTooltip();
         slot.RemoveChild(item);
         
-        if (!PlayerOwner.PlayerHUD.PlayerInventory.InventoryGrid.TryAddItemToInventory(ref item)) {
+        if (!PlayerOwner.PlayerHUD.Inventory.InventoryGrid.TryAddItemToInventory(ref item)) {
             PlayerOwner.DropItemOnFloor(item.ItemReference.ConvertToWorldItem());
         }
         else {
@@ -86,7 +86,7 @@ public partial class SkillPanel : Control {
         newSkill.GetParent().RemoveChild(newSkill);
         slot.AddChild(newSkill);
         
-        if (!PlayerOwner.PlayerHUD.PlayerInventory.InventoryGrid.TryAddItemToInventory(ref oldSkill)) {
+        if (!PlayerOwner.PlayerHUD.Inventory.InventoryGrid.TryAddItemToInventory(ref oldSkill)) {
             PlayerOwner.DropItemOnFloor(oldSkill.ItemReference.ConvertToWorldItem());
         }
         else {
@@ -94,7 +94,7 @@ public partial class SkillPanel : Control {
             oldSkill.ToggleBackground();
         }
 
-        PlayerOwner.PlayerHUD.PlayerInventory.ClearSelectedItem();
+        PlayerOwner.PlayerHUD.Inventory.ClearSelectedItem();
 
         SkillItem oldSkillItem = (SkillItem)oldSkill.ItemReference;
         oldSkillItem.SkillReference.ActorOwner = null;
@@ -113,7 +113,7 @@ public partial class SkillPanel : Control {
         item.GetParent().RemoveChild(item);
         slot.AddChild(item);
 
-        PlayerOwner.PlayerHUD.PlayerInventory.ClearSelectedItem();
+        PlayerOwner.PlayerHUD.Inventory.ClearSelectedItem();
         
         RemoveAllHighlights();
     }
@@ -122,7 +122,7 @@ public partial class SkillPanel : Control {
         item.RemoveTooltip();
         slot.RemoveChild(item);
         
-        if (!PlayerOwner.PlayerHUD.PlayerInventory.InventoryGrid.TryAddItemToInventory(ref item)) {
+        if (!PlayerOwner.PlayerHUD.Inventory.InventoryGrid.TryAddItemToInventory(ref item)) {
             PlayerOwner.DropItemOnFloor(item.ItemReference.ConvertToWorldItem());
         }
         else {
@@ -139,7 +139,7 @@ public partial class SkillPanel : Control {
         newSupport.GetParent().RemoveChild(newSupport);
         slot.AddChild(newSupport);
         
-        if (!PlayerOwner.PlayerHUD.PlayerInventory.InventoryGrid.TryAddItemToInventory(ref oldSupport)) {
+        if (!PlayerOwner.PlayerHUD.Inventory.InventoryGrid.TryAddItemToInventory(ref oldSupport)) {
             PlayerOwner.DropItemOnFloor(oldSupport.ItemReference.ConvertToWorldItem());
         }
         else {
@@ -147,7 +147,7 @@ public partial class SkillPanel : Control {
             oldSupport.ToggleBackground();
         }
 
-        PlayerOwner.PlayerHUD.PlayerInventory.ClearSelectedItem();
+        PlayerOwner.PlayerHUD.Inventory.ClearSelectedItem();
 
         RemoveAllHighlights();
     }

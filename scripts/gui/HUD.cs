@@ -5,36 +5,38 @@ public partial class HUD : Control {
 	PackedScene itemTooltipPopupScene = GD.Load<PackedScene>("res://scenes/gui/hud_item_tooltip_popup.tscn");
 	
 	public Player PlayerOwner { get; protected set; }
-	public CharacterPanel PlayerPanel;
-	public SkillPanel PlayerSkillPanel;
-	public PlayerInventory PlayerInventory;
-	public UpperHUD PlayerUpperHUD;
-	public RightHUD PlayerRightHUD;
-	public LowerHUD PlayerLowerHUD;
+	public CharacterPanel PlayerPanel { get; protected set; }
+	public SkillPanel SkillPanel { get; protected set; }
+	public PlayerInventory Inventory { get; protected set; }
+	public UpperHUD UpperHUD { get; protected set; }
+	public RightHUD RightHUD { get; protected set; }
+	public LowerHUD LowerHUD { get; protected set; }
+	public PTreePanel PassiveTreePanel { get; protected set; }
 
 	private ItemTooltipPopup activeTooltipPopup = null;
 
 	public override void _Ready() {
 		PlayerPanel = GetNode<CharacterPanel>("PlayerPanel");
-		PlayerSkillPanel = GetNode<SkillPanel>("SkillPanel");
-		PlayerInventory = GetNode<PlayerInventory>("Inventory");
-		PlayerUpperHUD = GetNode<UpperHUD>("UpperHUD");
-		PlayerRightHUD = GetNode<RightHUD>("RightHUD");
-		PlayerLowerHUD = GetNode<LowerHUD>("LowerHUD");
+		SkillPanel = GetNode<SkillPanel>("SkillPanel");
+		Inventory = GetNode<PlayerInventory>("Inventory");
+		UpperHUD = GetNode<UpperHUD>("UpperHUD");
+		RightHUD = GetNode<RightHUD>("RightHUD");
+		LowerHUD = GetNode<LowerHUD>("LowerHUD");
+		PassiveTreePanel = GetNode<PTreePanel>("PtreePanel");
 	}
 
 	public void AssignPlayer(Player player) {
 		PlayerOwner = player;
 
 		PlayerPanel.PlayerOwner = PlayerOwner;
-		PlayerInventory.PlayerOwner = PlayerOwner;
+		Inventory.PlayerOwner = PlayerOwner;
 
-		PlayerSkillPanel.AssignPlayer(PlayerOwner);
-		PlayerLowerHUD.AssignPlayer(PlayerOwner);
+		SkillPanel.AssignPlayer(PlayerOwner);
+		LowerHUD.AssignPlayer(PlayerOwner);
 	}
 
 	public void TogglePlayerPanel() {
-		if (PlayerSkillPanel.Visible) {
+		if (SkillPanel.Visible) {
 			ToggleSkillPanel();
 		}
 
@@ -46,11 +48,15 @@ public partial class HUD : Control {
 			TogglePlayerPanel();
 		}
 
-		PlayerSkillPanel.Visible = !PlayerSkillPanel.Visible;
+		SkillPanel.Visible = !SkillPanel.Visible;
 	}
 
 	public void ToggleInventory() {
-		PlayerInventory.ToggleInventory();
+		Inventory.ToggleInventory();
+	}
+
+	public void TogglePassiveTree() {
+		PassiveTreePanel.Visible = !PassiveTreePanel.Visible;
 	}
 
     public void CreateItemTooltip(Control tooltipContent, Vector2 anchor, Rect2 itemRect, bool rightSide) {

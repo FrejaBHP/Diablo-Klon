@@ -43,12 +43,12 @@ public partial class GameSettings : Node {
 
     // Currently unused
     public void ApplyPlayerSettings() { 
-        Run.Instance.PlayerActor.PlayerHUD.PlayerLowerHUD.AlwaysShowLifeManaValues = alwaysShowPlayerLifeAndManaValues;
+        Run.Instance.PlayerActor.PlayerHUD.LowerHUD.AlwaysShowLifeManaValues = alwaysShowPlayerLifeAndManaValues;
     }
 
     protected static void ShowLifeManaValuesChanged(bool state) {
         if (Run.Instance != null && Run.Instance.PlayerActor != null) {
-            Run.Instance.PlayerActor.PlayerHUD.PlayerLowerHUD.AlwaysShowLifeManaValues = state;
+            Run.Instance.PlayerActor.PlayerHUD.LowerHUD.AlwaysShowLifeManaValues = state;
         }
     }
 }

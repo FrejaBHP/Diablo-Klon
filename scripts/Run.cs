@@ -86,7 +86,7 @@ public partial class Run : Node3D {
         AddChild(PlayerActor);
         PlayerActor.GlobalPosition = CurrentMap.PlayerSpawnMarker.GlobalPosition;
 
-		PlayerActor.PlayerHUD.PlayerRightHUD.UpdateProgressLabel();
+		PlayerActor.PlayerHUD.RightHUD.UpdateProgressLabel();
 
 		CreateStarterWeaponPanel();
 	}
@@ -225,7 +225,7 @@ public partial class Run : Node3D {
 		PlayerActor.GlobalPosition = CurrentMap.PlayerSpawnMarker.GlobalPosition;
 		PlayerActor.PlayerCamera.OcclusionCast.Enabled = true;
 
-		PlayerActor.PlayerHUD.PlayerRightHUD.UpdateProgressLabel();
+		PlayerActor.PlayerHUD.RightHUD.UpdateProgressLabel();
 	}
 
 	public void OnMapCompletion() {

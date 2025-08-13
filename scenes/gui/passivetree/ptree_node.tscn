@@ -1,0 +1,30 @@
+[gd_scene load_steps=6 format=3 uid="uid://dcgmyorlf0ptm"]
+
+[ext_resource type="Shader" uid="uid://73qrog3tmoiv" path="res://scenes/gui/passivetree/ptree_node_circle.gdshader" id="1_cytkv"]
+[ext_resource type="Script" uid="uid://kor1trg5g33q" path="res://scripts/gui/passivetree/PTreeNode.cs" id="1_x8tt6"]
+[ext_resource type="Texture2D" uid="uid://rhlv3xv12kyp" path="res://textures/skills/skill_none.png" id="1_xdd3y"]
+[ext_resource type="Texture2D" uid="uid://ck35vtow47j1y" path="res://textures/ui/pTreeNodeInactive.png" id="3_m8gdq"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ci1m0"]
+shader = ExtResource("1_cytkv")
+
+[node name="PTreeNode" type="TextureButton"]
+material = SubResource("ShaderMaterial_ci1m0")
+custom_minimum_size = Vector2(48, 48)
+offset_right = 48.0
+offset_bottom = 48.0
+texture_normal = ExtResource("1_xdd3y")
+ignore_texture_size = true
+stretch_mode = 0
+script = ExtResource("1_x8tt6")
+metadata/_edit_group_ = true
+
+[node name="OutlineTexture" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 48.0
+offset_bottom = 48.0
+mouse_filter = 2
+texture = ExtResource("3_m8gdq")
+expand_mode = 1
+
+[connection signal="pressed" from="." to="." method="OnPressed"]

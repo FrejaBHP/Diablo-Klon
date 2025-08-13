@@ -26,10 +26,10 @@ public partial class SurvivalController : ObjectiveController {
     public override void _PhysicsProcess(double delta) {
         if (IsObjectiveActive) {
             if (SurvivalTimer.TimeLeft > 10) {
-                Run.Instance.PlayerActor.PlayerHUD.PlayerUpperHUD.ObjTimeLabel.Text = $"{SurvivalTimer.TimeLeft:F0}";
+                Run.Instance.PlayerActor.PlayerHUD.UpperHUD.ObjTimeLabel.Text = $"{SurvivalTimer.TimeLeft:F0}";
             }
             else {
-                Run.Instance.PlayerActor.PlayerHUD.PlayerUpperHUD.ObjTimeLabel.Text = $"{SurvivalTimer.TimeLeft:F1}";
+                Run.Instance.PlayerActor.PlayerHUD.UpperHUD.ObjTimeLabel.Text = $"{SurvivalTimer.TimeLeft:F1}";
             }
         }
     }
@@ -37,7 +37,7 @@ public partial class SurvivalController : ObjectiveController {
     // Generics
     public override void CreateObjectiveGUI() {
         ObjectiveHUD = mapObjectiveHUDScene.Instantiate<MapObjectiveHUD>();
-		Run.Instance.PlayerActor.PlayerHUD.PlayerRightHUD.ObjectiveContainer.AddChild(ObjectiveHUD);
+		Run.Instance.PlayerActor.PlayerHUD.RightHUD.ObjectiveContainer.AddChild(ObjectiveHUD);
         ObjectiveHUD.SetObjectiveText(MapObjective.ToString());
         ObjectiveHUD.SetGoldReward(GoldRewardPool);
         ObjectiveHUD.SetItemReward(ItemRewardPool.Count);
@@ -47,12 +47,12 @@ public partial class SurvivalController : ObjectiveController {
     public override void StartObjective() {
         SetObjectiveTimerLength();
 
-        Run.Instance.PlayerActor.PlayerHUD.PlayerUpperHUD.ObjTimeLabel.Visible = true;
-        Run.Instance.PlayerActor.PlayerHUD.PlayerUpperHUD.ObjTimeLabel.Text = $"{Math.Round(SurvivalTimer.WaitTime, 0)}";
+        Run.Instance.PlayerActor.PlayerHUD.UpperHUD.ObjTimeLabel.Visible = true;
+        Run.Instance.PlayerActor.PlayerHUD.UpperHUD.ObjTimeLabel.Text = $"{Math.Round(SurvivalTimer.WaitTime, 0)}";
 
         EnemySpawnCeiling = CalculateEnemySpawnCeiling(Run.Instance.CurrentAct, Run.Instance.CurrentArea, 1);
         EnemySpawnDensity = CalculateBaseEnemySpawnDensity(Run.Instance.CurrentAct, Run.Instance.CurrentArea, 1);
-        Run.Instance.PlayerActor.PlayerHUD.PlayerRightHUD.EnemyDebugLabel.Visible = true;
+        Run.Instance.PlayerActor.PlayerHUD.RightHUD.EnemyDebugLabel.Visible = true;
 
         SurvivalTimer.Start();
         OnSpawnTimerTimeout();
@@ -66,13 +66,13 @@ public partial class SurvivalController : ObjectiveController {
         
         SpawnTimer.Stop();
         LinkedMap.ClearEnemies();
-        Run.Instance.PlayerActor.PlayerHUD.PlayerUpperHUD.ObjTimeLabel.Visible = false;
+        Run.Instance.PlayerActor.PlayerHUD.UpperHUD.ObjTimeLabel.Visible = false;
 
         if (ObjectiveHUD != null) {
-            Run.Instance.PlayerActor.PlayerHUD.PlayerRightHUD.ObjectiveContainer.RemoveChild(ObjectiveHUD);
+            Run.Instance.PlayerActor.PlayerHUD.RightHUD.ObjectiveContainer.RemoveChild(ObjectiveHUD);
             ObjectiveHUD.QueueFree();
 
-            Run.Instance.PlayerActor.PlayerHUD.PlayerRightHUD.EnemyDebugLabel.Visible = false;
+            Run.Instance.PlayerActor.PlayerHUD.RightHUD.EnemyDebugLabel.Visible = false;
         }
 
         if (GoldRewardPool > 0) {
@@ -109,7 +109,7 @@ public partial class SurvivalController : ObjectiveController {
     public void OnSpawnTimerTimeout() {
         SpawnFromPool(GetAmountToSpawn(), false);
                 
-        Run.Instance.PlayerActor.PlayerHUD.PlayerRightHUD.UpdateEnemyDebugLabelSurvival(
+        Run.Instance.PlayerActor.PlayerHUD.RightHUD.UpdateEnemyDebugLabelSurvival(
             GetDensityTimeModifier(), 
             GetTimeAdjustedSpawnDensity(EnemySpawnDensity, GetDensityTimeModifier())
         );

@@ -73,7 +73,7 @@ public partial class ItemRewardPanel : Control {
             item.Owner = Run.Instance.PlayerActor;
             item.ToggleIsReward();
             item.GetParent().RemoveChild(item);
-            Run.Instance.PlayerActor.PlayerHUD.PlayerInventory.InventoryGrid.TryAddItemToInventory(ref item);
+            Run.Instance.PlayerActor.PlayerHUD.Inventory.InventoryGrid.TryAddItemToInventory(ref item);
 
             EmitSignal(SignalName.RewardTaken);
 
