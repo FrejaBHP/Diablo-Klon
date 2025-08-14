@@ -46,7 +46,7 @@ public class SFireNova : Skill, ISpell, IAreaSkill {
 
         ManaCost = 1;
 
-        AddedDamageModifier = 2;
+        AddedDamageModifier = 1.6;
 
         TotalAreaRadius = BaseAreaRadius;
         CastRange = TotalAreaRadius - 0.5f;

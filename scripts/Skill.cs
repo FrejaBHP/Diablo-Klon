@@ -226,7 +226,7 @@ public abstract class Skill {
         if (baseFire > 0) {
             if (ActiveStatusEffectModifiers.Ignite.RollForProc()) {
                 ActiveDamageModifiers.CalculateMultipliersWithType(ActiveDamageModifiers.Fire, IgniteEffect.DamageTags, out double incMult, out double moreMult);
-                double damage = baseFire * (1 + incMult) * moreMult;
+                double damage = baseFire * (1 + incMult) * moreMult * (1 + ActorOwner.StatusMods.Ignite.SFasterTicking);
                 statusEffects.Add(new IgniteEffect(null, ActiveStatusEffectModifiers.Ignite.CalculateDurationModifier(), damage));
             }
         }
@@ -244,7 +244,7 @@ public abstract class Skill {
         if ((basePhysical + baseChaos) > 0) {
             if (ActiveStatusEffectModifiers.Poison.RollForProc()) {
                 ActiveDamageModifiers.CalculateMultipliersWithType(ActiveDamageModifiers.Chaos, PoisonEffect.DamageTags, out double incMult, out double moreMult);
-                double damage = (basePhysical + baseChaos) * (1 + incMult) * moreMult;
+                double damage = (basePhysical + baseChaos) * (1 + incMult) * moreMult * (1 + ActorOwner.StatusMods.Poison.SFasterTicking);
                 statusEffects.Add(new PoisonEffect(null, ActiveStatusEffectModifiers.Poison.CalculateDurationModifier(), damage));
             }
         }

@@ -15,6 +15,9 @@ public class DamageModifiers() {
     public double IncreasedProjectile = 0;
     public double IncreasedArea = 0;
     public double IncreasedDoT = 0;
+    public double IncreasedBleed = 0;
+    public double IncreasedIgnite = 0;
+    public double IncreasedPoison = 0;
     public double IncreasedAll = 0;
 
     public double MoreAttack = 1;
@@ -23,6 +26,9 @@ public class DamageModifiers() {
     public double MoreProjectile = 1;
     public double MoreArea = 1;
     public double MoreDoT = 1;
+    public double MoreBleed = 1;
+    public double MoreIgnite = 1;
+    public double MorePoison = 1;
     public double MoreAll = 1;
 
     protected DamageTypeStat GetDamageTypeStat(EDamageType damageType) {
@@ -99,6 +105,18 @@ public class DamageModifiers() {
         if (damageTags.HasFlag(ESkillDamageTags.DoT)) {
             increasedMultiplier += IncreasedDoT;
             moreMultiplier *= MoreDoT;
+        }
+        if (damageTags.HasFlag(ESkillDamageTags.Bleed)) {
+            increasedMultiplier += IncreasedBleed;
+            moreMultiplier *= MoreBleed;
+        }
+        if (damageTags.HasFlag(ESkillDamageTags.Burn)) {
+            increasedMultiplier += IncreasedIgnite;
+            moreMultiplier *= MoreIgnite;
+        }
+        if (damageTags.HasFlag(ESkillDamageTags.Poison)) {
+            increasedMultiplier += IncreasedPoison;
+            moreMultiplier *= MorePoison;
         }
 
         increasedMultiplier += IncreasedAll;

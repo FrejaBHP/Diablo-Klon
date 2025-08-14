@@ -25,19 +25,10 @@ public partial class PTreeNode : TextureButton {
     protected TextureRect OutlineTexture;
 
     [Export]
-    public EStatName NodeFirstStatName { get; protected set; }
-    [Export]
-    public double NodeFirstStatValue { get; protected set; }
+    public Godot.Collections.Array<EStatName> StatNames { get; protected set; }
 
     [Export]
-    public EStatName NodeSecondStatName { get; protected set; }
-    [Export]
-    public double NodeSecondStatValue { get; protected set; }
-
-    [Export]
-    public EStatName NodeThirdStatName { get; protected set; }
-    [Export]
-    public double NodeThirdStatValue { get; protected set; }
+    public Godot.Collections.Array<double> StatValues { get; protected set; }
 
     protected ETreeNodeType treeNodeType = ETreeNodeType.Normal;
     [Export]
@@ -52,11 +43,13 @@ public partial class PTreeNode : TextureButton {
     [Export]
     public string NodeName { get; protected set; }
 
-    [Export]
+    [Export(PropertyHint.MultilineText)]
     public string NodeDescription { get; protected set; }
 
     public bool IsLocked { get; protected set; } = false;
     public bool IsAllocated { get; protected set; } = false;
+
+    public short Identifier { get; protected set; }
 
     public override void _Ready() {
         OutlineTexture = GetNode<TextureRect>("OutlineTexture");
@@ -74,7 +67,6 @@ public partial class PTreeNode : TextureButton {
         else {
             OutlineTexture.Size = vNewSize;
         }
-        
     }
 
     public void Lock() {
@@ -94,9 +86,13 @@ public partial class PTreeNode : TextureButton {
     }
 
     public void OnPressed() {
-        if (!IsAllocated) {
+        if (!IsAllocated && !IsLocked) {
             EmitSignal(SignalName.NodeClicked, this);
         }
+    }
+
+    public void SetIdentifier(short id) {
+        Identifier = id;
     }
 
     public override string _GetTooltip(Vector2 atPosition) {

@@ -127,6 +127,10 @@ public enum ESkillDamageTags {
 	Projectile = 1 << 3,
     Area = 1 << 4,
 	DoT = 1 << 5,
+
+	Bleed = 1 << 6,
+	Burn = 1 << 7,
+	Poison = 1 << 8,
 }
 
 [Flags]

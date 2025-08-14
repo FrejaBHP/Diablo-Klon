@@ -26,6 +26,14 @@ layout_mode = 1
 layout_mode = 1
 offset_bottom = 136.0
 
+[node name="PtreePanel" parent="." instance=ExtResource("8_wbuoc")]
+visible = false
+layout_mode = 1
+offset_left = -0.5
+offset_top = -11.5
+offset_right = 0.5
+offset_bottom = 11.5
+
 [node name="PlayerPanel" parent="." instance=ExtResource("2_stx8b")]
 visible = false
 layout_mode = 1
@@ -42,11 +50,3 @@ layout_mode = 1
 [node name="LowerHUD" parent="." instance=ExtResource("3_ucw7d")]
 z_index = 1
 layout_mode = 1
-
-[node name="PtreePanel" parent="." instance=ExtResource("8_wbuoc")]
-visible = false
-layout_mode = 1
-offset_left = -0.5
-offset_top = -11.5
-offset_right = 0.5
-offset_bottom = 11.5

@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Linq;
 
 public partial class PTreeCluster : Control {
     public PTreeNode NodeRoot { get; protected set; }
@@ -46,9 +47,60 @@ public partial class PTreeCluster : Control {
             }
             NodeArray[i].NodeAllocated += OnNodeAllocated;
         }
+
+        NodeRoot.SetIdentifier(000);
+        NodeBranchLeft.SetIdentifier(100);
+        NodeBranchRight.SetIdentifier(110);
+        NodeLeftSplitLeft.SetIdentifier(200);
+        NodeLeftSplitRight.SetIdentifier(201);
+        NodeRightSplitLeft.SetIdentifier(210);
+        NodeRightSplitRight.SetIdentifier(211);
+        NodeNotableLeft.SetIdentifier(300);
+        NodeNotableRight.SetIdentifier(310);
+        NodeKeystone.SetIdentifier(400);
     }
 
     public void OnNodeAllocated(PTreeNode node) {
+        PTreeNode[] nodes;
 
+        switch (node.Identifier) {
+            case 000:
+                nodes = NodeArray.Where(x => x.Identifier == 100 || x.Identifier == 110).ToArray();
+                break;
+            
+            case 100:
+                nodes = NodeArray.Where(x => x.Identifier == 200 || x.Identifier == 201).ToArray();
+                break;
+
+            case 110:
+                nodes = NodeArray.Where(x => x.Identifier == 210 || x.Identifier == 211).ToArray();
+                break;
+
+            case 200 or 201:
+                nodes = NodeArray.Where(x => x.Identifier == 300).ToArray();
+                break;
+
+            case 210 or 211:
+                nodes = NodeArray.Where(x => x.Identifier == 310).ToArray();
+                break;
+
+            case 300 or 310:
+                nodes = NodeArray.Where(x => x.Identifier == 400).ToArray();
+                break;
+
+            default:
+                if (node.Identifier != 400) {
+                    GD.PrintErr("Unknown identifier");
+                }
+
+                nodes = [];
+                break;
+        }
+
+        foreach (PTreeNode tnode in nodes) {
+            if (tnode.IsLocked) {
+                tnode.Unlock();
+            }
+        }
     }
 }

@@ -361,8 +361,16 @@ public partial class StatusEffectStats() {
 		}
 	}
 
+    private double sFasterTicking = 0;
+	public double SFasterTicking {
+		get => sFasterTicking;
+		set {
+			sFasterTicking = value;
+		}
+	}
+
     public double CalculateDurationModifier() {
-        return (1 + sIncreasedDuration) * sMoreDuration;
+        return (1 + sIncreasedDuration) * sMoreDuration / (1 + sFasterTicking);
     }
 
     public static StatusEffectStats operator +(StatusEffectStats a, StatusEffectStats b) {
@@ -371,7 +379,8 @@ public partial class StatusEffectStats() {
         c.sBaseChance = a.sBaseChance + b.sBaseChance;
         c.sAddedChance = a.sAddedChance + b.sAddedChance;
         c.sIncreasedChance = a.sIncreasedChance + b.sIncreasedChance;
-        c.SMoreChance = a.SMoreChance * b.SMoreChance;
+        c.sMoreChance = a.SMoreChance * b.sMoreChance;
+        c.sFasterTicking = a.sFasterTicking + b.sFasterTicking;
 
         c.sIncreasedDuration = a.sIncreasedDuration + b.sIncreasedDuration;
         c.sMoreDuration = a.sMoreDuration * b.sMoreDuration;
@@ -385,7 +394,8 @@ public partial class StatusEffectStats() {
         c.sBaseChance = a.sBaseChance - b.sBaseChance;
         c.sAddedChance = a.sAddedChance - b.sAddedChance;
         c.sIncreasedChance = a.sIncreasedChance - b.sIncreasedChance;
-        c.SMoreChance = a.SMoreChance / b.SMoreChance;
+        c.sMoreChance = a.sMoreChance / b.sMoreChance;
+        c.sFasterTicking = a.sFasterTicking - b.sFasterTicking;
 
         c.sIncreasedDuration = a.sIncreasedDuration - b.sIncreasedDuration;
         c.sMoreDuration = a.sMoreDuration / b.sMoreDuration;

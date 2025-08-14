@@ -25,8 +25,8 @@ public enum EStatName {
 	FlatAttackMaxPhysDamage,
 	FlatSpellMinPhysDamage,
 	FlatSpellMaxPhysDamage,
-	FlatPhysDamage,
 	IncreasedPhysDamage,
+	PhysicalPenetration,
 
 	FlatMinFireDamage,
 	FlatMaxFireDamage,
@@ -34,8 +34,8 @@ public enum EStatName {
 	FlatAttackMaxFireDamage,
 	FlatSpellMinFireDamage,
 	FlatSpellMaxFireDamage,
-	FlatFireDamage,
 	IncreasedFireDamage,
+	FirePenetration,
 
 	FlatMinColdDamage,
 	FlatMaxColdDamage,
@@ -43,8 +43,8 @@ public enum EStatName {
 	FlatAttackMaxColdDamage,
 	FlatSpellMinColdDamage,
 	FlatSpellMaxColdDamage,
-	FlatColdDamage,
 	IncreasedColdDamage,
+	ColdPenetration,
 
 	FlatMinLightningDamage,
 	FlatMaxLightningDamage,
@@ -52,8 +52,8 @@ public enum EStatName {
 	FlatAttackMaxLightningDamage,
 	FlatSpellMinLightningDamage,
 	FlatSpellMaxLightningDamage,
-	FlatLightningDamage,
 	IncreasedLightningDamage,
+	LightningPenetration,
 
 	FlatMinChaosDamage,
 	FlatMaxChaosDamage,
@@ -61,8 +61,8 @@ public enum EStatName {
 	FlatAttackMaxChaosDamage,
 	FlatSpellMinChaosDamage,
 	FlatSpellMaxChaosDamage,
-	FlatChaosDamage,
 	IncreasedChaosDamage,
+	ChaosPenetration,
 
 	IncreasedAttackDamage,
 	IncreasedSpellDamage,
@@ -76,6 +76,20 @@ public enum EStatName {
 	IncreasedCastSpeed,
 	IncreasedCritChance,
 	AddedCritMulti,
+
+	AddedBleedChance,
+	IncreasedBleedDamage,
+	FasterBleed,
+	AddedIgniteChance,
+	IncreasedIgniteDamage,
+	FasterIgnite,
+	AddedPoisonChance,
+	IncreasedPoisonDamage,
+	FasterPoison,
+
+	IncreasedBleedDuration,
+	IncreasedIgniteDuration,
+	IncreasedPoisonDuration,
 
 	IncreasedMovementSpeed,
 	BlockChance,

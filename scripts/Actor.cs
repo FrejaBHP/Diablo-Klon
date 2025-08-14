@@ -246,11 +246,11 @@ public class ActorResistances {
 }
 
 public class ActorPenetrations {
-    public int PenPhysical;
-    public int PenFire;
-    public int PenCold;
-    public int PenLightning;
-    public int PenChaos;
+    public int Physical;
+    public int Fire;
+    public int Cold;
+    public int Lightning;
+    public int Chaos;
 }
 
 public class ActorMainHand {
@@ -344,7 +344,7 @@ public partial class Actor : CharacterBody3D {
 
     public Stat MovementSpeed = new(0, false, 0);
 
-    public Dictionary<EStatName, double> ItemStatDictionary = new() {
+    public Dictionary<EStatName, double> StatDictionary = new() {
 		{ EStatName.FlatStrength, 					0 },
 		{ EStatName.FlatDexterity, 					0 },
 		{ EStatName.FlatIntelligence, 				0 },
@@ -366,6 +366,7 @@ public partial class Actor : CharacterBody3D {
         { EStatName.FlatSpellMinPhysDamage, 		0 },
 		{ EStatName.FlatSpellMaxPhysDamage, 		0 },
 		{ EStatName.IncreasedPhysDamage, 			0 },
+        { EStatName.PhysicalPenetration, 			0 },
 
 		{ EStatName.FlatMinFireDamage, 				0 },
 		{ EStatName.FlatMaxFireDamage, 				0 },
@@ -374,6 +375,7 @@ public partial class Actor : CharacterBody3D {
         { EStatName.FlatSpellMinFireDamage, 		0 },
 		{ EStatName.FlatSpellMaxFireDamage, 		0 },
 		{ EStatName.IncreasedFireDamage, 			0 },
+        { EStatName.FirePenetration, 			    0 },
 
 		{ EStatName.FlatMinColdDamage, 				0 },
 		{ EStatName.FlatMaxColdDamage, 				0 },
@@ -382,6 +384,7 @@ public partial class Actor : CharacterBody3D {
         { EStatName.FlatSpellMinColdDamage, 		0 },
 		{ EStatName.FlatSpellMaxColdDamage, 		0 },
 		{ EStatName.IncreasedColdDamage, 			0 },
+        { EStatName.ColdPenetration, 			    0 },
 
 		{ EStatName.FlatMinLightningDamage, 		0 },
 		{ EStatName.FlatMaxLightningDamage, 		0 },
@@ -390,6 +393,7 @@ public partial class Actor : CharacterBody3D {
         { EStatName.FlatSpellMinLightningDamage, 	0 },
 		{ EStatName.FlatSpellMaxLightningDamage, 	0 },
 		{ EStatName.IncreasedLightningDamage, 		0 },
+        { EStatName.LightningPenetration, 			0 },
 
 		{ EStatName.FlatMinChaosDamage, 			0 },
 		{ EStatName.FlatMaxChaosDamage, 			0 },
@@ -398,6 +402,7 @@ public partial class Actor : CharacterBody3D {
         { EStatName.FlatSpellMinChaosDamage, 		0 },
 		{ EStatName.FlatSpellMaxChaosDamage, 		0 },
 		{ EStatName.IncreasedChaosDamage, 			0 },
+        { EStatName.ChaosPenetration, 			    0 },
 
         { EStatName.IncreasedAttackDamage, 			0 },
         { EStatName.IncreasedSpellDamage, 			0 },
@@ -410,6 +415,19 @@ public partial class Actor : CharacterBody3D {
 		{ EStatName.IncreasedCastSpeed, 			0 },
 		{ EStatName.IncreasedCritChance, 			0 },
 		{ EStatName.AddedCritMulti, 				0 },
+
+        { EStatName.AddedBleedChance, 			    0 },
+        { EStatName.IncreasedBleedDamage, 		    0 },
+        { EStatName.IncreasedBleedDuration,         0 },
+        { EStatName.FasterBleed, 			        0 },
+        { EStatName.AddedIgniteChance, 			    0 },
+        { EStatName.IncreasedIgniteDamage, 		    0 },
+        { EStatName.IncreasedIgniteDuration,        0 },
+        { EStatName.FasterIgnite, 			        0 },
+        { EStatName.AddedPoisonChance, 			    0 },
+        { EStatName.IncreasedPoisonDamage, 		    0 },
+        { EStatName.IncreasedPoisonDuration,        0 },
+        { EStatName.FasterPoison, 			        0 },
 
 		{ EStatName.IncreasedMovementSpeed, 		0 },
 		{ EStatName.BlockChance, 					0 },
@@ -561,11 +579,11 @@ public partial class Actor : CharacterBody3D {
             chaosDamage *= blockMitigation;
         }
 
-        physDamage *= 1 - ((Resistances.ResPhysical - Penetrations.PenPhysical) / 100);
-        fireDamage *= 1 - ((Resistances.ResFire - Penetrations.PenFire) / 100);
-        coldDamage *= 1 - ((Resistances.ResCold - Penetrations.PenCold) / 100);
-        lightningDamage *= 1 - ((Resistances.ResLightning - Penetrations.PenLightning) / 100);
-        chaosDamage *= 1 - ((Resistances.ResChaos - Penetrations.PenChaos) / 100);
+        physDamage *= 1 - ((double)(Resistances.ResPhysical - pens.Physical) / 100);
+        fireDamage *= 1 - ((double)(Resistances.ResFire - pens.Fire) / 100);
+        coldDamage *= 1 - ((double)(Resistances.ResCold - pens.Cold) / 100);
+        lightningDamage *= 1 - ((double)(Resistances.ResLightning - pens.Lightning) / 100);
+        chaosDamage *= 1 - ((double)(Resistances.ResChaos - pens.Chaos) / 100);
 
         totalDamage = physDamage + fireDamage + coldDamage + lightningDamage + chaosDamage;
 

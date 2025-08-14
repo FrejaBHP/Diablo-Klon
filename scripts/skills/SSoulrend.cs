@@ -74,7 +74,7 @@ public class SSoulrend : Skill, ISpell, IProjectileSkill, IAreaSkill, IDurationS
 
         CastRange = 15f;
 
-        AddedDamageModifier = 1.80;
+        AddedDamageModifier = 1.35;
 
         TotalPierces = BasePierces;
         TotalProjectiles = BaseProjectiles;
