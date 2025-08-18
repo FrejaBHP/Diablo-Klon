@@ -228,14 +228,17 @@ public partial class DamageTypeStat() {
     }
 
     public bool IsNonZero() {
+        if (SMore <= 0) {
+            return false;
+        }
+
         CalculateTotal(out double min, out double max);
 
         if (min == 0 && max == 0) {
             return false;
         }
-        else {
-            return true;
-        }
+
+        return true;
     }
 
     public DamageTypeStat ShallowCopy() {

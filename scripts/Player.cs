@@ -556,12 +556,16 @@ public partial class Player : Actor {
 	public void ApplyItemStats(EquipmentSlot slot, Item item) {
 		foreach (var stat in item.StatDictionary) {
 			if (ItemStatDictionary.ContainsKey(stat.Key)) {
-				ItemStatDictionary[stat.Key] += stat.Value;
+				if (Utilities.MultiplicativeStatNames.Contains(stat.Key)) {
+					ItemStatDictionary[stat.Key] *= stat.Value;
+				}
+				else {
+					ItemStatDictionary[stat.Key] += stat.Value;
+				}
 			}
 			else {
 				ItemStatDictionary.TryAdd(stat.Key, stat.Value);
 			}
-			//StatDictionary[stat.Key] += stat.Value;
 		}
 		
 		//CalculateStats();
@@ -571,12 +575,21 @@ public partial class Player : Actor {
 	public void RemoveItemStats(EquipmentSlot slot, Item item) {
 		foreach (KeyValuePair<EStatName, double> stat in item.StatDictionary) {
 			if (ItemStatDictionary.ContainsKey(stat.Key)) {
-				ItemStatDictionary[stat.Key] -= stat.Value;
+				if (Utilities.MultiplicativeStatNames.Contains(stat.Key)) {
+					if (stat.Value != 0) {
+						ItemStatDictionary[stat.Key] /= stat.Value;
+					}
+					else {
+						GD.PrintErr($"Tried to divide by 0 from stat {stat.Key} ");
+					}
+				}
+				else {
+					ItemStatDictionary[stat.Key] -= stat.Value;
+				}
 			}
 			else {
 				GD.PrintErr($"Can't remove from stat {stat.Key} from Item Stat Dictionary, because it does not exist");
 			}
-			//StatDictionary[stat.Key] -= stat.Value;
 		}
 
 		//CalculateStats();
@@ -603,9 +616,16 @@ public partial class Player : Actor {
 			StatDictionary[key] = 0;
 		}
 
+		foreach (EStatName key in MultiplicativeStatDictionary.Keys.ToList()) {
+			MultiplicativeStatDictionary[key] = 1;
+		}
+
 		foreach (KeyValuePair<EStatName, double> stat in ItemStatDictionary) {
 			if (StatDictionary.ContainsKey(stat.Key)) {
 				StatDictionary[stat.Key] += stat.Value;
+			}
+			else if (MultiplicativeStatDictionary.ContainsKey(stat.Key)) {
+				MultiplicativeStatDictionary[stat.Key] *= stat.Value;
 			}
 			else {
 				GD.PrintErr($"Key {stat.Key} not found, skipping");
@@ -615,6 +635,9 @@ public partial class Player : Actor {
 		foreach (KeyValuePair<EStatName, double> stat in PlayerHUD.PassiveTreePanel.PassiveTreeStatDictionary) {
 			if (StatDictionary.ContainsKey(stat.Key)) {
 				StatDictionary[stat.Key] += stat.Value;
+			}
+			else if (MultiplicativeStatDictionary.ContainsKey(stat.Key)) {
+				MultiplicativeStatDictionary[stat.Key] *= stat.Value;
 			}
 			else {
 				GD.PrintErr($"Key {stat.Key} not found, skipping");
@@ -657,8 +680,10 @@ public partial class Player : Actor {
 	protected void CalculateMaxLifeAndMana() {
 		BasicStats.AddedLife = (int)StatDictionary[EStatName.FlatMaxLife] + (int)StrLifeBonus + (lifeGrowth * (ActorLevel - 1));
 		BasicStats.IncreasedLife = StatDictionary[EStatName.IncreasedMaxLife];
+		BasicStats.MoreLife = MultiplicativeStatDictionary[EStatName.MoreMaxLife];
 		BasicStats.AddedMana = (int)StatDictionary[EStatName.FlatMaxMana] + (int)IntManaBonus + (manaGrowth * (ActorLevel - 1));
 		BasicStats.IncreasedMana = StatDictionary[EStatName.IncreasedMaxMana];
+		BasicStats.MoreMana = MultiplicativeStatDictionary[EStatName.MoreMaxMana];
 
 		BasicStats.AddedLifeRegen = StatDictionary[EStatName.AddedLifeRegen] + 1;
 		BasicStats.PercentageLifeRegen = StatDictionary[EStatName.PercentageLifeRegen];
@@ -689,8 +714,11 @@ public partial class Player : Actor {
 		CalculateMaxLifeAndMana();
 
 		AttackSpeedMod.SIncreased = StatDictionary[EStatName.IncreasedAttackSpeed] + DexASBonus;
+		AttackSpeedMod.SMore = MultiplicativeStatDictionary[EStatName.MoreAttackSpeed];
 		CastSpeedMod.SIncreased = StatDictionary[EStatName.IncreasedCastSpeed];
+		CastSpeedMod.SMore = MultiplicativeStatDictionary[EStatName.MoreCastSpeed];
 		CritChanceMod.SIncreased = StatDictionary[EStatName.IncreasedCritChance];
+		CritChanceMod.SMore = MultiplicativeStatDictionary[EStatName.MoreCritChance];
 		CritMultiplier.SAdded = StatDictionary[EStatName.AddedCritMulti];
 
 		MovementSpeed.SIncreased = StatDictionary[EStatName.IncreasedMovementSpeed];
@@ -701,35 +729,40 @@ public partial class Player : Actor {
 			(int)StatDictionary[EStatName.FlatMinPhysDamage], (int)StatDictionary[EStatName.FlatMaxPhysDamage],
 			(int)StatDictionary[EStatName.FlatAttackMinPhysDamage], (int)StatDictionary[EStatName.FlatAttackMaxPhysDamage],
 			(int)StatDictionary[EStatName.FlatSpellMinPhysDamage], (int)StatDictionary[EStatName.FlatSpellMaxPhysDamage],
-			StatDictionary[EStatName.IncreasedPhysDamage]
+			StatDictionary[EStatName.IncreasedPhysDamage],
+			MultiplicativeStatDictionary[EStatName.MorePhysDamage]
 		);
 
 		DamageMods.Fire.SetAddedIncreasedMore(
 			(int)StatDictionary[EStatName.FlatMinFireDamage], (int)StatDictionary[EStatName.FlatMaxFireDamage],
 			(int)StatDictionary[EStatName.FlatAttackMinFireDamage], (int)StatDictionary[EStatName.FlatAttackMaxFireDamage],
 			(int)StatDictionary[EStatName.FlatSpellMinFireDamage], (int)StatDictionary[EStatName.FlatSpellMaxFireDamage],
-			StatDictionary[EStatName.IncreasedFireDamage]
+			StatDictionary[EStatName.IncreasedFireDamage],
+			MultiplicativeStatDictionary[EStatName.MoreFireDamage]
 		);
 
 		DamageMods.Cold.SetAddedIncreasedMore(
 			(int)StatDictionary[EStatName.FlatMinColdDamage], (int)StatDictionary[EStatName.FlatMaxColdDamage],
 			(int)StatDictionary[EStatName.FlatAttackMinColdDamage], (int)StatDictionary[EStatName.FlatAttackMaxColdDamage],
 			(int)StatDictionary[EStatName.FlatSpellMinColdDamage], (int)StatDictionary[EStatName.FlatSpellMaxColdDamage],
-			StatDictionary[EStatName.IncreasedColdDamage]
+			StatDictionary[EStatName.IncreasedColdDamage],
+			MultiplicativeStatDictionary[EStatName.MoreColdDamage]
 		);
 
 		DamageMods.Lightning.SetAddedIncreasedMore(
 			(int)StatDictionary[EStatName.FlatMinLightningDamage], (int)StatDictionary[EStatName.FlatMaxLightningDamage],
 			(int)StatDictionary[EStatName.FlatAttackMinLightningDamage], (int)StatDictionary[EStatName.FlatAttackMaxLightningDamage],
 			(int)StatDictionary[EStatName.FlatSpellMinLightningDamage], (int)StatDictionary[EStatName.FlatSpellMaxLightningDamage],
-			StatDictionary[EStatName.IncreasedLightningDamage]
+			StatDictionary[EStatName.IncreasedLightningDamage],
+			MultiplicativeStatDictionary[EStatName.MoreLightningDamage]
 		);
 
 		DamageMods.Chaos.SetAddedIncreasedMore(
 			(int)StatDictionary[EStatName.FlatMinChaosDamage], (int)StatDictionary[EStatName.FlatMaxChaosDamage],
 			(int)StatDictionary[EStatName.FlatAttackMinChaosDamage], (int)StatDictionary[EStatName.FlatAttackMaxChaosDamage],
 			(int)StatDictionary[EStatName.FlatSpellMinChaosDamage], (int)StatDictionary[EStatName.FlatSpellMaxChaosDamage],
-			StatDictionary[EStatName.IncreasedChaosDamage]
+			StatDictionary[EStatName.IncreasedChaosDamage],
+			MultiplicativeStatDictionary[EStatName.MoreChaosDamage]
 		);
 
 		Penetrations.Physical = (int)StatDictionary[EStatName.PhysicalPenetration];
@@ -739,33 +772,49 @@ public partial class Player : Actor {
 		Penetrations.Chaos = (int)StatDictionary[EStatName.ChaosPenetration];
 
 		DamageMods.IncreasedAttack = StatDictionary[EStatName.IncreasedAttackDamage];
+		DamageMods.MoreAttack = MultiplicativeStatDictionary[EStatName.MoreAttackDamage];
 		DamageMods.IncreasedSpell = StatDictionary[EStatName.IncreasedSpellDamage] + IntSpellBonus;
+		DamageMods.MoreSpell = MultiplicativeStatDictionary[EStatName.MoreSpellDamage];
 		DamageMods.IncreasedMelee = StatDictionary[EStatName.IncreasedMeleeDamage] + StrMeleeBonus;
+		DamageMods.MoreMelee = MultiplicativeStatDictionary[EStatName.MoreMeleeDamage];
 		DamageMods.IncreasedProjectile = StatDictionary[EStatName.IncreasedProjectileDamage];
+		DamageMods.MoreProjectile = MultiplicativeStatDictionary[EStatName.MoreProjectileDamage];
 		DamageMods.IncreasedArea = StatDictionary[EStatName.IncreasedAreaDamage];
+		DamageMods.MoreArea = MultiplicativeStatDictionary[EStatName.MoreAreaDamage];
 		DamageMods.IncreasedBleed = StatDictionary[EStatName.IncreasedBleedDamage];
+		DamageMods.MoreBleed = MultiplicativeStatDictionary[EStatName.MoreBleedDamage];
 		DamageMods.IncreasedIgnite = StatDictionary[EStatName.IncreasedIgniteDamage];
+		DamageMods.MoreIgnite = MultiplicativeStatDictionary[EStatName.MoreIgniteDamage];
 		DamageMods.IncreasedPoison = StatDictionary[EStatName.IncreasedPoisonDamage];
+		DamageMods.MorePoison = MultiplicativeStatDictionary[EStatName.MorePoisonDamage];
 		DamageMods.IncreasedDoT = StatDictionary[EStatName.IncreasedDamageOverTime];
+		DamageMods.MoreDoT = MultiplicativeStatDictionary[EStatName.MoreDamageOverTime];
+		DamageMods.IncreasedAll = StatDictionary[EStatName.IncreasedAllDamage];
+		DamageMods.MoreAll = MultiplicativeStatDictionary[EStatName.MoreAllDamage];
 
 		StatusMods.Bleed.SAddedChance = StatDictionary[EStatName.AddedBleedChance];
 		StatusMods.Bleed.SIncreasedDuration = StatDictionary[EStatName.IncreasedBleedDuration];
+		StatusMods.Bleed.SMoreDuration = MultiplicativeStatDictionary[EStatName.MoreBleedDuration];
 		StatusMods.Bleed.SFasterTicking = StatDictionary[EStatName.FasterBleed];
 		StatusMods.Ignite.SAddedChance = StatDictionary[EStatName.AddedIgniteChance];
 		StatusMods.Ignite.SIncreasedDuration = StatDictionary[EStatName.IncreasedIgniteDuration];
+		StatusMods.Ignite.SMoreDuration = MultiplicativeStatDictionary[EStatName.MoreIgniteDuration];
 		StatusMods.Ignite.SFasterTicking = StatDictionary[EStatName.FasterIgnite];
 		StatusMods.Poison.SAddedChance = StatDictionary[EStatName.AddedPoisonChance];
 		StatusMods.Poison.SIncreasedDuration = StatDictionary[EStatName.IncreasedPoisonDuration];
+		StatusMods.Poison.SMoreDuration = MultiplicativeStatDictionary[EStatName.MorePoisonDuration];
 		StatusMods.Poison.SFasterTicking = StatDictionary[EStatName.FasterPoison];
 
 		Armour.SetAddedIncreasedMore(
 			(int)StatDictionary[EStatName.FlatArmour], 
-			StatDictionary[EStatName.IncreasedArmour]
+			StatDictionary[EStatName.IncreasedArmour],
+			MultiplicativeStatDictionary[EStatName.MoreArmour]
 		);
 
 		Evasion.SetAddedIncreasedMore(
 			(int)StatDictionary[EStatName.FlatEvasion],
-			StatDictionary[EStatName.IncreasedEvasion] + DexEvasionBonus
+			StatDictionary[EStatName.IncreasedEvasion] + DexEvasionBonus,
+			MultiplicativeStatDictionary[EStatName.MoreEvasion]
 		);
 
 		BlockChance.SAdded = StatDictionary[EStatName.BlockChance];

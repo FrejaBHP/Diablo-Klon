@@ -7,6 +7,7 @@ using Godot;
 public abstract class Skill {
     public static readonly PackedScene GenericAreaPersistentScene = GD.Load<PackedScene>("res://scenes/skills/scene_aoe_persistent_generic.tscn");
     public static readonly PackedScene GenericAreaInstantScene = GD.Load<PackedScene>("res://scenes/skills/scene_aoe_instant_generic.tscn");
+    public static readonly PackedScene ConeAreaInstantScene = GD.Load<PackedScene>("res://scenes/skills/scene_aoe_instant_cone.tscn");
     protected static readonly PackedScene thrustAttackScene = GD.Load<PackedScene>("res://scenes/skills/scene_thrust.tscn");
 
     public Actor ActorOwner { get; set; }
@@ -336,8 +337,8 @@ public abstract class Skill {
             }
 
             if (this is IAreaSkill aSkill) {
-                aSkill.IncreasedArea = 0;
-                aSkill.MoreArea = 1;
+                aSkill.IncreasedArea = ActorOwner.StatDictionary[EStatName.IncreasedAreaOfEffect];
+                aSkill.MoreArea = ActorOwner.MultiplicativeStatDictionary[EStatName.MoreAreaOfEffect];
 
                 if (isPartOfCluster) {
                     foreach (SupportGem support in supportGems) {
@@ -351,8 +352,8 @@ public abstract class Skill {
             }
 
             if (this is IDurationSkill dSkill) {
-                dSkill.IncreasedDuration = 1;
-                dSkill.MoreDuration = 1;
+                dSkill.IncreasedDuration = ActorOwner.StatDictionary[EStatName.IncreasedSkillEffectDuration];
+                dSkill.MoreDuration = ActorOwner.MultiplicativeStatDictionary[EStatName.MoreSkillEffectDuration];
 
                 if (isPartOfCluster) {
                     foreach (SupportGem support in supportGems) {
@@ -362,7 +363,7 @@ public abstract class Skill {
                     }
                 }
 
-                dSkill.TotalDuration = dSkill.BaseDuration * dSkill.IncreasedDuration * dSkill.MoreDuration;
+                dSkill.TotalDuration = dSkill.BaseDuration * (1 + dSkill.IncreasedDuration) * dSkill.MoreDuration;
             }
 
             if (isPartOfCluster) {
@@ -550,7 +551,7 @@ public interface IMeleeSkill {
     float BaseAttackRange { get; protected set; }
 
     // ===== Virtual functions =====
-    void ApplyMeleeSkillBehaviourToTarget(Actor target);
+    //void ApplyMeleeSkillBehaviourToTarget(Actor target);
 
     // ===== Default functions =====
 }
@@ -757,6 +758,24 @@ public interface IAreaSkill {
             area.TargetsSwept += ApplyAreaSkillBehaviourToTargets;
             area.GlobalPosition = targetPosition;
             area.SetProperties(TotalAreaRadius, animationName, animationPixelSize, TotalAreaRadius / BaseAreaRadius);
+            area.Sweep();
+        }
+
+        skill.DeductManaFromActor();
+    }
+
+    void BasicConeSweepSkillBehaviour(Skill skill, string animationName, float animationPixelSize, Vector3 direction, float coneDotMinimum) {
+        const int casts = 1; // Might allow skills to repeat in the future, but until then, this is here to make sure they only cast once
+        Vector3  targetPosition = skill.ActorOwner.GlobalPosition;
+
+        for (int i = 0; i < casts; i++) {
+            AreaOfEffectInstantCone area = Skill.ConeAreaInstantScene.Instantiate<AreaOfEffectInstantCone>();
+            Run.Instance.AddChild(area);
+            skill.SetSkillCollision(area.ShapeCastSweep);
+
+            area.TargetsSwept += ApplyAreaSkillBehaviourToTargets;
+            area.GlobalPosition = targetPosition;
+            area.SetProperties(TotalAreaRadius, animationName, animationPixelSize, TotalAreaRadius / BaseAreaRadius, skill.ActorOwner.OutgoingEffectAttachmentHeight, direction, coneDotMinimum);
             area.Sweep();
         }
 

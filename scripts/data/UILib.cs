@@ -54,6 +54,7 @@ public static class UILib {
 	public static readonly Texture2D TextureSkillNONE = GD.Load<Texture2D>("res://textures/skills/skill_none.png");
 	
 	public static readonly Texture2D TextureSkillThrust = GD.Load<Texture2D>("res://textures/skills/skill_thrust.png");
+	public static readonly Texture2D TextureSkillCleave = GD.Load<Texture2D>("res://textures/skills/skill_cleave.png");
 	
 	public static readonly Texture2D TextureSkillPiercingShot = GD.Load<Texture2D>("res://textures/skills/skill_piercingShot.png");
 	public static readonly Texture2D TextureSkillSplitArrow = GD.Load<Texture2D>("res://textures/skills/skill_splitArrow.png");

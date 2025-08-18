@@ -90,6 +90,7 @@ public enum ESkillName {
 	FireNova,
 	CobraShot,
 	Soulrend,
+	Cleave,
 	COUNT
 }
 

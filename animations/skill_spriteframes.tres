@@ -1,6 +1,19 @@
-[gd_resource type="SpriteFrames" load_steps=9 format=3 uid="uid://b4j0ojeo5e024"]
+[gd_resource type="SpriteFrames" load_steps=13 format=3 uid="uid://b4j0ojeo5e024"]
 
+[ext_resource type="Texture2D" uid="uid://klw3pcx8aqu4" path="res://textures/effects/cleave.png" id="1_3jd5j"]
 [ext_resource type="Texture2D" uid="uid://caj2fjojsjvwh" path="res://textures/effects/sheet_bd_nova.png" id="1_6w6o0"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qtckl"]
+atlas = ExtResource("1_3jd5j")
+region = Rect2(0, 0, 44, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cb7pv"]
+atlas = ExtResource("1_3jd5j")
+region = Rect2(0, 32, 44, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ofy04"]
+atlas = ExtResource("1_3jd5j")
+region = Rect2(0, 64, 44, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3jd5j"]
 atlas = ExtResource("1_6w6o0")
@@ -33,6 +46,20 @@ region = Rect2(384, 0, 64, 64)
 [resource]
 resource_local_to_scene = true
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qtckl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cb7pv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ofy04")
+}],
+"loop": false,
+"name": &"cleave",
+"speed": 20.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_3jd5j")

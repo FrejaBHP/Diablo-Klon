@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public partial class PTreePanel : PanelContainer {
     [Signal]
@@ -44,14 +45,15 @@ public partial class PTreePanel : PanelContainer {
     public void OnNodeAllocated(PTreeNode node) {
         for (int i = 0; i < node.StatNames.Count; i++) {
             if (PassiveTreeStatDictionary.ContainsKey(node.StatNames[i])) {
-                PassiveTreeStatDictionary[node.StatNames[i]] += node.StatValues[i];
-                //GD.Print($"Added {node.StatNames[i]} {node.StatValues[i]}");
-            }
-            else {
-                if (PassiveTreeStatDictionary.TryAdd(node.StatNames[i], node.StatValues[i])) {
-                    //GD.Print($"Added {node.StatNames[i]} {node.StatValues[i]} to dictionary");
+                if (Utilities.MultiplicativeStatNames.Contains(node.StatNames[i])) {
+                    PassiveTreeStatDictionary[node.StatNames[i]] *= node.StatValues[i];
                 }
                 else {
+                    PassiveTreeStatDictionary[node.StatNames[i]] += node.StatValues[i];
+                }
+            }
+            else {
+                if (!PassiveTreeStatDictionary.TryAdd(node.StatNames[i], node.StatValues[i])) {
                     GD.PrintErr($"Failed to add {node.StatNames[i]} {node.StatValues[i]} to dictionary");
                 }
             }

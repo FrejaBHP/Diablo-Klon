@@ -43,4 +43,37 @@ public static class Utilities {
 			return chance >= roll;
 		}
 	}
+
+	public static readonly EStatName[] MultiplicativeStatNames = [
+		EStatName.MoreMaxLife,
+        EStatName.MoreMaxMana,
+		EStatName.MorePhysDamage,
+		EStatName.MoreFireDamage,
+		EStatName.MoreColdDamage,
+        EStatName.MoreLightningDamage,
+        EStatName.MoreChaosDamage,
+
+        EStatName.MoreAttackDamage,
+        EStatName.MoreSpellDamage,
+        EStatName.MoreMeleeDamage,
+        EStatName.MoreProjectileDamage,
+        EStatName.MoreAreaDamage,
+        EStatName.MoreDamageOverTime,
+        EStatName.MoreAllDamage,
+
+        EStatName.MoreAttackSpeed,
+        EStatName.MoreCastSpeed,
+        EStatName.MoreCritChance,
+
+        EStatName.MoreBleedDamage,
+        EStatName.MoreBleedDuration,
+        EStatName.MoreIgniteDamage,
+        EStatName.MoreIgniteDuration,
+        EStatName.MorePoisonDamage,
+        EStatName.MorePoisonDuration,
+
+        EStatName.MoreArmour,
+        EStatName.MoreEvasion,
+        EStatName.MoreEnergyShield,
+	];
 }

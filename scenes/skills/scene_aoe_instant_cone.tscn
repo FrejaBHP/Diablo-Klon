@@ -1,0 +1,28 @@
+[gd_scene load_steps=4 format=3 uid="uid://cmvdx2i78rpom"]
+
+[ext_resource type="Script" uid="uid://glul5gfu2lkn" path="res://scripts/AreaOfEffectInstantCone.cs" id="1_d03po"]
+[ext_resource type="SpriteFrames" uid="uid://b4j0ojeo5e024" path="res://animations/skill_spriteframes.tres" id="2_game6"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_m4v3k"]
+resource_local_to_scene = true
+radius = 2.0
+
+[node name="AreaOfEffectInstant" type="Node3D"]
+script = ExtResource("1_d03po")
+
+[node name="ShapeCastSweep" type="ShapeCast3D" parent="."]
+enabled = false
+shape = SubResource("CylinderShape3D_m4v3k")
+target_position = Vector3(0, 0, 0)
+collision_mask = 0
+
+[node name="AreaAnimation" type="AnimatedSprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, -1)
+visible = false
+layers = 32
+cast_shadow = 0
+pixel_size = 0.06
+axis = 1
+texture_filter = 4
+sprite_frames = ExtResource("2_game6")
+animation = &"none"

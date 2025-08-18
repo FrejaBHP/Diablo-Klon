@@ -7,42 +7,42 @@
 
 [node name="PTreeNodeRoot" parent="." index="0"]
 texture_normal = ExtResource("2_238v1")
-StatNames = [27]
-StatValues = [0.2]
+StatNames = [30]
+StatValues = [0.15]
 NodeName = "Fire Damage"
-NodeDescription = "20% increased Fire Damage"
+NodeDescription = "15% increased Fire Damage"
 
 [node name="PTreeNodeBranch1" parent="." index="1"]
 texture_normal = ExtResource("2_238v1")
-StatNames = [28]
+StatNames = [32]
 StatValues = [6.0]
 NodeName = "Fire Penetration"
 NodeDescription = "Damage Penetrates 6% Fire Resistance"
 
 [node name="PTreeNodeBranch2" parent="." index="2"]
 texture_normal = ExtResource("2_238v1")
-StatNames = [67]
+StatNames = [85]
 StatValues = [0.25]
 NodeName = "Ignite Chance"
 NodeDescription = "25% chance to Ignite"
 
 [node name="PTreeNodeSplit1Node1" parent="." index="3"]
 texture_normal = ExtResource("2_238v1")
-StatNames = [27]
-StatValues = [0.25]
+StatNames = [30]
+StatValues = [0.2]
 NodeName = "Fire Damage"
-NodeDescription = "25% increased Fire Damage"
+NodeDescription = "20% increased Fire Damage"
 
 [node name="PTreeNodeSplit1Node2" parent="." index="4"]
 texture_normal = ExtResource("2_238v1")
-StatNames = [21, 22]
+StatNames = [24, 25]
 StatValues = [10.0, 20.0]
 NodeName = "Added Fire Damage"
 NodeDescription = "Adds 10 - 20 Fire Damage"
 
 [node name="PTreeNodeSplit2Node1" parent="." index="5"]
 texture_normal = ExtResource("2_238v1")
-StatNames = [67, 74]
+StatNames = [85, 95]
 StatValues = [0.15, 0.15]
 NodeName = "Ignite Chance and Duration"
 NodeDescription = "15% chance to Ignite
@@ -50,14 +50,14 @@ NodeDescription = "15% chance to Ignite
 
 [node name="PTreeNodeSplit2Node2" parent="." index="6"]
 texture_normal = ExtResource("2_238v1")
-StatNames = [68]
-StatValues = [0.4]
+StatNames = [86]
+StatValues = [0.35]
 NodeName = "Ignite Damage"
-NodeDescription = "40% increased Ignite Damage"
+NodeDescription = "35% increased Ignite Damage"
 
 [node name="PTreeNodeNotable1" parent="." index="7"]
 texture_normal = ExtResource("2_238v1")
-StatNames = [27, 28]
+StatNames = [30, 32]
 StatValues = [0.3, 10.0]
 NodeName = "Fire Damage and Penetration"
 NodeDescription = "30% increased Fire Damage
@@ -65,12 +65,15 @@ Damage Penetrates 10% Fire Resistance"
 
 [node name="PTreeNodeNotable2" parent="." index="8"]
 texture_normal = ExtResource("2_238v1")
-StatNames = [69]
+StatNames = [88]
 StatValues = [0.25]
 NodeName = "Faster Ignite"
-NodeDescription = "Ignite deals Damage 25% faster"
+NodeDescription = "Ignites deal Damage 25% faster"
 
 [node name="PTreeNodeKeystone" parent="." index="9"]
 texture_normal = ExtResource("2_238v1")
-NodeName = "Keystone Placeholder"
-NodeDescription = "Does nothing"
+StatNames = [31, 22, 40, 49, 58]
+StatValues = [1.3, null, null, null, null]
+NodeName = "Avatar of Fire"
+NodeDescription = "30% more Fire Damage
+Deal no non-Fire Damage"

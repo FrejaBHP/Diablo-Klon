@@ -7,13 +7,13 @@ public class SFireNova : Skill, ISpell, IAreaSkill {
     public Stat BaseCastSpeedModifiers { get; set; } = new(0, false);
     public Stat ActiveCastSpeedModifiers { get; set; } = new(0, false);
 
-    public float BaseAreaRadius { get; set; } = 2.5f;
+    public float BaseAreaRadius { get; set; } = 3f;
     public double IncreasedArea { get; set; } = 0;
     public double MoreArea { get; set; } = 1;
     public float TotalAreaRadius { get; set; }
     public bool IsNovaSkill { get; set; } = true;
 
-    private const float pixelSize = 0.125f;
+    private const float pixelSize = 0.15f;
 
     private static readonly double[] minDamageArray = [
         10, 12, 14, 17, 20,

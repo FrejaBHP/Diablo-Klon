@@ -70,7 +70,7 @@ public partial class SuppAddedFire : SupportGem {
 
     public SuppAddedFire() {
         ItemName = "Added Fire Damage Support";
-        Description = "Supports Skills that deal damage";
+        Description = "Supports Skills that deal Damage";
         AffectsDamageModifiers = true;
         AffectsStatusModifiers = false;
         SkillTags = ESkillTags.None;
@@ -83,7 +83,7 @@ public partial class SuppAddedFire : SupportGem {
     }
 
     protected override void UpdateGemEffectsDescription() {
-        DescEffects = $"Supported Skill gains {addedMinFire} to {addedMaxFire} Added Fire Damage";
+        DescEffects = $"Supported Skill deals {addedMinFire} to {addedMaxFire} Added Fire Damage";
     }
 
     public override void ApplyToDamageModifiers(DamageModifiers dmgMods) {
@@ -110,7 +110,7 @@ public partial class SuppAddedCold : SupportGem {
 
     public SuppAddedCold() {
         ItemName = "Added Cold Damage Support";
-        Description = "Supports Skills that deal damage";
+        Description = "Supports Skills that deal Damage";
         AffectsDamageModifiers = true;
         AffectsStatusModifiers = false;
         SkillTags = ESkillTags.None;
@@ -123,7 +123,7 @@ public partial class SuppAddedCold : SupportGem {
     }
 
     protected override void UpdateGemEffectsDescription() {
-        DescEffects = $"Supported Skill gains {addedMinCold} to {addedMaxCold} Added Cold Damage";
+        DescEffects = $"Supported Skill deals {addedMinCold} to {addedMaxCold} Added Cold Damage";
     }
 
     public override void ApplyToDamageModifiers(DamageModifiers dmgMods) {
@@ -150,7 +150,7 @@ public partial class SuppAddedLightning : SupportGem {
 
     public SuppAddedLightning() {
         ItemName = "Added Lightning Damage Support";
-        Description = "Supports Skills that deal damage";
+        Description = "Supports Skills that deal Damage";
         AffectsDamageModifiers = true;
         AffectsStatusModifiers = false;
         SkillTags = ESkillTags.None;
@@ -163,7 +163,7 @@ public partial class SuppAddedLightning : SupportGem {
     }
 
     protected override void UpdateGemEffectsDescription() {
-        DescEffects = $"Supported Skill gains {addedMinLightning} to {addedMaxLightning} Added Lightning Damage";
+        DescEffects = $"Supported Skill deals {addedMinLightning} to {addedMaxLightning} Added Lightning Damage";
     }
 
     public override void ApplyToDamageModifiers(DamageModifiers dmgMods) {
@@ -190,7 +190,7 @@ public partial class SuppAddedChaos : SupportGem {
 
     public SuppAddedChaos() {
         ItemName = "Added Chaos Damage Support";
-        Description = "Supports Skills that deal damage";
+        Description = "Supports Skills that deal Damage";
         AffectsDamageModifiers = true;
         AffectsStatusModifiers = false;
         SkillTags = ESkillTags.None;
@@ -203,7 +203,7 @@ public partial class SuppAddedChaos : SupportGem {
     }
 
     protected override void UpdateGemEffectsDescription() {
-        DescEffects = $"Supported Skill gains {addedMinChaos} to {addedMaxChaos} Added Chaos Damage";
+        DescEffects = $"Supported Skill deals {addedMinChaos} to {addedMaxChaos} Added Chaos Damage";
     }
 
     public override void ApplyToDamageModifiers(DamageModifiers dmgMods) {
@@ -235,7 +235,7 @@ public partial class SuppAttackSpeed : SupportGem {
     }
 
     protected override void UpdateGemEffectsDescription() {
-        DescEffects = $"Supported Skill gains {attackSpeedIncrease:P0} increased Attack Speed";
+        DescEffects = $"Supported Skill has {attackSpeedIncrease:P0} increased Attack Speed";
     }
 
     public override void ModifyAttackSkill(IAttack attack) {
@@ -266,7 +266,7 @@ public partial class SuppCastSpeed : SupportGem {
     }
 
     protected override void UpdateGemEffectsDescription() {
-        DescEffects = $"Supported Skill gains {castSpeedIncrease:P0} increased Cast Speed";
+        DescEffects = $"Supported Skill has {castSpeedIncrease:P0} increased Cast Speed";
     }
 
     public override void ModifySpellSkill(ISpell spell) {
@@ -378,7 +378,7 @@ public partial class SuppIncreasedDuration : SupportGem {
     }
 
     protected override void UpdateGemEffectsDescription() {
-        DescEffects = $"Supported Skill gains {incDuration:P0} increased Duration of Skill Effects";
+        DescEffects = $"Supported Skill has {incDuration:P0} increased Duration of Skill Effects";
     }
 
     public override void ModifyDurationSkill(IDurationSkill dSkill) {
@@ -409,7 +409,7 @@ public partial class SuppLessDuration : SupportGem {
     }
 
     protected override void UpdateGemEffectsDescription() {
-        DescEffects = $"Supported Skill gains {1 - lessDuration:P0} less Duration of Skill Effects";
+        DescEffects = $"Supported Skill has {1 - lessDuration:P0} less Duration of Skill Effects";
     }
 
     public override void ModifyDurationSkill(IDurationSkill dSkill) {
@@ -440,11 +440,47 @@ public partial class SuppIncreasedAoE : SupportGem {
     }
 
     protected override void UpdateGemEffectsDescription() {
-        DescEffects = $"Supported Skill gains {incArea:P0} increased Area of Effect";
+        DescEffects = $"Supported Skill has {incArea:P0} increased Area of Effect";
     }
 
     public override void ModifyAreaSkill(IAreaSkill aSkill) {
         aSkill.IncreasedArea += incArea;
+    }
+}
+
+public partial class SuppConcAoE : SupportGem {
+    private static readonly double[] moreAreaDamageArray = [
+        1.30, 1.31, 1.32, 1.33, 1.34,
+        1.35, 1.36, 1.37, 1.38, 1.39,
+        1.40, 1.41, 1.42, 1.43, 1.44
+    ];
+
+    private double moreAreaDamage;
+    private const double areaMultiplier = 0.7;
+
+    public SuppConcAoE() {
+        ItemName = "Concentrated Effect Support";
+        Description = "Supports Area Skills";
+        AffectsDamageModifiers = true;
+        AffectsStatusModifiers = false;
+        SkillTags = ESkillTags.Area;
+    }
+
+    protected override void OnGemLevelChanged() {
+        moreAreaDamage = moreAreaDamageArray[level];
+        UpdateGemEffectsDescription();
+    }
+
+    protected override void UpdateGemEffectsDescription() {
+        DescEffects = $"Supported Skill deals {moreAreaDamage - 1:P0} more Area Damage\nSupported Skill has {1 - areaMultiplier:P0} less Area of Effect";
+    }
+
+    public override void ApplyToDamageModifiers(DamageModifiers dmgMods) {
+        dmgMods.MoreArea *= moreAreaDamage;
+    }
+
+    public override void ModifyAreaSkill(IAreaSkill aSkill) {
+        aSkill.MoreArea *= areaMultiplier;
     }
 }
 
@@ -484,5 +520,76 @@ public partial class SuppPoisonChance : SupportGem {
     public override void ApplyToStatusModifiers(StatusEffectModifiers seMods) {
         seMods.Poison.SAddedChance += addedPoisonChance;
         seMods.Poison.SIncreasedDuration += incPoisonDuration;
+    }
+}
+
+public partial class SuppBrutality : SupportGem {
+    private static readonly double[] morePhysDamageArray = [
+        1.30, 1.31, 1.32, 1.33, 1.34,
+        1.35, 1.36, 1.37, 1.38, 1.39,
+        1.40, 1.41, 1.42, 1.43, 1.44
+    ];
+
+    private double morePhysDamage;
+    private const double nonPhysMultiplier = 0;
+
+    public SuppBrutality() {
+        ItemName = "Brutality Support";
+        Description = "Supports Skills that deal Damage";
+        AffectsDamageModifiers = true;
+        AffectsStatusModifiers = false;
+        SkillTags = ESkillTags.None;
+    }
+
+    protected override void OnGemLevelChanged() {
+        morePhysDamage = morePhysDamageArray[level];
+        UpdateGemEffectsDescription();
+    }
+
+    protected override void UpdateGemEffectsDescription() {
+        DescEffects = $"Supported Skill deals {morePhysDamage - 1:P0} more Physical Damage\nSupported Skill deals no non-Physical Damage";
+    }
+
+    public override void ApplyToDamageModifiers(DamageModifiers dmgMods) {
+        dmgMods.Physical.SMore *= morePhysDamage;
+        dmgMods.Fire.SMore *= nonPhysMultiplier;
+        dmgMods.Cold.SMore *= nonPhysMultiplier;
+        dmgMods.Lightning.SMore *= nonPhysMultiplier;
+        dmgMods.Chaos.SMore *= nonPhysMultiplier;
+    }
+}
+
+public partial class SuppSheerCold : SupportGem {
+    private static readonly double[] moreColdDamageArray = [
+        1.25, 1.26, 1.27, 1.28, 1.29,
+        1.30, 1.31, 1.32, 1.33, 1.34,
+        1.35, 1.36, 1.37, 1.38, 1.39
+    ];
+
+    private double moreColdDamage;
+    private const double otherEleMultiplier = 0.5;
+
+    public SuppSheerCold() {
+        ItemName = "Sheer Cold Support";
+        Description = "Supports Skills that deal Damage";
+        AffectsDamageModifiers = true;
+        AffectsStatusModifiers = false;
+        SkillTags = ESkillTags.None;
+    }
+
+    protected override void OnGemLevelChanged() {
+        moreColdDamage = moreColdDamageArray[level];
+        UpdateGemEffectsDescription();
+    }
+
+    protected override void UpdateGemEffectsDescription() {
+        DescEffects = $"Supported Skill deals {moreColdDamage - 1:P0} more Cold Damage\nSupported Skill deals {otherEleMultiplier - 1:P0} less Fire and Lightning Damage";
+    }
+
+    public override void ApplyToDamageModifiers(DamageModifiers dmgMods) {
+        dmgMods.Cold.SMore *= moreColdDamage;
+        dmgMods.Fire.SMore *= otherEleMultiplier;
+        
+        dmgMods.Lightning.SMore *= otherEleMultiplier;
     }
 }

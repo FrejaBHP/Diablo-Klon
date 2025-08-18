@@ -393,6 +393,13 @@ public static class ItemDataTables {
 			Texture = UILib.TextureItemD2JewelBlue,
 			MinimumLevel = 0,
 		},
+
+		new SkillItemData {
+			SkillName = ESkillName.Cleave,
+			SkillType = typeof(SCleave),
+			Texture = UILib.TextureItemD2JewelRed,
+			MinimumLevel = 0,
+		},
 	];
 
 	public static readonly List<SupportGemData> SupportGemData = [
@@ -474,9 +481,23 @@ public static class ItemDataTables {
 		},
 
 		new SupportGemData {
+			SkillTags = ESkillTags.Area,
+			SupportType = typeof(SuppConcAoE),
+			Texture = UILib.TextureItemD2JewelBlueF,
+			MinimumLevel = 0,
+		},
+
+		new SupportGemData {
 			SkillTags = ESkillTags.None,
 			SupportType = typeof(SuppPoisonChance),
 			Texture = UILib.TextureItemD2JewelGreenF,
+			MinimumLevel = 0,
+		},
+
+		new SupportGemData {
+			SkillTags = ESkillTags.None,
+			SupportType = typeof(SuppBrutality),
+			Texture = UILib.TextureItemD2JewelRedF,
 			MinimumLevel = 0,
 		},
 	];

@@ -410,6 +410,7 @@ public partial class Actor : CharacterBody3D {
 		{ EStatName.IncreasedProjectileDamage, 		0 },
 		{ EStatName.IncreasedAreaDamage, 			0 },
         { EStatName.IncreasedDamageOverTime, 		0 },
+        { EStatName.IncreasedAllDamage, 	    	0 },
 
 		{ EStatName.IncreasedAttackSpeed, 			0 },
 		{ EStatName.IncreasedCastSpeed, 			0 },
@@ -432,6 +433,9 @@ public partial class Actor : CharacterBody3D {
 		{ EStatName.IncreasedMovementSpeed, 		0 },
 		{ EStatName.BlockChance, 					0 },
 
+        { EStatName.IncreasedAreaOfEffect,       	0 },
+        { EStatName.IncreasedSkillEffectDuration, 	0 },
+
 		{ EStatName.FlatArmour, 					0 },
 		{ EStatName.IncreasedArmour, 				0 },
 		{ EStatName.FlatEvasion, 					0 },
@@ -444,6 +448,43 @@ public partial class Actor : CharacterBody3D {
 		{ EStatName.ColdResistance, 				0 },
 		{ EStatName.LightningResistance, 			0 },
 		{ EStatName.ChaosResistance, 				0 },
+	};
+
+    public Dictionary<EStatName, double> MultiplicativeStatDictionary = new() {
+        { EStatName.MoreMaxLife, 		    		1 },
+        { EStatName.MoreMaxMana, 		    		1 },
+
+		{ EStatName.MorePhysDamage, 				1 },
+		{ EStatName.MoreFireDamage, 				1 },
+		{ EStatName.MoreColdDamage, 				1 },
+        { EStatName.MoreLightningDamage, 			1 },
+        { EStatName.MoreChaosDamage, 				1 },
+
+        { EStatName.MoreAttackDamage, 				1 },
+        { EStatName.MoreSpellDamage, 				1 },
+        { EStatName.MoreMeleeDamage, 				1 },
+        { EStatName.MoreProjectileDamage, 			1 },
+        { EStatName.MoreAreaDamage, 				1 },
+        { EStatName.MoreDamageOverTime,				1 },
+        { EStatName.MoreAllDamage, 				    1 },
+
+        { EStatName.MoreAttackSpeed, 		    	1 },
+        { EStatName.MoreCastSpeed, 		    	    1 },
+        { EStatName.MoreCritChance, 		    	1 },
+
+        { EStatName.MoreBleedDamage, 				1 },
+        { EStatName.MoreBleedDuration, 				1 },
+        { EStatName.MoreIgniteDamage, 				1 },
+        { EStatName.MoreIgniteDuration, 			1 },
+        { EStatName.MorePoisonDamage, 				1 },
+        { EStatName.MorePoisonDuration, 			1 },
+
+        { EStatName.MoreAreaOfEffect, 		        1 },
+        { EStatName.MoreSkillEffectDuration, 		1 },
+
+        { EStatName.MoreArmour, 		    		1 },
+        { EStatName.MoreEvasion, 		    		1 },
+        { EStatName.MoreEnergyShield,	    		1 },
 	};
 
     public float OutgoingEffectAttachmentHeight { get; protected set; } = 1f;
