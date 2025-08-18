@@ -410,7 +410,7 @@ public static class ItemGeneration {
 		item.ItemBase = data.BaseName;
 		item.ItemTexture = data.Texture;
 
-		item.Level = Run.Instance.GemLevel;
+		item.RollForVariant();
 
 		return item;
 	}
@@ -431,7 +431,7 @@ public static class ItemGeneration {
 				item.ItemBase = data.BaseName;
 				item.ItemTexture = data.Texture;
 
-				item.Level = Run.Instance.GemLevel;
+				item.RollForVariant();
 
 				generatedSupportGems.Add(item);
 

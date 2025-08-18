@@ -4,15 +4,6 @@ using System.Collections.Generic;
 using System.Text;
 
 public abstract class SupportGem : Item {
-    protected int level = 0;
-    public int Level { 
-        get => level; 
-        set {
-            level = value;
-            OnGemLevelChanged();
-        } 
-    }
-
     public string Description { get; protected set; }
     public string DescEffects { get; protected set; }
     public bool AffectsDamageModifiers { get; protected set; }
@@ -29,17 +20,10 @@ public abstract class SupportGem : Item {
 
 		gridSizeX = 1;
 		gridSizeY = 1;
-
-        if (Run.Instance.Rules.ExistingGemsScaleWithGameProgress) {
-			Run.Instance.GemLevelChanged += SetGemLevel;
-		}
 	}
 
-    public void SetGemLevel(int level) {
-        Level = level;
-    }
-
-    protected abstract void OnGemLevelChanged();
+    public abstract void RollForVariant();
+    protected abstract void OnVariantChosen();
     protected abstract void UpdateGemEffectsDescription();
 
     public virtual void ApplyToDamageModifiers(DamageModifiers dmgMods) {}
@@ -76,9 +60,13 @@ public partial class SuppAddedFire : SupportGem {
         SkillTags = ESkillTags.None;
     }
 
-    protected override void OnGemLevelChanged() {
-        addedMinFire = minDamageArray[level];
-        addedMaxFire = maxDamageArray[level];
+    public override void RollForVariant() {
+        OnVariantChosen();
+    }
+
+    protected override void OnVariantChosen() {
+        addedMinFire = minDamageArray[0];
+        addedMaxFire = maxDamageArray[0];
         UpdateGemEffectsDescription();
     }
 
@@ -116,9 +104,13 @@ public partial class SuppAddedCold : SupportGem {
         SkillTags = ESkillTags.None;
     }
 
-    protected override void OnGemLevelChanged() {
-        addedMinCold = minDamageArray[level];
-        addedMaxCold = maxDamageArray[level];
+    public override void RollForVariant() {
+        OnVariantChosen();
+    }
+
+    protected override void OnVariantChosen() {
+        addedMinCold = minDamageArray[0];
+        addedMaxCold = maxDamageArray[0];
         UpdateGemEffectsDescription();
     }
 
@@ -156,9 +148,13 @@ public partial class SuppAddedLightning : SupportGem {
         SkillTags = ESkillTags.None;
     }
 
-    protected override void OnGemLevelChanged() {
-        addedMinLightning = minDamageArray[level];
-        addedMaxLightning = maxDamageArray[level];
+    public override void RollForVariant() {
+        OnVariantChosen();
+    }
+
+    protected override void OnVariantChosen() {
+        addedMinLightning = minDamageArray[0];
+        addedMaxLightning = maxDamageArray[0];
         UpdateGemEffectsDescription();
     }
 
@@ -196,9 +192,13 @@ public partial class SuppAddedChaos : SupportGem {
         SkillTags = ESkillTags.None;
     }
 
-    protected override void OnGemLevelChanged() {
-        addedMinChaos = minDamageArray[level];
-        addedMaxChaos = maxDamageArray[level];
+    public override void RollForVariant() {
+        OnVariantChosen();
+    }
+
+    protected override void OnVariantChosen() {
+        addedMinChaos = minDamageArray[0];
+        addedMaxChaos = maxDamageArray[0];
         UpdateGemEffectsDescription();
     }
 
@@ -213,13 +213,7 @@ public partial class SuppAddedChaos : SupportGem {
 }
 
 public partial class SuppAttackSpeed : SupportGem {
-    private static readonly double[] increasedAttackSpeedArray = [
-        0.25, 0.26, 0.27, 0.28, 0.29,
-        0.30, 0.31, 0.32, 0.33, 0.34,
-        0.35, 0.36, 0.37, 0.38, 0.39
-    ];
-
-    private double attackSpeedIncrease;
+    private const double moreAttackSpeed = 1.20;
 
     public SuppAttackSpeed() {
         ItemName = "Attack Speed Support";
@@ -229,28 +223,25 @@ public partial class SuppAttackSpeed : SupportGem {
         SkillTags = ESkillTags.Attack;
     }
 
-    protected override void OnGemLevelChanged() {
-        attackSpeedIncrease = increasedAttackSpeedArray[level];
+    public override void RollForVariant() {
+        OnVariantChosen();
+    }
+
+    protected override void OnVariantChosen() {
         UpdateGemEffectsDescription();
     }
 
     protected override void UpdateGemEffectsDescription() {
-        DescEffects = $"Supported Skill has {attackSpeedIncrease:P0} increased Attack Speed";
+        DescEffects = $"Supported Skill has {moreAttackSpeed - 1:P0} more Attack Speed";
     }
 
     public override void ModifyAttackSkill(IAttack attack) {
-        attack.ActiveAttackSpeedModifiers.SIncreased += attackSpeedIncrease;
+        attack.ActiveAttackSpeedModifiers.SMore *= moreAttackSpeed;
     }
 }
 
 public partial class SuppCastSpeed : SupportGem {
-    private static readonly double[] increasedCastSpeedArray = [
-        0.25, 0.26, 0.27, 0.28, 0.29,
-        0.30, 0.31, 0.32, 0.33, 0.34,
-        0.35, 0.36, 0.37, 0.38, 0.39
-    ];
-
-    private double castSpeedIncrease;
+    private const double moreCastSpeed = 1.20;
 
     public SuppCastSpeed() {
         ItemName = "Cast Speed Support";
@@ -260,26 +251,25 @@ public partial class SuppCastSpeed : SupportGem {
         SkillTags = ESkillTags.Spell;
     }
 
-    protected override void OnGemLevelChanged() {
-        castSpeedIncrease = increasedCastSpeedArray[level];
+    public override void RollForVariant() {
+        OnVariantChosen();
+    }
+
+    protected override void OnVariantChosen() {
         UpdateGemEffectsDescription();
     }
 
     protected override void UpdateGemEffectsDescription() {
-        DescEffects = $"Supported Skill has {castSpeedIncrease:P0} increased Cast Speed";
+        DescEffects = $"Supported Skill has {moreCastSpeed - 1:P0} more Cast Speed";
     }
 
     public override void ModifySpellSkill(ISpell spell) {
-        spell.ActiveCastSpeedModifiers.SIncreased += castSpeedIncrease;
+        spell.ActiveCastSpeedModifiers.SMore *= moreCastSpeed;
     }
 }
 
 public partial class SuppPierce : SupportGem {
-    private static readonly int[] addedPierceArray = [
-        2, 3, 4
-    ];
-
-    private int addedPierces;
+    private const int addedPierces = 2;
 
     public SuppPierce() {
         ItemName = "Pierce Support";
@@ -289,17 +279,11 @@ public partial class SuppPierce : SupportGem {
         SkillTags = ESkillTags.Projectile;
     }
 
-    protected override void OnGemLevelChanged() {
-        if (level >= 10) {
-            addedPierces = addedPierceArray[2];
-        }
-        else if (level >= 5) {
-            addedPierces = addedPierceArray[1];
-        }
-        else {
-            addedPierces = addedPierceArray[0];
-        }
+    public override void RollForVariant() {
+        OnVariantChosen();
+    }
 
+    protected override void OnVariantChosen() {
         UpdateGemEffectsDescription();
     }
 
@@ -313,12 +297,8 @@ public partial class SuppPierce : SupportGem {
 }
 
 public partial class SuppMultipleProjectiles : SupportGem {
-    private static readonly int[] addedProjectilesArray = [
-        2, 3, 4
-    ];
-
-    private int addedProjectiles;
-    private readonly double damagePenalty = 0.75;
+    private const int addedProjectiles = 2;
+    private const double damagePenalty = 0.75;
 
     public SuppMultipleProjectiles() {
         ItemName = "Multiple Projectiles Support";
@@ -328,17 +308,11 @@ public partial class SuppMultipleProjectiles : SupportGem {
         SkillTags = ESkillTags.Projectile;
     }
 
-    protected override void OnGemLevelChanged() {
-        if (level >= 10) {
-            addedProjectiles = addedProjectilesArray[2];
-        }
-        else if (level >= 5) {
-            addedProjectiles = addedProjectilesArray[1];
-        }
-        else {
-            addedProjectiles = addedProjectilesArray[0];
-        }
+    public override void RollForVariant() {
+        OnVariantChosen();
+    }
 
+    protected override void OnVariantChosen() {
         UpdateGemEffectsDescription();
     }
 
@@ -355,45 +329,36 @@ public partial class SuppMultipleProjectiles : SupportGem {
     }
 }
 
-public partial class SuppIncreasedDuration : SupportGem {
-    private static readonly double[] increasedDurationArray = [
-        0.40, 0.41, 0.42, 0.43, 0.44,
-        0.45, 0.46, 0.47, 0.48, 0.49,
-        0.50, 0.51, 0.52, 0.53, 0.54
-    ];
+public partial class SuppMoreDuration : SupportGem {
+    private const double moreDuration = 1.4;
 
-    private double incDuration;
-
-    public SuppIncreasedDuration() {
-        ItemName = "Increased Duration Support";
+    public SuppMoreDuration() {
+        ItemName = "More Duration Support";
         Description = "Supports Duration Skills";
         AffectsDamageModifiers = false;
         AffectsStatusModifiers = false;
         SkillTags = ESkillTags.Duration;
     }
 
-    protected override void OnGemLevelChanged() {
-        incDuration = increasedDurationArray[level];
+    public override void RollForVariant() {
+        OnVariantChosen();
+    }
+
+    protected override void OnVariantChosen() {
         UpdateGemEffectsDescription();
     }
 
     protected override void UpdateGemEffectsDescription() {
-        DescEffects = $"Supported Skill has {incDuration:P0} increased Duration of Skill Effects";
+        DescEffects = $"Supported Skill has {moreDuration - 1:P0} more Duration of Skill Effects";
     }
 
     public override void ModifyDurationSkill(IDurationSkill dSkill) {
-        dSkill.IncreasedDuration += incDuration;
+        dSkill.MoreDuration *= moreDuration;
     }
 }
 
 public partial class SuppLessDuration : SupportGem {
-    private static readonly double[] lessDurationArray = [
-        0.50, 0.49, 0.49, 0.48, 0.47, 
-        0.47, 0.46, 0.45, 0.44, 0.43, 
-        0.43, 0.42, 0.41, 0.41, 0.40
-    ];
-
-    private double lessDuration;
+    private const double moreDuration = 0.65;
 
     public SuppLessDuration() {
         ItemName = "Less Duration Support";
@@ -403,60 +368,54 @@ public partial class SuppLessDuration : SupportGem {
         SkillTags = ESkillTags.Duration;
     }
 
-    protected override void OnGemLevelChanged() {
-        lessDuration = lessDurationArray[level];
+    public override void RollForVariant() {
+        OnVariantChosen();
+    }
+
+    protected override void OnVariantChosen() {
         UpdateGemEffectsDescription();
     }
 
     protected override void UpdateGemEffectsDescription() {
-        DescEffects = $"Supported Skill has {1 - lessDuration:P0} less Duration of Skill Effects";
+        DescEffects = $"Supported Skill has {1 - moreDuration:P0} less Duration of Skill Effects";
     }
 
     public override void ModifyDurationSkill(IDurationSkill dSkill) {
-        dSkill.MoreDuration *= lessDuration;
+        dSkill.MoreDuration *= moreDuration;
     }
 }
 
-public partial class SuppIncreasedAoE : SupportGem {
-    private static readonly double[] increasedAreaArray = [
-        0.40, 0.41, 0.42, 0.43, 0.44,
-        0.45, 0.46, 0.47, 0.48, 0.49,
-        0.50, 0.51, 0.52, 0.53, 0.54
-    ];
+public partial class SuppMoreAoE : SupportGem {
+    private const double moreArea = 1.3;
 
-    private double incArea;
-
-    public SuppIncreasedAoE() {
-        ItemName = "Increased Area of Effect Support";
+    public SuppMoreAoE() {
+        ItemName = "More Area of Effect Support";
         Description = "Supports Area Skills";
         AffectsDamageModifiers = false;
         AffectsStatusModifiers = false;
         SkillTags = ESkillTags.Area;
     }
 
-    protected override void OnGemLevelChanged() {
-        incArea = increasedAreaArray[level];
+    public override void RollForVariant() {
+        OnVariantChosen();
+    }
+
+    protected override void OnVariantChosen() {
         UpdateGemEffectsDescription();
     }
 
     protected override void UpdateGemEffectsDescription() {
-        DescEffects = $"Supported Skill has {incArea:P0} increased Area of Effect";
+        DescEffects = $"Supported Skill has {moreArea - 1:P0} more Area of Effect";
     }
 
     public override void ModifyAreaSkill(IAreaSkill aSkill) {
-        aSkill.IncreasedArea += incArea;
+        aSkill.MoreArea *= moreArea;
     }
 }
 
 public partial class SuppConcAoE : SupportGem {
-    private static readonly double[] moreAreaDamageArray = [
-        1.30, 1.31, 1.32, 1.33, 1.34,
-        1.35, 1.36, 1.37, 1.38, 1.39,
-        1.40, 1.41, 1.42, 1.43, 1.44
-    ];
-
-    private double moreAreaDamage;
-    private const double areaMultiplier = 0.7;
+    private const double moreAreaDamage = 1.3;
+    private const double areaMultiplier = 0.6;
 
     public SuppConcAoE() {
         ItemName = "Concentrated Effect Support";
@@ -466,8 +425,11 @@ public partial class SuppConcAoE : SupportGem {
         SkillTags = ESkillTags.Area;
     }
 
-    protected override void OnGemLevelChanged() {
-        moreAreaDamage = moreAreaDamageArray[level];
+    public override void RollForVariant() {
+        OnVariantChosen();
+    }
+
+    protected override void OnVariantChosen() {
         UpdateGemEffectsDescription();
     }
 
@@ -484,15 +446,59 @@ public partial class SuppConcAoE : SupportGem {
     }
 }
 
-public partial class SuppPoisonChance : SupportGem {
-    private static readonly double[] increasedPoisonDurationArray = [
-        0.00, 0.02, 0.04, 0.06, 0.08,
-        0.10, 0.12, 0.14, 0.16, 0.18,
-        0.20, 0.22, 0.24, 0.26, 0.28
-    ];
+public partial class SuppBleedChance : SupportGem {
+    private const double addedBleedChance = 0.5;
 
-    private double incPoisonDuration;
+    private int variant = 0;
+    private const double variantIncreasedBleedDuration = 0.2;
+
+    public SuppBleedChance() {
+        ItemName = "Chance to Bleed Support";
+        Description = "Supports Skills that deal damage";
+        AffectsDamageModifiers = false;
+        AffectsStatusModifiers = true;
+        SkillTags = ESkillTags.None;
+    }
+
+    public override void RollForVariant() {
+        variant = Utilities.RNG.Next(0, 2);
+
+        if (variant == 1) {
+            ItemName = "Chance to Bleed Support of Exsanguination";
+        }
+
+        OnVariantChosen();
+    }
+
+    protected override void OnVariantChosen() {
+        UpdateGemEffectsDescription();
+    }
+
+    protected override void UpdateGemEffectsDescription() {
+        StringBuilder sb = new();
+        sb.Append($"Supported Skill has {addedBleedChance:P0} chance to Bleed on Hit");
+
+        if (variant == 1) {
+            sb.Append($"\nSupported Skill has {variantIncreasedBleedDuration:P0} increased Bleed Duration");
+        }
+
+        DescEffects = sb.ToString();
+    }
+
+    public override void ApplyToStatusModifiers(StatusEffectModifiers seMods) {
+        seMods.Bleed.SAddedChance += addedBleedChance;
+
+        if (variant == 1) {
+            seMods.Bleed.SIncreasedDuration += variantIncreasedBleedDuration;
+        }
+    }
+}
+
+public partial class SuppPoisonChance : SupportGem {
     private const double addedPoisonChance = 0.5;
+
+    private int variant = 0;
+    private const double variantIncreasedPoisonDuration = 0.2;
 
     public SuppPoisonChance() {
         ItemName = "Chance to Poison Support";
@@ -502,16 +508,26 @@ public partial class SuppPoisonChance : SupportGem {
         SkillTags = ESkillTags.None;
     }
 
-    protected override void OnGemLevelChanged() {
-        incPoisonDuration = increasedPoisonDurationArray[level];
+    public override void RollForVariant() {
+        variant = Utilities.RNG.Next(0, 2);
+
+        if (variant == 1) {
+            ItemName = "Chance to Poison Support of Wasting";
+        }
+
+        OnVariantChosen();
+    }
+
+    protected override void OnVariantChosen() {
         UpdateGemEffectsDescription();
     }
 
     protected override void UpdateGemEffectsDescription() {
         StringBuilder sb = new();
         sb.Append($"Supported Skill has {addedPoisonChance:P0} chance to Poison on Hit");
-        if (level > 0) {
-            sb.Append($"\nSupported Skill has {incPoisonDuration:P0} increased Poison duration");
+
+        if (variant == 1) {
+            sb.Append($"\nSupported Skill has {variantIncreasedPoisonDuration:P0} increased Poison Duration");
         }
 
         DescEffects = sb.ToString();
@@ -519,19 +535,19 @@ public partial class SuppPoisonChance : SupportGem {
 
     public override void ApplyToStatusModifiers(StatusEffectModifiers seMods) {
         seMods.Poison.SAddedChance += addedPoisonChance;
-        seMods.Poison.SIncreasedDuration += incPoisonDuration;
+
+        if (variant == 1) {
+            seMods.Poison.SIncreasedDuration += variantIncreasedPoisonDuration;
+        }
     }
 }
 
 public partial class SuppBrutality : SupportGem {
-    private static readonly double[] morePhysDamageArray = [
-        1.30, 1.31, 1.32, 1.33, 1.34,
-        1.35, 1.36, 1.37, 1.38, 1.39,
-        1.40, 1.41, 1.42, 1.43, 1.44
-    ];
+    private const double morePhysDamage = 1.3;
+    private const double moreNonPhysDamage = 0;
 
-    private double morePhysDamage;
-    private const double nonPhysMultiplier = 0;
+    private int variant = 0;
+    private const double variantIncreasedBleedDamage = 0.3;
 
     public SuppBrutality() {
         ItemName = "Brutality Support";
@@ -541,33 +557,78 @@ public partial class SuppBrutality : SupportGem {
         SkillTags = ESkillTags.None;
     }
 
-    protected override void OnGemLevelChanged() {
-        morePhysDamage = morePhysDamageArray[level];
+    public override void RollForVariant() {
+        variant = Utilities.RNG.Next(0, 2);
+
+        if (variant == 1) {
+            ItemName = "Brutality Support of Deep Cuts";
+        }
+
+        OnVariantChosen();
+    }
+
+    protected override void OnVariantChosen() {
         UpdateGemEffectsDescription();
     }
 
     protected override void UpdateGemEffectsDescription() {
-        DescEffects = $"Supported Skill deals {morePhysDamage - 1:P0} more Physical Damage\nSupported Skill deals no non-Physical Damage";
+        StringBuilder sb = new();
+        sb.Append($"Supported Skill deals {morePhysDamage - 1:P0} more Physical Damage\nSupported Skill deals no non-Physical Damage");
+
+        if (variant == 1) {
+            sb.Append($"\nSupported Skill deals {variantIncreasedBleedDamage:P0} increased Bleed Damage");
+        }
+
+        DescEffects = sb.ToString();
     }
 
     public override void ApplyToDamageModifiers(DamageModifiers dmgMods) {
         dmgMods.Physical.SMore *= morePhysDamage;
-        dmgMods.Fire.SMore *= nonPhysMultiplier;
-        dmgMods.Cold.SMore *= nonPhysMultiplier;
-        dmgMods.Lightning.SMore *= nonPhysMultiplier;
-        dmgMods.Chaos.SMore *= nonPhysMultiplier;
+        dmgMods.Fire.SMore *= moreNonPhysDamage;
+        dmgMods.Cold.SMore *= moreNonPhysDamage;
+        dmgMods.Lightning.SMore *= moreNonPhysDamage;
+        dmgMods.Chaos.SMore *= moreNonPhysDamage;
+
+        if (variant == 1) {
+            dmgMods.IncreasedBleed += variantIncreasedBleedDamage;
+        }
+    }
+}
+
+public partial class SuppBlisteringHeat : SupportGem {
+    private const double moreFireDamage = 1.25;
+    private const double moreOtherEleDamage = 0.5;
+
+    public SuppBlisteringHeat() {
+        ItemName = "Blistering Heat Support";
+        Description = "Supports Skills that deal Damage";
+        AffectsDamageModifiers = true;
+        AffectsStatusModifiers = false;
+        SkillTags = ESkillTags.None;
+    }
+
+    public override void RollForVariant() {
+        OnVariantChosen();
+    }
+
+    protected override void OnVariantChosen() {
+        UpdateGemEffectsDescription();
+    }
+
+    protected override void UpdateGemEffectsDescription() {
+        DescEffects = $"Supported Skill deals {moreFireDamage - 1:P0} more Fire Damage\nSupported Skill deals {1 - moreOtherEleDamage:P0} less Cold and Lightning Damage";
+    }
+
+    public override void ApplyToDamageModifiers(DamageModifiers dmgMods) {
+        dmgMods.Fire.SMore *= moreFireDamage;
+        dmgMods.Cold.SMore *= moreOtherEleDamage;
+        dmgMods.Lightning.SMore *= moreOtherEleDamage;
     }
 }
 
 public partial class SuppSheerCold : SupportGem {
-    private static readonly double[] moreColdDamageArray = [
-        1.25, 1.26, 1.27, 1.28, 1.29,
-        1.30, 1.31, 1.32, 1.33, 1.34,
-        1.35, 1.36, 1.37, 1.38, 1.39
-    ];
-
-    private double moreColdDamage;
-    private const double otherEleMultiplier = 0.5;
+    private const double moreColdDamage = 1.25;
+    private const double moreOtherEleDamage = 0.5;
 
     public SuppSheerCold() {
         ItemName = "Sheer Cold Support";
@@ -577,19 +638,52 @@ public partial class SuppSheerCold : SupportGem {
         SkillTags = ESkillTags.None;
     }
 
-    protected override void OnGemLevelChanged() {
-        moreColdDamage = moreColdDamageArray[level];
+    public override void RollForVariant() {
+        OnVariantChosen();
+    }
+
+    protected override void OnVariantChosen() {
         UpdateGemEffectsDescription();
     }
 
     protected override void UpdateGemEffectsDescription() {
-        DescEffects = $"Supported Skill deals {moreColdDamage - 1:P0} more Cold Damage\nSupported Skill deals {otherEleMultiplier - 1:P0} less Fire and Lightning Damage";
+        DescEffects = $"Supported Skill deals {moreColdDamage - 1:P0} more Cold Damage\nSupported Skill deals {1 - moreOtherEleDamage:P0} less Fire and Lightning Damage";
     }
 
     public override void ApplyToDamageModifiers(DamageModifiers dmgMods) {
         dmgMods.Cold.SMore *= moreColdDamage;
-        dmgMods.Fire.SMore *= otherEleMultiplier;
-        
-        dmgMods.Lightning.SMore *= otherEleMultiplier;
+        dmgMods.Fire.SMore *= moreOtherEleDamage;
+        dmgMods.Lightning.SMore *= moreOtherEleDamage;
+    }
+}
+
+public partial class SuppVolatileCurrent : SupportGem {
+    private const double moreLightningDamage = 1.25;
+    private const double moreOtherEleDamage = 0.5;
+
+    public SuppVolatileCurrent() {
+        ItemName = "Volatile Current Support";
+        Description = "Supports Skills that deal Damage";
+        AffectsDamageModifiers = true;
+        AffectsStatusModifiers = false;
+        SkillTags = ESkillTags.None;
+    }
+
+    public override void RollForVariant() {
+        OnVariantChosen();
+    }
+
+    protected override void OnVariantChosen() {
+        UpdateGemEffectsDescription();
+    }
+
+    protected override void UpdateGemEffectsDescription() {
+        DescEffects = $"Supported Skill deals {moreLightningDamage - 1:P0} more Lightning Damage\nSupported Skill deals {1 - moreOtherEleDamage:P0} less Fire and Cold Damage";
+    }
+
+    public override void ApplyToDamageModifiers(DamageModifiers dmgMods) {
+        dmgMods.Lightning.SMore *= moreLightningDamage;
+        dmgMods.Fire.SMore *= moreOtherEleDamage;
+        dmgMods.Cold.SMore *= moreOtherEleDamage;
     }
 }

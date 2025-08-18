@@ -469,8 +469,8 @@ public partial class InventoryItem : PanelContainer {
 		Label tagsLabel = GenerateGreyLabel(sbTags.ToString());
 		tooltipContent.StatsContainer.AddChild(tagsLabel);
 
-		HBoxContainer levelLabel = GenerateBaseStatLabel("Level:", $"{supportGem.Level + 1}", false);
-		tooltipContent.StatsContainer.AddChild(levelLabel);
+		//HBoxContainer levelLabel = GenerateBaseStatLabel("Level:", $"{supportGem.Level + 1}", false);
+		//tooltipContent.StatsContainer.AddChild(levelLabel);
 
 		tooltipContent.DescriptionLabel.Text = supportGem.Description;
 

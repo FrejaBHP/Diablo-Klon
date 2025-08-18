@@ -403,6 +403,7 @@ public static class ItemDataTables {
 	];
 
 	public static readonly List<SupportGemData> SupportGemData = [
+		/*
 		new SupportGemData {
 			SkillTags = ESkillTags.None,
 			SupportType = typeof(SuppAddedFire),
@@ -430,6 +431,7 @@ public static class ItemDataTables {
 			Texture = UILib.TextureItemD2JewelWhiteF,
 			MinimumLevel = 0,
 		},
+		*/
 
 		new SupportGemData {
 			SkillTags = ESkillTags.Attack,
@@ -454,7 +456,7 @@ public static class ItemDataTables {
 
 		new SupportGemData {
 			SkillTags = ESkillTags.Duration,
-			SupportType = typeof(SuppIncreasedDuration),
+			SupportType = typeof(SuppMoreDuration),
 			Texture = UILib.TextureItemD2JewelWhiteF,
 			MinimumLevel = 0,
 		},
@@ -475,7 +477,7 @@ public static class ItemDataTables {
 
 		new SupportGemData {
 			SkillTags = ESkillTags.Area,
-			SupportType = typeof(SuppIncreasedAoE),
+			SupportType = typeof(SuppMoreAoE),
 			Texture = UILib.TextureItemD2JewelBlueF,
 			MinimumLevel = 0,
 		},
@@ -484,6 +486,13 @@ public static class ItemDataTables {
 			SkillTags = ESkillTags.Area,
 			SupportType = typeof(SuppConcAoE),
 			Texture = UILib.TextureItemD2JewelBlueF,
+			MinimumLevel = 0,
+		},
+
+		new SupportGemData {
+			SkillTags = ESkillTags.None,
+			SupportType = typeof(SuppBleedChance),
+			Texture = UILib.TextureItemD2JewelRedF,
 			MinimumLevel = 0,
 		},
 
@@ -498,6 +507,27 @@ public static class ItemDataTables {
 			SkillTags = ESkillTags.None,
 			SupportType = typeof(SuppBrutality),
 			Texture = UILib.TextureItemD2JewelRedF,
+			MinimumLevel = 0,
+		},
+
+		new SupportGemData {
+			SkillTags = ESkillTags.None,
+			SupportType = typeof(SuppBlisteringHeat),
+			Texture = UILib.TextureItemD2JewelRedF,
+			MinimumLevel = 0,
+		},
+
+		new SupportGemData {
+			SkillTags = ESkillTags.None,
+			SupportType = typeof(SuppSheerCold),
+			Texture = UILib.TextureItemD2JewelGreenF,
+			MinimumLevel = 0,
+		},
+
+		new SupportGemData {
+			SkillTags = ESkillTags.None,
+			SupportType = typeof(SuppVolatileCurrent),
+			Texture = UILib.TextureItemD2JewelBlueF,
 			MinimumLevel = 0,
 		},
 	];

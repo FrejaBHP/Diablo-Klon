@@ -29,7 +29,7 @@ public class SCleave : Skill, IAttack, IMeleeSkill, IAreaSkill {
 
     public SCleave() {
         Name = "Cleave";
-        Description = "Attacks in a cone with a melee weapon.";
+        Description = "Attacks in a frontal arc with a melee weapon, damaging enemies in the area.";
         Effects = [];
 
         SkillName = ESkillName.Cleave;
