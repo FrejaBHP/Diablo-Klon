@@ -39,14 +39,27 @@ width = 72
 height = 8
 fill_to = Vector2(0, 0)
 
-[node name="BarContainer" type="VBoxContainer"]
+[node name="CombinedContainer" type="VBoxContainer"]
 offset_right = 72.0
 offset_bottom = 16.0
 mouse_filter = 2
-theme_override_constants/separation = 0
+theme_override_constants/separation = 2
 script = ExtResource("1_soq5p")
 
-[node name="LifeBar" type="TextureProgressBar" parent="."]
+[node name="StatusContainer" type="HBoxContainer" parent="."]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="BarContainer" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(72, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="LifeBar" type="TextureProgressBar" parent="BarContainer"]
 custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
 mouse_filter = 2
@@ -54,7 +67,7 @@ nine_patch_stretch = true
 texture_under = SubResource("GradientTexture2D_33mjm")
 texture_progress = SubResource("GradientTexture2D_v3duh")
 
-[node name="ManaBar" type="TextureProgressBar" parent="."]
+[node name="ManaBar" type="TextureProgressBar" parent="BarContainer"]
 custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
 mouse_filter = 2

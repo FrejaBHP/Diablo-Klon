@@ -11,6 +11,6 @@ float circle(vec2 position, float radius, float feather) {
 void fragment() {
 	// Called for every pixel the material is visible on.
 	vec3 preColour = vec3( circle(UV, 0.45, 0.005) );
-	if (preColour.x == 1.0) 
+	if (preColour.x == 1.0)
 		COLOR.a = 0.0;
 }

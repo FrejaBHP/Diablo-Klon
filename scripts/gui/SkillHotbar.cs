@@ -313,11 +313,15 @@ public partial class SkillHotbar : Control {
             tooltipContent.EffectContainer.AddChild(GenerateAffixLabel($"Duration is {dSkill.TotalDuration:F2} seconds"));
         }
 
-        if (skill.ActiveStatusEffectModifiers.Ignite.CalculateTotalChance() != 0) {
+        if (skill.ActiveStatusEffectModifiers.Bleed.CalculateTotalChance() != 0 && skill.ActiveDamageModifiers.Physical.SMore > 0) {
+            tooltipContent.EffectContainer.AddChild(GenerateAffixLabel($"{skill.ActiveStatusEffectModifiers.Bleed.CalculateTotalChance():P0} chance to Bleed on Hit"));
+        }
+
+        if (skill.ActiveStatusEffectModifiers.Ignite.CalculateTotalChance() != 0 && skill.ActiveDamageModifiers.Fire.SMore > 0) {
             tooltipContent.EffectContainer.AddChild(GenerateAffixLabel($"{skill.ActiveStatusEffectModifiers.Ignite.CalculateTotalChance():P0} chance to Ignite on Hit"));
         }
 
-        if (skill.ActiveStatusEffectModifiers.Poison.CalculateTotalChance() != 0) {
+        if (skill.ActiveStatusEffectModifiers.Poison.CalculateTotalChance() != 0 && (skill.ActiveDamageModifiers.Physical.SMore > 0 || skill.ActiveDamageModifiers.Chaos.SMore > 0)) {
             tooltipContent.EffectContainer.AddChild(GenerateAffixLabel($"{skill.ActiveStatusEffectModifiers.Poison.CalculateTotalChance():P0} chance to Poison on Hit"));
         }
 

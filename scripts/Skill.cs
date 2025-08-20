@@ -221,7 +221,9 @@ public abstract class Skill {
         }*/
         if (basePhysical > 0) {
             if (ActiveStatusEffectModifiers.Bleed.RollForProc()) {
-                // TODO
+                ActiveDamageModifiers.CalculateMultipliersWithType(ActiveDamageModifiers.Physical, BleedEffect.DamageTags, out double incMult, out double moreMult);
+                double damage = basePhysical * (1 + incMult) * moreMult * (1 + ActorOwner.StatusMods.Bleed.SFasterTicking);
+                statusEffects.Add(new BleedEffect(null, ActiveStatusEffectModifiers.Bleed.CalculateDurationModifier(), damage));
             }
         }
         if (baseFire > 0) {

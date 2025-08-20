@@ -3,18 +3,26 @@ using System;
 
 public abstract class AttachedEffect {
     public Actor AffectedActor { get; set; }
+    public Texture2D EffectIcon { get; protected set; }
     public EEffectName EffectName { get; protected set; }
     public double EffectLength { get; protected set; }
     public double RemainingTime { get; protected set; }
     public double EffectValue { get; protected set; }
     public bool HasExpired { get; protected set; } = false;
+    public bool CreatesStatusIcon { get; protected set; } = false;
     
-    public abstract void OnGained();
-    public abstract void Tick(double deltaTime);
+    public virtual  void OnGained() {
+        if (CreatesStatusIcon) {
+            AffectedActor.AddStatusToFloatingBars(EffectIcon, EffectName);
+        }
+    }
 
     public virtual void OnExpired() {
+        //AffectedActor.RemoveStatusFromFloatingBars(EffectName);
         HasExpired = true;
     }
+    
+    public abstract void Tick(double deltaTime);
 
     public virtual void OverrideTimer(double newTime) {
         RemainingTime = newTime;
@@ -46,6 +54,47 @@ public interface IDamageOverTimeEffect {
     
 }
 
+public class BleedEffect : AttachedEffect, IUniqueEffect, IDamageOverTimeEffect {
+    public static EDamageType DamageType { get; protected set; } = EDamageType.Physical;
+    public static ESkillDamageTags DamageTags { get; protected set; } = ESkillDamageTags.DoT | ESkillDamageTags.Bleed;
+    private const double damageFactor = 0.75;
+    private const double bleedDuration = 8;
+
+    // duration should be changed to a multiplier, and a base duration should be set here instead
+    public BleedEffect(Actor actor, double durationModifier, double dps) {
+        EffectIcon = UILib.DamageBleed;
+        CreatesStatusIcon = true;
+        EffectName = EEffectName.Bleed;
+
+        AffectedActor = actor;
+        EffectLength = bleedDuration * durationModifier;
+        RemainingTime = EffectLength;
+        EffectValue = dps * damageFactor;
+    }
+
+    public override void OnGained() {
+        base.OnGained();
+    }
+
+    public override void OnExpired() {
+        base.OnExpired();
+    }
+
+    public bool ShouldReplaceCurrentEffect(double duration, double value) {
+        return (duration * value) > (RemainingTime * EffectValue);
+    }
+
+    public override void Tick(double deltaTime) {
+        double damage = EffectValue * deltaTime;
+
+        if (AffectedActor.Velocity.LengthSquared() > 0) {
+            damage *= 2;
+        }
+
+        AffectedActor.TallyDamageOverTimeForNextTick(DamageType, damage);
+        RemainingTime -= deltaTime;
+    }
+}
 
 public class IgniteEffect : AttachedEffect, IUniqueEffect, IDamageOverTimeEffect {
     public static EDamageType DamageType { get; protected set; } = EDamageType.Fire;
@@ -55,6 +104,8 @@ public class IgniteEffect : AttachedEffect, IUniqueEffect, IDamageOverTimeEffect
 
     // duration should be changed to a multiplier, and a base duration should be set here instead
     public IgniteEffect(Actor actor, double durationModifier, double dps) {
+        EffectIcon = UILib.DamageFireBurn;
+        CreatesStatusIcon = true;
         EffectName = EEffectName.Ignite;
 
         AffectedActor = actor;
@@ -64,7 +115,11 @@ public class IgniteEffect : AttachedEffect, IUniqueEffect, IDamageOverTimeEffect
     }
 
     public override void OnGained() {
-        
+        base.OnGained();
+    }
+
+    public override void OnExpired() {
+        base.OnExpired();
     }
 
     public bool ShouldReplaceCurrentEffect(double duration, double value) {
@@ -85,6 +140,8 @@ public class PoisonEffect : AttachedEffect, IRepeatableEffect, IDamageOverTimeEf
     private const double poisonDuration = 2;
 
     public PoisonEffect(Actor actor, double durationModifier, double dps) {
+        EffectIcon = UILib.DamagePoison;
+        CreatesStatusIcon = true;
         EffectName = EEffectName.Poison;
 
         AffectedActor = actor;
@@ -94,7 +151,11 @@ public class PoisonEffect : AttachedEffect, IRepeatableEffect, IDamageOverTimeEf
     }
 
     public override void OnGained() {
-        
+        base.OnGained();
+    }
+
+    public override void OnExpired() {
+        base.OnExpired();
     }
 
     public override void Tick(double deltaTime) {

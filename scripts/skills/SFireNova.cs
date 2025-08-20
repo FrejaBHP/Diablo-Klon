@@ -65,9 +65,8 @@ public class SFireNova : Skill, ISpell, IAreaSkill {
     }
 
     public void ApplyAreaSkillBehaviourToTargets(List<Actor> targets) {
-        SkillInfo info = CalculateOutgoingValuesIntoInfo(true);
-
         foreach (Actor actor in targets) {
+            SkillInfo info = CalculateOutgoingValuesIntoInfo(true);
             actor.ReceiveHit(DamageCategory, info, ActorOwner.Penetrations, true);
         }
     }

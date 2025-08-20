@@ -1,9 +1,15 @@
 using Godot;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 public partial class FloatingResourceBars : Control {
+    protected readonly PackedScene floatingStatusIconScene = GD.Load<PackedScene>("res://scenes/gui/actor_floating_status_icon.tscn");
+    private List<FloatingStatusIcon> statusIcons = new();
+
     private TextureProgressBar lifeBar;
     private TextureProgressBar manaBar;
+    private HBoxContainer statusContainer;
 
     private bool isLifeHidden = false;
     private bool isManaHidden = false;
@@ -13,8 +19,9 @@ public partial class FloatingResourceBars : Control {
     private const int margin = 8;
 
     public override void _Ready() {
-        lifeBar = GetNode<TextureProgressBar>("LifeBar");
-        manaBar = GetNode<TextureProgressBar>("ManaBar");
+        statusContainer = GetNode<HBoxContainer>("StatusContainer");
+        lifeBar = GetNode<TextureProgressBar>("BarContainer/LifeBar");
+        manaBar = GetNode<TextureProgressBar>("BarContainer/ManaBar");
 
         camera = GetViewport().GetCamera3D();
 		parentAnchor = GetParent<Marker3D>();
@@ -97,5 +104,32 @@ public partial class FloatingResourceBars : Control {
         else {
             isManaHidden = false;
         }
+    }
+
+    public bool TryAddStatus(Texture2D texture, EEffectName effectName) {
+        if (statusIcons.Exists(s => s.StatusName == effectName)) {
+            return false;
+        }
+
+        FloatingStatusIcon newStatusIcon = floatingStatusIconScene.Instantiate<FloatingStatusIcon>();
+        statusContainer.AddChild(newStatusIcon);
+        newStatusIcon.SetIconAndStatusType(texture, effectName);
+        statusIcons.Add(newStatusIcon);
+
+        return true;
+    }
+
+    public bool TryRemoveStatus(EEffectName effectName) {
+        if (statusIcons.Exists(s => s.StatusName == effectName)) {
+            FloatingStatusIcon statusIcon = statusIcons.Find(s => s.StatusName == effectName);
+            
+            statusContainer.RemoveChild(statusIcon);
+            statusIcons.Remove(statusIcon);
+            statusIcon.QueueFree();
+
+            return true;
+        }
+
+        return false;
     }
 }

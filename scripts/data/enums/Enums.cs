@@ -13,7 +13,8 @@ public enum EDamageType {
 public enum EEffectName {
 	Ignite,
 	Poison,
-	Soulrend
+	Soulrend,
+	Bleed
 }
 
 [Flags]

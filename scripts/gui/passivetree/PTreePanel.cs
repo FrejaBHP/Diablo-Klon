@@ -9,6 +9,8 @@ public partial class PTreePanel : PanelContainer {
 
     private Label pointLabel;
     public PTreeCluster ClusterFire { get; protected set; }
+    public PTreeCluster ClusterPhys { get; protected set; }
+    public PTreeCluster ClusterBleed { get; protected set; }
 
     private int passiveTreePoints = 10;
     public int PassiveTreePoints { 
@@ -23,8 +25,20 @@ public partial class PTreePanel : PanelContainer {
         pointLabel = GetNode<Label>("MarginContainer/PointLabel");
         UpdatePointLabelText();
 
-        ClusterFire = GetNode<PTreeCluster>("MarginContainer/Control/ClusterFire");
+        ClusterFire = GetNode<PTreeCluster>("MarginContainer/Clusters/ClusterFire");
         foreach (PTreeNode node in ClusterFire.NodeArray) {
+            node.NodeClicked += OnNodeClicked;
+            node.NodeAllocated += OnNodeAllocated;
+        }
+
+        ClusterPhys = GetNode<PTreeCluster>("MarginContainer/Clusters/ClusterPhysical");
+        foreach (PTreeNode node in ClusterPhys.NodeArray) {
+            node.NodeClicked += OnNodeClicked;
+            node.NodeAllocated += OnNodeAllocated;
+        }
+
+        ClusterBleed = GetNode<PTreeCluster>("MarginContainer/Clusters/ClusterBleed");
+        foreach (PTreeNode node in ClusterBleed.NodeArray) {
             node.NodeClicked += OnNodeClicked;
             node.NodeAllocated += OnNodeAllocated;
         }

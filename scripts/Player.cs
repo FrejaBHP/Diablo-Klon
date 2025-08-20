@@ -925,11 +925,11 @@ public partial class Player : Actor {
 		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedAreaDamage.SetValue($"{(1 + DamageMods.IncreasedArea) * DamageMods.MoreArea - 1:P0}");
 		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedDamageOverTime.SetValue($"{(1 + DamageMods.IncreasedDoT) * DamageMods.MoreDoT - 1:P0}");
 
-		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedBleedDamage.SetValue($"{(1 + DamageMods.IncreasedBleed) * DamageMods.MoreBleed * (1 + StatusMods.Bleed.SFasterTicking - 1):P0}");
+		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedBleedDamage.SetValue($"{(1 + DamageMods.IncreasedBleed) * DamageMods.MoreBleed * (1 + StatusMods.Bleed.SFasterTicking) - 1:P0}");
 		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedBleedDuration.SetValue($"{StatusMods.Bleed.CalculateDurationModifier() - 1:P0}");
 		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedIgniteDamage.SetValue($"{(1 + DamageMods.IncreasedIgnite) * DamageMods.MoreIgnite * (1 + StatusMods.Ignite.SFasterTicking) - 1:P0}");
 		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedIgniteDuration.SetValue($"{StatusMods.Ignite.CalculateDurationModifier() - 1:P0}");
-		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedPoisonDamage.SetValue($"{(1 + DamageMods.IncreasedPoison) * DamageMods.MorePoison * (1 + StatusMods.Poison.SFasterTicking - 1):P0}");
+		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedPoisonDamage.SetValue($"{(1 + DamageMods.IncreasedPoison) * DamageMods.MorePoison * (1 + StatusMods.Poison.SFasterTicking) - 1:P0}");
 		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedPoisonDuration.SetValue($"{StatusMods.Poison.CalculateDurationModifier() - 1:P0}");
 
 		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedAttackSpeed.SetValue($"{AttackSpeedMod.STotal - 1:P1}");

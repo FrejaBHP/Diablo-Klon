@@ -1,0 +1,82 @@
+[gd_scene load_steps=3 format=3 uid="uid://r3o77v8dxuf4"]
+
+[ext_resource type="PackedScene" uid="uid://08nys5h31q60" path="res://scenes/gui/passivetree/ptree_cluster.tscn" id="1_0ir3v"]
+[ext_resource type="Texture2D" uid="uid://d1v63vv6226nu" path="res://textures/ui/ptree_Phys.png" id="2_6bxaq"]
+
+[node name="ClusterPhysical" instance=ExtResource("1_0ir3v")]
+
+[node name="PTreeNodeRoot" parent="." index="0"]
+texture_normal = ExtResource("2_6bxaq")
+StatNames = [21]
+StatValues = [0.15]
+NodeName = "Physical Damage"
+NodeDescription = "15% increased Physical Damage"
+
+[node name="PTreeNodeBranch1" parent="." index="1"]
+texture_normal = ExtResource("2_6bxaq")
+StatNames = [21, 74, 76]
+StatValues = [0.1, 0.04, 0.04]
+NodeName = "Physical Damage and Skill Speed"
+NodeDescription = "10% increased Physical Damage
+4% increased Attack and Cast Speed"
+
+[node name="PTreeNodeBranch2" parent="." index="2"]
+texture_normal = ExtResource("2_6bxaq")
+StatNames = [21, 74, 76]
+StatValues = [0.25, -0.03, -0.03]
+NodeName = "Physical Damage"
+NodeDescription = "25% increased Physical Damage
+3% reduced Attack and Cast Speed"
+
+[node name="PTreeNodeSplit1Node1" parent="." index="3"]
+texture_normal = ExtResource("2_6bxaq")
+StatNames = [21, 78]
+StatValues = [0.1, 0.3]
+NodeName = "Physical Damage and Critical Strike Chance"
+NodeDescription = "10% increased Physical Damage
+30% increased Critical Strike Chance"
+
+[node name="PTreeNodeSplit1Node2" parent="." index="4"]
+texture_normal = ExtResource("2_6bxaq")
+StatNames = [21, 74, 76]
+StatValues = [0.1, 0.04, 0.04]
+NodeName = "Physical Damage and Skill Speed"
+NodeDescription = "10% increased Physical Damage
+4% increased Attack and Cast Speed"
+
+[node name="PTreeNodeSplit2Node1" parent="." index="5"]
+texture_normal = ExtResource("2_6bxaq")
+StatNames = [21, 99]
+StatValues = [0.1, 0.1]
+NodeName = "Physical Damage and Area"
+NodeDescription = "10% increased Physical Damage
+10% increased Area of Effect"
+
+[node name="PTreeNodeSplit2Node2" parent="." index="6"]
+texture_normal = ExtResource("2_6bxaq")
+StatNames = [21, 30, 39, 48]
+StatValues = [0.2, -0.2, -0.2, -0.2]
+NodeName = "Physical Specialisation"
+NodeDescription = "20% increased Physical Damage
+20% reduced Elemental Damage"
+
+[node name="PTreeNodeNotable1" parent="." index="7"]
+texture_normal = ExtResource("2_6bxaq")
+StatNames = [21, 74, 76, 78]
+StatValues = [0.15, 0.08, 0.08, 0.5]
+NodeName = "Precise and Deadly"
+NodeDescription = "15% increased Physical Damage
+8% increased Attack and Cast Speed
+50% increased Critical Strike Chance"
+
+[node name="PTreeNodeNotable2" parent="." index="8"]
+texture_normal = ExtResource("2_6bxaq")
+StatNames = [21, 99, 30, 39, 48]
+StatValues = [0.25, 0.15, -0.25, -0.25, -0.25]
+NodeName = "Free Thinker"
+NodeDescription = "25% increased Physical Damage
+15% increased Area of Effect
+25% reduced Elemental Damage"
+
+[node name="PTreeNodeKeystone" parent="." index="9"]
+texture_normal = ExtResource("2_6bxaq")

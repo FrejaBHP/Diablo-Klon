@@ -91,6 +91,10 @@ public static class UILib {
 	public static readonly Color ColorItemBackground = Color.Color8(0, 65, 180, 55);
 	public static readonly Color ColorItemBackgroundHovered = Color.Color8(0, 100, 255, 65);
 
+	public static readonly Texture2D DamageBleed = GD.Load<Texture2D>("res://textures/ui/damage_Bleed.png");
+	public static readonly Texture2D DamageFireBurn = GD.Load<Texture2D>("res://textures/ui/damage_FireBurn.png");
+	public static readonly Texture2D DamagePoison = GD.Load<Texture2D>("res://textures/ui/damage_Poison.png");
+
 	public static readonly Texture2D PTreeNodeActive = GD.Load<Texture2D>("res://textures/ui/pTreeNodeActive.png");
 	public static readonly Texture2D PTreeNodeInactive = GD.Load<Texture2D>("res://textures/ui/pTreeNodeInactive.png");
 }

@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://civvbwx8686qk"]
+
+[ext_resource type="Script" uid="uid://b2tixlx3gsyof" path="res://scripts/gui/FloatingStatusIcon.cs" id="1_h2od2"]
+
+[node name="FloatingStatusIcon" type="TextureRect"]
+custom_minimum_size = Vector2(16, 16)
+offset_right = 16.0
+offset_bottom = 16.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+expand_mode = 1
+stretch_mode = 5
+script = ExtResource("1_h2od2")

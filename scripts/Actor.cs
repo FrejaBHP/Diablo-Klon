@@ -774,6 +774,7 @@ public partial class Actor : CharacterBody3D {
                 else {
                     kvp.Value.OnExpired();
                     UniqueEffects[kvp.Key] = null;
+                    RemoveStatusFromFloatingBars(kvp.Key);
                 }
             }
         }
@@ -794,7 +795,23 @@ public partial class Actor : CharacterBody3D {
             if (effectHasExpired) {
                 //StackableEffects[kvp.Key] = kvp.Value.Where(effect => !effect.HasExpired).ToList();
                 StackableEffects[kvp.Key].RemoveAll(effect => effect.HasExpired);
+
+                if (StackableEffects[kvp.Key].Count == 0) {
+                    RemoveStatusFromFloatingBars(kvp.Key);
+                }
             }
+        }
+    }
+
+    public void AddStatusToFloatingBars(Texture2D texture, EEffectName effectName) {
+        if (fResBars != null) {
+            fResBars.TryAddStatus(texture, effectName);
+        }
+    }
+
+    public void RemoveStatusFromFloatingBars(EEffectName effectName) {
+        if (fResBars != null) {
+            fResBars.TryRemoveStatus(effectName);
         }
     }
 
