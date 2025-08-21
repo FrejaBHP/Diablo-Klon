@@ -7,10 +7,20 @@ public partial class PTreePanel : PanelContainer {
     [Signal]
     public delegate void PassiveTreeChangedEventHandler();
 
+    private readonly PackedScene clusterPhysScene = GD.Load<PackedScene>("res://scenes/gui/passivetree/clusters/cluster_physical.tscn");
+    private readonly PackedScene clusterBleedScene = GD.Load<PackedScene>("res://scenes/gui/passivetree/clusters/cluster_bleed.tscn");
+    private readonly PackedScene clusterFireScene = GD.Load<PackedScene>("res://scenes/gui/passivetree/clusters/cluster_fire.tscn");
+    private readonly PackedScene clusterColdScene = GD.Load<PackedScene>("res://scenes/gui/passivetree/clusters/cluster_cold.tscn");
+    private readonly PackedScene clusterLightningScene = GD.Load<PackedScene>("res://scenes/gui/passivetree/clusters/cluster_lightning.tscn");
+    private readonly PackedScene clusterPoisonScene = GD.Load<PackedScene>("res://scenes/gui/passivetree/clusters/cluster_poison.tscn");
+
+    public Dictionary<EStatName, double> PassiveTreeStatDictionary { get; protected set; } = new();
+
     private Label pointLabel;
-    public PTreeCluster ClusterFire { get; protected set; }
-    public PTreeCluster ClusterPhys { get; protected set; }
-    public PTreeCluster ClusterBleed { get; protected set; }
+    private Control[] activeClusterAttachmentNodes = new Control[3];
+
+    private const int amountOfActiveClusters = 3;
+    private List<PTreeCluster> clusterPool = new();
 
     private int passiveTreePoints = 10;
     public int PassiveTreePoints { 
@@ -25,22 +35,50 @@ public partial class PTreePanel : PanelContainer {
         pointLabel = GetNode<Label>("MarginContainer/PointLabel");
         UpdatePointLabelText();
 
-        ClusterFire = GetNode<PTreeCluster>("MarginContainer/Clusters/ClusterFire");
-        foreach (PTreeNode node in ClusterFire.NodeArray) {
-            node.NodeClicked += OnNodeClicked;
-            node.NodeAllocated += OnNodeAllocated;
-        }
+        activeClusterAttachmentNodes[0] = GetNode<Control>("MarginContainer/Clusters/ActiveCluster1");
+        activeClusterAttachmentNodes[1] = GetNode<Control>("MarginContainer/Clusters/ActiveCluster2");
+        activeClusterAttachmentNodes[2] = GetNode<Control>("MarginContainer/Clusters/ActiveCluster3");
 
-        ClusterPhys = GetNode<PTreeCluster>("MarginContainer/Clusters/ClusterPhysical");
-        foreach (PTreeNode node in ClusterPhys.NodeArray) {
-            node.NodeClicked += OnNodeClicked;
-            node.NodeAllocated += OnNodeAllocated;
-        }
+        CreateClusters();
+        GetRandomClusters();
+    }
 
-        ClusterBleed = GetNode<PTreeCluster>("MarginContainer/Clusters/ClusterBleed");
-        foreach (PTreeNode node in ClusterBleed.NodeArray) {
-            node.NodeClicked += OnNodeClicked;
-            node.NodeAllocated += OnNodeAllocated;
+    private void CreateClusters() {
+        SetupCluster(clusterPhysScene);
+        SetupCluster(clusterBleedScene);
+        SetupCluster(clusterFireScene);
+        SetupCluster(clusterColdScene);
+        SetupCluster(clusterLightningScene);
+        SetupCluster(clusterPoisonScene);
+    }
+
+    private void SetupCluster(PackedScene clusterScene) {
+        PTreeCluster newCluster = clusterScene.Instantiate<PTreeCluster>();
+        clusterPool.Add(newCluster);
+    }
+
+    private void GetRandomClusters() {
+        List<int> randomNumbers = Enumerable.Range(0, clusterPool.Count).OrderBy(x => Utilities.RNG.Next()).Take(amountOfActiveClusters).ToList();
+        
+        for (int i = 0; i < amountOfActiveClusters; i++) {
+            //activeClusters.Add();
+            PTreeCluster cluster = clusterPool[randomNumbers[i]];
+            activeClusterAttachmentNodes[i].AddChild(cluster);
+
+            if (cluster.FirstTime) {
+                foreach (PTreeNode node in cluster.NodeArray) {
+                    node.Resize();
+                    node.NodeClicked += OnNodeClicked;
+                    node.NodeAllocated += OnNodeAllocated;
+                }
+                cluster.FirstTime = false;
+            }
+        }
+    }
+
+    private void RemoveActiveClusters() {
+        for (int i = 0; i < amountOfActiveClusters; i++) {
+            activeClusterAttachmentNodes[i].RemoveChild(activeClusterAttachmentNodes[i].GetChild(0));
         }
     }
 
@@ -51,9 +89,11 @@ public partial class PTreePanel : PanelContainer {
     private void OnNodeClicked(PTreeNode node) {
         if (passiveTreePoints > 0) {
             node.Allocate();
-        }
+            PassiveTreePoints--;
 
-        PassiveTreePoints--;
+            RemoveActiveClusters();
+            GetRandomClusters();
+        }
     }
 
     public void OnNodeAllocated(PTreeNode node) {
@@ -75,6 +115,4 @@ public partial class PTreePanel : PanelContainer {
 
         EmitSignal(SignalName.PassiveTreeChanged);
     }
-
-    public Dictionary<EStatName, double> PassiveTreeStatDictionary { get; protected set; } = new();
 }

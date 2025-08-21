@@ -36,7 +36,10 @@ public partial class PTreeNode : TextureButton {
         get => treeNodeType;
         protected set {
             treeNodeType = value;
-            CallDeferred(MethodName.Resize);
+
+            if (Engine.IsEditorHint()) {
+                CallDeferred(MethodName.Resize);
+            }
         }
     }
 
@@ -55,7 +58,7 @@ public partial class PTreeNode : TextureButton {
         OutlineTexture = GetNode<TextureRect>("OutlineTexture");
     }
 
-    protected void Resize() {
+    public void Resize() {
         float fNewSize = sizeDictionary[treeNodeType];
         Vector2 vNewSize = new(fNewSize, fNewSize);
         Size = vNewSize;

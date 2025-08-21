@@ -16,6 +16,8 @@ public partial class PTreeCluster : Control {
 
     public PTreeNode[] NodeArray { get; protected set; }
 
+    public bool FirstTime { get; set; } = true;
+
     public override void _Ready() {
         NodeRoot = GetNode<PTreeNode>("PTreeNodeRoot");
         NodeBranchLeft = GetNode<PTreeNode>("PTreeNodeBranch1");

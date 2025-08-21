@@ -1,0 +1,36 @@
+[gd_scene load_steps=3 format=3 uid="uid://cvelsaxfu58ee"]
+
+[ext_resource type="PackedScene" uid="uid://08nys5h31q60" path="res://scenes/gui/passivetree/ptree_cluster.tscn" id="1_0vxa0"]
+[ext_resource type="Texture2D" uid="uid://c55bdksr3eba6" path="res://textures/ui/ptree_Poison.png" id="2_7sykw"]
+
+[node name="ClusterPoison" instance=ExtResource("1_0vxa0")]
+
+[node name="PTreeNodeRoot" parent="." index="0"]
+texture_normal = ExtResource("2_7sykw")
+
+[node name="PTreeNodeBranch1" parent="." index="1"]
+texture_normal = ExtResource("2_7sykw")
+
+[node name="PTreeNodeBranch2" parent="." index="2"]
+texture_normal = ExtResource("2_7sykw")
+
+[node name="PTreeNodeSplit1Node1" parent="." index="3"]
+texture_normal = ExtResource("2_7sykw")
+
+[node name="PTreeNodeSplit1Node2" parent="." index="4"]
+texture_normal = ExtResource("2_7sykw")
+
+[node name="PTreeNodeSplit2Node1" parent="." index="5"]
+texture_normal = ExtResource("2_7sykw")
+
+[node name="PTreeNodeSplit2Node2" parent="." index="6"]
+texture_normal = ExtResource("2_7sykw")
+
+[node name="PTreeNodeNotable1" parent="." index="7"]
+texture_normal = ExtResource("2_7sykw")
+
+[node name="PTreeNodeNotable2" parent="." index="8"]
+texture_normal = ExtResource("2_7sykw")
+
+[node name="PTreeNodeKeystone" parent="." index="9"]
+texture_normal = ExtResource("2_7sykw")
