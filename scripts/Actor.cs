@@ -323,10 +323,12 @@ public partial class Actor : CharacterBody3D {
     public int ActorLevel = 1;
     protected int maxLevel = 40;
 
+    public EActorFlags ActorFlags { get; set; }
     public Stat Armour = new(0, true, 0);
     public Stat Evasion = new(0, true, 0);
     public Stat BlockChance = new(0, false, 0, 0.75);
     public Stat BlockEffectiveness = new(0.5, false, 0, 0.8);
+    public Stat AreaOfEffect = new(0, false);
 
     public ActorBasicStats BasicStats = new();
     public DamageModifiers DamageMods = new();
@@ -410,30 +412,38 @@ public partial class Actor : CharacterBody3D {
 		{ EStatName.IncreasedProjectileDamage, 		0 },
 		{ EStatName.IncreasedAreaDamage, 			0 },
         { EStatName.IncreasedDamageOverTime, 		0 },
+        { EStatName.IncreasedDamageWithShield, 		0 },
+        { EStatName.IncreasedDamageDualWield, 		0 },
+        { EStatName.IncreasedDamageTwoHanded, 		0 },
         { EStatName.IncreasedAllDamage, 	    	0 },
 
 		{ EStatName.IncreasedAttackSpeed, 			0 },
+        { EStatName.IncreasedAttackSpeedDualWield, 	0 },
 		{ EStatName.IncreasedCastSpeed, 			0 },
+        { EStatName.IncreasedCastSpeedDualWield, 	0 },
+        { EStatName.IncreasedSkillSpeedShield, 		0 },
 		{ EStatName.IncreasedCritChance, 			0 },
 		{ EStatName.AddedCritMulti, 				0 },
 
         { EStatName.AddedBleedChance, 			    0 },
-        { EStatName.IncreasedBleedDamage, 		    0 },
+        { EStatName.BleedMagnitude,                 0 },
         { EStatName.IncreasedBleedDuration,         0 },
         { EStatName.FasterBleed, 			        0 },
         { EStatName.AddedIgniteChance, 			    0 },
-        { EStatName.IncreasedIgniteDamage, 		    0 },
+        { EStatName.IgniteMagnitude,                0 },
         { EStatName.IncreasedIgniteDuration,        0 },
         { EStatName.FasterIgnite, 			        0 },
         { EStatName.AddedPoisonChance, 			    0 },
-        { EStatName.IncreasedPoisonDamage, 		    0 },
+        { EStatName.PoisonMagnitude,                0 },
         { EStatName.IncreasedPoisonDuration,        0 },
         { EStatName.FasterPoison, 			        0 },
 
 		{ EStatName.IncreasedMovementSpeed, 		0 },
 		{ EStatName.BlockChance, 					0 },
+        { EStatName.BlockEffectiveness, 			0 },
 
         { EStatName.IncreasedAreaOfEffect,       	0 },
+        { EStatName.IncreasedAreaOfEffectTwoHanded, 0 },
         { EStatName.IncreasedSkillEffectDuration, 	0 },
 
 		{ EStatName.FlatArmour, 					0 },
@@ -448,6 +458,16 @@ public partial class Actor : CharacterBody3D {
 		{ EStatName.ColdResistance, 				0 },
 		{ EStatName.LightningResistance, 			0 },
 		{ EStatName.ChaosResistance, 				0 },
+
+        { EStatName.AddedBlockCap, 				    0 },
+        { EStatName.FlatLifeOnBlock, 				0 },
+        { EStatName.PercentageLifeOnBlock, 			0 },
+
+        { EStatName.DamageAsExtraPhysical, 			0 },
+        { EStatName.DamageAsExtraFire, 			    0 },
+        { EStatName.DamageAsExtraCold, 			    0 },
+        { EStatName.DamageAsExtraLightning, 		0 },
+        { EStatName.DamageAsExtraChaos, 			0 },
 	};
 
     public Dictionary<EStatName, double> MultiplicativeStatDictionary = new() {
@@ -466,20 +486,24 @@ public partial class Actor : CharacterBody3D {
         { EStatName.MoreProjectileDamage, 			1 },
         { EStatName.MoreAreaDamage, 				1 },
         { EStatName.MoreDamageOverTime,				1 },
+        { EStatName.MoreDamageWithShield,			1 },
+        { EStatName.MoreDamageDualWield,			1 },
+        { EStatName.MoreDamageTwoHanded,			1 },
         { EStatName.MoreAllDamage, 				    1 },
 
         { EStatName.MoreAttackSpeed, 		    	1 },
+        { EStatName.MoreAttackSpeedDualWield,		1 },
         { EStatName.MoreCastSpeed, 		    	    1 },
+        { EStatName.MoreCastSpeedDualWield,			1 },
+        { EStatName.MoreSkillSpeedShield, 		    1 },
         { EStatName.MoreCritChance, 		    	1 },
 
-        { EStatName.MoreBleedDamage, 				1 },
         { EStatName.MoreBleedDuration, 				1 },
-        { EStatName.MoreIgniteDamage, 				1 },
         { EStatName.MoreIgniteDuration, 			1 },
-        { EStatName.MorePoisonDamage, 				1 },
         { EStatName.MorePoisonDuration, 			1 },
 
         { EStatName.MoreAreaOfEffect, 		        1 },
+        { EStatName.MoreAreaOfEffectTwoHanded,		1 },
         { EStatName.MoreSkillEffectDuration, 		1 },
 
         { EStatName.MoreArmour, 		    		1 },
@@ -487,13 +511,19 @@ public partial class Actor : CharacterBody3D {
         { EStatName.MoreEnergyShield,	    		1 },
 	};
 
+    public Dictionary<EStatName, double> CombinedEffectStatDictionary = new();
+
     public float OutgoingEffectAttachmentHeight { get; protected set; } = 1f;
 
     public WeaponItem MainHand { get; protected set; } = null;
     public ActorWeaponStats MainHandStats { get; protected set; } = new();
+    public bool IsMainHandTwoHandedMelee { get; protected set; } = false;
+
     public Item OffHandItem { get; protected set; } = null;
     public bool IsOffHandAWeapon { get; protected set; } = false;
+    public bool IsOffHandAShield { get; protected set; } = false;
     public ActorWeaponStats OffHandStats { get; protected set; } = new();
+
     public bool IsDualWielding { get; protected set; } = false;
     public bool IsUsingMainHandDW { get; protected set; } = true;
 
@@ -692,7 +722,10 @@ public partial class Actor : CharacterBody3D {
     }
 
     public virtual void OnDamageBlocked() {
-
+        double lifeOnBlock = StatDictionary[EStatName.FlatLifeOnBlock] + (BasicStats.TotalLife * StatDictionary[EStatName.PercentageLifeOnBlock]);
+        if (lifeOnBlock != 0) {
+            BasicStats.CurrentLife += lifeOnBlock;
+        }
     }
 
     public static double GetArmourMitigation(double armour, int level) {
@@ -728,7 +761,7 @@ public partial class Actor : CharacterBody3D {
                     UniqueEffects[incEffect.EffectName] = incEffect;
                     incEffect.OnGained();
                 }
-                else if (ue.ShouldReplaceCurrentEffect(incEffect.RemainingTime, incEffect.EffectValue)) {
+                else if ((UniqueEffects[incEffect.EffectName] as IUniqueEffect).ShouldReplaceCurrentEffect(incEffect.RemainingTime, incEffect.EffectValue)) {
                     UniqueEffects[incEffect.EffectName] = incEffect;
                     //incEffect.OnGained(); // Should probably make another type of function here, since effect is never lost, but will definitely be updated
                 }
@@ -803,6 +836,44 @@ public partial class Actor : CharacterBody3D {
         }
     }
 
+    public void OnStatAlteringEffectGained(IStatAlteringEffect effect) {
+        foreach (KeyValuePair<EStatName, double> stat in effect.EffectStatDictionary) {
+            if (CombinedEffectStatDictionary.ContainsKey(stat.Key)) {
+                if (Utilities.MultiplicativeStatNames.Contains(stat.Key)) {
+                    CombinedEffectStatDictionary[stat.Key] *= stat.Value;
+                }
+                else {
+                    CombinedEffectStatDictionary[stat.Key] += stat.Value;
+                }
+            }
+            else {
+                if (!CombinedEffectStatDictionary.TryAdd(stat.Key, stat.Value)) {
+                    GD.PrintErr($"Failed to add {stat.Key} {stat.Value} to dictionary");
+                }
+            }
+        }
+
+        ResetAndMergeStatDictionaries();
+    }
+
+    public void OnStatAlteringEffectLost(IStatAlteringEffect effect) {
+        foreach (KeyValuePair<EStatName, double> stat in effect.EffectStatDictionary) {
+            if (CombinedEffectStatDictionary.ContainsKey(stat.Key)) {
+                if (Utilities.MultiplicativeStatNames.Contains(stat.Key)) {
+                    CombinedEffectStatDictionary[stat.Key] /= stat.Value;
+                }
+                else {
+                    CombinedEffectStatDictionary[stat.Key] -= stat.Value;
+                }
+            }
+            else {
+                GD.PrintErr($"Failed to deduct {stat.Key} {stat.Value} from dictionary");
+            }
+        }
+
+        ResetAndMergeStatDictionaries();
+    }
+
     public void AddStatusToFloatingBars(Texture2D texture, EEffectName effectName) {
         if (fResBars != null) {
             fResBars.TryAddStatus(texture, effectName);
@@ -813,6 +884,10 @@ public partial class Actor : CharacterBody3D {
         if (fResBars != null) {
             fResBars.TryRemoveStatus(effectName);
         }
+    }
+
+    public virtual void ResetAndMergeStatDictionaries() {
+
     }
 
     public virtual void OnNoLifeLeft() {

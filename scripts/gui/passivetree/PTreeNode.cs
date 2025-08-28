@@ -17,9 +17,9 @@ public partial class PTreeNode : TextureButton {
     }
 
     protected static Dictionary<ETreeNodeType, float> sizeDictionary = new() {
-        { ETreeNodeType.Normal, 48f },
-        { ETreeNodeType.Notable, 64f },
-        { ETreeNodeType.Keystone, 80f }
+        { ETreeNodeType.Normal, 28f },
+        { ETreeNodeType.Notable, 40f },
+        { ETreeNodeType.Keystone, 56f }
     };
 
     protected TextureRect OutlineTexture;
@@ -29,6 +29,9 @@ public partial class PTreeNode : TextureButton {
 
     [Export]
     public Godot.Collections.Array<double> StatValues { get; protected set; }
+
+    [Export]
+    public EActorFlags ActorFlag { get; protected set; }
 
     protected ETreeNodeType treeNodeType = ETreeNodeType.Normal;
     [Export]
@@ -49,10 +52,23 @@ public partial class PTreeNode : TextureButton {
     [Export(PropertyHint.MultilineText)]
     public string NodeDescription { get; protected set; }
 
-    public bool IsLocked { get; protected set; } = false;
+    private bool isLocked;
+    [Export]
+    public bool IsLocked { 
+        get => isLocked; 
+        set {
+            isLocked = value;
+            Disabled = value;
+        }
+    }
+
     public bool IsAllocated { get; protected set; } = false;
 
-    public short Identifier { get; protected set; }
+    [Export]
+    public Godot.Collections.Array<PTreeNode> NodesPrevious { get; set; }
+
+    [Export]
+    public Godot.Collections.Array<PTreeNode> NodesNext { get; set; }
 
     public override void _Ready() {
         OutlineTexture = GetNode<TextureRect>("OutlineTexture");
@@ -72,16 +88,6 @@ public partial class PTreeNode : TextureButton {
         }
     }
 
-    public void Lock() {
-        Disabled = true;
-        IsLocked = true;
-    }
-
-    public void Unlock() {
-        Disabled = false;
-        IsLocked = false;
-    }
-
     public void Allocate() {
         IsAllocated = true;
         EmitSignal(SignalName.NodeAllocated, this);
@@ -92,10 +98,6 @@ public partial class PTreeNode : TextureButton {
         if (!IsAllocated && !IsLocked) {
             EmitSignal(SignalName.NodeClicked, this);
         }
-    }
-
-    public void SetIdentifier(short id) {
-        Identifier = id;
     }
 
     public override string _GetTooltip(Vector2 atPosition) {

@@ -547,7 +547,7 @@ public partial class SuppBrutality : SupportGem {
     private const double moreNonPhysDamage = 0;
 
     private int variant = 0;
-    private const double variantIncreasedBleedDamage = 0.3;
+    private const double variantBleedDamageMagnitude = 1.05;
 
     public SuppBrutality() {
         ItemName = "Brutality Support";
@@ -576,7 +576,7 @@ public partial class SuppBrutality : SupportGem {
         sb.Append($"Supported Skill deals {morePhysDamage - 1:P0} more Physical Damage\nSupported Skill deals no non-Physical Damage");
 
         if (variant == 1) {
-            sb.Append($"\nSupported Skill deals {variantIncreasedBleedDamage:P0} increased Bleed Damage");
+            sb.Append($"\nSupported Skill has {variantBleedDamageMagnitude - 1:P0} increased Bleed Magnitude");
         }
 
         DescEffects = sb.ToString();
@@ -590,13 +590,13 @@ public partial class SuppBrutality : SupportGem {
         dmgMods.Chaos.SMore *= moreNonPhysDamage;
 
         if (variant == 1) {
-            dmgMods.IncreasedBleed += variantIncreasedBleedDamage;
+            dmgMods.BleedMagnitude += variantBleedDamageMagnitude;
         }
     }
 }
 
 public partial class SuppBlisteringHeat : SupportGem {
-    private const double moreFireDamage = 1.25;
+    private const double damageAsExtraFire = 0.25;
     private const double moreOtherEleDamage = 0.5;
 
     public SuppBlisteringHeat() {
@@ -616,18 +616,18 @@ public partial class SuppBlisteringHeat : SupportGem {
     }
 
     protected override void UpdateGemEffectsDescription() {
-        DescEffects = $"Supported Skill deals {moreFireDamage - 1:P0} more Fire Damage\nSupported Skill deals {1 - moreOtherEleDamage:P0} less Cold and Lightning Damage";
+        DescEffects = $"Supported Skill gains {damageAsExtraFire:P0} of Damage as Extra Fire Damage\nSupported Skill deals {1 - moreOtherEleDamage:P0} less Cold and Lightning Damage";
     }
 
     public override void ApplyToDamageModifiers(DamageModifiers dmgMods) {
-        dmgMods.Fire.SMore *= moreFireDamage;
+        dmgMods.ExtraFire += damageAsExtraFire;
         dmgMods.Cold.SMore *= moreOtherEleDamage;
         dmgMods.Lightning.SMore *= moreOtherEleDamage;
     }
 }
 
 public partial class SuppSheerCold : SupportGem {
-    private const double moreColdDamage = 1.25;
+    private const double damageAsExtraCold = 0.25;
     private const double moreOtherEleDamage = 0.5;
 
     public SuppSheerCold() {
@@ -647,18 +647,18 @@ public partial class SuppSheerCold : SupportGem {
     }
 
     protected override void UpdateGemEffectsDescription() {
-        DescEffects = $"Supported Skill deals {moreColdDamage - 1:P0} more Cold Damage\nSupported Skill deals {1 - moreOtherEleDamage:P0} less Fire and Lightning Damage";
+        DescEffects = $"Supported Skill gains {damageAsExtraCold:P0} of Damage as Extra Cold Damage\nSupported Skill deals {1 - moreOtherEleDamage:P0} less Fire and Lightning Damage";
     }
 
     public override void ApplyToDamageModifiers(DamageModifiers dmgMods) {
-        dmgMods.Cold.SMore *= moreColdDamage;
+        dmgMods.ExtraCold += damageAsExtraCold;
         dmgMods.Fire.SMore *= moreOtherEleDamage;
         dmgMods.Lightning.SMore *= moreOtherEleDamage;
     }
 }
 
 public partial class SuppVolatileCurrent : SupportGem {
-    private const double moreLightningDamage = 1.25;
+    private const double damageAsExtraLightning = 0.25;
     private const double moreOtherEleDamage = 0.5;
 
     public SuppVolatileCurrent() {
@@ -678,11 +678,11 @@ public partial class SuppVolatileCurrent : SupportGem {
     }
 
     protected override void UpdateGemEffectsDescription() {
-        DescEffects = $"Supported Skill deals {moreLightningDamage - 1:P0} more Lightning Damage\nSupported Skill deals {1 - moreOtherEleDamage:P0} less Fire and Cold Damage";
+        DescEffects = $"Supported Skill gains {damageAsExtraLightning:P0} of Damage as Extra Lightning Damage\nSupported Skill deals {1 - moreOtherEleDamage:P0} less Fire and Cold Damage";
     }
 
     public override void ApplyToDamageModifiers(DamageModifiers dmgMods) {
-        dmgMods.Lightning.SMore *= moreLightningDamage;
+        dmgMods.ExtraLightning += damageAsExtraLightning;
         dmgMods.Fire.SMore *= moreOtherEleDamage;
         dmgMods.Cold.SMore *= moreOtherEleDamage;
     }

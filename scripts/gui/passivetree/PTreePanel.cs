@@ -7,19 +7,21 @@ public partial class PTreePanel : PanelContainer {
     [Signal]
     public delegate void PassiveTreeChangedEventHandler();
 
-    private readonly PackedScene clusterPhysScene = GD.Load<PackedScene>("res://scenes/gui/passivetree/clusters/cluster_physical.tscn");
-    private readonly PackedScene clusterBleedScene = GD.Load<PackedScene>("res://scenes/gui/passivetree/clusters/cluster_bleed.tscn");
-    private readonly PackedScene clusterFireScene = GD.Load<PackedScene>("res://scenes/gui/passivetree/clusters/cluster_fire.tscn");
-    private readonly PackedScene clusterColdScene = GD.Load<PackedScene>("res://scenes/gui/passivetree/clusters/cluster_cold.tscn");
-    private readonly PackedScene clusterLightningScene = GD.Load<PackedScene>("res://scenes/gui/passivetree/clusters/cluster_lightning.tscn");
-    private readonly PackedScene clusterPoisonScene = GD.Load<PackedScene>("res://scenes/gui/passivetree/clusters/cluster_poison.tscn");
+    //private readonly PackedScene clusterPhysScene = GD.Load<PackedScene>("res://scenes/gui/passivetree/clusters/cluster_physical.tscn");
+    //private readonly PackedScene clusterBleedScene = GD.Load<PackedScene>("res://scenes/gui/passivetree/clusters/cluster_bleed.tscn");
+    //private readonly PackedScene clusterFireScene = GD.Load<PackedScene>("res://scenes/gui/passivetree/clusters/cluster_fire.tscn");
+    //private readonly PackedScene clusterColdScene = GD.Load<PackedScene>("res://scenes/gui/passivetree/clusters/cluster_cold.tscn");
+    //private readonly PackedScene clusterLightningScene = GD.Load<PackedScene>("res://scenes/gui/passivetree/clusters/cluster_lightning.tscn");
+    //private readonly PackedScene clusterPoisonScene = GD.Load<PackedScene>("res://scenes/gui/passivetree/clusters/cluster_poison.tscn");
+    private readonly PackedScene clusterJuggernautScene = GD.Load<PackedScene>("res://scenes/gui/passivetree/clusters/cluster_juggernaut.tscn");
 
+    public EActorFlags PassiveTreeActorFlags { get; protected set; }
     public Dictionary<EStatName, double> PassiveTreeStatDictionary { get; protected set; } = new();
 
     private Label pointLabel;
     private Control[] activeClusterAttachmentNodes = new Control[3];
 
-    private const int amountOfActiveClusters = 3;
+    private const int amountOfActiveClusters = 1;
     private List<PTreeCluster> clusterPool = new();
 
     private int passiveTreePoints = 10;
@@ -44,12 +46,13 @@ public partial class PTreePanel : PanelContainer {
     }
 
     private void CreateClusters() {
-        SetupCluster(clusterPhysScene);
-        SetupCluster(clusterBleedScene);
-        SetupCluster(clusterFireScene);
-        SetupCluster(clusterColdScene);
-        SetupCluster(clusterLightningScene);
-        SetupCluster(clusterPoisonScene);
+        SetupCluster(clusterJuggernautScene);
+        //SetupCluster(clusterPhysScene);
+        //SetupCluster(clusterBleedScene);
+        //SetupCluster(clusterFireScene);
+        //SetupCluster(clusterColdScene);
+        //SetupCluster(clusterLightningScene);
+        //SetupCluster(clusterPoisonScene);
     }
 
     private void SetupCluster(PackedScene clusterScene) {
@@ -66,7 +69,7 @@ public partial class PTreePanel : PanelContainer {
             activeClusterAttachmentNodes[i].AddChild(cluster);
 
             if (cluster.FirstTime) {
-                foreach (PTreeNode node in cluster.NodeArray) {
+                foreach (PTreeNode node in cluster.NodeList) {
                     node.Resize();
                     node.NodeClicked += OnNodeClicked;
                     node.NodeAllocated += OnNodeAllocated;
@@ -111,6 +114,10 @@ public partial class PTreePanel : PanelContainer {
                     GD.PrintErr($"Failed to add {node.StatNames[i]} {node.StatValues[i]} to dictionary");
                 }
             }
+        }
+
+        if (node.ActorFlag != 0) {
+            PassiveTreeActorFlags |= node.ActorFlag;
         }
 
         EmitSignal(SignalName.PassiveTreeChanged);

@@ -611,7 +611,7 @@ public partial class Player : Actor {
 		ResetAndMergeStatDictionaries();
 	}
 
-	public void ResetAndMergeStatDictionaries() {
+	public override void ResetAndMergeStatDictionaries() {
 		foreach (EStatName key in StatDictionary.Keys.ToList()) {
 			StatDictionary[key] = 0;
 		}
@@ -644,8 +644,22 @@ public partial class Player : Actor {
 			}
 		}
 
+		foreach (KeyValuePair<EStatName, double> stat in CombinedEffectStatDictionary) {
+			if (StatDictionary.ContainsKey(stat.Key)) {
+				StatDictionary[stat.Key] += stat.Value;
+			}
+			else if (MultiplicativeStatDictionary.ContainsKey(stat.Key)) {
+				MultiplicativeStatDictionary[stat.Key] *= stat.Value;
+			}
+			else {
+				GD.PrintErr($"Key {stat.Key} not found, skipping");
+			}
+		}
+
 		// Insert logic for buffs and stuff here, probably?
 		// Entire thing isn't exactly efficient, so take another look later, please
+
+		ActorFlags = PlayerHUD.PassiveTreePanel.PassiveTreeActorFlags;
 
 		CalculateStats();
 	}
@@ -781,16 +795,48 @@ public partial class Player : Actor {
 		DamageMods.MoreProjectile = MultiplicativeStatDictionary[EStatName.MoreProjectileDamage];
 		DamageMods.IncreasedArea = StatDictionary[EStatName.IncreasedAreaDamage];
 		DamageMods.MoreArea = MultiplicativeStatDictionary[EStatName.MoreAreaDamage];
-		DamageMods.IncreasedBleed = StatDictionary[EStatName.IncreasedBleedDamage];
-		DamageMods.MoreBleed = MultiplicativeStatDictionary[EStatName.MoreBleedDamage];
-		DamageMods.IncreasedIgnite = StatDictionary[EStatName.IncreasedIgniteDamage];
-		DamageMods.MoreIgnite = MultiplicativeStatDictionary[EStatName.MoreIgniteDamage];
-		DamageMods.IncreasedPoison = StatDictionary[EStatName.IncreasedPoisonDamage];
-		DamageMods.MorePoison = MultiplicativeStatDictionary[EStatName.MorePoisonDamage];
 		DamageMods.IncreasedDoT = StatDictionary[EStatName.IncreasedDamageOverTime];
 		DamageMods.MoreDoT = MultiplicativeStatDictionary[EStatName.MoreDamageOverTime];
 		DamageMods.IncreasedAll = StatDictionary[EStatName.IncreasedAllDamage];
 		DamageMods.MoreAll = MultiplicativeStatDictionary[EStatName.MoreAllDamage];
+
+		DamageMods.BleedMagnitude = StatDictionary[EStatName.BleedMagnitude];
+		DamageMods.IgniteMagnitude = StatDictionary[EStatName.IgniteMagnitude];
+		DamageMods.PoisonMagnitude = StatDictionary[EStatName.PoisonMagnitude];
+
+		AreaOfEffect.SIncreased = StatDictionary[EStatName.IncreasedAreaOfEffect];
+		AreaOfEffect.SMore = MultiplicativeStatDictionary[EStatName.MoreAreaOfEffect];
+
+		if (IsMainHandTwoHandedMelee) {
+			DamageMods.IncreasedAll += StatDictionary[EStatName.IncreasedDamageTwoHanded];
+			DamageMods.MoreAll *= MultiplicativeStatDictionary[EStatName.MoreDamageTwoHanded];
+			AreaOfEffect.SIncreased += StatDictionary[EStatName.IncreasedAreaOfEffectTwoHanded];
+			AreaOfEffect.SMore *= MultiplicativeStatDictionary[EStatName.MoreAreaOfEffectTwoHanded];
+		}
+
+		if (IsDualWielding) {
+			DamageMods.IncreasedAll += StatDictionary[EStatName.IncreasedDamageDualWield];
+			DamageMods.MoreAll *= MultiplicativeStatDictionary[EStatName.MoreDamageDualWield];
+			AttackSpeedMod.SIncreased += StatDictionary[EStatName.IncreasedAttackSpeedDualWield];
+			AttackSpeedMod.SMore *= MultiplicativeStatDictionary[EStatName.MoreAttackSpeedDualWield];
+			CastSpeedMod.SIncreased += StatDictionary[EStatName.IncreasedCastSpeedDualWield];
+			CastSpeedMod.SMore *= MultiplicativeStatDictionary[EStatName.MoreCastSpeedDualWield];
+		}
+
+		if (IsOffHandAShield) {
+			DamageMods.IncreasedAll += StatDictionary[EStatName.IncreasedDamageWithShield];
+			DamageMods.MoreAll *= MultiplicativeStatDictionary[EStatName.MoreDamageWithShield];
+			AttackSpeedMod.SIncreased += StatDictionary[EStatName.IncreasedSkillSpeedShield];
+			AttackSpeedMod.SMore *= MultiplicativeStatDictionary[EStatName.MoreSkillSpeedShield];
+			CastSpeedMod.SIncreased += StatDictionary[EStatName.IncreasedSkillSpeedShield];
+			CastSpeedMod.SMore *= MultiplicativeStatDictionary[EStatName.MoreSkillSpeedShield];
+		}
+
+		DamageMods.ExtraPhysical = StatDictionary[EStatName.DamageAsExtraPhysical];
+		DamageMods.ExtraFire = StatDictionary[EStatName.DamageAsExtraFire];
+		DamageMods.ExtraCold = StatDictionary[EStatName.DamageAsExtraCold];
+		DamageMods.ExtraLightning = StatDictionary[EStatName.DamageAsExtraLightning];
+		DamageMods.ExtraChaos = StatDictionary[EStatName.DamageAsExtraChaos];
 
 		StatusMods.Bleed.SAddedChance = StatDictionary[EStatName.AddedBleedChance];
 		StatusMods.Bleed.SIncreasedDuration = StatDictionary[EStatName.IncreasedBleedDuration];
@@ -818,12 +864,19 @@ public partial class Player : Actor {
 		);
 
 		BlockChance.SAdded = StatDictionary[EStatName.BlockChance];
+		BlockEffectiveness.SAdded = StatDictionary[EStatName.BlockEffectiveness];
+
+		if (ActorFlags.HasFlag(EActorFlags.DamageScalesWithBlockChance)) {
+			DamageMods.IncreasedAll += BlockChance.STotal * 0.75;
+		}
 
 		Resistances.ResPhysical = (int)StatDictionary[EStatName.PhysicalResistance];
 		Resistances.ResFire = (int)StatDictionary[EStatName.FireResistance];
 		Resistances.ResCold = (int)StatDictionary[EStatName.ColdResistance];
 		Resistances.ResLightning = (int)StatDictionary[EStatName.LightningResistance];
 		Resistances.ResChaos = (int)StatDictionary[EStatName.ChaosResistance];
+
+		BlockChance.SetMaxCap(0.75 + StatDictionary[EStatName.AddedBlockCap]);
 
 		UpdateWeaponStats();
 		UpdateStatsPanel();
@@ -924,12 +977,13 @@ public partial class Player : Actor {
 		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedProjectileDamage.SetValue($"{(1 + DamageMods.IncreasedProjectile) * DamageMods.MoreProjectile - 1:P0}");
 		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedAreaDamage.SetValue($"{(1 + DamageMods.IncreasedArea) * DamageMods.MoreArea - 1:P0}");
 		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedDamageOverTime.SetValue($"{(1 + DamageMods.IncreasedDoT) * DamageMods.MoreDoT - 1:P0}");
+		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedAllDamage.SetValue($"{(1 + DamageMods.IncreasedAll) * DamageMods.MoreAll - 1:P0}");
 
-		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedBleedDamage.SetValue($"{(1 + DamageMods.IncreasedBleed) * DamageMods.MoreBleed * (1 + StatusMods.Bleed.SFasterTicking) - 1:P0}");
+		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedBleedDamage.SetValue($"{(1 + DamageMods.BleedMagnitude) * (1 + StatusMods.Bleed.SFasterTicking) - 1:P0}");
 		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedBleedDuration.SetValue($"{StatusMods.Bleed.CalculateDurationModifier() - 1:P0}");
-		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedIgniteDamage.SetValue($"{(1 + DamageMods.IncreasedIgnite) * DamageMods.MoreIgnite * (1 + StatusMods.Ignite.SFasterTicking) - 1:P0}");
+		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedIgniteDamage.SetValue($"{(1 + DamageMods.IgniteMagnitude) * (1 + StatusMods.Ignite.SFasterTicking) - 1:P0}");
 		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedIgniteDuration.SetValue($"{StatusMods.Ignite.CalculateDurationModifier() - 1:P0}");
-		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedPoisonDamage.SetValue($"{(1 + DamageMods.IncreasedPoison) * DamageMods.MorePoison * (1 + StatusMods.Poison.SFasterTicking) - 1:P0}");
+		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedPoisonDamage.SetValue($"{(1 + DamageMods.PoisonMagnitude) * (1 + StatusMods.Poison.SFasterTicking) - 1:P0}");
 		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedPoisonDuration.SetValue($"{StatusMods.Poison.CalculateDurationModifier() - 1:P0}");
 
 		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedAttackSpeed.SetValue($"{AttackSpeedMod.STotal - 1:P1}");
@@ -938,8 +992,8 @@ public partial class Player : Actor {
 		PlayerHUD.PlayerPanel.OffenceTabPanel.CritMulti.SetValue($"{CritMultiplier.STotal:P0}");
 
 		// ===== DEFENCE =====
-		PlayerHUD.PlayerPanel.DefenceTabPanel.MovementSpeed.SetValue($"{(1 + MovementSpeed.SIncreased) * MovementSpeed.SMore - 1:P0}");
-		PlayerHUD.PlayerPanel.DefenceTabPanel.Armour.SetValue($"{Math.Round(Armour.STotal, 0)} / {(1 - GetArmourMitigation(Armour.STotal, ActorLevel)):P1}");
+		PlayerHUD.PlayerPanel.DefenceTabPanel.MovementSpeed.SetValue($"{MovementSpeed.SIncreased:P0}");
+		PlayerHUD.PlayerPanel.DefenceTabPanel.Armour.SetValue($"{Math.Round(Armour.STotal, 0)} / {1 - GetArmourMitigation(Armour.STotal, ActorLevel):P1}");
 		PlayerHUD.PlayerPanel.DefenceTabPanel.Evasion.SetValue($"{Math.Round(Evasion.STotal, 0)} / {GetEvasionChance(Evasion.STotal, ActorLevel):P1}");
 		PlayerHUD.PlayerPanel.DefenceTabPanel.BlockChance.SetValue($"{BlockChance.STotal:P0}");
 		PlayerHUD.PlayerPanel.DefenceTabPanel.BlockEffectiveness.SetValue($"{BlockEffectiveness.STotal:P0}");
@@ -969,8 +1023,21 @@ public partial class Player : Actor {
 	public void AssignMainHand(WeaponItem item) {
 		MainHand = item;
 
-		if (MainHand == null || MainHand.ItemWeaponBaseType != EItemWeaponBaseType.WeaponMelee1H) {
+		if (MainHand != null) {
+			if (MainHand.ItemWeaponBaseType != EItemWeaponBaseType.WeaponMelee1H) {
+				IsDualWielding = false;
+			}
+
+			if (MainHand.ItemWeaponBaseType == EItemWeaponBaseType.WeaponMelee2H) {
+				IsMainHandTwoHandedMelee = true;
+			}
+			else {
+				IsMainHandTwoHandedMelee = false;
+			}
+		}
+		else {
 			IsDualWielding = false;
+			IsMainHandTwoHandedMelee = false;
 		}
 	}
 
@@ -978,6 +1045,7 @@ public partial class Player : Actor {
 		if (item == null) {
 			OffHandItem = null;
 			IsOffHandAWeapon = false;
+			IsOffHandAShield = false;
 			IsDualWielding = false;
 			//PlayerHUD.PlayerPanel.OffenceTabPanel.SetOffhandVisibility(false);
 		}
@@ -989,13 +1057,20 @@ public partial class Player : Actor {
 					//PlayerHUD.PlayerPanel.OffenceTabPanel.SetOffhandVisibility(true);
 				}
 				IsOffHandAWeapon = true;
+				IsOffHandAShield = false;
 
 				if (MainHand != null) {
 					IsDualWielding = true;
 				}
 			}
+			else if (OffHandItem.ItemAllBaseType == EItemAllBaseType.Shield) {
+				IsOffHandAShield = true;
+				IsOffHandAWeapon = false;
+				IsDualWielding = false;
+			}
 			else {
 				IsOffHandAWeapon = false;
+				IsOffHandAShield = false;
 				IsDualWielding = false;
 				//PlayerHUD.PlayerPanel.OffenceTabPanel.SetOffhandVisibility(false);
 			}

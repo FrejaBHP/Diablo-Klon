@@ -33,6 +33,7 @@ public partial class OffencePanel : StatPanel {
     public StatTableEntry IncreasedProjectileDamage;
     public StatTableEntry IncreasedAreaDamage;
     public StatTableEntry IncreasedDamageOverTime;
+    public StatTableEntry IncreasedAllDamage;
 
     public StatTableEntry IncreasedBleedDamage;
     public StatTableEntry IncreasedBleedDuration;
@@ -84,10 +85,11 @@ public partial class OffencePanel : StatPanel {
         AddEntry(ref IncreasedProjectileDamage, "Projectile Damage Modifier");
         AddEntry(ref IncreasedAreaDamage, "Area Damage Modifier");
         AddEntry(ref IncreasedDamageOverTime, "Damage Over Time Modifier");
+        AddEntry(ref IncreasedAllDamage, "All Damage Modifier");
 
-        AddEntry(ref IncreasedBleedDamage, "Bleed Damage Modifier");
-        AddEntry(ref IncreasedIgniteDamage, "Ignite Damage Modifier");
-        AddEntry(ref IncreasedPoisonDamage, "Poison Damage Modifier");
+        AddEntry(ref IncreasedBleedDamage, "Bleed Magnitude");
+        AddEntry(ref IncreasedIgniteDamage, "Ignite Magnitude");
+        AddEntry(ref IncreasedPoisonDamage, "Poison Magnitude");
 
         AddEntry(ref IncreasedBleedDuration, "Bleed Duration Modifier");
         AddEntry(ref IncreasedIgniteDuration, "Ignite Duration Modifier");

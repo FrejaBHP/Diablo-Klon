@@ -14,7 +14,8 @@ public enum EEffectName {
 	Ignite,
 	Poison,
 	Soulrend,
-	Bleed
+	Bleed,
+	SpeedBoost
 }
 
 [Flags]
@@ -52,12 +53,24 @@ public enum EMapObjective {
 	Waves
 }
 
+
 public enum EEnemyType {
 	TestEnemy,
 	TestEnemy2,
 	TestEnemy3,
 }
 
+
+[Flags]
+public enum EActorFlags {
+	None = 0,
+	AllDamageCanBleed = 1 << 0,
+	AllDamageCanIgnite = 1 << 1,
+	AllDamageCanChill = 1 << 2,
+	AllDamageCanShock = 1 << 3,
+	AllDamageCanPoison = 1 << 4,
+	DamageScalesWithBlockChance = 1 << 5,
+}
 
 // ======== LABELS =======
 

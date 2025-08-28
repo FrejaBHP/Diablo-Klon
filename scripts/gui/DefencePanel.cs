@@ -22,7 +22,7 @@ public partial class DefencePanel : StatPanel {
     }
 
     private void BuildTable() {
-        AddEntry(ref MovementSpeed, "Movement Speed Modifier");
+        AddEntry(ref MovementSpeed, "Increased Movement Speed");
         AddEntry(ref LifeRegen, "Life Regeneration per Second");
         AddEntry(ref ManaRegen, "Mana Regeneration per Second");
         AddEntry(ref Armour, "Armour");

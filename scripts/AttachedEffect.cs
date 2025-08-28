@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public abstract class AttachedEffect {
     public Actor AffectedActor { get; set; }
@@ -54,13 +55,15 @@ public interface IDamageOverTimeEffect {
     
 }
 
+public interface IStatAlteringEffect {
+    public Dictionary<EStatName, double> EffectStatDictionary { get; protected set; }
+}
+
 public class BleedEffect : AttachedEffect, IUniqueEffect, IDamageOverTimeEffect {
     public static EDamageType DamageType { get; protected set; } = EDamageType.Physical;
-    public static ESkillDamageTags DamageTags { get; protected set; } = ESkillDamageTags.DoT | ESkillDamageTags.Bleed;
     private const double damageFactor = 0.75;
     private const double bleedDuration = 8;
 
-    // duration should be changed to a multiplier, and a base duration should be set here instead
     public BleedEffect(Actor actor, double durationModifier, double dps) {
         EffectIcon = UILib.DamageBleed;
         CreatesStatusIcon = true;
@@ -98,11 +101,9 @@ public class BleedEffect : AttachedEffect, IUniqueEffect, IDamageOverTimeEffect 
 
 public class IgniteEffect : AttachedEffect, IUniqueEffect, IDamageOverTimeEffect {
     public static EDamageType DamageType { get; protected set; } = EDamageType.Fire;
-    public static ESkillDamageTags DamageTags { get; protected set; } = ESkillDamageTags.DoT | ESkillDamageTags.Burn;
     private const double damageFactor = 0.5;
     private const double igniteDuration = 4;
 
-    // duration should be changed to a multiplier, and a base duration should be set here instead
     public IgniteEffect(Actor actor, double durationModifier, double dps) {
         EffectIcon = UILib.DamageFireBurn;
         CreatesStatusIcon = true;
@@ -135,7 +136,6 @@ public class IgniteEffect : AttachedEffect, IUniqueEffect, IDamageOverTimeEffect
 
 public class PoisonEffect : AttachedEffect, IRepeatableEffect, IDamageOverTimeEffect {
     public static EDamageType DamageType { get; protected set; } = EDamageType.Chaos;
-    public static ESkillDamageTags DamageTags { get; protected set; } = ESkillDamageTags.DoT | ESkillDamageTags.Poison;
     private const double damageFactor = 0.2;
     private const double poisonDuration = 2;
 
@@ -161,6 +161,41 @@ public class PoisonEffect : AttachedEffect, IRepeatableEffect, IDamageOverTimeEf
     public override void Tick(double deltaTime) {
         double damage = EffectValue * deltaTime;
         AffectedActor.TallyDamageOverTimeForNextTick(DamageType, damage);
+        RemainingTime -= deltaTime;
+    }
+}
+
+public class SpeedBurstTestEffect : AttachedEffect, IUniqueEffect, IStatAlteringEffect {
+    public Dictionary<EStatName, double> EffectStatDictionary { get; set; } = new() {
+        { EStatName.IncreasedMovementSpeed, 0.5 }
+    };
+    private const double boostDuration = 2;
+
+    public SpeedBurstTestEffect(Actor actor) {
+        EffectIcon = UILib.TextureSkillSoulrend;
+        CreatesStatusIcon = true;
+        EffectName = EEffectName.SpeedBoost;
+
+        AffectedActor = actor;
+        EffectLength = boostDuration;
+        RemainingTime = EffectLength;
+    }
+
+    public override void OnGained() {
+        base.OnGained();
+        AffectedActor.OnStatAlteringEffectGained(this);
+    }
+
+    public override void OnExpired() {
+        base.OnExpired();
+        AffectedActor.OnStatAlteringEffectLost(this);
+    }
+
+    public bool ShouldReplaceCurrentEffect(double duration, double value) {
+        return duration > RemainingTime;
+    }
+
+    public override void Tick(double deltaTime) {
         RemainingTime -= deltaTime;
     }
 }

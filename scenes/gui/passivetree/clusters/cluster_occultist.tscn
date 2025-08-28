@@ -1,0 +1,72 @@
+[gd_scene load_steps=3 format=3 uid="uid://l3fwg6fgr2pi"]
+
+[ext_resource type="PackedScene" uid="uid://08nys5h31q60" path="res://scenes/gui/passivetree/ptree_cluster.tscn" id="1_ak2p5"]
+[ext_resource type="PackedScene" uid="uid://dcgmyorlf0ptm" path="res://scenes/gui/passivetree/ptree_node.tscn" id="2_jgvr2"]
+
+[node name="ClusterOccultist" instance=ExtResource("1_ak2p5")]
+
+[node name="PTreeNode" parent="." index="1" node_paths=PackedStringArray("NodesNext") instance=ExtResource("2_jgvr2")]
+layout_mode = 0
+offset_left = -14.0
+offset_top = 148.0
+offset_right = 14.0
+offset_bottom = 176.0
+NodesNext = [NodePath("../PTreeNode2")]
+
+[node name="PTreeNode2" parent="." index="2" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_jgvr2")]
+layout_mode = 0
+offset_left = -20.0
+offset_top = 95.0
+offset_right = 20.0
+offset_bottom = 135.0
+disabled = true
+TreeNodeType = 1
+NodeDescription = "+10% chance to Block
++10% to Block Effectiveness"
+IsLocked = true
+NodesPrevious = [NodePath("../PTreeNode")]
+NodesNext = [NodePath("../PTreeNode3"), NodePath("../PTreeNode4")]
+
+[node name="PTreeNode3" parent="." index="3" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_jgvr2")]
+layout_mode = 0
+offset_left = -48.0
+offset_top = 63.0
+offset_right = -20.0
+offset_bottom = 91.0
+disabled = true
+IsLocked = true
+NodesPrevious = [NodePath("../PTreeNode2")]
+NodesNext = [NodePath("../PTreeNode5")]
+
+[node name="PTreeNode4" parent="." index="4" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_jgvr2")]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 63.0
+offset_right = 48.0
+offset_bottom = 91.0
+disabled = true
+IsLocked = true
+NodesPrevious = [NodePath("../PTreeNode2")]
+NodesNext = [NodePath("../PTreeNode6")]
+
+[node name="PTreeNode5" parent="." index="5" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_jgvr2")]
+layout_mode = 0
+offset_left = -95.0
+offset_top = 82.0
+offset_right = -55.0
+offset_bottom = 122.0
+disabled = true
+TreeNodeType = 1
+IsLocked = true
+NodesPrevious = [NodePath("../PTreeNode3")]
+
+[node name="PTreeNode6" parent="." index="6" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_jgvr2")]
+layout_mode = 0
+offset_left = 56.0
+offset_top = 81.0
+offset_right = 96.0
+offset_bottom = 121.0
+disabled = true
+TreeNodeType = 1
+IsLocked = true
+NodesPrevious = [NodePath("../PTreeNode4")]

@@ -1,0 +1,112 @@
+[gd_scene load_steps=7 format=3 uid="uid://do8b45ce7kn6k"]
+
+[ext_resource type="PackedScene" uid="uid://08nys5h31q60" path="res://scenes/gui/passivetree/ptree_cluster.tscn" id="1_tq2we"]
+[ext_resource type="PackedScene" uid="uid://dcgmyorlf0ptm" path="res://scenes/gui/passivetree/ptree_node.tscn" id="3_6afdj"]
+[ext_resource type="Texture2D" uid="uid://b57qlymtbwnvl" path="res://textures/ui/ptree_DamageDefences.png" id="4_2fof3"]
+[ext_resource type="Texture2D" uid="uid://dylewivtwb3cj" path="res://textures/ui/ptree_LayeredShield.png" id="5_vrpeu"]
+[ext_resource type="Texture2D" uid="uid://druuvl3nsihmo" path="res://textures/ui/ptree_ShieldHeal.png" id="6_2dlwa"]
+[ext_resource type="Texture2D" uid="uid://c8ka706v88jgu" path="res://textures/ui/ptree_SpikedShield.png" id="6_vrpeu"]
+
+[node name="ClusterJuggernaut" instance=ExtResource("1_tq2we")]
+
+[node name="PTreeNode" parent="." index="1" node_paths=PackedStringArray("NodesNext") instance=ExtResource("3_6afdj")]
+layout_mode = 0
+offset_left = -14.0
+offset_top = 148.0
+offset_right = 14.0
+offset_bottom = 176.0
+texture_normal = ExtResource("4_2fof3")
+StatNames = [72, 121, 124]
+StatValues = [0.1, 0.1, 0.1]
+NodeName = "Damage with Shield, Defences"
+NodeDescription = "10% increased Damage while holding a Shield
+10% increased Armour and Evasion"
+NodesNext = [NodePath("../PTreeNode2")]
+
+[node name="PTreeNode2" parent="." index="2" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("3_6afdj")]
+layout_mode = 0
+offset_left = -20.0
+offset_top = 95.0
+offset_right = 20.0
+offset_bottom = 135.0
+disabled = true
+texture_normal = ExtResource("5_vrpeu")
+StatNames = [118, 119]
+StatValues = [0.1, 0.1]
+TreeNodeType = 1
+NodeName = "Unbreakable"
+NodeDescription = "+10% chance to Block
++10% to Block Effectiveness"
+IsLocked = true
+NodesPrevious = [NodePath("../PTreeNode")]
+NodesNext = [NodePath("../PTreeNode3"), NodePath("../PTreeNode4")]
+
+[node name="PTreeNode3" parent="." index="3" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("3_6afdj")]
+layout_mode = 0
+offset_left = -48.0
+offset_top = 63.0
+offset_right = -20.0
+offset_bottom = 91.0
+disabled = true
+texture_normal = ExtResource("4_2fof3")
+StatNames = [72, 118]
+StatValues = [0.1, 0.05]
+NodeName = "Damage with Shield, Block Chance"
+NodeDescription = "+5% chance to Block
+10% increased Damage while holding a Shield"
+IsLocked = true
+NodesPrevious = [NodePath("../PTreeNode2")]
+NodesNext = [NodePath("../PTreeNode5")]
+
+[node name="PTreeNode4" parent="." index="4" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("3_6afdj")]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 63.0
+offset_right = 48.0
+offset_bottom = 91.0
+disabled = true
+texture_normal = ExtResource("4_2fof3")
+StatNames = [72, 88]
+StatValues = [0.1, 0.04]
+NodeName = "Damage and Skill Speed with Shield"
+NodeDescription = "10% increased Damage while holding a Shield
+4% increased Attack and Cast Speed while holding a Shield"
+IsLocked = true
+NodesPrevious = [NodePath("../PTreeNode2")]
+NodesNext = [NodePath("../PTreeNode6")]
+
+[node name="PTreeNode5" parent="." index="5" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("3_6afdj")]
+layout_mode = 0
+offset_left = -95.0
+offset_top = 82.0
+offset_right = -55.0
+offset_bottom = 122.0
+disabled = true
+texture_normal = ExtResource("6_vrpeu")
+StatNames = [134, 118]
+StatValues = [0.05, 0.1]
+ActorFlag = 32
+TreeNodeType = 1
+NodeName = "Outmatch and Outlast"
+NodeDescription = "+5% to Maximum Block Chance
++10% chance to Block
+Damage is increased by 75% of Block Chance"
+IsLocked = true
+NodesPrevious = [NodePath("../PTreeNode3")]
+
+[node name="PTreeNode6" parent="." index="6" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("3_6afdj")]
+layout_mode = 0
+offset_left = 56.0
+offset_top = 81.0
+offset_right = 96.0
+offset_bottom = 121.0
+disabled = true
+texture_normal = ExtResource("6_2dlwa")
+StatNames = [119, 8]
+StatValues = [0.15, 0.01]
+TreeNodeType = 1
+NodeName = "Unyielding"
+NodeDescription = "+15% to Block Effectiveness
+Regenerate 1% Maximum Life per Second"
+IsLocked = true
+NodesPrevious = [NodePath("../PTreeNode4")]

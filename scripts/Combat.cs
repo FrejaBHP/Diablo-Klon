@@ -15,10 +15,11 @@ public class DamageModifiers() {
     public double IncreasedProjectile = 0;
     public double IncreasedArea = 0;
     public double IncreasedDoT = 0;
-    public double IncreasedBleed = 0;
-    public double IncreasedIgnite = 0;
-    public double IncreasedPoison = 0;
     public double IncreasedAll = 0;
+
+    public double BleedMagnitude = 0;
+    public double IgniteMagnitude = 0;
+    public double PoisonMagnitude = 0;
 
     public double MoreAttack = 1;
     public double MoreSpell = 1;
@@ -26,10 +27,13 @@ public class DamageModifiers() {
     public double MoreProjectile = 1;
     public double MoreArea = 1;
     public double MoreDoT = 1;
-    public double MoreBleed = 1;
-    public double MoreIgnite = 1;
-    public double MorePoison = 1;
     public double MoreAll = 1;
+
+    public double ExtraPhysical = 0;
+    public double ExtraFire = 0;
+    public double ExtraCold = 0;
+    public double ExtraLightning = 0;
+    public double ExtraChaos = 0;
 
     protected DamageTypeStat GetDamageTypeStat(EDamageType damageType) {
         DamageTypeStat damageStat;
@@ -64,65 +68,154 @@ public class DamageModifiers() {
         return damageStat;
     }
 
-    public static void CalculatePreAttackDamageWithType(DamageTypeStat damageStat, double baseMin, double baseMax, double addedMultiplier, out double minDamage, out double maxDamage) {
-        minDamage = (baseMin + damageStat.SMinAdded + damageStat.SAttackMinAdded) * addedMultiplier;
-        maxDamage = (baseMax + damageStat.SMaxAdded + damageStat.SAttackMaxAdded) * addedMultiplier;
+    public static SkillDamageRangeInfo CalculateBaseAttackDamage(DamageModifiers damageMods, ActorWeaponStats weaponStats, double addedMultiplier) {
+        double physMin = (weaponStats.PhysMinDamage + damageMods.Physical.SMinAdded + damageMods.Physical.SAttackMinAdded) * addedMultiplier;
+        double physMax = (weaponStats.PhysMaxDamage + damageMods.Physical.SMaxAdded + damageMods.Physical.SAttackMaxAdded) * addedMultiplier;
+        double fireMin = (weaponStats.FireMinDamage + damageMods.Fire.SMinAdded + damageMods.Fire.SAttackMinAdded) * addedMultiplier;
+        double fireMax = (weaponStats.FireMaxDamage + damageMods.Fire.SMaxAdded + damageMods.Fire.SAttackMaxAdded) * addedMultiplier;
+        double coldMin = (weaponStats.ColdMinDamage + damageMods.Cold.SMinAdded + damageMods.Cold.SAttackMinAdded) * addedMultiplier;
+        double coldMax = (weaponStats.ColdMaxDamage + damageMods.Cold.SMaxAdded + damageMods.Cold.SAttackMaxAdded) * addedMultiplier;
+        double lightningMin = (weaponStats.LightningMinDamage + damageMods.Lightning.SMinAdded + damageMods.Lightning.SAttackMinAdded) * addedMultiplier;
+        double lightningMax = (weaponStats.LightningMaxDamage + damageMods.Lightning.SMaxAdded + damageMods.Lightning.SAttackMaxAdded) * addedMultiplier;
+        double chaosMin = (weaponStats.ChaosMinDamage + damageMods.Chaos.SMinAdded + damageMods.Chaos.SAttackMinAdded) * addedMultiplier;
+        double chaosMax = (weaponStats.ChaosMaxDamage + damageMods.Chaos.SMaxAdded + damageMods.Chaos.SAttackMaxAdded) * addedMultiplier;
+
+        double combinedMinDamage = physMin + fireMin + coldMin + lightningMin + chaosMin;
+        double combinedMaxDamage = physMax + fireMax + coldMax + lightningMax + chaosMax;
+
+        if (damageMods.ExtraPhysical > 0) {
+            physMin += combinedMinDamage * damageMods.ExtraPhysical;
+            physMax += combinedMaxDamage * damageMods.ExtraPhysical;
+        }
+        if (damageMods.ExtraFire > 0) {
+            fireMin += combinedMinDamage * damageMods.ExtraFire;
+            fireMax += combinedMaxDamage * damageMods.ExtraFire;
+        }
+        if (damageMods.ExtraCold > 0) {
+            coldMin += combinedMinDamage * damageMods.ExtraCold;
+            coldMax += combinedMaxDamage * damageMods.ExtraCold;
+        }
+        if (damageMods.ExtraLightning > 0) {
+            lightningMin += combinedMinDamage * damageMods.ExtraLightning;
+            lightningMax += combinedMaxDamage * damageMods.ExtraLightning;
+        }
+        if (damageMods.ExtraChaos > 0) {
+            chaosMin += combinedMinDamage * damageMods.ExtraChaos;
+            chaosMax += combinedMaxDamage * damageMods.ExtraChaos;
+        }
+
+        return new SkillDamageRangeInfo(physMin, physMax, fireMin, fireMax, coldMin, coldMax, lightningMin, lightningMax, chaosMin, chaosMax);
     }
 
-    public static void CalculatePreSpellDamageWithType(DamageTypeStat damageStat, double addedMultiplier, out double minDamage, out double maxDamage) {
-        minDamage = damageStat.SMinBase + ((damageStat.SMinAdded + damageStat.SSpellMinAdded) * addedMultiplier);
-        maxDamage = damageStat.SMaxBase + ((damageStat.SMaxAdded + damageStat.SSpellMaxAdded) * addedMultiplier);
+    public static SkillDamageRangeInfo CalculateBaseSpellDamage(DamageModifiers damageMods, double addedMultiplier) {
+        double physMin = damageMods.Physical.SMinBase + ((damageMods.Physical.SMinAdded + damageMods.Physical.SSpellMinAdded) * addedMultiplier);
+        double physMax = damageMods.Physical.SMaxBase + ((damageMods.Physical.SMaxAdded + damageMods.Physical.SSpellMaxAdded) * addedMultiplier);
+        double fireMin = damageMods.Fire.SMinBase + ((damageMods.Fire.SMinAdded + damageMods.Fire.SSpellMinAdded) * addedMultiplier);
+        double fireMax = damageMods.Fire.SMaxBase + ((damageMods.Fire.SMaxAdded + damageMods.Fire.SSpellMaxAdded) * addedMultiplier);
+        double coldMin = damageMods.Cold.SMinBase + ((damageMods.Cold.SMinAdded + damageMods.Cold.SSpellMinAdded) * addedMultiplier);
+        double coldMax = damageMods.Cold.SMaxBase + ((damageMods.Cold.SMaxAdded + damageMods.Cold.SSpellMaxAdded) * addedMultiplier);
+        double lightningMin = damageMods.Lightning.SMinBase + ((damageMods.Lightning.SMinAdded + damageMods.Lightning.SSpellMinAdded) * addedMultiplier);
+        double lightningMax = damageMods.Lightning.SMaxBase + ((damageMods.Lightning.SMaxAdded + damageMods.Lightning.SSpellMaxAdded) * addedMultiplier);
+        double chaosMin = damageMods.Chaos.SMinBase + ((damageMods.Chaos.SMinAdded + damageMods.Chaos.SSpellMinAdded) * addedMultiplier);
+        double chaosMax = damageMods.Chaos.SMaxBase + ((damageMods.Chaos.SMaxAdded + damageMods.Chaos.SSpellMaxAdded) * addedMultiplier);
+
+        double combinedMinDamage = physMin + fireMin + coldMin + lightningMin + chaosMin;
+        double combinedMaxDamage = physMax + fireMax + coldMax + lightningMax + chaosMax;
+
+        if (damageMods.ExtraPhysical > 0) {
+            physMin += combinedMinDamage * damageMods.ExtraPhysical;
+            physMax += combinedMaxDamage * damageMods.ExtraPhysical;
+        }
+        if (damageMods.ExtraFire > 0) {
+            fireMin += combinedMinDamage * damageMods.ExtraFire;
+            fireMax += combinedMaxDamage * damageMods.ExtraFire;
+        }
+        if (damageMods.ExtraCold > 0) {
+            coldMin += combinedMinDamage * damageMods.ExtraCold;
+            coldMax += combinedMaxDamage * damageMods.ExtraCold;
+        }
+        if (damageMods.ExtraLightning > 0) {
+            lightningMin += combinedMinDamage * damageMods.ExtraLightning;
+            lightningMax += combinedMaxDamage * damageMods.ExtraLightning;
+        }
+        if (damageMods.ExtraChaos > 0) {
+            chaosMin += combinedMinDamage * damageMods.ExtraChaos;
+            chaosMax += combinedMaxDamage * damageMods.ExtraChaos;
+        }
+
+        return new SkillDamageRangeInfo(physMin, physMax, fireMin, fireMax, coldMin, coldMax, lightningMin, lightningMax, chaosMin, chaosMax);
     }
 
-    public static double RollPreDamage(double preMin, double preMax) {
-        return Utilities.RandomDouble(preMin, preMax);
-    }
+    public static SkillDamageRangeInfo ApplyMultipliersToDamageRangeInfo(SkillDamageRangeInfo baseDamageInfo, DamageModifiers damageMods, ESkillDamageTags damageTags) {
+        double newPhysMin = baseDamageInfo.PhysicalMin;
+        double newPhysMax = baseDamageInfo.PhysicalMax;
+        double newFireMin = baseDamageInfo.FireMin;
+        double newFireMax = baseDamageInfo.FireMax;
+        double newColdMin = baseDamageInfo.ColdMin;
+        double newColdMax = baseDamageInfo.ColdMax;
+        double newLightningMin = baseDamageInfo.LightningMin;
+        double newLightningMax = baseDamageInfo.LightningMax;
+        double newChaosMin = baseDamageInfo.ChaosMin;
+        double newChaosMax = baseDamageInfo.ChaosMax;
 
-    public void CalculateMultipliers(ESkillDamageTags damageTags, out double increasedMultiplier, out double moreMultiplier) {
-        increasedMultiplier = 0;
-        moreMultiplier = 1;
+        double increasedMultiplier = 0;
+        double moreMultiplier = 1;
 
         if (damageTags.HasFlag(ESkillDamageTags.Attack)) {
-            increasedMultiplier += IncreasedAttack;
-            moreMultiplier *= MoreAttack;
+            increasedMultiplier += damageMods.IncreasedAttack;
+            moreMultiplier *= damageMods.MoreAttack;
         }
         if (damageTags.HasFlag(ESkillDamageTags.Spell)) {
-            increasedMultiplier += IncreasedSpell;
-            moreMultiplier *= MoreSpell;
+            increasedMultiplier += damageMods.IncreasedSpell;
+            moreMultiplier *= damageMods.MoreSpell;
         }
         if (damageTags.HasFlag(ESkillDamageTags.Melee)) {
-            increasedMultiplier += IncreasedMelee;
-            moreMultiplier *= MoreMelee;
+            increasedMultiplier += damageMods.IncreasedMelee;
+            moreMultiplier *= damageMods.MoreMelee;
         }
         if (damageTags.HasFlag(ESkillDamageTags.Projectile)) {
-            increasedMultiplier += IncreasedProjectile;
-            moreMultiplier *= MoreProjectile;
+            increasedMultiplier += damageMods.IncreasedProjectile;
+            moreMultiplier *= damageMods.MoreProjectile;
         }
         if (damageTags.HasFlag(ESkillDamageTags.Area)) {
-            increasedMultiplier += IncreasedArea;
-            moreMultiplier *= MoreArea;
+            increasedMultiplier += damageMods.IncreasedArea;
+            moreMultiplier *= damageMods.MoreArea;
         }
         if (damageTags.HasFlag(ESkillDamageTags.DoT)) {
-            increasedMultiplier += IncreasedDoT;
-            moreMultiplier *= MoreDoT;
-        }
-        if (damageTags.HasFlag(ESkillDamageTags.Bleed)) {
-            increasedMultiplier += IncreasedBleed;
-            moreMultiplier *= MoreBleed;
-        }
-        if (damageTags.HasFlag(ESkillDamageTags.Burn)) {
-            increasedMultiplier += IncreasedIgnite;
-            moreMultiplier *= MoreIgnite;
-        }
-        if (damageTags.HasFlag(ESkillDamageTags.Poison)) {
-            increasedMultiplier += IncreasedPoison;
-            moreMultiplier *= MorePoison;
+            increasedMultiplier += damageMods.IncreasedDoT;
+            moreMultiplier *= damageMods.MoreDoT;
         }
 
-        increasedMultiplier += IncreasedAll;
-        moreMultiplier *= MoreAll;
+        increasedMultiplier += damageMods.IncreasedAll;
+        moreMultiplier *= damageMods.MoreAll;
+
+        newPhysMin *= (1 + damageMods.Physical.SIncreased + increasedMultiplier) * damageMods.Physical.SMore * moreMultiplier;
+        newPhysMax *= (1 + damageMods.Physical.SIncreased + increasedMultiplier) * damageMods.Physical.SMore * moreMultiplier;
+        newFireMin *= (1 + damageMods.Fire.SIncreased + increasedMultiplier) * damageMods.Fire.SMore * moreMultiplier;
+        newFireMax *= (1 + damageMods.Fire.SIncreased + increasedMultiplier) * damageMods.Fire.SMore * moreMultiplier;
+        newColdMin *= (1 + damageMods.Cold.SIncreased + increasedMultiplier) * damageMods.Cold.SMore * moreMultiplier;
+        newColdMax *= (1 + damageMods.Cold.SIncreased + increasedMultiplier) * damageMods.Cold.SMore * moreMultiplier;
+        newLightningMin *= (1 + damageMods.Lightning.SIncreased + increasedMultiplier) * damageMods.Lightning.SMore * moreMultiplier;
+        newLightningMax *= (1 + damageMods.Lightning.SIncreased + increasedMultiplier) * damageMods.Lightning.SMore * moreMultiplier;
+        newChaosMin *= (1 + damageMods.Chaos.SIncreased + increasedMultiplier) * damageMods.Chaos.SMore * moreMultiplier;
+        newChaosMax *= (1 + damageMods.Chaos.SIncreased + increasedMultiplier) * damageMods.Chaos.SMore * moreMultiplier;
+
+        return new SkillDamageRangeInfo(newPhysMin, newPhysMax, newFireMin, newFireMax, newColdMin, newColdMax, newLightningMin, newLightningMax, newChaosMin, newChaosMax);
     }
 
+    public static SkillDamageRangeInfo CalculateAttackSkillDamageRange(DamageModifiers damageMods, ActorWeaponStats weaponStats, double addedMultiplier, ESkillDamageTags damageTags) {
+        return ApplyMultipliersToDamageRangeInfo(CalculateBaseAttackDamage(damageMods, weaponStats, addedMultiplier), damageMods, damageTags);
+    }
+
+    public static SkillDamageRangeInfo CalculateSpellSkillDamageRange(DamageModifiers damageMods, double addedMultiplier, ESkillDamageTags damageTags) {
+        return ApplyMultipliersToDamageRangeInfo(CalculateBaseSpellDamage(damageMods, addedMultiplier), damageMods, damageTags);
+    }
+
+    public static double RollDamageRange(double min, double max) {
+        return Utilities.RandomDouble(min, max);
+    }
+
+    // Holdover from old system. Still works for secondary damage, so keeping it for that purpose
     public void CalculateMultipliersWithType(DamageTypeStat damageStat, ESkillDamageTags damageTags, out double increasedMultiplier, out double moreMultiplier) {
         increasedMultiplier = damageStat.SIncreased;
         moreMultiplier = damageStat.SMore;
@@ -156,34 +249,6 @@ public class DamageModifiers() {
         moreMultiplier *= MoreAll;
     }
 
-    public double GetTotalDamageWithType(DamageTypeStat damageStat, ESkillDamageTags damageTags, double preDamage) {
-        CalculateMultipliersWithType(damageStat, damageTags, out double increasedMultiplier, out double moreMultiplier);
-
-        double totalDamage = preDamage * (1 + increasedMultiplier) * moreMultiplier;
-
-        if (totalDamage < 0) {
-            totalDamage = 0;
-        }
-
-        return totalDamage;
-    }
-
-    public void CalculateTotalAttackDamageWithType(DamageTypeStat damageStat, ESkillDamageTags damageTags, double baseMin, double baseMax, double addedMultiplier, out double totalMin, out double totalMax) {
-        CalculatePreAttackDamageWithType(damageStat, baseMin, baseMax, addedMultiplier, out double preMin, out double preMax);
-        CalculateMultipliersWithType(damageStat, damageTags, out double increasedMultiplier, out double moreMultiplier);
-
-        totalMin = preMin * (1 + increasedMultiplier) * moreMultiplier;
-        totalMax = preMax * (1 + increasedMultiplier) * moreMultiplier;
-    }
-
-    public void CalculateTotalSpellDamageWithType(DamageTypeStat damageStat, ESkillDamageTags damageTags, double addedMultiplier, out double totalMin, out double totalMax) {
-        CalculatePreSpellDamageWithType(damageStat, addedMultiplier, out double preMin, out double preMax);
-        CalculateMultipliersWithType(damageStat, damageTags, out double increasedMultiplier, out double moreMultiplier);
-
-        totalMin = preMin * (1 + increasedMultiplier) * moreMultiplier;
-        totalMax = preMax * (1 + increasedMultiplier) * moreMultiplier;
-    }
-
     public DamageModifiers ShallowCopy() {
         DamageModifiers copy = (DamageModifiers)MemberwiseClone();
         copy.Physical = Physical.ShallowCopy();
@@ -212,6 +277,10 @@ public class DamageModifiers() {
         c.IncreasedDoT = a.IncreasedDoT + b.IncreasedDoT;
         c.IncreasedAll = a.IncreasedAll + b.IncreasedAll;
 
+        c.BleedMagnitude = a.BleedMagnitude + b.BleedMagnitude;
+        c.IgniteMagnitude = a.IgniteMagnitude + b.IgniteMagnitude;
+        c.PoisonMagnitude = a.PoisonMagnitude + b.PoisonMagnitude;
+
         c.MoreAttack = a.MoreAttack * b.MoreAttack;
         c.MoreSpell = a.MoreSpell * b.MoreSpell;
         c.MoreMelee = a.MoreMelee * b.MoreMelee;
@@ -219,6 +288,12 @@ public class DamageModifiers() {
         c.MoreArea = a.MoreArea * b.MoreArea;
         c.MoreDoT = a.MoreDoT * b.MoreDoT;
         c.MoreAll = a.MoreAll * b.MoreAll;
+
+        c.ExtraPhysical = a.ExtraPhysical + b.ExtraPhysical;
+        c.ExtraFire = a.ExtraFire + b.ExtraFire;
+        c.ExtraCold = a.ExtraCold + b.ExtraCold;
+        c.ExtraLightning = a.ExtraLightning + b.ExtraLightning;
+        c.ExtraChaos = a.ExtraChaos + b.ExtraChaos;
         
         return c;
     }
@@ -240,6 +315,10 @@ public class DamageModifiers() {
         c.IncreasedDoT = a.IncreasedDoT - b.IncreasedDoT;
         c.IncreasedAll = a.IncreasedAll - b.IncreasedAll;
 
+        c.BleedMagnitude = a.BleedMagnitude - b.BleedMagnitude;
+        c.IgniteMagnitude = a.IgniteMagnitude - b.IgniteMagnitude;
+        c.PoisonMagnitude = a.PoisonMagnitude - b.PoisonMagnitude;
+
         c.MoreAttack = a.MoreAttack / b.MoreAttack;
         c.MoreSpell = a.MoreSpell / b.MoreSpell;
         c.MoreMelee = a.MoreMelee / b.MoreMelee;
@@ -247,6 +326,12 @@ public class DamageModifiers() {
         c.MoreArea = a.MoreArea / b.MoreArea;
         c.MoreDoT = a.MoreDoT / b.MoreDoT;
         c.MoreAll = a.MoreAll / b.MoreAll;
+
+        c.ExtraPhysical = a.ExtraPhysical - b.ExtraPhysical;
+        c.ExtraFire = a.ExtraFire - b.ExtraFire;
+        c.ExtraCold = a.ExtraCold - b.ExtraCold;
+        c.ExtraLightning = a.ExtraLightning - b.ExtraLightning;
+        c.ExtraChaos = a.ExtraChaos - b.ExtraChaos;
         
         return c;
     }
@@ -331,4 +416,42 @@ public readonly struct SkillInfo(SkillHitDamageInfo damageInfo, SkillStatusInfo 
 public readonly struct SkillFeedbackInfo(SkillHitDamageInfo damageInfo, EDamageFeedbackInfoFlags flags) {
     public readonly SkillHitDamageInfo DamageInfo = damageInfo;
     public readonly EDamageFeedbackInfoFlags InfoFlags = flags;
+}
+
+public readonly struct SkillDamageRangeInfo(double physMin, double physMax, double fireMin, double fireMax, double coldMin, double coldMax, double lightningMin, double lightningMax, double chaosMin, double chaosMax) {
+    public readonly double PhysicalMin = physMin;
+    public readonly double PhysicalMax = physMax;
+    public readonly double FireMin = fireMin;
+    public readonly double FireMax = fireMax;
+    public readonly double ColdMin = coldMin;
+    public readonly double ColdMax = coldMax;
+    public readonly double LightningMin = lightningMin;
+    public readonly double LightningMax = lightningMax;
+    public readonly double ChaosMin = chaosMin;
+    public readonly double ChaosMax = chaosMax;
+
+    /*
+    public override string ToString() {
+        StringBuilder sb = new();
+        
+        if (Physical > 0) {
+            sb.Append($"Physical: {Physical:F2}\n");
+        }
+        if (Fire > 0) {
+            sb.Append($"Fire: {Fire:F2}\n");
+        }
+        if (Cold > 0) {
+            sb.Append($"Cold: {Cold:F2}\n");
+        }
+        if (Lightning > 0) {
+            sb.Append($"Lightning: {Lightning:F2}\n");
+        }
+        if (Chaos > 0) {
+            sb.Append($"Chaos: {Chaos:F2}\n");
+        }
+
+        sb.Append($"Total: {Physical + Fire + Cold + Lightning + Chaos:F2}");
+        return sb.ToString();
+    }
+    */
 }

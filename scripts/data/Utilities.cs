@@ -65,11 +65,8 @@ public static class Utilities {
         EStatName.MoreCastSpeed,
         EStatName.MoreCritChance,
 
-        EStatName.MoreBleedDamage,
         EStatName.MoreBleedDuration,
-        EStatName.MoreIgniteDamage,
         EStatName.MoreIgniteDuration,
-        EStatName.MorePoisonDamage,
         EStatName.MorePoisonDuration,
 
         EStatName.MoreArmour,

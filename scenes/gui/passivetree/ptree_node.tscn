@@ -8,23 +8,24 @@
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ci1m0"]
 shader = ExtResource("1_cytkv")
 
-[node name="PTreeNode" type="TextureButton"]
+[node name="PTreeNode" type="TextureButton" node_paths=PackedStringArray("NodesPrevious", "NodesNext")]
 material = SubResource("ShaderMaterial_ci1m0")
-custom_minimum_size = Vector2(48, 48)
-offset_right = 48.0
-offset_bottom = 48.0
+offset_right = 28.0
+offset_bottom = 28.0
 texture_normal = ExtResource("1_xdd3y")
 ignore_texture_size = true
 stretch_mode = 0
 script = ExtResource("1_x8tt6")
 StatNames = []
 StatValues = []
+NodesPrevious = []
+NodesNext = []
 metadata/_edit_group_ = true
 
 [node name="OutlineTexture" type="TextureRect" parent="."]
 layout_mode = 0
-offset_right = 48.0
-offset_bottom = 48.0
+offset_right = 28.0
+offset_bottom = 28.0
 mouse_filter = 2
 texture = ExtResource("3_m8gdq")
 expand_mode = 1
