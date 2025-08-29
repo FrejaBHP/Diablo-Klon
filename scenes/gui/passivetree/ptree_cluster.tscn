@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://08nys5h31q60"]
+[gd_scene load_steps=4 format=3 uid="uid://08nys5h31q60"]
 
 [ext_resource type="Script" uid="uid://d3j4hcwx12b4o" path="res://scripts/gui/passivetree/PTreeCluster.cs" id="1_aw6ie"]
 [ext_resource type="Texture2D" uid="uid://2hndq8udygyh" path="res://textures/ui/clusterCircle.png" id="2_j1bbp"]
+[ext_resource type="Texture2D" uid="uid://bnh6e82qxggkf" path="res://textures/ui/pTreeClusterCentre.png" id="3_3keaq"]
 
 [node name="PTreeCluster" type="Control"]
 layout_mode = 3
@@ -22,6 +23,17 @@ offset_bottom = 384.0
 grow_horizontal = 2
 texture = ExtResource("2_j1bbp")
 expand_mode = 1
+metadata/_edit_lock_ = true
+
+[node name="ClusterCentre" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = -10.0
+offset_top = 182.0
+offset_right = 10.0
+offset_bottom = 202.0
+texture = ExtResource("3_3keaq")
+expand_mode = 1
+metadata/_edit_lock_ = true
 
 [node name="Marker2D" type="Marker2D" parent="."]
 position = Vector2(0, 192)

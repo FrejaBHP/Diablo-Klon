@@ -345,6 +345,7 @@ public partial class Actor : CharacterBody3D {
     public Stat ExperienceMod = new(1, false, 0);
 
     public Stat MovementSpeed = new(0, false, 0);
+    public Stat DamageTakenFromMana = new(0, false, 0, 1);
 
     public Dictionary<EStatName, double> StatDictionary = new() {
 		{ EStatName.FlatStrength, 					0 },
@@ -468,6 +469,8 @@ public partial class Actor : CharacterBody3D {
         { EStatName.DamageAsExtraCold, 			    0 },
         { EStatName.DamageAsExtraLightning, 		0 },
         { EStatName.DamageAsExtraChaos, 			0 },
+
+        { EStatName.DamageTakenFromMana, 			0 },
 	};
 
     public Dictionary<EStatName, double> MultiplicativeStatDictionary = new() {
@@ -628,7 +631,13 @@ public partial class Actor : CharacterBody3D {
             }
         }
 
-        double armourMitigation = GetArmourMitigation(Armour.STotal, ActorLevel);
+        double armourToDefendWith = Armour.STotal;
+
+        if (info.InfoFlags.HasFlag(EDamageInfoFlags.Critical) && ActorFlags.HasFlag(EActorFlags.DoubleArmourAgainstCrits)) {
+            armourToDefendWith *= 2;
+        }
+
+        double armourMitigation = GetArmourMitigation(armourToDefendWith, ActorLevel);
         double halfMitigation = armourMitigation + ((1 - armourMitigation) * 0.5);
         
         physDamage *= armourMitigation;
@@ -658,9 +667,9 @@ public partial class Actor : CharacterBody3D {
 
         totalDamage = physDamage + fireDamage + coldDamage + lightningDamage + chaosDamage;
 
-        BasicStats.CurrentLife -= totalDamage;
+        ProcessDamageTaken(totalDamage);
         EmitSignal(SignalName.HitTaken, totalDamage, hitBlocked, info.InfoFlags.HasFlag(EDamageInfoFlags.Critical), createDamageText);
-        EmitSignal(SignalName.DamageTaken);
+        //EmitSignal(SignalName.DamageTaken);
         
         if (info.StatusInfo.StatusEffects.Count != 0) {
             foreach (AttachedEffect status in info.StatusInfo.StatusEffects) {
@@ -699,14 +708,26 @@ public partial class Actor : CharacterBody3D {
         chaosDamage *= 1 - Resistances.ResChaos;
 
         double processedDamage = untypedDamage + physDamage + fireDamage + coldDamage + lightningDamage + chaosDamage;
-
-        BasicStats.CurrentLife -= processedDamage;
-        EmitSignal(SignalName.DamageTaken);
+        ProcessDamageTaken(processedDamage);
 
         foreach (EDamageType damageType in PendingDamageOverTime.Keys) {
             PendingDamageOverTime[damageType] = 0;
         }
-        
+    }
+
+    protected void ProcessDamageTaken(double damage) {
+        double damageToMana = damage * DamageTakenFromMana.STotal;
+
+        if (BasicStats.CurrentMana < damageToMana) {
+            damageToMana = BasicStats.CurrentMana;
+        }
+
+        double damageToLife = damage - damageToMana;
+
+        BasicStats.CurrentLife -= damageToLife;
+        BasicStats.CurrentMana -= damageToMana;
+
+        EmitSignal(SignalName.DamageTaken);
     }
 
     public virtual void OnHitTaken(double damage, bool wasBlocked, bool isCritical, bool createDamageText) {

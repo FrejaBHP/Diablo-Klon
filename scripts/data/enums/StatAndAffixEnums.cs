@@ -162,6 +162,8 @@ public enum EStatName {
 	DamageAsExtraCold,
 	DamageAsExtraLightning,
 	DamageAsExtraChaos,
+
+	DamageTakenFromMana,
 }
 
 public enum EAffixPosition {

@@ -62,7 +62,7 @@ public enum EEnemyType {
 
 
 [Flags]
-public enum EActorFlags {
+public enum EActorFlags : long {
 	None = 0,
 	AllDamageCanBleed = 1 << 0,
 	AllDamageCanIgnite = 1 << 1,
@@ -70,6 +70,7 @@ public enum EActorFlags {
 	AllDamageCanShock = 1 << 3,
 	AllDamageCanPoison = 1 << 4,
 	DamageScalesWithBlockChance = 1 << 5,
+	DoubleArmourAgainstCrits = 1 << 6,
 }
 
 // ======== LABELS =======

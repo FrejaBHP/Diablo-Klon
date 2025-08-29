@@ -876,6 +876,8 @@ public partial class Player : Actor {
 		Resistances.ResLightning = (int)StatDictionary[EStatName.LightningResistance];
 		Resistances.ResChaos = (int)StatDictionary[EStatName.ChaosResistance];
 
+		DamageTakenFromMana.SAdded = StatDictionary[EStatName.DamageTakenFromMana];
+
 		BlockChance.SetMaxCap(0.75 + StatDictionary[EStatName.AddedBlockCap]);
 
 		UpdateWeaponStats();

@@ -94,8 +94,8 @@ public partial class PTreePanel : PanelContainer {
             node.Allocate();
             PassiveTreePoints--;
 
-            RemoveActiveClusters();
-            GetRandomClusters();
+            //RemoveActiveClusters();
+            //GetRandomClusters();
         }
     }
 

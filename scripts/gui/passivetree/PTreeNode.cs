@@ -52,6 +52,9 @@ public partial class PTreeNode : TextureButton {
     [Export(PropertyHint.MultilineText)]
     public string NodeDescription { get; protected set; }
 
+    [Export]
+    public bool ConnectsToCentre { get; protected set; }
+
     private bool isLocked;
     [Export]
     public bool IsLocked { 

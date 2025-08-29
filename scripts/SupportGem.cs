@@ -547,7 +547,7 @@ public partial class SuppBrutality : SupportGem {
     private const double moreNonPhysDamage = 0;
 
     private int variant = 0;
-    private const double variantBleedDamageMagnitude = 1.05;
+    private const double variantBleedDamageMagnitude = 1.15;
 
     public SuppBrutality() {
         ItemName = "Brutality Support";
