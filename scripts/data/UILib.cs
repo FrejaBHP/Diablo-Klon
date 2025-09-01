@@ -97,4 +97,6 @@ public static class UILib {
 
 	public static readonly Texture2D PTreeNodeActive = GD.Load<Texture2D>("res://textures/ui/pTreeNodeActive.png");
 	public static readonly Texture2D PTreeNodeInactive = GD.Load<Texture2D>("res://textures/ui/pTreeNodeInactive.png");
+
+	public static readonly Texture2D AEffectArcaneSurge = GD.Load<Texture2D>("res://textures/ui/aeffect_ArcaneSurge.png");
 }

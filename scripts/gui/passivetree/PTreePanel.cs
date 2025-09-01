@@ -14,6 +14,8 @@ public partial class PTreePanel : PanelContainer {
     //private readonly PackedScene clusterLightningScene = GD.Load<PackedScene>("res://scenes/gui/passivetree/clusters/cluster_lightning.tscn");
     //private readonly PackedScene clusterPoisonScene = GD.Load<PackedScene>("res://scenes/gui/passivetree/clusters/cluster_poison.tscn");
     private readonly PackedScene clusterJuggernautScene = GD.Load<PackedScene>("res://scenes/gui/passivetree/clusters/cluster_juggernaut.tscn");
+    private readonly PackedScene clusterSorcererScene = GD.Load<PackedScene>("res://scenes/gui/passivetree/clusters/cluster_sorcerer.tscn");
+    private readonly PackedScene clusterOccultistScene = GD.Load<PackedScene>("res://scenes/gui/passivetree/clusters/cluster_occultist.tscn");
 
     public EActorFlags PassiveTreeActorFlags { get; protected set; }
     public Dictionary<EStatName, double> PassiveTreeStatDictionary { get; protected set; } = new();
@@ -21,7 +23,7 @@ public partial class PTreePanel : PanelContainer {
     private Label pointLabel;
     private Control[] activeClusterAttachmentNodes = new Control[3];
 
-    private const int amountOfActiveClusters = 1;
+    private const int amountOfActiveClusters = 3;
     private List<PTreeCluster> clusterPool = new();
 
     private int passiveTreePoints = 10;
@@ -47,6 +49,8 @@ public partial class PTreePanel : PanelContainer {
 
     private void CreateClusters() {
         SetupCluster(clusterJuggernautScene);
+        SetupCluster(clusterSorcererScene);
+        SetupCluster(clusterOccultistScene);
         //SetupCluster(clusterPhysScene);
         //SetupCluster(clusterBleedScene);
         //SetupCluster(clusterFireScene);

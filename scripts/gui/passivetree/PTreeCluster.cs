@@ -44,7 +44,7 @@ public partial class PTreeCluster : Control {
         AddChild(newLine);
     }
 
-    public void OnNodeAllocated(PTreeNode node) {
+    public virtual void OnNodeAllocated(PTreeNode node) {
         foreach (PTreeNode tnode in node.NodesNext) {
             if (tnode.IsLocked) {
                 tnode.IsLocked = false;

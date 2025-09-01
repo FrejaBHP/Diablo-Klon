@@ -11,6 +11,21 @@ grow_horizontal = 2
 mouse_filter = 2
 script = ExtResource("1_iejdg")
 
+[node name="BuffMarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.25
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+
+[node name="BuffGridContainer" type="GridContainer" parent="BuffMarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+columns = 3
+
 [node name="ObjTimeLabel" type="Label" parent="."]
 visible = false
 layout_mode = 1

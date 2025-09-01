@@ -142,7 +142,12 @@ public class SoulrendEffect : AttachedEffect, IUniqueEffect, IDamageOverTimeEffe
     public EDamageType DamageType { get; set; } = EDamageType.Chaos;
 
     public SoulrendEffect(Actor actor, double duration, double dps) {
+        EffectIcon = UILib.TextureSkillSoulrend;
+        CreatesPlayerStatusIcon = true;
         EffectName = EEffectName.Soulrend;
+
+        EffectString = "Soulrend";
+        EffectDescription = "Taking Chaos Damage over Time";
 
         AffectedActor = actor;
         EffectLength = duration;

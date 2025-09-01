@@ -100,7 +100,6 @@ public partial class Player : Actor {
 		Dexterity.StatTotalChanged += DexTotalChanged;
 		Intelligence.StatTotalChanged += IntTotalChanged;
 
-		//PlayerHUD.PlayerPanel.OffenceTabPanel.SetOffhandVisibility(false);
 		PlayerHUD.PlayerPanel.CharacterLevelLabel.Text = $"Level {ActorLevel} Creature";
 
 		PlayerHUD.LowerHUD.SetGoldAmount(Gold);
@@ -870,6 +869,10 @@ public partial class Player : Actor {
 			DamageMods.IncreasedAll += BlockChance.STotal * 0.75;
 		}
 
+		if (ActorFlags.HasFlag(EActorFlags.DamageScalesWithMaxMana)) {
+			DamageMods.IncreasedAll += Math.Round(BasicStats.TotalMana * 0.0005, 2);
+		}
+
 		Resistances.ResPhysical = (int)StatDictionary[EStatName.PhysicalResistance];
 		Resistances.ResFire = (int)StatDictionary[EStatName.FireResistance];
 		Resistances.ResCold = (int)StatDictionary[EStatName.ColdResistance];
@@ -948,6 +951,8 @@ public partial class Player : Actor {
 
 	protected void UpdateStatsPanel() {
 		// ===== OFFENCE =====
+
+		// De fleste af disse eksisterer primært for debugging og burde fjernes senere for at reducere den enorme mængde tal
 		PlayerHUD.PlayerPanel.OffenceTabPanel.AddedAttackPhysDamage.SetValue($"{DamageMods.Physical.SMinAdded + DamageMods.Physical.SAttackMinAdded:F0} - {DamageMods.Physical.SMaxAdded + DamageMods.Physical.SAttackMaxAdded:F0}");
 		PlayerHUD.PlayerPanel.OffenceTabPanel.AddedSpellPhysDamage.SetValue($"{DamageMods.Physical.SMinAdded + DamageMods.Physical.SSpellMinAdded:F0} - {DamageMods.Physical.SMaxAdded + DamageMods.Physical.SSpellMaxAdded:F0}");
 		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedPhysDamage.SetValue($"{(1 + DamageMods.Physical.SIncreased) * DamageMods.Physical.SMore - 1:P0}");

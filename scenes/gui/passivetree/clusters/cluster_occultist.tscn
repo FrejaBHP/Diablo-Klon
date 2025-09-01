@@ -5,15 +5,16 @@
 
 [node name="ClusterOccultist" instance=ExtResource("1_ak2p5")]
 
-[node name="PTreeNode" parent="." index="1" node_paths=PackedStringArray("NodesNext") instance=ExtResource("2_jgvr2")]
+[node name="PTreeNode" parent="." index="2" node_paths=PackedStringArray("NodesNext") instance=ExtResource("2_jgvr2")]
 layout_mode = 0
 offset_left = -14.0
 offset_top = 148.0
 offset_right = 14.0
 offset_bottom = 176.0
+ConnectsToCentre = true
 NodesNext = [NodePath("../PTreeNode2")]
 
-[node name="PTreeNode2" parent="." index="2" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_jgvr2")]
+[node name="PTreeNode2" parent="." index="3" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_jgvr2")]
 layout_mode = 0
 offset_left = -20.0
 offset_top = 95.0
@@ -27,7 +28,7 @@ IsLocked = true
 NodesPrevious = [NodePath("../PTreeNode")]
 NodesNext = [NodePath("../PTreeNode3"), NodePath("../PTreeNode4")]
 
-[node name="PTreeNode3" parent="." index="3" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_jgvr2")]
+[node name="PTreeNode3" parent="." index="4" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_jgvr2")]
 layout_mode = 0
 offset_left = -48.0
 offset_top = 63.0
@@ -38,7 +39,7 @@ IsLocked = true
 NodesPrevious = [NodePath("../PTreeNode2")]
 NodesNext = [NodePath("../PTreeNode5")]
 
-[node name="PTreeNode4" parent="." index="4" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_jgvr2")]
+[node name="PTreeNode4" parent="." index="5" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_jgvr2")]
 layout_mode = 0
 offset_left = 20.0
 offset_top = 63.0
@@ -49,7 +50,7 @@ IsLocked = true
 NodesPrevious = [NodePath("../PTreeNode2")]
 NodesNext = [NodePath("../PTreeNode6")]
 
-[node name="PTreeNode5" parent="." index="5" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_jgvr2")]
+[node name="PTreeNode5" parent="." index="6" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_jgvr2")]
 layout_mode = 0
 offset_left = -95.0
 offset_top = 82.0
@@ -60,7 +61,7 @@ TreeNodeType = 1
 IsLocked = true
 NodesPrevious = [NodePath("../PTreeNode3")]
 
-[node name="PTreeNode6" parent="." index="6" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_jgvr2")]
+[node name="PTreeNode6" parent="." index="7" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_jgvr2")]
 layout_mode = 0
 offset_left = 56.0
 offset_top = 81.0

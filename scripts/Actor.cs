@@ -302,6 +302,9 @@ public partial class Actor : CharacterBody3D {
     [Signal]
     public delegate void DamageBlockedEventHandler();
 
+    public delegate void ManaSpentEventHandler(double change);
+    public event ManaSpentEventHandler ManaSpent;
+
     protected static readonly PackedScene floatingResourceBarsScene = GD.Load<PackedScene>("res://scenes/gui/actor_floating_resource_bars.tscn");
 
     public readonly float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
@@ -730,6 +733,10 @@ public partial class Actor : CharacterBody3D {
         EmitSignal(SignalName.DamageTaken);
     }
 
+    public virtual void NotifyManaSpent(double mana) {
+        ManaSpent?.Invoke(mana);
+    }
+
     public virtual void OnHitTaken(double damage, bool wasBlocked, bool isCritical, bool createDamageText) {
 
     }
@@ -784,6 +791,10 @@ public partial class Actor : CharacterBody3D {
                 }
                 else if ((UniqueEffects[incEffect.EffectName] as IUniqueEffect).ShouldReplaceCurrentEffect(incEffect.RemainingTime, incEffect.EffectValue)) {
                     UniqueEffects[incEffect.EffectName] = incEffect;
+
+                    if (this is Player player) {
+                        player.PlayerHUD.UpperHUD.TryAddStatus(incEffect);
+                    }
                     //incEffect.OnGained(); // Should probably make another type of function here, since effect is never lost, but will definitely be updated
                 }
             }
@@ -800,6 +811,10 @@ public partial class Actor : CharacterBody3D {
                 else if (UniqueEffects[incEffect.EffectName] is IUniqueStackableEffect cEffect) {
                     UniqueEffects[incEffect.EffectName].OverrideTimer(incEffect.RemainingTime);
                     cEffect.AddStack(use.StacksPerApplication);
+
+                    if (this is Player player) {
+                        player.PlayerHUD.UpperHUD.TryAddStatus(incEffect);
+                    }
                     //incEffect.OnGained(); // Should probably make another type of function here, since effect is never lost, but will definitely be updated
                 }
             }
@@ -829,6 +844,10 @@ public partial class Actor : CharacterBody3D {
                     kvp.Value.OnExpired();
                     UniqueEffects[kvp.Key] = null;
                     RemoveStatusFromFloatingBars(kvp.Key);
+
+                    if (this is Player player) {
+                        player.PlayerHUD.UpperHUD.TryRemoveStatus(kvp.Key);
+                    }
                 }
             }
         }
@@ -852,6 +871,10 @@ public partial class Actor : CharacterBody3D {
 
                 if (StackableEffects[kvp.Key].Count == 0) {
                     RemoveStatusFromFloatingBars(kvp.Key);
+
+                    if (this is Player player) {
+                        player.PlayerHUD.UpperHUD.TryRemoveStatus(kvp.Key);
+                    }
                 }
             }
         }

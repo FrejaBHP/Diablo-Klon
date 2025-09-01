@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://3tmuqf6dg06s"]
+
+[ext_resource type="Script" uid="uid://d4f4niu3luukm" path="res://scripts/controllers/SorcererArcaneSurgeController.cs" id="1_mah53"]
+
+[node name="SorcererArcaneSurgeController" type="Node"]
+script = ExtResource("1_mah53")

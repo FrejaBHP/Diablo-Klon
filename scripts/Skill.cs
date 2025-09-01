@@ -108,7 +108,9 @@ public abstract class Skill {
 
     public void DeductManaFromActor() {
         if (!ActorOwner.IsIgnoringManaCosts) {
-            ActorOwner.BasicStats.CurrentMana -= ManaCost * ManaCostMultiplier;
+            double totalManaCost = ManaCost * ManaCostMultiplier;
+            ActorOwner.BasicStats.CurrentMana -= totalManaCost;
+            ActorOwner.NotifyManaSpent(totalManaCost);
         }
     }
 

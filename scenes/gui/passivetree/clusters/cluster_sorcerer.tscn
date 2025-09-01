@@ -1,0 +1,171 @@
+[gd_scene load_steps=10 format=3 uid="uid://cr1iaxvmleadb"]
+
+[ext_resource type="PackedScene" uid="uid://08nys5h31q60" path="res://scenes/gui/passivetree/ptree_cluster.tscn" id="1_am7c2"]
+[ext_resource type="Script" uid="uid://b11p33taixese" path="res://scripts/gui/passivetree/ClusterSorcerer.cs" id="2_823s3"]
+[ext_resource type="PackedScene" uid="uid://dcgmyorlf0ptm" path="res://scenes/gui/passivetree/ptree_node.tscn" id="2_yqqcn"]
+[ext_resource type="Texture2D" uid="uid://dq5bu11rctw2j" path="res://textures/ui/ptree_Mana.png" id="3_yqqcn"]
+[ext_resource type="Texture2D" uid="uid://bey0ww72kxdnd" path="res://textures/ui/ptree_Spell.png" id="5_270gq"]
+[ext_resource type="Texture2D" uid="uid://r84hdoqe5ik6" path="res://textures/ui/ptree_ArcaneSurge.png" id="5_x52w2"]
+[ext_resource type="Texture2D" uid="uid://5p51sh6wspae" path="res://textures/ui/ptree_ManaReserves.png" id="7_lyb66"]
+[ext_resource type="Texture2D" uid="uid://d2ssl4mk85lcy" path="res://textures/ui/ptree_MindOverMatter.png" id="8_u3621"]
+[ext_resource type="Texture2D" uid="uid://quvted5o2fip" path="res://textures/ui/ptree_ManaDamageScaling.png" id="9_uth7t"]
+
+[node name="ClusterSorcerer" instance=ExtResource("1_am7c2")]
+script = ExtResource("2_823s3")
+
+[node name="TopStart" parent="." index="3" node_paths=PackedStringArray("NodesNext") instance=ExtResource("2_yqqcn")]
+layout_mode = 0
+offset_left = -14.0
+offset_top = 142.0
+offset_right = 14.0
+offset_bottom = 170.0
+texture_normal = ExtResource("3_yqqcn")
+StatNames = [11, 14]
+StatValues = [0.04, 0.1]
+NodeName = "Mana, Mana Regeneration"
+NodeDescription = "4% increased Maximum Mana
+10% increased Mana Regeneration Rate"
+ConnectsToCentre = true
+NodesNext = [NodePath("../TopNotable")]
+
+[node name="TopNotable" parent="." index="4" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_yqqcn")]
+layout_mode = 0
+offset_left = -20.0
+offset_top = 88.0
+offset_right = 20.0
+offset_bottom = 128.0
+disabled = true
+texture_normal = ExtResource("5_x52w2")
+ActorFlag = 256
+TreeNodeType = 1
+NodeName = "Archmage"
+NodeDescription = "Gain Arcane Surge every 5 Mana spent
+
+Arcane Surge grants 20% increased Cast Speed and
+50% increased Mana Regeneration Rate for 4 seconds"
+IsLocked = true
+NodesPrevious = [NodePath("../TopStart")]
+
+[node name="RightStart" parent="." index="5" node_paths=PackedStringArray("NodesNext") instance=ExtResource("2_yqqcn")]
+layout_mode = 0
+offset_left = 22.0
+offset_top = 178.0
+offset_right = 50.0
+offset_bottom = 206.0
+texture_normal = ExtResource("5_270gq")
+StatNames = [62, 84]
+StatValues = [0.1, 0.04]
+NodeName = "Spell Damage, Cast Speed"
+NodeDescription = "10% increased Spell Damage
+4% increased Cast Speed"
+ConnectsToCentre = true
+NodesNext = [NodePath("../RightNotable")]
+
+[node name="RightNotable" parent="." index="6" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_yqqcn")]
+layout_mode = 0
+offset_left = 64.0
+offset_top = 172.0
+offset_right = 104.0
+offset_bottom = 212.0
+disabled = true
+TreeNodeType = 1
+IsLocked = true
+NodesPrevious = [NodePath("../RightStart")]
+
+[node name="BottomStart" parent="." index="7" node_paths=PackedStringArray("NodesNext") instance=ExtResource("2_yqqcn")]
+layout_mode = 0
+offset_left = -14.0
+offset_top = 214.0
+offset_right = 14.0
+offset_bottom = 242.0
+texture_normal = ExtResource("3_yqqcn")
+StatNames = [142, 14]
+StatValues = [0.05, 0.1]
+NodeName = "Damage from Mana, Mana Regeneration"
+NodeDescription = "5% of incoming Hit Damage is taken from Mana before Life
+10% increased Mana Regeneration Rate"
+ConnectsToCentre = true
+NodesNext = [NodePath("../BottomNotable")]
+
+[node name="BottomNotable" parent="." index="8" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_yqqcn")]
+layout_mode = 0
+offset_left = -20.0
+offset_top = 256.0
+offset_right = 20.0
+offset_bottom = 296.0
+disabled = true
+texture_normal = ExtResource("7_lyb66")
+StatNames = [12, 10]
+StatValues = [1.1, 25.0]
+TreeNodeType = 1
+NodeName = "Arcane Reserves"
+NodeDescription = "+25 to Maximum Mana
+10% more Maximum Mana"
+IsLocked = true
+NodesPrevious = [NodePath("../BottomStart")]
+NodesNext = [NodePath("../BottomLeftNode"), NodePath("../BottomRightNode")]
+
+[node name="BottomLeftNode" parent="." index="9" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_yqqcn")]
+layout_mode = 0
+offset_left = -60.0
+offset_top = 236.0
+offset_right = -32.0
+offset_bottom = 264.0
+disabled = true
+texture_normal = ExtResource("3_yqqcn")
+StatNames = [142, 14]
+StatValues = [0.05, 0.1]
+NodeName = "Damage from Mana, Mana Regeneration"
+NodeDescription = "5% of incoming Hit Damage is taken from Mana before Life
+10% increased Mana Regeneration Rate"
+IsLocked = true
+NodesPrevious = [NodePath("../BottomNotable")]
+NodesNext = [NodePath("../BottomLeftNotable")]
+
+[node name="BottomLeftNotable" parent="." index="10" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_yqqcn")]
+layout_mode = 0
+offset_left = -82.0
+offset_top = 274.0
+offset_right = -42.0
+offset_bottom = 314.0
+disabled = true
+texture_normal = ExtResource("8_u3621")
+StatNames = [142]
+StatValues = [0.4]
+TreeNodeType = 1
+NodeName = "Mind Over Matter"
+NodeDescription = "40% of incoming Hit Damage is taken from Mana before Life"
+IsLocked = true
+NodesPrevious = [NodePath("../BottomLeftNode")]
+
+[node name="BottomRightNode" parent="." index="11" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_yqqcn")]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 236.0
+offset_right = 60.0
+offset_bottom = 264.0
+disabled = true
+texture_normal = ExtResource("3_yqqcn")
+StatNames = [11, 14]
+StatValues = [0.04, 0.1]
+NodeName = "Mana, Mana Regeneration"
+NodeDescription = "4% increased Maximum Mana
+10% increased Mana Regeneration Rate"
+IsLocked = true
+NodesPrevious = [NodePath("../BottomNotable")]
+NodesNext = [NodePath("../BottomRightNotable")]
+
+[node name="BottomRightNotable" parent="." index="12" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_yqqcn")]
+layout_mode = 0
+offset_left = 42.0
+offset_top = 274.0
+offset_right = 82.0
+offset_bottom = 314.0
+disabled = true
+texture_normal = ExtResource("9_uth7t")
+ActorFlag = 128
+TreeNodeType = 1
+NodeName = "Arcane Potency"
+NodeDescription = "Damage is increased by 5% per 100 Maximum Mana"
+IsLocked = true
+NodesPrevious = [NodePath("../BottomRightNode")]

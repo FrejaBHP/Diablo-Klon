@@ -15,7 +15,8 @@ public enum EEffectName {
 	Poison,
 	Soulrend,
 	Bleed,
-	SpeedBoost
+	SpeedBoost,
+	ArcaneSurge
 }
 
 [Flags]
@@ -71,6 +72,8 @@ public enum EActorFlags : long {
 	AllDamageCanPoison = 1 << 4,
 	DamageScalesWithBlockChance = 1 << 5,
 	DoubleArmourAgainstCrits = 1 << 6,
+	DamageScalesWithMaxMana = 1 << 7,
+	GainArcaneSurgeOnManaSpent = 1 << 8,
 }
 
 // ======== LABELS =======

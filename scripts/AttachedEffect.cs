@@ -6,15 +6,25 @@ public abstract class AttachedEffect {
     public Actor AffectedActor { get; set; }
     public Texture2D EffectIcon { get; protected set; }
     public EEffectName EffectName { get; protected set; }
+    
+    public string EffectString { get; protected set; }
+    public string EffectDescription { get; protected set; }
+
     public double EffectLength { get; protected set; }
     public double RemainingTime { get; protected set; }
     public double EffectValue { get; protected set; }
+
     public bool HasExpired { get; protected set; } = false;
     public bool CreatesStatusIcon { get; protected set; } = false;
+    public bool CreatesPlayerStatusIcon { get; protected set; } = false;
     
-    public virtual  void OnGained() {
+    public virtual void OnGained() {
         if (CreatesStatusIcon) {
             AffectedActor.AddStatusToFloatingBars(EffectIcon, EffectName);
+        }
+
+        if (AffectedActor is Player player && CreatesPlayerStatusIcon) {
+            player.PlayerHUD.UpperHUD.TryAddStatus(this);
         }
     }
 
@@ -23,7 +33,9 @@ public abstract class AttachedEffect {
         HasExpired = true;
     }
     
-    public abstract void Tick(double deltaTime);
+    public virtual void Tick(double deltaTime) {
+        RemainingTime -= deltaTime;
+    }
 
     public virtual void OverrideTimer(double newTime) {
         RemainingTime = newTime;
@@ -40,6 +52,7 @@ public interface IUniqueEffect {
 public interface IUniqueStackableEffect {
     int StacksPerApplication { get; protected set; }
     int StackLimit { get; protected set; }
+    int StackAmount { get; protected set; }
 
     void AddStack(int stacks);
     void SetStacks(int stacks);
@@ -67,7 +80,11 @@ public class BleedEffect : AttachedEffect, IUniqueEffect, IDamageOverTimeEffect 
     public BleedEffect(Actor actor, double durationModifier, double dps) {
         EffectIcon = UILib.DamageBleed;
         CreatesStatusIcon = true;
+        CreatesPlayerStatusIcon = true;
         EffectName = EEffectName.Bleed;
+
+        EffectString = "Bleeding";
+        EffectDescription = "Taking Physical Damage over Time. Damage is doubled while Moving";
 
         AffectedActor = actor;
         EffectLength = bleedDuration * durationModifier;
@@ -107,7 +124,11 @@ public class IgniteEffect : AttachedEffect, IUniqueEffect, IDamageOverTimeEffect
     public IgniteEffect(Actor actor, double durationModifier, double dps) {
         EffectIcon = UILib.DamageFireBurn;
         CreatesStatusIcon = true;
+        CreatesPlayerStatusIcon = true;
         EffectName = EEffectName.Ignite;
+
+        EffectString = "Ignited";
+        EffectDescription = "Taking Fire Damage over Time";
 
         AffectedActor = actor;
         EffectLength = igniteDuration * durationModifier;
@@ -142,7 +163,11 @@ public class PoisonEffect : AttachedEffect, IRepeatableEffect, IDamageOverTimeEf
     public PoisonEffect(Actor actor, double durationModifier, double dps) {
         EffectIcon = UILib.DamagePoison;
         CreatesStatusIcon = true;
+        CreatesPlayerStatusIcon = true;
         EffectName = EEffectName.Poison;
+
+        EffectString = "Poisoned";
+        EffectDescription = "Taking Chaos Damage over Time";
 
         AffectedActor = actor;
         EffectLength = poisonDuration * durationModifier;
@@ -169,12 +194,17 @@ public class SpeedBurstTestEffect : AttachedEffect, IUniqueEffect, IStatAltering
     public Dictionary<EStatName, double> EffectStatDictionary { get; set; } = new() {
         { EStatName.IncreasedMovementSpeed, 0.5 }
     };
+
     private const double boostDuration = 2;
 
     public SpeedBurstTestEffect(Actor actor) {
         EffectIcon = UILib.TextureSkillSoulrend;
         CreatesStatusIcon = true;
+        CreatesPlayerStatusIcon = true;
         EffectName = EEffectName.SpeedBoost;
+
+        EffectString = "Speed Burst";
+        EffectDescription = "Increased Movement Speed";
 
         AffectedActor = actor;
         EffectLength = boostDuration;
@@ -194,8 +224,40 @@ public class SpeedBurstTestEffect : AttachedEffect, IUniqueEffect, IStatAltering
     public bool ShouldReplaceCurrentEffect(double duration, double value) {
         return duration > RemainingTime;
     }
+}
 
-    public override void Tick(double deltaTime) {
-        RemainingTime -= deltaTime;
+public class ArcaneSurgeEffect : AttachedEffect, IUniqueEffect, IStatAlteringEffect {
+    public Dictionary<EStatName, double> EffectStatDictionary { get; set; } = new() {
+        { EStatName.IncreasedCastSpeed, 0.2 },
+        { EStatName.IncreasedManaRegen, 0.5 }
+    };
+
+    private const double boostDuration = 4;
+
+    public ArcaneSurgeEffect(Actor actor) {
+        EffectIcon = UILib.AEffectArcaneSurge;
+        CreatesPlayerStatusIcon = true;
+        EffectName = EEffectName.ArcaneSurge;
+
+        EffectString = "Arcane Surge";
+        EffectDescription = "Increased Cast Speed and Mana Regeneration Rate";
+
+        AffectedActor = actor;
+        EffectLength = boostDuration;
+        RemainingTime = EffectLength;
+    }
+
+    public override void OnGained() {
+        base.OnGained();
+        AffectedActor.OnStatAlteringEffectGained(this);
+    }
+
+    public override void OnExpired() {
+        base.OnExpired();
+        AffectedActor.OnStatAlteringEffectLost(this);
+    }
+
+    public bool ShouldReplaceCurrentEffect(double duration, double value) {
+        return duration > RemainingTime;
     }
 }
