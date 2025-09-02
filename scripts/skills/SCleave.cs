@@ -57,7 +57,7 @@ public class SCleave : Skill, IAttack, IMeleeSkill, IAreaSkill {
             Vector3 projectedPosition = ActorOwner.GlobalPosition + facing;
             aSkill.BasicConeSweepSkillBehaviour(this, "cleave", pixelSize, projectedPosition, coneMin);
 
-            ActorOwner.ReceiveEffect(new SpeedBurstTestEffect(ActorOwner));
+            //ActorOwner.ReceiveEffect(new SpeedBurstTestEffect(ActorOwner));
         }
     }
 

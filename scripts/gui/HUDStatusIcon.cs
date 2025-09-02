@@ -3,6 +3,7 @@ using System;
 
 public partial class HUDStatusIcon : PanelContainer {
     public TextureRect StatusIcon { get; protected set; }
+    public Label StacksLabel { get; protected set; }
     public Label StatusLabel { get; protected set; }
 
     public EEffectName EffectName { get; protected set; }
@@ -12,17 +13,21 @@ public partial class HUDStatusIcon : PanelContainer {
     public int Stacks { get; protected set; } = 1;
     public double TimeLeft { get; protected set; }
 
-    public bool ShouldDisplayStacksInstead { get; protected set; } = false;
+    public bool ShouldShowInstancesInsteadOfTime { get; protected set; } = false;
+
     private bool isConfigured = false;
 
     public override void _Ready() {
-        StatusIcon = GetNode<TextureRect>("MarginContainer/VBoxContainer/StatusIcon");
+        StatusIcon = GetNode<TextureRect>("MarginContainer/VBoxContainer/Container/StatusIcon");
+        StacksLabel = GetNode<Label>("MarginContainer/VBoxContainer/Container/StacksLabel");
         StatusLabel = GetNode<Label>("MarginContainer/VBoxContainer/CenterContainer/StatusLabel");
     }
 
     public override void _PhysicsProcess(double delta) {
         if (isConfigured) {
-            if (!ShouldDisplayStacksInstead) {
+            TimeLeft -= delta;
+
+            if (!ShouldShowInstancesInsteadOfTime) {
                 int minutes = (int)TimeLeft / 60;
                 int seconds = (int)TimeLeft % 60;
 
@@ -34,14 +39,15 @@ public partial class HUDStatusIcon : PanelContainer {
                 else {
                     secondsString = $"{seconds}";
                 }
+
                 StatusLabel.Text = $"{minutes}:{secondsString}";
             }
-
-            TimeLeft -= delta;
         }
     }
 
     public void SetStatusType(AttachedEffect attachedEffect) {
+        OverrideBackground(attachedEffect.EffectRating);
+
         EffectName = attachedEffect.EffectName;
         StatusIcon.Texture = attachedEffect.EffectIcon;
         EffectNameString = attachedEffect.EffectString;
@@ -49,18 +55,54 @@ public partial class HUDStatusIcon : PanelContainer {
         TimeLeft = attachedEffect.RemainingTime;
 
         if (attachedEffect is IUniqueStackableEffect usEffect) {
-            Stacks = usEffect.StackAmount;
+            UpdateStacks(usEffect.StackAmount);
+            StacksLabel.Visible = true;
+        }
+        else {
+            StacksLabel.Text = "";
+            StacksLabel.Visible = false;
         }
 
-        if (Stacks > 1) {
-            ShouldDisplayStacksInstead = true;
+        if (attachedEffect is IRepeatableEffect) {
+            ShouldShowInstancesInsteadOfTime = true;
         }
 
         isConfigured = true;
     }
 
+    private void OverrideBackground(EEffectRating effectRating) {
+        Color bgColor;
+
+        switch (effectRating) {
+            case EEffectRating.Positive:
+                bgColor = UILib.ColorStatusPositive;
+                break;
+            
+            case EEffectRating.Negative:
+                bgColor = UILib.ColorStatusNegative;
+                break;
+
+            default:
+                bgColor = UILib.ColorStatusNeutral;
+                break;
+        }
+
+        StyleBoxFlat styleBoxFlat = new StyleBoxFlat();
+        styleBoxFlat.BgColor = bgColor;
+		AddThemeStyleboxOverride("panel", styleBoxFlat);
+    }
+
     public void OverrideTimeLeft(double time) {
         TimeLeft = time;
+    }
+
+    public void UpdateStacks(int stacks) {
+        Stacks = stacks;
+        StacksLabel.Text = Stacks.ToString();
+    }
+
+    public void UpdateInstances(int instances) {
+        StatusLabel.Text = instances.ToString();
     }
 
     public override string _GetTooltip(Vector2 atPosition) {

@@ -19,6 +19,12 @@ public enum EEffectName {
 	ArcaneSurge
 }
 
+public enum EEffectRating {
+    Neutral,
+    Negative,
+    Positive
+}
+
 [Flags]
 public enum EDamageInfoFlags {
 	None = 0,

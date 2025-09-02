@@ -6,6 +6,7 @@ public abstract class AttachedEffect {
     public Actor AffectedActor { get; set; }
     public Texture2D EffectIcon { get; protected set; }
     public EEffectName EffectName { get; protected set; }
+    public EEffectRating EffectRating { get; protected set; }
     
     public string EffectString { get; protected set; }
     public string EffectDescription { get; protected set; }
@@ -29,7 +30,6 @@ public abstract class AttachedEffect {
     }
 
     public virtual void OnExpired() {
-        //AffectedActor.RemoveStatusFromFloatingBars(EffectName);
         HasExpired = true;
     }
     
@@ -82,6 +82,7 @@ public class BleedEffect : AttachedEffect, IUniqueEffect, IDamageOverTimeEffect 
         CreatesStatusIcon = true;
         CreatesPlayerStatusIcon = true;
         EffectName = EEffectName.Bleed;
+        EffectRating = EEffectRating.Negative;
 
         EffectString = "Bleeding";
         EffectDescription = "Taking Physical Damage over Time. Damage is doubled while Moving";
@@ -126,6 +127,7 @@ public class IgniteEffect : AttachedEffect, IUniqueEffect, IDamageOverTimeEffect
         CreatesStatusIcon = true;
         CreatesPlayerStatusIcon = true;
         EffectName = EEffectName.Ignite;
+        EffectRating = EEffectRating.Negative;
 
         EffectString = "Ignited";
         EffectDescription = "Taking Fire Damage over Time";
@@ -165,6 +167,7 @@ public class PoisonEffect : AttachedEffect, IRepeatableEffect, IDamageOverTimeEf
         CreatesStatusIcon = true;
         CreatesPlayerStatusIcon = true;
         EffectName = EEffectName.Poison;
+        EffectRating = EEffectRating.Negative;
 
         EffectString = "Poisoned";
         EffectDescription = "Taking Chaos Damage over Time";
@@ -202,6 +205,7 @@ public class SpeedBurstTestEffect : AttachedEffect, IUniqueEffect, IStatAltering
         CreatesStatusIcon = true;
         CreatesPlayerStatusIcon = true;
         EffectName = EEffectName.SpeedBoost;
+        EffectRating = EEffectRating.Positive;
 
         EffectString = "Speed Burst";
         EffectDescription = "Increased Movement Speed";
@@ -238,6 +242,7 @@ public class ArcaneSurgeEffect : AttachedEffect, IUniqueEffect, IStatAlteringEff
         EffectIcon = UILib.AEffectArcaneSurge;
         CreatesPlayerStatusIcon = true;
         EffectName = EEffectName.ArcaneSurge;
+        EffectRating = EEffectRating.Positive;
 
         EffectString = "Arcane Surge";
         EffectDescription = "Increased Cast Speed and Mana Regeneration Rate";
@@ -259,5 +264,99 @@ public class ArcaneSurgeEffect : AttachedEffect, IUniqueEffect, IStatAlteringEff
 
     public bool ShouldReplaceCurrentEffect(double duration, double value) {
         return duration > RemainingTime;
+    }
+}
+
+public class TestStackEffect : AttachedEffect, IUniqueStackableEffect {
+    private const double length = 10;
+    private const int stacksPerApplication = 1;
+
+    public int StacksPerApplication { get; set; } = stacksPerApplication;
+    public int StackLimit { get; set; } = 10;
+    public int StackAmount { get; set; }
+
+    public TestStackEffect(Actor actor, int startingStacks = stacksPerApplication) {
+        EffectIcon = UILib.DamageBleed;
+        CreatesStatusIcon = true;
+        CreatesPlayerStatusIcon = true;
+        EffectName = EEffectName.Bleed;
+        EffectRating = EEffectRating.Negative;
+
+        EffectString = "Test";
+        EffectDescription = "Numbers Go Up";
+
+        StackAmount = startingStacks;
+
+        AffectedActor = actor;
+        EffectLength = length;
+        RemainingTime = EffectLength;
+    }
+
+    public override void OnGained() {
+        base.OnGained();
+    }
+
+    public override void OnExpired() {
+        base.OnExpired();
+    }
+
+    public void AddStack(int stacks) {
+        int newStackAmount = StackAmount + stacks;
+
+        if (newStackAmount > StackLimit) {
+            StackAmount = StackLimit;
+        }
+        else {
+            StackAmount = newStackAmount;
+        }
+
+        RemainingTime = length;
+    }
+
+    public void SetStacks(int stacks) {
+        if (stacks > StackLimit) {
+            StackAmount = StackLimit;
+        }
+        else {
+            StackAmount = stacks;
+        }
+
+        RemainingTime = length;
+    }
+
+    public override void Tick(double deltaTime) {
+        RemainingTime -= deltaTime;
+    }
+}
+
+public class TestRepeatableEffect : AttachedEffect, IRepeatableEffect {
+    public static EDamageType DamageType { get; protected set; } = EDamageType.Chaos;
+    private const double duration = 5;
+
+    public TestRepeatableEffect(Actor actor) {
+        EffectIcon = UILib.DamagePoison;
+        CreatesStatusIcon = true;
+        CreatesPlayerStatusIcon = true;
+        EffectName = EEffectName.Poison;
+        EffectRating = EEffectRating.Neutral;
+
+        EffectString = "Test Repeatable Effect";
+        EffectDescription = "Numbers Still Going Up";
+
+        AffectedActor = actor;
+        EffectLength = duration;
+        RemainingTime = EffectLength;
+    }
+
+    public override void OnGained() {
+        base.OnGained();
+    }
+
+    public override void OnExpired() {
+        base.OnExpired();
+    }
+
+    public override void Tick(double deltaTime) {
+        RemainingTime -= deltaTime;
     }
 }

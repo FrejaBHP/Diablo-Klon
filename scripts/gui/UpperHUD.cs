@@ -21,6 +21,10 @@ public partial class UpperHUD : Control {
         if (statusIcons.Exists(s => s.EffectName == statusEffect.EffectName)) {
             HUDStatusIcon statusIcon = statusIcons.Find(s => s.EffectName == statusEffect.EffectName);
             statusIcon.OverrideTimeLeft(statusEffect.RemainingTime);
+
+            if (statusEffect is IUniqueStackableEffect usEffect) {
+                statusIcon.UpdateStacks(usEffect.StackAmount);
+            }
             
             return false;
         }
@@ -31,6 +35,17 @@ public partial class UpperHUD : Control {
         statusIcons.Add(newStatusIcon);
 
         return true;
+    }
+
+    public bool TryUpdateRepeatableEffectInstances(EEffectName effectName, int amount) {
+        if (statusIcons.Exists(s => s.EffectName == effectName)) {
+            HUDStatusIcon statusIcon = statusIcons.Find(s => s.EffectName == effectName);
+            statusIcon.UpdateInstances(amount);
+
+            return true;
+        }
+
+        return false;
     }
 
     public bool TryRemoveStatus(EEffectName statusEffectName) {

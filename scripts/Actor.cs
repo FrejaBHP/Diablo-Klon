@@ -813,7 +813,7 @@ public partial class Actor : CharacterBody3D {
                     cEffect.AddStack(use.StacksPerApplication);
 
                     if (this is Player player) {
-                        player.PlayerHUD.UpperHUD.TryAddStatus(incEffect);
+                        player.PlayerHUD.UpperHUD.TryAddStatus(UniqueEffects[incEffect.EffectName]);
                     }
                     //incEffect.OnGained(); // Should probably make another type of function here, since effect is never lost, but will definitely be updated
                 }
@@ -830,6 +830,11 @@ public partial class Actor : CharacterBody3D {
             else if (StackableEffects.TryAdd(incEffect.EffectName, new List<AttachedEffect>())) {
                 StackableEffects[incEffect.EffectName].Add(incEffect);
                 incEffect.OnGained();
+            }
+
+            if (this is Player player) {
+                int count = StackableEffects[incEffect.EffectName].Count;
+                player.PlayerHUD.UpperHUD.TryUpdateRepeatableEffectInstances(incEffect.EffectName, count);
             }
         }
     }
@@ -868,13 +873,19 @@ public partial class Actor : CharacterBody3D {
             if (effectHasExpired) {
                 //StackableEffects[kvp.Key] = kvp.Value.Where(effect => !effect.HasExpired).ToList();
                 StackableEffects[kvp.Key].RemoveAll(effect => effect.HasExpired);
+                Player player = this as Player;
 
                 if (StackableEffects[kvp.Key].Count == 0) {
                     RemoveStatusFromFloatingBars(kvp.Key);
 
-                    if (this is Player player) {
+                    if (player != null) {
                         player.PlayerHUD.UpperHUD.TryRemoveStatus(kvp.Key);
                     }
+                }
+
+                if (player != null) {
+                    int count = StackableEffects[kvp.Key].Count;
+                    player.PlayerHUD.UpperHUD.TryUpdateRepeatableEffectInstances(kvp.Key, count);
                 }
             }
         }
