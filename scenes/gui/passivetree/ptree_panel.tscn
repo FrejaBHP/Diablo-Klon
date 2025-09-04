@@ -35,6 +35,18 @@ anchor_bottom = 0.25
 offset_right = 40.0
 offset_bottom = 40.0
 
+[node name="Label" type="Label" parent="MarginContainer/Clusters/ActiveCluster1"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_top = -30.0
+offset_right = 20.0
+offset_bottom = -7.0
+grow_horizontal = 2
+horizontal_alignment = 1
+
 [node name="ActiveCluster2" type="Control" parent="MarginContainer/Clusters"]
 layout_mode = 1
 anchor_left = 0.5
@@ -44,6 +56,18 @@ anchor_bottom = 0.25
 offset_right = 40.0
 offset_bottom = 40.0
 
+[node name="Label" type="Label" parent="MarginContainer/Clusters/ActiveCluster2"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_top = -30.0
+offset_right = 20.0
+offset_bottom = -7.0
+grow_horizontal = 2
+horizontal_alignment = 1
+
 [node name="ActiveCluster3" type="Control" parent="MarginContainer/Clusters"]
 layout_mode = 1
 anchor_left = 0.825
@@ -52,3 +76,15 @@ anchor_right = 0.825
 anchor_bottom = 0.25
 offset_right = 40.0
 offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="MarginContainer/Clusters/ActiveCluster3"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_top = -30.0
+offset_right = 20.0
+offset_bottom = -7.0
+grow_horizontal = 2
+horizontal_alignment = 1

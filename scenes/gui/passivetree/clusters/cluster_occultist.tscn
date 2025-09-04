@@ -1,73 +1,177 @@
-[gd_scene load_steps=3 format=3 uid="uid://l3fwg6fgr2pi"]
+[gd_scene load_steps=5 format=3 uid="uid://l3fwg6fgr2pi"]
 
 [ext_resource type="PackedScene" uid="uid://08nys5h31q60" path="res://scenes/gui/passivetree/ptree_cluster.tscn" id="1_ak2p5"]
 [ext_resource type="PackedScene" uid="uid://dcgmyorlf0ptm" path="res://scenes/gui/passivetree/ptree_node.tscn" id="2_jgvr2"]
+[ext_resource type="Texture2D" uid="uid://kwcuafwap1qv" path="res://textures/ui/ptree_Chaos.png" id="3_pkjni"]
+[ext_resource type="Texture2D" uid="uid://bh56qdrp2q6tr" path="res://textures/ui/ptree_Corruption.png" id="4_p26iu"]
 
 [node name="ClusterOccultist" instance=ExtResource("1_ak2p5")]
+ClusterName = "Occultist"
 
-[node name="PTreeNode" parent="." index="2" node_paths=PackedStringArray("NodesNext") instance=ExtResource("2_jgvr2")]
+[node name="TopStart" parent="." index="2" node_paths=PackedStringArray("NodesNext") instance=ExtResource("2_jgvr2")]
 layout_mode = 0
 offset_left = -14.0
-offset_top = 148.0
+offset_top = 146.0
 offset_right = 14.0
-offset_bottom = 176.0
+offset_bottom = 174.0
+texture_normal = ExtResource("3_pkjni")
+StatNames = [57, 133]
+StatValues = [0.1, 2.0]
+NodeName = "Chaos Damage, Chaos Resistance"
+NodeDescription = "10% increased Chaos Damage
++2% to Chaos Resistance"
 ConnectsToCentre = true
-NodesNext = [NodePath("../PTreeNode2")]
+NodesNext = [NodePath("../TopNotable")]
 
-[node name="PTreeNode2" parent="." index="3" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_jgvr2")]
+[node name="TopNotable" parent="." index="3" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_jgvr2")]
 layout_mode = 0
 offset_left = -20.0
-offset_top = 95.0
+offset_top = 96.0
 offset_right = 20.0
-offset_bottom = 135.0
+offset_bottom = 136.0
 disabled = true
+texture_normal = ExtResource("4_p26iu")
+StatNames = [141, 133]
+StatValues = [0.1, 10.0]
 TreeNodeType = 1
-NodeDescription = "+10% chance to Block
-+10% to Block Effectiveness"
+NodeName = "Corruption"
+NodeDescription = "Gain 10% of Damage as Extra Chaos Damage
++10% to Chaos Resistance"
 IsLocked = true
-NodesPrevious = [NodePath("../PTreeNode")]
-NodesNext = [NodePath("../PTreeNode3"), NodePath("../PTreeNode4")]
+NodesPrevious = [NodePath("../TopStart")]
+NodesNext = [NodePath("../TopLeftNode"), NodePath("../TopRightNode")]
 
-[node name="PTreeNode3" parent="." index="4" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_jgvr2")]
+[node name="TopLeftNode" parent="." index="4" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_jgvr2")]
 layout_mode = 0
-offset_left = -48.0
-offset_top = 63.0
-offset_right = -20.0
-offset_bottom = 91.0
+offset_left = -52.0
+offset_top = 68.0
+offset_right = -24.0
+offset_bottom = 96.0
 disabled = true
+texture_normal = ExtResource("3_pkjni")
+StatNames = [57, 133]
+StatValues = [0.1, 2.0]
+NodeName = "Chaos Damage, Chaos Resistance"
+NodeDescription = "10% increased Chaos Damage
++2% to Chaos Resistance"
 IsLocked = true
-NodesPrevious = [NodePath("../PTreeNode2")]
-NodesNext = [NodePath("../PTreeNode5")]
+NodesPrevious = [NodePath("../TopNotable")]
+NodesNext = [NodePath("../TopLeftNotable")]
 
-[node name="PTreeNode4" parent="." index="5" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_jgvr2")]
+[node name="TopLeftNotable" parent="." index="5" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_jgvr2")]
 layout_mode = 0
-offset_left = 20.0
-offset_top = 63.0
-offset_right = 48.0
-offset_bottom = 91.0
+offset_left = -104.0
+offset_top = 88.0
+offset_right = -64.0
+offset_bottom = 128.0
 disabled = true
-IsLocked = true
-NodesPrevious = [NodePath("../PTreeNode2")]
-NodesNext = [NodePath("../PTreeNode6")]
-
-[node name="PTreeNode5" parent="." index="6" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_jgvr2")]
-layout_mode = 0
-offset_left = -95.0
-offset_top = 82.0
-offset_right = -55.0
-offset_bottom = 122.0
-disabled = true
+texture_normal = ExtResource("3_pkjni")
+StatNames = [59, 133]
+StatValues = [10.0, 15.0]
 TreeNodeType = 1
+NodeName = "Strong Will"
+NodeDescription = "Damage Penetrates 10% Chaos Resistance
++15% to Chaos Resistance"
 IsLocked = true
-NodesPrevious = [NodePath("../PTreeNode3")]
+NodesPrevious = [NodePath("../TopLeftNode")]
 
-[node name="PTreeNode6" parent="." index="7" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_jgvr2")]
+[node name="TopRightNode" parent="." index="6" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_jgvr2")]
 layout_mode = 0
-offset_left = 56.0
-offset_top = 81.0
-offset_right = 96.0
-offset_bottom = 121.0
+offset_left = 24.0
+offset_top = 68.0
+offset_right = 52.0
+offset_bottom = 96.0
 disabled = true
-TreeNodeType = 1
+texture_normal = ExtResource("3_pkjni")
+StatNames = [57, 133]
+StatValues = [0.1, 2.0]
+NodeName = "Chaos Damage, Chaos Resistance"
+NodeDescription = "10% increased Chaos Damage
++2% to Chaos Resistance"
 IsLocked = true
-NodesPrevious = [NodePath("../PTreeNode4")]
+NodesPrevious = [NodePath("../TopNotable")]
+NodesNext = [NodePath("../TopRightNotable")]
+
+[node name="TopRightNotable" parent="." index="7" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_jgvr2")]
+layout_mode = 0
+offset_left = 64.0
+offset_top = 88.0
+offset_right = 104.0
+offset_bottom = 128.0
+disabled = true
+texture_normal = ExtResource("3_pkjni")
+StatNames = [141, 31, 40, 49]
+StatValues = [0.2, 0.5, 0.5, 0.5]
+TreeNodeType = 1
+NodeName = "Insanity"
+NodeDescription = "Gain 20% of Damage as Extra Chaos Damage
+Deal 50% less Elemental Damage"
+IsLocked = true
+NodesPrevious = [NodePath("../TopRightNode")]
+
+[node name="LeftStart" parent="." index="8" node_paths=PackedStringArray("NodesNext") instance=ExtResource("2_jgvr2")]
+layout_mode = 0
+offset_left = -46.0
+offset_top = 178.0
+offset_right = -18.0
+offset_bottom = 206.0
+texture_normal = ExtResource("3_pkjni")
+StatNames = [57, 115]
+StatValues = [0.1, 0.05]
+NodeName = "Chaos Damage, Effect Duration"
+NodeDescription = "10% increased Chaos Damage
+5% increased Skill Effect Duration"
+ConnectsToCentre = true
+NodesNext = [NodePath("../LeftNotable")]
+
+[node name="LeftNotable" parent="." index="9" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_jgvr2")]
+layout_mode = 0
+offset_left = -96.0
+offset_top = 171.0
+offset_right = -56.0
+offset_bottom = 211.0
+disabled = true
+texture_normal = ExtResource("3_pkjni")
+StatNames = [57, 115]
+StatValues = [0.2, 0.15]
+TreeNodeType = 1
+NodeName = "Lingering Torment"
+NodeDescription = "20% increased Chaos Damage
+15% increased Skill Effect Duration"
+IsLocked = true
+NodesPrevious = [NodePath("../LeftStart")]
+NodesNext = [NodePath("../BottomLeftNode")]
+
+[node name="BottomLeftNode" parent="." index="10" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_jgvr2")]
+layout_mode = 0
+offset_left = -61.0
+offset_top = 216.0
+offset_right = -33.0
+offset_bottom = 244.0
+disabled = true
+texture_normal = ExtResource("3_pkjni")
+StatNames = [57, 115]
+StatValues = [0.1, 0.05]
+NodeName = "Chaos Damage, Effect Duration"
+NodeDescription = "10% increased Chaos Damage
+5% increased Skill Effect Duration"
+IsLocked = true
+NodesPrevious = [NodePath("../LeftNotable")]
+NodesNext = [NodePath("../BottomLeftNotable")]
+
+[node name="BottomLeftNotable" parent="." index="11" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_jgvr2")]
+layout_mode = 0
+offset_left = -116.0
+offset_top = 224.0
+offset_right = -76.0
+offset_bottom = 264.0
+disabled = true
+texture_normal = ExtResource("3_pkjni")
+StatNames = [58, 116]
+StatValues = [1.1, 1.1]
+TreeNodeType = 1
+NodeName = "Impending Doom"
+NodeDescription = "10% more Chaos Damage
+10% more Skill Effect Duration"
+IsLocked = true
+NodesPrevious = [NodePath("../BottomLeftNode")]

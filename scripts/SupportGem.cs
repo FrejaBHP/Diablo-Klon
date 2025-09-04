@@ -36,182 +36,6 @@ public abstract class SupportGem : Item {
     public virtual void ModifyDurationSkill(IDurationSkill dSkill) {}
 }
 
-public partial class SuppAddedFire : SupportGem {
-    private static readonly int[] minDamageArray = [
-        4, 4, 5, 5, 6,
-        7, 8, 9, 10, 11,
-        12, 13, 15, 17, 19
-    ];
-
-    private static readonly int[] maxDamageArray = [
-        8, 9, 10, 11, 12,
-        13, 15, 17, 19, 22,
-        25, 28, 31, 35, 39
-    ];
-
-    private int addedMinFire;
-    private int addedMaxFire;
-
-    public SuppAddedFire() {
-        ItemName = "Added Fire Damage Support";
-        Description = "Supports Skills that deal Damage";
-        AffectsDamageModifiers = true;
-        AffectsStatusModifiers = false;
-        SkillTags = ESkillTags.None;
-    }
-
-    public override void RollForVariant() {
-        OnVariantChosen();
-    }
-
-    protected override void OnVariantChosen() {
-        addedMinFire = minDamageArray[0];
-        addedMaxFire = maxDamageArray[0];
-        UpdateGemEffectsDescription();
-    }
-
-    protected override void UpdateGemEffectsDescription() {
-        DescEffects = $"Supported Skill deals {addedMinFire} to {addedMaxFire} Added Fire Damage";
-    }
-
-    public override void ApplyToDamageModifiers(DamageModifiers dmgMods) {
-        dmgMods.Fire.SMinAdded += addedMinFire;
-        dmgMods.Fire.SMaxAdded += addedMaxFire;
-    }
-}
-
-public partial class SuppAddedCold : SupportGem {
-    private static readonly int[] minDamageArray = [
-        5, 5, 6, 7, 8,
-        9, 10, 11, 12, 13,
-        15, 17, 19, 21, 24
-    ];
-
-    private static readonly int[] maxDamageArray = [
-        7, 8, 8, 9, 10,
-        11, 13, 15, 17, 19,
-        21, 24, 27, 30, 34
-    ];
-
-    private int addedMinCold;
-    private int addedMaxCold;
-
-    public SuppAddedCold() {
-        ItemName = "Added Cold Damage Support";
-        Description = "Supports Skills that deal Damage";
-        AffectsDamageModifiers = true;
-        AffectsStatusModifiers = false;
-        SkillTags = ESkillTags.None;
-    }
-
-    public override void RollForVariant() {
-        OnVariantChosen();
-    }
-
-    protected override void OnVariantChosen() {
-        addedMinCold = minDamageArray[0];
-        addedMaxCold = maxDamageArray[0];
-        UpdateGemEffectsDescription();
-    }
-
-    protected override void UpdateGemEffectsDescription() {
-        DescEffects = $"Supported Skill deals {addedMinCold} to {addedMaxCold} Added Cold Damage";
-    }
-
-    public override void ApplyToDamageModifiers(DamageModifiers dmgMods) {
-        dmgMods.Cold.SMinAdded += addedMinCold;
-        dmgMods.Cold.SMaxAdded += addedMaxCold;
-    }
-}
-
-public partial class SuppAddedLightning : SupportGem {
-    private static readonly int[] minDamageArray = [
-        1, 1, 1, 1, 1,
-        1, 1, 2, 2, 2,
-        2, 3, 3, 4, 4
-    ];
-
-    private static readonly int[] maxDamageArray = [
-        10, 11, 12, 13, 15,
-        17, 19, 21, 24, 27,
-        30, 34, 38, 43, 48
-    ];
-
-    private int addedMinLightning;
-    private int addedMaxLightning;
-
-    public SuppAddedLightning() {
-        ItemName = "Added Lightning Damage Support";
-        Description = "Supports Skills that deal Damage";
-        AffectsDamageModifiers = true;
-        AffectsStatusModifiers = false;
-        SkillTags = ESkillTags.None;
-    }
-
-    public override void RollForVariant() {
-        OnVariantChosen();
-    }
-
-    protected override void OnVariantChosen() {
-        addedMinLightning = minDamageArray[0];
-        addedMaxLightning = maxDamageArray[0];
-        UpdateGemEffectsDescription();
-    }
-
-    protected override void UpdateGemEffectsDescription() {
-        DescEffects = $"Supported Skill deals {addedMinLightning} to {addedMaxLightning} Added Lightning Damage";
-    }
-
-    public override void ApplyToDamageModifiers(DamageModifiers dmgMods) {
-        dmgMods.Lightning.SMinAdded += addedMinLightning;
-        dmgMods.Lightning.SMaxAdded += addedMaxLightning;
-    }
-}
-
-public partial class SuppAddedChaos : SupportGem {
-    private static readonly int[] minDamageArray = [
-        4, 4, 5, 5, 6,
-        7, 8, 9, 10, 11,
-        12, 13, 15, 17, 19
-    ];
-
-    private static readonly int[] maxDamageArray = [
-        8, 9, 10, 11, 12,
-        13, 15, 17, 19, 22,
-        25, 28, 31, 35, 39
-    ];
-
-    private int addedMinChaos;
-    private int addedMaxChaos;
-
-    public SuppAddedChaos() {
-        ItemName = "Added Chaos Damage Support";
-        Description = "Supports Skills that deal Damage";
-        AffectsDamageModifiers = true;
-        AffectsStatusModifiers = false;
-        SkillTags = ESkillTags.None;
-    }
-
-    public override void RollForVariant() {
-        OnVariantChosen();
-    }
-
-    protected override void OnVariantChosen() {
-        addedMinChaos = minDamageArray[0];
-        addedMaxChaos = maxDamageArray[0];
-        UpdateGemEffectsDescription();
-    }
-
-    protected override void UpdateGemEffectsDescription() {
-        DescEffects = $"Supported Skill deals {addedMinChaos} to {addedMaxChaos} Added Chaos Damage";
-    }
-
-    public override void ApplyToDamageModifiers(DamageModifiers dmgMods) {
-        dmgMods.Chaos.SMinAdded += addedMinChaos;
-        dmgMods.Chaos.SMaxAdded += addedMaxChaos;
-    }
-}
-
 public partial class SuppAttackSpeed : SupportGem {
     private const double moreAttackSpeed = 1.20;
 
@@ -590,7 +414,7 @@ public partial class SuppBrutality : SupportGem {
         dmgMods.Chaos.SMore *= moreNonPhysDamage;
 
         if (variant == 1) {
-            dmgMods.BleedMagnitude += variantBleedDamageMagnitude;
+            dmgMods.IncreasedBleedMagnitude += variantBleedDamageMagnitude;
         }
     }
 }
@@ -687,3 +511,94 @@ public partial class SuppVolatileCurrent : SupportGem {
         dmgMods.Cold.SMore *= moreOtherEleDamage;
     }
 }
+
+public partial class SuppDeadlyPoison : SupportGem {
+    private const double morePoisonMagnitude = 1.75;
+    private const double lessHitDamage = 0.75;
+
+    public SuppDeadlyPoison() {
+        ItemName = "Deadly Poison Support";
+        Description = "Supports Skills that deal Damage";
+        AffectsDamageModifiers = true;
+        AffectsStatusModifiers = false;
+        SkillTags = ESkillTags.None;
+    }
+
+    public override void RollForVariant() {
+        OnVariantChosen();
+    }
+
+    protected override void OnVariantChosen() {
+        UpdateGemEffectsDescription();
+    }
+
+    protected override void UpdateGemEffectsDescription() {
+        DescEffects = $"Supported Skill has {morePoisonMagnitude - 1:P0} more Poison Magnitude\nSupported Skill deals {1 - lessHitDamage:P0} less Damage with Hits";
+    }
+
+    public override void ApplyToDamageModifiers(DamageModifiers dmgMods) {
+        dmgMods.MorePoisonMagnitude *= morePoisonMagnitude;
+        dmgMods.HitDamageMultiplier *= lessHitDamage;
+    }
+}
+
+public partial class SuppHemorrhage : SupportGem {
+    private const double moreBleedMagnitude = 1.75;
+    private const double lessHitDamage = 0.75;
+
+    public SuppHemorrhage() {
+        ItemName = "Hemorrhage Support";
+        Description = "Supports Skills that deal Damage";
+        AffectsDamageModifiers = true;
+        AffectsStatusModifiers = false;
+        SkillTags = ESkillTags.None;
+    }
+
+    public override void RollForVariant() {
+        OnVariantChosen();
+    }
+
+    protected override void OnVariantChosen() {
+        UpdateGemEffectsDescription();
+    }
+
+    protected override void UpdateGemEffectsDescription() {
+        DescEffects = $"Supported Skill has {moreBleedMagnitude - 1:P0} more Bleed Magnitude\nSupported Skill deals {1 - lessHitDamage:P0} less Damage with Hits";
+    }
+
+    public override void ApplyToDamageModifiers(DamageModifiers dmgMods) {
+        dmgMods.MoreBleedMagnitude *= moreBleedMagnitude;
+        dmgMods.HitDamageMultiplier *= lessHitDamage;
+    }
+}
+
+public partial class SuppSearingHeat : SupportGem {
+    private const double moreIgniteMagnitude = 1.75;
+    private const double lessHitDamage = 0.75;
+
+    public SuppSearingHeat() {
+        ItemName = "Searing Heat Support";
+        Description = "Supports Skills that deal Damage";
+        AffectsDamageModifiers = true;
+        AffectsStatusModifiers = false;
+        SkillTags = ESkillTags.None;
+    }
+
+    public override void RollForVariant() {
+        OnVariantChosen();
+    }
+
+    protected override void OnVariantChosen() {
+        UpdateGemEffectsDescription();
+    }
+
+    protected override void UpdateGemEffectsDescription() {
+        DescEffects = $"Supported Skill has {moreIgniteMagnitude - 1:P0} more Ignite Magnitude\nSupported Skill deals {1 - lessHitDamage:P0} less Damage with Hits";
+    }
+
+    public override void ApplyToDamageModifiers(DamageModifiers dmgMods) {
+        dmgMods.MoreIgniteMagnitude *= moreIgniteMagnitude;
+        dmgMods.HitDamageMultiplier *= lessHitDamage;
+    }
+}
+

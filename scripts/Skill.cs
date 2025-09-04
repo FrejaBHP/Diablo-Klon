@@ -13,8 +13,8 @@ public abstract class Skill {
     public Actor ActorOwner { get; set; }
     public SkillSlotCluster HousingSkillCluster = null;
 
-    public DamageModifiers BaseDamageModifiers { get; protected set; } = new(); // Kan måske erstattes med nogle mere simple værdier
-    public DamageModifiers ActiveDamageModifiers { get; protected set; } = new(); // Som fx bare have en double der hedder "IncreasedPhys" og lægge det til i det relevante sted i et skill
+    public DamageModifiers BaseDamageModifiers { get; protected set; } = new();
+    public DamageModifiers ActiveDamageModifiers { get; protected set; } = new();
     public StatusEffectModifiers BaseStatusEffectModifiers { get; protected set; } = new();
     public StatusEffectModifiers ActiveStatusEffectModifiers { get; protected set; } = new();
     public double BaseCriticalStrikeChance;
@@ -127,35 +127,49 @@ public abstract class Skill {
                 isCritical = RollForCritical(wStats.CritChance * ActorOwner.CritChanceMod.STotal);
             }
 
-            damageRangeInfo = DamageModifiers.CalculateAttackSkillDamageRange(ActiveDamageModifiers, wStats, AddedDamageModifier, SkillDamageTags);
+            //damageRangeInfo = DamageModifiers.CalculateAttackSkillDamageRange(ActiveDamageModifiers, wStats, AddedDamageModifier, SkillDamageTags);
+            damageRangeInfo = DamageModifiers.CalculateAttackSkillDamageRangeWithHitMulti(ActiveDamageModifiers, wStats, AddedDamageModifier, SkillDamageTags);
         }
         else {
             if (canCrit) {
                 isCritical = RollForCritical(BaseCriticalStrikeChance * ActorOwner.CritChanceMod.STotal);
             }
 
-            damageRangeInfo = DamageModifiers.CalculateSpellSkillDamageRange(ActiveDamageModifiers, AddedDamageModifier, SkillDamageTags);
+            //damageRangeInfo = DamageModifiers.CalculateSpellSkillDamageRange(ActiveDamageModifiers, AddedDamageModifier, SkillDamageTags);
+            damageRangeInfo = DamageModifiers.CalculateSpellSkillDamageRangeWithHitMulti(ActiveDamageModifiers, AddedDamageModifier, SkillDamageTags);
         }
 
-        double hitPhysical = DamageModifiers.RollDamageRange(damageRangeInfo.PhysicalMin, damageRangeInfo.PhysicalMax);
-        double hitFire = DamageModifiers.RollDamageRange(damageRangeInfo.FireMin, damageRangeInfo.FireMax);
-        double hitCold = DamageModifiers.RollDamageRange(damageRangeInfo.ColdMin, damageRangeInfo.ColdMax);
-        double hitLightning = DamageModifiers.RollDamageRange(damageRangeInfo.LightningMin, damageRangeInfo.LightningMax);
-        double hitChaos = DamageModifiers.RollDamageRange(damageRangeInfo.ChaosMin, damageRangeInfo.ChaosMax);
+        double baseHitPhysical = DamageModifiers.RollDamageRange(damageRangeInfo.PhysicalMin, damageRangeInfo.PhysicalMax);
+        double baseHitFire = DamageModifiers.RollDamageRange(damageRangeInfo.FireMin, damageRangeInfo.FireMax);
+        double baseHitCold = DamageModifiers.RollDamageRange(damageRangeInfo.ColdMin, damageRangeInfo.ColdMax);
+        double baseHitLightning = DamageModifiers.RollDamageRange(damageRangeInfo.LightningMin, damageRangeInfo.LightningMax);
+        double baseHitChaos = DamageModifiers.RollDamageRange(damageRangeInfo.ChaosMin, damageRangeInfo.ChaosMax);
         
         if (isCritical) {
             damageInfoFlags |= EDamageInfoFlags.Critical;
 
-            hitPhysical *= CriticalStrikeMulti;
-            hitFire *= CriticalStrikeMulti;
-            hitCold *= CriticalStrikeMulti;
-            hitLightning *= CriticalStrikeMulti;
-            hitChaos *= CriticalStrikeMulti;
+            baseHitPhysical *= CriticalStrikeMulti;
+            baseHitFire *= CriticalStrikeMulti;
+            baseHitCold *= CriticalStrikeMulti;
+            baseHitLightning *= CriticalStrikeMulti;
+            baseHitChaos *= CriticalStrikeMulti;
         }
 
-        SkillHitDamageInfo hitDamageInfo = new(hitPhysical, hitFire, hitCold, hitLightning, hitChaos);
+        SkillHitDamageInfo hitDamageInfo = new(baseHitPhysical, baseHitFire, baseHitCold, baseHitLightning, baseHitChaos);
+
+        // In case I want the hit damage multiplier, or anything similar to it, to not apply to ailments, swap what's commented out here and above
+        /*
+        double finalHitPhysical = baseHitPhysical * ActiveDamageModifiers.HitDamageMultiplier;
+        double finalHitFire = baseHitFire * ActiveDamageModifiers.HitDamageMultiplier;
+        double finalHitCold = baseHitCold * ActiveDamageModifiers.HitDamageMultiplier;
+        double finalHitLightning = baseHitLightning * ActiveDamageModifiers.HitDamageMultiplier;
+        double finalHitChaos = baseHitChaos * ActiveDamageModifiers.HitDamageMultiplier;
+
+        SkillHitDamageInfo hitDamageInfo = new(finalHitPhysical, finalHitFire, finalHitCold, finalHitLightning, finalHitChaos);
+        */
 
         List<AttachedEffect> statusEffects = new();
+
         /*
         if (StatusEffectFlags.HasFlag(ESkillStatusEffectFlags.CanBleed)) {
             if (ActiveStatusEffectModifiers.Bleed.RollForProc()) {
@@ -189,38 +203,32 @@ public abstract class Skill {
                 // TODO
             }
         }*/
-        if (hitPhysical > 0) {
+        if (baseHitPhysical > 0) {
             if (ActiveStatusEffectModifiers.Bleed.RollForProc()) {
-                //ActiveDamageModifiers.CalculateMultipliersWithType(ActiveDamageModifiers.Physical, BleedEffect.DamageTags, out double incMult, out double moreMult);
-                //double damage = hitPhysical * (1 + incMult) * moreMult * (1 + ActorOwner.StatusMods.Bleed.SFasterTicking);
-                double damage = hitPhysical * (1 + ActiveDamageModifiers.BleedMagnitude) * (1 + ActorOwner.StatusMods.Bleed.SFasterTicking);
+                double damage = baseHitPhysical * (1 + ActiveDamageModifiers.IncreasedBleedMagnitude) * ActiveDamageModifiers.MoreBleedMagnitude * (1 + ActorOwner.StatusMods.Bleed.SFasterTicking);
                 statusEffects.Add(new BleedEffect(null, ActiveStatusEffectModifiers.Bleed.CalculateDurationModifier(), damage));
             }
         }
-        if (hitFire > 0) {
+        if (baseHitFire > 0) {
             if (ActiveStatusEffectModifiers.Ignite.RollForProc()) {
-                //ActiveDamageModifiers.CalculateMultipliersWithType(ActiveDamageModifiers.Fire, IgniteEffect.DamageTags, out double incMult, out double moreMult);
-                //double damage = hitFire * (1 + incMult) * moreMult * (1 + ActorOwner.StatusMods.Ignite.SFasterTicking);
-                double damage = hitFire * (1 + ActiveDamageModifiers.IgniteMagnitude) * (1 + ActorOwner.StatusMods.Ignite.SFasterTicking);
+                double damage = baseHitFire * (1 + ActiveDamageModifiers.IncreasedIgniteMagnitude) * ActiveDamageModifiers.MoreIgniteMagnitude *  (1 + ActorOwner.StatusMods.Ignite.SFasterTicking);
                 statusEffects.Add(new IgniteEffect(null, ActiveStatusEffectModifiers.Ignite.CalculateDurationModifier(), damage));
             }
         }
-        if (hitCold > 0) {
+        if (baseHitCold > 0) {
             if (ActiveStatusEffectModifiers.Chill.RollForProc()) {
                 // TODO
             }
         }
-        if (hitLightning > 0) {
+        if (baseHitLightning > 0) {
             if (ActiveStatusEffectModifiers.Shock.RollForProc()) {
                 // TODO
             }
         }
 
-        if ((hitPhysical + hitChaos) > 0) {
+        if ((baseHitPhysical + baseHitChaos) > 0) {
             if (ActiveStatusEffectModifiers.Poison.RollForProc()) {
-                //ActiveDamageModifiers.CalculateMultipliersWithType(ActiveDamageModifiers.Chaos, PoisonEffect.DamageTags, out double incMult, out double moreMult);
-                //double damage = (hitPhysical + hitChaos) * (1 + incMult) * moreMult * (1 + ActorOwner.StatusMods.Poison.SFasterTicking);
-                double damage = (hitPhysical + hitChaos) * (1 * ActiveDamageModifiers.PoisonMagnitude) * (1 + ActorOwner.StatusMods.Poison.SFasterTicking);
+                double damage = (baseHitPhysical + baseHitChaos) * (1 * ActiveDamageModifiers.IncreasedPoisonMagnitude) * ActiveDamageModifiers.MorePoisonMagnitude *  (1 + ActorOwner.StatusMods.Poison.SFasterTicking);
                 statusEffects.Add(new PoisonEffect(null, ActiveStatusEffectModifiers.Poison.CalculateDurationModifier(), damage));
             }
         }

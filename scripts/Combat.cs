@@ -17,9 +17,9 @@ public class DamageModifiers() {
     public double IncreasedDoT = 0;
     public double IncreasedAll = 0;
 
-    public double BleedMagnitude = 0;
-    public double IgniteMagnitude = 0;
-    public double PoisonMagnitude = 0;
+    public double IncreasedBleedMagnitude = 0;
+    public double IncreasedIgniteMagnitude = 0;
+    public double IncreasedPoisonMagnitude = 0;
 
     public double MoreAttack = 1;
     public double MoreSpell = 1;
@@ -28,6 +28,12 @@ public class DamageModifiers() {
     public double MoreArea = 1;
     public double MoreDoT = 1;
     public double MoreAll = 1;
+
+    public double MoreBleedMagnitude = 1;
+    public double MoreIgniteMagnitude = 1;
+    public double MorePoisonMagnitude = 1;
+
+    public double HitDamageMultiplier = 1;
 
     public double ExtraPhysical = 0;
     public double ExtraFire = 0;
@@ -207,8 +213,16 @@ public class DamageModifiers() {
         return ApplyMultipliersToDamageRangeInfo(CalculateBaseAttackDamage(damageMods, weaponStats, addedMultiplier), damageMods, damageTags);
     }
 
+    public static SkillDamageRangeInfo CalculateAttackSkillDamageRangeWithHitMulti(DamageModifiers damageMods, ActorWeaponStats weaponStats, double addedMultiplier, ESkillDamageTags damageTags) {
+        return ApplyMultipliersToDamageRangeInfo(CalculateBaseAttackDamage(damageMods, weaponStats, addedMultiplier), damageMods, damageTags) * damageMods.HitDamageMultiplier;
+    }
+
     public static SkillDamageRangeInfo CalculateSpellSkillDamageRange(DamageModifiers damageMods, double addedMultiplier, ESkillDamageTags damageTags) {
         return ApplyMultipliersToDamageRangeInfo(CalculateBaseSpellDamage(damageMods, addedMultiplier), damageMods, damageTags);
+    }
+
+    public static SkillDamageRangeInfo CalculateSpellSkillDamageRangeWithHitMulti(DamageModifiers damageMods, double addedMultiplier, ESkillDamageTags damageTags) {
+        return ApplyMultipliersToDamageRangeInfo(CalculateBaseSpellDamage(damageMods, addedMultiplier), damageMods, damageTags) * damageMods.HitDamageMultiplier;
     }
 
     public static double RollDamageRange(double min, double max) {
@@ -277,9 +291,9 @@ public class DamageModifiers() {
         c.IncreasedDoT = a.IncreasedDoT + b.IncreasedDoT;
         c.IncreasedAll = a.IncreasedAll + b.IncreasedAll;
 
-        c.BleedMagnitude = a.BleedMagnitude + b.BleedMagnitude;
-        c.IgniteMagnitude = a.IgniteMagnitude + b.IgniteMagnitude;
-        c.PoisonMagnitude = a.PoisonMagnitude + b.PoisonMagnitude;
+        c.IncreasedBleedMagnitude = a.IncreasedBleedMagnitude + b.IncreasedBleedMagnitude;
+        c.IncreasedIgniteMagnitude = a.IncreasedIgniteMagnitude + b.IncreasedIgniteMagnitude;
+        c.IncreasedPoisonMagnitude = a.IncreasedPoisonMagnitude + b.IncreasedPoisonMagnitude;
 
         c.MoreAttack = a.MoreAttack * b.MoreAttack;
         c.MoreSpell = a.MoreSpell * b.MoreSpell;
@@ -288,6 +302,12 @@ public class DamageModifiers() {
         c.MoreArea = a.MoreArea * b.MoreArea;
         c.MoreDoT = a.MoreDoT * b.MoreDoT;
         c.MoreAll = a.MoreAll * b.MoreAll;
+
+        c.MoreBleedMagnitude = a.MoreBleedMagnitude * b.MoreBleedMagnitude;
+        c.MoreIgniteMagnitude = a.MoreIgniteMagnitude * b.MoreIgniteMagnitude;
+        c.MorePoisonMagnitude = a.MorePoisonMagnitude * b.MorePoisonMagnitude;
+
+        c.HitDamageMultiplier = a.HitDamageMultiplier * b.HitDamageMultiplier;
 
         c.ExtraPhysical = a.ExtraPhysical + b.ExtraPhysical;
         c.ExtraFire = a.ExtraFire + b.ExtraFire;
@@ -315,9 +335,9 @@ public class DamageModifiers() {
         c.IncreasedDoT = a.IncreasedDoT - b.IncreasedDoT;
         c.IncreasedAll = a.IncreasedAll - b.IncreasedAll;
 
-        c.BleedMagnitude = a.BleedMagnitude - b.BleedMagnitude;
-        c.IgniteMagnitude = a.IgniteMagnitude - b.IgniteMagnitude;
-        c.PoisonMagnitude = a.PoisonMagnitude - b.PoisonMagnitude;
+        c.IncreasedBleedMagnitude = a.IncreasedBleedMagnitude - b.IncreasedBleedMagnitude;
+        c.IncreasedIgniteMagnitude = a.IncreasedIgniteMagnitude - b.IncreasedIgniteMagnitude;
+        c.IncreasedPoisonMagnitude = a.IncreasedPoisonMagnitude - b.IncreasedPoisonMagnitude;
 
         c.MoreAttack = a.MoreAttack / b.MoreAttack;
         c.MoreSpell = a.MoreSpell / b.MoreSpell;
@@ -326,6 +346,12 @@ public class DamageModifiers() {
         c.MoreArea = a.MoreArea / b.MoreArea;
         c.MoreDoT = a.MoreDoT / b.MoreDoT;
         c.MoreAll = a.MoreAll / b.MoreAll;
+
+        c.MoreBleedMagnitude = a.MoreBleedMagnitude / b.MoreBleedMagnitude;
+        c.MoreIgniteMagnitude = a.MoreIgniteMagnitude / b.MoreIgniteMagnitude;
+        c.MorePoisonMagnitude = a.MorePoisonMagnitude / b.MorePoisonMagnitude;
+
+        c.HitDamageMultiplier = a.HitDamageMultiplier / b.HitDamageMultiplier;
 
         c.ExtraPhysical = a.ExtraPhysical - b.ExtraPhysical;
         c.ExtraFire = a.ExtraFire - b.ExtraFire;
@@ -429,6 +455,21 @@ public readonly struct SkillDamageRangeInfo(double physMin, double physMax, doub
     public readonly double LightningMax = lightningMax;
     public readonly double ChaosMin = chaosMin;
     public readonly double ChaosMax = chaosMax;
+
+    public static SkillDamageRangeInfo operator *(SkillDamageRangeInfo info, double multiplier) {
+        return new SkillDamageRangeInfo(
+            info.PhysicalMin * multiplier,
+            info.PhysicalMax * multiplier,
+            info.FireMin * multiplier,
+            info.FireMax * multiplier,
+            info.ColdMin * multiplier,
+            info.ColdMax * multiplier,
+            info.LightningMin * multiplier,
+            info.LightningMax * multiplier,
+            info.ChaosMin * multiplier,
+            info.ChaosMax * multiplier
+        );
+    }
 
     /*
     public override string ToString() {

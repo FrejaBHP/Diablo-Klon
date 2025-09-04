@@ -142,8 +142,9 @@ public class SoulrendEffect : AttachedEffect, IUniqueEffect, IDamageOverTimeEffe
     public EDamageType DamageType { get; set; } = EDamageType.Chaos;
 
     public SoulrendEffect(Actor actor, double duration, double dps) {
-        EffectIcon = UILib.TextureSkillSoulrend;
+        EffectIcon = UILib.AEffectSoulrend;
         CreatesPlayerStatusIcon = true;
+        EffectRating = EEffectRating.Negative;
         EffectName = EEffectName.Soulrend;
 
         EffectString = "Soulrend";
@@ -153,10 +154,6 @@ public class SoulrendEffect : AttachedEffect, IUniqueEffect, IDamageOverTimeEffe
         EffectLength = duration;
         RemainingTime = EffectLength;
         EffectValue = dps;
-    }
-
-    public override void OnGained() {
-        
     }
 
     public bool ShouldReplaceCurrentEffect(double duration, double value) {

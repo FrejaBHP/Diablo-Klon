@@ -403,36 +403,6 @@ public static class ItemDataTables {
 	];
 
 	public static readonly List<SupportGemData> SupportGemData = [
-		/*
-		new SupportGemData {
-			SkillTags = ESkillTags.None,
-			SupportType = typeof(SuppAddedFire),
-			Texture = UILib.TextureItemD2JewelRedF,
-			MinimumLevel = 0,
-		},
-
-		new SupportGemData {
-			SkillTags = ESkillTags.None,
-			SupportType = typeof(SuppAddedCold),
-			Texture = UILib.TextureItemD2JewelGreenF,
-			MinimumLevel = 0,
-		},
-
-		new SupportGemData {
-			SkillTags = ESkillTags.None,
-			SupportType = typeof(SuppAddedLightning),
-			Texture = UILib.TextureItemD2JewelBlueF,
-			MinimumLevel = 0,
-		},
-
-		new SupportGemData {
-			SkillTags = ESkillTags.None,
-			SupportType = typeof(SuppAddedChaos),
-			Texture = UILib.TextureItemD2JewelWhiteF,
-			MinimumLevel = 0,
-		},
-		*/
-
 		new SupportGemData {
 			SkillTags = ESkillTags.Attack,
 			SupportType = typeof(SuppAttackSpeed),
@@ -528,6 +498,27 @@ public static class ItemDataTables {
 			SkillTags = ESkillTags.None,
 			SupportType = typeof(SuppVolatileCurrent),
 			Texture = UILib.TextureItemD2JewelBlueF,
+			MinimumLevel = 0,
+		},
+
+		new SupportGemData {
+			SkillTags = ESkillTags.None,
+			SupportType = typeof(SuppDeadlyPoison),
+			Texture = UILib.TextureItemD2JewelGreenF,
+			MinimumLevel = 0,
+		},
+
+		new SupportGemData {
+			SkillTags = ESkillTags.None,
+			SupportType = typeof(SuppHemorrhage),
+			Texture = UILib.TextureItemD2JewelRedF,
+			MinimumLevel = 0,
+		},
+
+		new SupportGemData {
+			SkillTags = ESkillTags.None,
+			SupportType = typeof(SuppSearingHeat),
+			Texture = UILib.TextureItemD2JewelRedF,
 			MinimumLevel = 0,
 		},
 	];

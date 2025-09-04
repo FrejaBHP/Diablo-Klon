@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 
 public partial class PTreeCluster : Control {
+    [Export]
+    public string ClusterName { get; protected set; }
+
     public List<PTreeNode> NodeList { get; protected set; } = new();
     public bool FirstTime { get; set; } = true;
 

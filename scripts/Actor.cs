@@ -430,15 +430,15 @@ public partial class Actor : CharacterBody3D {
 		{ EStatName.AddedCritMulti, 				0 },
 
         { EStatName.AddedBleedChance, 			    0 },
-        { EStatName.BleedMagnitude,                 0 },
+        { EStatName.IncreasedBleedMagnitude,        0 },
         { EStatName.IncreasedBleedDuration,         0 },
         { EStatName.FasterBleed, 			        0 },
         { EStatName.AddedIgniteChance, 			    0 },
-        { EStatName.IgniteMagnitude,                0 },
+        { EStatName.IncreasedIgniteMagnitude,       0 },
         { EStatName.IncreasedIgniteDuration,        0 },
         { EStatName.FasterIgnite, 			        0 },
         { EStatName.AddedPoisonChance, 			    0 },
-        { EStatName.PoisonMagnitude,                0 },
+        { EStatName.IncreasedPoisonMagnitude,       0 },
         { EStatName.IncreasedPoisonDuration,        0 },
         { EStatName.FasterPoison, 			        0 },
 
@@ -503,6 +503,10 @@ public partial class Actor : CharacterBody3D {
         { EStatName.MoreCastSpeedDualWield,			1 },
         { EStatName.MoreSkillSpeedShield, 		    1 },
         { EStatName.MoreCritChance, 		    	1 },
+
+        { EStatName.MoreBleedMagnitude,             1 },
+        { EStatName.MoreIgniteMagnitude,            1 },
+        { EStatName.MorePoisonMagnitude,            1 },
 
         { EStatName.MoreBleedDuration, 				1 },
         { EStatName.MoreIgniteDuration, 			1 },

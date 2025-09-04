@@ -6,10 +6,10 @@ public partial class Projectile : Node3D {
     public delegate void TargetHitEventHandler(Actor target);
     public event TargetHitEventHandler TargetHit;
 
-    public Area3D Hitbox;
+    public Area3D Hitbox { get; protected set; }
+    public Sprite3D ProjectileSprite { get; protected set; }
     private CollisionShape3D hitboxCollision;
     private CapsuleShape3D collisionCapsule;
-    public Sprite3D ProjectileSprite;
 
     private Vector3 direction;
 

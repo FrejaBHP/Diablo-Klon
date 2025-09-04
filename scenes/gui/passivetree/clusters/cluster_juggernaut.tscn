@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://bb4roqp33jqq0" path="res://textures/ui/ptree_DensePlating.png" id="7_vrpeu"]
 
 [node name="ClusterJuggernaut" instance=ExtResource("1_tq2we")]
+ClusterName = "Juggernaut"
 
 [node name="TopStart" parent="." index="2" node_paths=PackedStringArray("NodesNext") instance=ExtResource("3_6afdj")]
 layout_mode = 0

@@ -1,0 +1,156 @@
+[gd_scene load_steps=4 format=3 uid="uid://cjely4fh8qm68"]
+
+[ext_resource type="PackedScene" uid="uid://08nys5h31q60" path="res://scenes/gui/passivetree/ptree_cluster.tscn" id="1_20vh4"]
+[ext_resource type="PackedScene" uid="uid://dcgmyorlf0ptm" path="res://scenes/gui/passivetree/ptree_node.tscn" id="2_l1pt6"]
+[ext_resource type="Texture2D" uid="uid://ccr5qho6u2fxy" path="res://textures/ui/ptree_Crit.png" id="3_8vubm"]
+
+[node name="ClusterAssassin" instance=ExtResource("1_20vh4")]
+ClusterName = "Assassin"
+
+[node name="TopLeftStart" parent="." index="2" node_paths=PackedStringArray("NodesNext") instance=ExtResource("2_l1pt6")]
+layout_mode = 0
+offset_left = -40.0
+offset_top = 152.0
+offset_right = -12.0
+offset_bottom = 180.0
+texture_normal = ExtResource("3_8vubm")
+StatNames = [90]
+StatValues = [0.2]
+NodeName = "Critical Strike Chance"
+NodeDescription = "20% increased Critical Strike Chance"
+ConnectsToCentre = true
+NodesNext = [NodePath("../TopLeftNotable")]
+
+[node name="TopLeftNotable" parent="." index="3" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_l1pt6")]
+layout_mode = 0
+offset_left = -80.0
+offset_top = 112.0
+offset_right = -40.0
+offset_bottom = 152.0
+disabled = true
+texture_normal = ExtResource("3_8vubm")
+StatNames = [90]
+StatValues = [0.35]
+TreeNodeType = 1
+NodeName = "Accelerationism"
+NodeDescription = "(Unimplemented) 10% increased Attack and Cast Speed for 3 seconds on Critical Strike
+35% increased Critical Strike Chance"
+IsLocked = true
+NodesPrevious = [NodePath("../TopLeftStart")]
+
+[node name="TopRightStart" parent="." index="4" node_paths=PackedStringArray("NodesNext") instance=ExtResource("2_l1pt6")]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 152.0
+offset_right = 40.0
+offset_bottom = 180.0
+texture_normal = ExtResource("3_8vubm")
+StatNames = [90, 92]
+StatValues = [0.1, 0.05]
+NodeName = "Critical Strike Multiplier and Chance"
+NodeDescription = "+5% to Critical Strike Multiplier
+10% increased Critical Strike Chance"
+ConnectsToCentre = true
+NodesNext = [NodePath("../TopRightNotable")]
+
+[node name="TopRightNotable" parent="." index="5" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_l1pt6")]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 112.0
+offset_right = 80.0
+offset_bottom = 152.0
+disabled = true
+texture_normal = ExtResource("3_8vubm")
+StatNames = [90, 92]
+StatValues = [0.25, 0.25]
+TreeNodeType = 1
+NodeName = "Vital Precision"
+NodeDescription = "+25% to Critical Strike Multiplier
+25% increased Critical Strike Chance"
+IsLocked = true
+NodesPrevious = [NodePath("../TopRightStart")]
+NodesNext = [NodePath("../TopRightEdgeNode")]
+
+[node name="BottomLeftStart" parent="." index="6" node_paths=PackedStringArray("NodesNext") instance=ExtResource("2_l1pt6")]
+layout_mode = 0
+offset_left = -40.0
+offset_top = 204.0
+offset_right = -12.0
+offset_bottom = 232.0
+texture_normal = ExtResource("3_8vubm")
+StatNames = [90]
+StatValues = [0.1]
+NodeName = "Status Effect Damage and Critical Strike Chance"
+NodeDescription = "(Unimplemented) 15% increased Magnitude of Damaging Status Effects inflicted with Critical Strikes
+10% increased Critical Strike Chance"
+ConnectsToCentre = true
+NodesNext = [NodePath("../BottomLeftNotable")]
+
+[node name="BottomLeftNotable" parent="." index="7" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_l1pt6")]
+layout_mode = 0
+offset_left = -80.0
+offset_top = 232.0
+offset_right = -40.0
+offset_bottom = 272.0
+disabled = true
+texture_normal = ExtResource("3_8vubm")
+TreeNodeType = 1
+NodeName = "Worsening Condition"
+NodeDescription = "(Unimplemented) Increased Magnitude of Damaging Status Effects inflicted with Critical Strikes
+(Unimplemented) Increased Critical Strike Chance against Enemies affected by Damaging Status Effects"
+IsLocked = true
+NodesPrevious = [NodePath("../BottomLeftStart")]
+
+[node name="BottomRightStart" parent="." index="8" node_paths=PackedStringArray("NodesNext") instance=ExtResource("2_l1pt6")]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 204.0
+offset_right = 40.0
+offset_bottom = 232.0
+texture_normal = ExtResource("3_8vubm")
+ConnectsToCentre = true
+NodesNext = [NodePath("../BottomRightNotable")]
+
+[node name="BottomRightNotable" parent="." index="9" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_l1pt6")]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 232.0
+offset_right = 80.0
+offset_bottom = 272.0
+disabled = true
+texture_normal = ExtResource("3_8vubm")
+TreeNodeType = 1
+IsLocked = true
+NodesPrevious = [NodePath("../BottomRightStart")]
+
+[node name="TopRightEdgeNode" parent="." index="10" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_l1pt6")]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 73.0
+offset_right = 60.0
+offset_bottom = 101.0
+disabled = true
+texture_normal = ExtResource("3_8vubm")
+StatNames = [90, 92]
+StatValues = [0.1, 0.05]
+NodeName = "Critical Strike Multiplier and Chance"
+NodeDescription = "+5% to Critical Strike Multiplier
+10% increased Critical Strike Chance"
+IsLocked = true
+NodesPrevious = [NodePath("../TopRightNotable")]
+NodesNext = [NodePath("../TopEdgeNotable")]
+
+[node name="TopEdgeNotable" parent="." index="11" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_l1pt6")]
+layout_mode = 0
+offset_left = -20.0
+offset_top = 56.0
+offset_right = 20.0
+offset_bottom = 96.0
+disabled = true
+texture_normal = ExtResource("3_8vubm")
+TreeNodeType = 1
+NodeName = "Cleaner"
+NodeDescription = "(Unimplemented) Increased Critical Strike Chance against Enemies with 50% Life or less
+(Unimplemented) Increased Critical Strike Multiplier against Enemies with 50% Life or less"
+IsLocked = true
+NodesPrevious = [NodePath("../TopRightEdgeNode")]

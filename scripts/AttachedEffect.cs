@@ -74,8 +74,8 @@ public interface IStatAlteringEffect {
 
 public class BleedEffect : AttachedEffect, IUniqueEffect, IDamageOverTimeEffect {
     public static EDamageType DamageType { get; protected set; } = EDamageType.Physical;
-    private const double damageFactor = 0.75;
-    private const double bleedDuration = 8;
+    private const double damageFactor = 0.6;
+    private const double bleedDuration = 6;
 
     public BleedEffect(Actor actor, double durationModifier, double dps) {
         EffectIcon = UILib.DamageBleed;
@@ -159,7 +159,7 @@ public class IgniteEffect : AttachedEffect, IUniqueEffect, IDamageOverTimeEffect
 
 public class PoisonEffect : AttachedEffect, IRepeatableEffect, IDamageOverTimeEffect {
     public static EDamageType DamageType { get; protected set; } = EDamageType.Chaos;
-    private const double damageFactor = 0.2;
+    private const double damageFactor = 0.15;
     private const double poisonDuration = 2;
 
     public PoisonEffect(Actor actor, double durationModifier, double dps) {

@@ -8,13 +8,6 @@ public partial class Player : Actor {
 	public Control PauseMenu;
 	public PlayerCamera PlayerCamera;
 
-	public Stat Strength { get; protected set; } = new(0, true);
-    public Stat Dexterity { get; protected set; } = new(0, true);
-    public Stat Intelligence { get; protected set; } = new(0, true);
-
-	protected int lifeGrowth = 5;
-	protected int manaGrowth = 3;
-
     public double Experience { get; protected set; } = 0;
 
     protected int[] experienceRequirements = [
@@ -61,6 +54,13 @@ public partial class Player : Actor {
 	protected Vector2 lastMouseInputPos = new(0, 0);
 	protected Vector3 moveTo = new(0, 0, 0);
 	protected float remainingDist = 0f;
+
+	public Stat Strength { get; protected set; } = new(0, true);
+    public Stat Dexterity { get; protected set; } = new(0, true);
+    public Stat Intelligence { get; protected set; } = new(0, true);
+
+	protected int lifeGrowth = 5;
+	protected int manaGrowth = 3;
 
 	protected double StrLifeBonus;
 	protected double StrMeleeBonus;
@@ -109,7 +109,6 @@ public partial class Player : Actor {
 		
 		PlayerHUD.PassiveTreePanel.PassiveTreeChanged += ResetAndMergeStatDictionaries;
 		ResetAndMergeStatDictionaries();
-		//CalculateStats();
 
 		AddToGroup("Player");
 	}
@@ -567,7 +566,6 @@ public partial class Player : Actor {
 			}
 		}
 		
-		//CalculateStats();
 		ResetAndMergeStatDictionaries();
 	}
 
@@ -591,7 +589,6 @@ public partial class Player : Actor {
 			}
 		}
 
-		//CalculateStats();
 		ResetAndMergeStatDictionaries();
 	}
 
@@ -606,7 +603,6 @@ public partial class Player : Actor {
 			}
 		}
 
-		//CalculateStats();
 		ResetAndMergeStatDictionaries();
 	}
 
@@ -655,7 +651,6 @@ public partial class Player : Actor {
 			}
 		}
 
-		// Insert logic for buffs and stuff here, probably?
 		// Entire thing isn't exactly efficient, so take another look later, please
 
 		ActorFlags = PlayerHUD.PassiveTreePanel.PassiveTreeActorFlags;
@@ -668,8 +663,8 @@ public partial class Player : Actor {
 	}
 
 	protected void UpdateStrBonuses() {
-		StrLifeBonus = Strength.STotal * 3;
-		StrMeleeBonus = Strength.STotal / 100;
+		StrLifeBonus = Strength.STotal * 2; 		// +2 Max Life per Strength
+		StrMeleeBonus = Strength.STotal / 100; 		// +1% Melee Damage per Strength
 	}
 
 	protected void DexTotalChanged(double newStatTotal) {
@@ -677,8 +672,8 @@ public partial class Player : Actor {
 	}
 
 	protected void UpdateDexBonuses() {
-		DexASBonus = Dexterity.STotal * 0.5 / 100;
-		DexEvasionBonus = Dexterity.STotal / 100;
+		DexASBonus = Dexterity.STotal / 200;		// +0,5% Attack Speed per Dexterity
+		DexEvasionBonus = Dexterity.STotal / 100;	// +1% Evasion Rating per Dexterity
 	}
 
 	protected void IntTotalChanged(double newStatTotal) {
@@ -686,8 +681,8 @@ public partial class Player : Actor {
 	}
 
 	protected void UpdateIntBonuses() {
-		IntManaBonus = Intelligence.STotal * 2;
-		IntSpellBonus = Intelligence.STotal / 100;
+		IntManaBonus = Intelligence.STotal * 2;		// +2 Max Mana per Intelligence
+		IntSpellBonus = Intelligence.STotal / 100;	// +1% Spell Damage per Intelligence
 	}
 
 	protected void CalculateMaxLifeAndMana() {
@@ -799,9 +794,12 @@ public partial class Player : Actor {
 		DamageMods.IncreasedAll = StatDictionary[EStatName.IncreasedAllDamage];
 		DamageMods.MoreAll = MultiplicativeStatDictionary[EStatName.MoreAllDamage];
 
-		DamageMods.BleedMagnitude = StatDictionary[EStatName.BleedMagnitude];
-		DamageMods.IgniteMagnitude = StatDictionary[EStatName.IgniteMagnitude];
-		DamageMods.PoisonMagnitude = StatDictionary[EStatName.PoisonMagnitude];
+		DamageMods.IncreasedBleedMagnitude = StatDictionary[EStatName.IncreasedBleedMagnitude];
+		DamageMods.MoreBleedMagnitude = MultiplicativeStatDictionary[EStatName.MoreBleedMagnitude];
+		DamageMods.IncreasedIgniteMagnitude = StatDictionary[EStatName.IncreasedIgniteMagnitude];
+		DamageMods.MoreIgniteMagnitude = MultiplicativeStatDictionary[EStatName.MoreIgniteMagnitude];
+		DamageMods.IncreasedPoisonMagnitude = StatDictionary[EStatName.IncreasedPoisonMagnitude];
+		DamageMods.MorePoisonMagnitude = MultiplicativeStatDictionary[EStatName.MorePoisonMagnitude];
 
 		AreaOfEffect.SIncreased = StatDictionary[EStatName.IncreasedAreaOfEffect];
 		AreaOfEffect.SMore = MultiplicativeStatDictionary[EStatName.MoreAreaOfEffect];
@@ -986,11 +984,11 @@ public partial class Player : Actor {
 		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedDamageOverTime.SetValue($"{(1 + DamageMods.IncreasedDoT) * DamageMods.MoreDoT - 1:P0}");
 		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedAllDamage.SetValue($"{(1 + DamageMods.IncreasedAll) * DamageMods.MoreAll - 1:P0}");
 
-		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedBleedDamage.SetValue($"{(1 + DamageMods.BleedMagnitude) * (1 + StatusMods.Bleed.SFasterTicking) - 1:P0}");
+		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedBleedDamage.SetValue($"{(1 + DamageMods.IncreasedBleedMagnitude) * DamageMods.MoreBleedMagnitude * (1 + StatusMods.Bleed.SFasterTicking) - 1:P0}");
 		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedBleedDuration.SetValue($"{StatusMods.Bleed.CalculateDurationModifier() - 1:P0}");
-		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedIgniteDamage.SetValue($"{(1 + DamageMods.IgniteMagnitude) * (1 + StatusMods.Ignite.SFasterTicking) - 1:P0}");
+		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedIgniteDamage.SetValue($"{(1 + DamageMods.IncreasedIgniteMagnitude) * DamageMods.MoreIgniteMagnitude * (1 + StatusMods.Ignite.SFasterTicking) - 1:P0}");
 		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedIgniteDuration.SetValue($"{StatusMods.Ignite.CalculateDurationModifier() - 1:P0}");
-		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedPoisonDamage.SetValue($"{(1 + DamageMods.PoisonMagnitude) * (1 + StatusMods.Poison.SFasterTicking) - 1:P0}");
+		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedPoisonDamage.SetValue($"{(1 + DamageMods.IncreasedPoisonMagnitude) * DamageMods.MorePoisonMagnitude * (1 + StatusMods.Poison.SFasterTicking) - 1:P0}");
 		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedPoisonDuration.SetValue($"{StatusMods.Poison.CalculateDurationModifier() - 1:P0}");
 
 		PlayerHUD.PlayerPanel.OffenceTabPanel.IncreasedAttackSpeed.SetValue($"{AttackSpeedMod.STotal - 1:P1}");

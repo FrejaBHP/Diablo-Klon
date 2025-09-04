@@ -34,6 +34,3 @@ offset_bottom = 202.0
 texture = ExtResource("3_3keaq")
 expand_mode = 1
 metadata/_edit_lock_ = true
-
-[node name="Marker2D" type="Marker2D" parent="."]
-position = Vector2(0, 192)
