@@ -218,3 +218,12 @@ public enum EItemRewardType {
 	Skills,
 	Supports
 }
+
+
+public enum EPlayerClass {
+	Juggernaut,
+	Sorcerer,
+	Occultist,
+	Assassin,
+	Pathfinder,
+}

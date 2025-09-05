@@ -5,10 +5,14 @@
 [ext_resource type="Texture2D" uid="uid://bnh6e82qxggkf" path="res://textures/ui/pTreeClusterCentre.png" id="3_3keaq"]
 
 [node name="PTreeCluster" type="Control"]
+custom_minimum_size = Vector2(384, 384)
 layout_mode = 3
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
+offset_left = -192.0
+offset_right = 192.0
+offset_bottom = 384.0
 grow_horizontal = 2
 script = ExtResource("1_aw6ie")
 
@@ -26,11 +30,17 @@ expand_mode = 1
 metadata/_edit_lock_ = true
 
 [node name="ClusterCentre" type="TextureRect" parent="."]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
 offset_left = -10.0
-offset_top = 182.0
+offset_top = -10.0
 offset_right = 10.0
-offset_bottom = 202.0
+offset_bottom = 10.0
+grow_horizontal = 2
+grow_vertical = 2
 texture = ExtResource("3_3keaq")
 expand_mode = 1
-metadata/_edit_lock_ = true

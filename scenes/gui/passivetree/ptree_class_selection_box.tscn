@@ -1,0 +1,39 @@
+[gd_scene load_steps=2 format=3 uid="uid://6mlcphdjbc5s"]
+
+[ext_resource type="Script" uid="uid://dpwwlqm7rde0n" path="res://scripts/gui/passivetree/PTreeClassSelectionBox.cs" id="1_o634f"]
+
+[node name="PTreeClassSelectionBox" type="PanelContainer"]
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("1_o634f")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+
+[node name="ElementsVBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="TextVBoxContainer" type="VBoxContainer" parent="MarginContainer/ElementsVBoxContainer"]
+layout_mode = 2
+
+[node name="ClassTitle" type="RichTextLabel" parent="MarginContainer/ElementsVBoxContainer/TextVBoxContainer"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+
+[node name="ClassDescription" type="RichTextLabel" parent="MarginContainer/ElementsVBoxContainer/TextVBoxContainer"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+
+[node name="Placeholder" type="Control" parent="MarginContainer/ElementsVBoxContainer"]
+layout_mode = 2
+
+[node name="SelectionButton" type="Button" parent="MarginContainer/ElementsVBoxContainer"]
+layout_mode = 2
+text = "Choose Class"
+
+[connection signal="pressed" from="MarginContainer/ElementsVBoxContainer/SelectionButton" to="." method="OnSelectionButtonPressed"]

@@ -69,6 +69,8 @@ public partial class Player : Actor {
 	protected double IntManaBonus;
 	protected double IntSpellBonus;
 
+	public List<EPlayerClass> PlayerClasses = new();
+
 	public Dictionary<EStatName, double> ItemStatDictionary = new();
 
 	public Player() {
@@ -205,6 +207,9 @@ public partial class Player : Actor {
 		}
 		else if (@event.IsActionPressed("DebugDecGemLevel")) { // KP_MIN
 			Run.Instance.GemLevel--;
+		}
+		else if (@event.IsActionPressed("DebugOpenSkillSelectionPanel")) { // KP_MUL
+			PlayerHUD.PassiveTreePanel.CreateClassSelectionPanel();
 		}
 		else if (@event.IsActionPressed("Pause")) { // ESC
 			GetTree().Paused = true;

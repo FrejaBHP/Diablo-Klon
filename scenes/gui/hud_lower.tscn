@@ -57,6 +57,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_froqh")
 custom_minimum_size = Vector2(384, 136)
 layout_mode = 2
 size_flags_vertical = 8
+mouse_filter = 2
 theme_override_constants/separation = 20
 
 [node name="Control" type="Control" parent="LowerContainer/LeftSide/HBoxContainer"]
@@ -162,10 +163,12 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_froqh")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="LowerContainer/RightSide"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 20
 
 [node name="SkillHotbar" parent="LowerContainer/RightSide/HBoxContainer" instance=ExtResource("3_fxhu6")]
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Control" type="Control" parent="LowerContainer/RightSide/HBoxContainer"]
 custom_minimum_size = Vector2(136, 136)
