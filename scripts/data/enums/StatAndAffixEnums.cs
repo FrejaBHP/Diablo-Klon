@@ -107,16 +107,16 @@ public enum EStatName {
 	AddedCritMulti,
 
 	AddedBleedChance,
-	IncreasedBleedMagnitude,
-	MoreBleedMagnitude,
+	IncreasedBleedDamageMult,
+	MoreBleedDamageMult,
 	FasterBleed,
 	AddedIgniteChance,
-	IncreasedIgniteMagnitude,
-	MoreIgniteMagnitude,
+	IncreasedIgniteDamageMult,
+	MoreIgniteDamageMult,
 	FasterIgnite,
 	AddedPoisonChance,
-	IncreasedPoisonMagnitude,
-	MorePoisonMagnitude,
+	IncreasedPoisonDamageMult,
+	MorePoisonDamageMult,
 	FasterPoison,
 
 	IncreasedBleedDuration,
@@ -164,6 +164,8 @@ public enum EStatName {
 	DamageAsExtraChaos,
 
 	DamageTakenFromMana,
+	IncreasedProjectileSpeed,
+	MoreProjectileSpeed,
 }
 
 public enum EAffixPosition {

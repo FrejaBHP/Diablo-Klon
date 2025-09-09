@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public partial class SSoulrendProjectile : Projectile {
+public partial class SoulrendProjectile : Projectile {
     public AreaOfEffectPersistent AoE { get; protected set; }
     public Area3D SeekerRadius { get; protected set; }
 

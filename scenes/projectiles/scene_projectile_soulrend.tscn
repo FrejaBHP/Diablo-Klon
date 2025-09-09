@@ -1,8 +1,8 @@
 [gd_scene load_steps=16 format=3 uid="uid://dv2j15wgp4287"]
 
-[ext_resource type="PackedScene" uid="uid://crxui3bhb6cxg" path="res://scenes/skills/scene_projectile_generic.tscn" id="1_o1len"]
+[ext_resource type="PackedScene" uid="uid://crxui3bhb6cxg" path="res://scenes/projectiles/scene_projectile_generic.tscn" id="1_o1len"]
 [ext_resource type="Texture2D" uid="uid://1ccabqu5yhn7" path="res://textures/effects/soulrendProj.png" id="2_1s1cj"]
-[ext_resource type="Script" uid="uid://dqtnh2hxxmktu" path="res://scripts/skills/SSoulrendProjectile.cs" id="2_7yhsu"]
+[ext_resource type="Script" uid="uid://dqtnh2hxxmktu" path="res://scripts/projectiles/SoulrendProjectile.cs" id="2_7yhsu"]
 [ext_resource type="PackedScene" uid="uid://4k6k3qtyyxi7" path="res://scenes/skills/scene_aoe_persistent_generic.tscn" id="3_atsvy"]
 [ext_resource type="Texture2D" uid="uid://caj2fjojsjvwh" path="res://textures/effects/sheet_bd_nova.png" id="4_ihy65"]
 

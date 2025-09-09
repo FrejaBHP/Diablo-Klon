@@ -400,6 +400,13 @@ public static class ItemDataTables {
 			Texture = UILib.TextureItemD2JewelRed,
 			MinimumLevel = 0,
 		},
+
+		new SkillItemData {
+			SkillName = ESkillName.Fireball,
+			SkillType = typeof(SFireball),
+			Texture = UILib.TextureItemD2JewelBlue,
+			MinimumLevel = 0,
+		},
 	];
 
 	public static readonly List<SupportGemData> SupportGemData = [
@@ -519,6 +526,20 @@ public static class ItemDataTables {
 			SkillTags = ESkillTags.None,
 			SupportType = typeof(SuppSearingHeat),
 			Texture = UILib.TextureItemD2JewelRedF,
+			MinimumLevel = 0,
+		},
+
+		new SupportGemData {
+			SkillTags = ESkillTags.Projectile,
+			SupportType = typeof(SuppMoreProjSpeed),
+			Texture = UILib.TextureItemD2JewelGreenF,
+			MinimumLevel = 0,
+		},
+
+		new SupportGemData {
+			SkillTags = ESkillTags.Projectile,
+			SupportType = typeof(SuppLessProjSpeed),
+			Texture = UILib.TextureItemD2JewelGreenF,
 			MinimumLevel = 0,
 		},
 	];

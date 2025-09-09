@@ -17,7 +17,7 @@ public abstract class Skill {
     public DamageModifiers ActiveDamageModifiers { get; protected set; } = new();
     public StatusEffectModifiers BaseStatusEffectModifiers { get; protected set; } = new();
     public StatusEffectModifiers ActiveStatusEffectModifiers { get; protected set; } = new();
-    public double BaseCriticalStrikeChance;
+    public Stat CriticalStrikeChance { get; protected set; } = new(0, false, 0, 100);
     public double CriticalStrikeMulti;
 
     public string Name { get; protected set; }
@@ -42,8 +42,7 @@ public abstract class Skill {
 
     public ESkillStatusEffectFlags StatusEffectFlags = new();
 
-    public double ManaCost { get; protected set; } = 0;
-    public float ManaCostMultiplier { get; protected set; } = 1f;
+    public Stat ManaCost { get; protected set; } = new(0, false, 0);
     public double AddedDamageModifier { get; protected set; } = 1;
     public double SpeedModifier { get; protected set; } = 1;
     public double Cooldown { get; protected set; } = 0;
@@ -63,7 +62,7 @@ public abstract class Skill {
 
     public virtual bool CanUseSkill() {
         if (!ActorOwner.IsIgnoringManaCosts) {
-            if (ActorOwner.BasicStats.CurrentMana < ManaCost * ManaCostMultiplier) {
+            if (ActorOwner.BasicStats.CurrentMana < ManaCost.STotal) {
                 return false;
             }
         }
@@ -108,7 +107,7 @@ public abstract class Skill {
 
     public void DeductManaFromActor() {
         if (!ActorOwner.IsIgnoringManaCosts) {
-            double totalManaCost = ManaCost * ManaCostMultiplier;
+            double totalManaCost = ManaCost.STotal;
             ActorOwner.BasicStats.CurrentMana -= totalManaCost;
             ActorOwner.NotifyManaSpent(totalManaCost);
         }
@@ -122,9 +121,11 @@ public abstract class Skill {
 
         if (this is IAttack attack) {
             attack.GetUsedWeaponStats(ActorOwner, out ActorWeaponStats wStats);
+            Stat critChance = new(0, false, 0, 100);
+            critChance.SetAddedIncreasedMore(wStats.CritChance, CriticalStrikeChance.SIncreased, CriticalStrikeChance.SMore);
 
             if (canCrit) {
-                isCritical = RollForCritical(wStats.CritChance * ActorOwner.CritChanceMod.STotal);
+                isCritical = RollForCritical(critChance.STotal);
             }
 
             //damageRangeInfo = DamageModifiers.CalculateAttackSkillDamageRange(ActiveDamageModifiers, wStats, AddedDamageModifier, SkillDamageTags);
@@ -132,7 +133,7 @@ public abstract class Skill {
         }
         else {
             if (canCrit) {
-                isCritical = RollForCritical(BaseCriticalStrikeChance * ActorOwner.CritChanceMod.STotal);
+                isCritical = RollForCritical(CriticalStrikeChance.STotal);
             }
 
             //damageRangeInfo = DamageModifiers.CalculateSpellSkillDamageRange(ActiveDamageModifiers, AddedDamageModifier, SkillDamageTags);
@@ -254,6 +255,9 @@ public abstract class Skill {
             ActiveDamageModifiers = ActorOwner.DamageMods + BaseDamageModifiers;
             ActiveStatusEffectModifiers = ActorOwner.StatusMods + BaseStatusEffectModifiers;
 
+            CriticalStrikeChance.SIncreased = ActorOwner.CritChanceMod.SIncreased;
+            CriticalStrikeChance.SMore = ActorOwner.CritChanceMod.SMore;
+
             List<SupportGem> supportGems;
 
             bool isPartOfCluster = HousingSkillCluster != null;
@@ -302,8 +306,13 @@ public abstract class Skill {
             }
 
             if (this is IProjectileSkill pSkill) {
-                pSkill.AddedPierces = 0;
-                pSkill.AddedProjectiles = 0;
+                pSkill.Pierces.ResetNonBaseValues();
+                pSkill.NumberOfProjectiles.ResetNonBaseValues();
+                //pSkill.ProjectileSpeed.ResetNonBaseValues();
+                
+                pSkill.ProjectileSpeed.SIncreased = ActorOwner.ProjectileSpeed.SIncreased;
+                pSkill.ProjectileSpeed.SMore = ActorOwner.ProjectileSpeed.SMore;
+
                 pSkill.MinimumSpreadAngleOverride = 0;
                 pSkill.MaximumSpreadAngleOverride = 0;
                 
@@ -314,14 +323,11 @@ public abstract class Skill {
                         }
                     }
                 }
-
-                pSkill.TotalPierces = pSkill.BasePierces + pSkill.AddedPierces;
-                pSkill.TotalProjectiles = pSkill.BaseProjectiles + pSkill.AddedProjectiles;
             }
 
             if (this is IAreaSkill aSkill) {
-                aSkill.IncreasedArea = ActorOwner.StatDictionary[EStatName.IncreasedAreaOfEffect];
-                aSkill.MoreArea = ActorOwner.MultiplicativeStatDictionary[EStatName.MoreAreaOfEffect];
+                aSkill.IncreasedArea = ActorOwner.AreaOfEffect.SIncreased;
+                aSkill.MoreArea = ActorOwner.AreaOfEffect.SMore;
 
                 if (isPartOfCluster) {
                     foreach (SupportGem support in supportGems) {
@@ -350,7 +356,12 @@ public abstract class Skill {
             }
 
             if (isPartOfCluster) {
+                ManaCost.SMore = 1;
+
                 foreach (SupportGem support in supportGems) {
+                    support.ModifySkill(this);
+                    ManaCost.SMore *= support.ManaCostMultiplier;
+
                     if (support.AffectsDamageModifiers) {
                         support.ApplyToDamageModifiers(ActiveDamageModifiers);
                     }
@@ -540,16 +551,15 @@ public interface IMeleeSkill {
 }
 
 public interface IProjectileSkill {
-    float BaseProjectileSpeed { get; protected set; }
     double BaseProjectileLifetime { get; protected set; }
     ESkillProjectileType ProjectileType { get; protected set; }
-    int BasePierces { get; protected set; }
-    int AddedPierces { get; set; }
-    int TotalPierces { get; set; }
+
+    Stat Pierces { get; set; }
+    Stat NumberOfProjectiles { get; set; }
+    Stat ProjectileSpeed { get; set; }
+
     bool AlwaysPierces { get; set; }
-    int BaseProjectiles { get; protected set; }
-    int AddedProjectiles { get; set; }
-    int TotalProjectiles { get; set; }
+
     bool CanFireSequentially { get; protected set; }
     bool FiresSequentially { get; set; }
 
@@ -659,10 +669,10 @@ public interface IProjectileSkill {
         float coefficient = GetSpreadCoefficient(skill.ActorOwner.GlobalPosition, mouseAimPosition);
         Vector3 diffVector = mouseAimPosition - skill.ActorOwner.GlobalPosition;
 
-        float[] angleOffsets = GetMultipleProjectileAngles(TotalProjectiles, coefficient);
+        float[] angleOffsets = GetMultipleProjectileAngles((int)NumberOfProjectiles.STotal, coefficient);
         HashSet<Actor> ActorsHitByThisInstance = new();
 
-        for (int i = 0; i < TotalProjectiles; i++) {
+        for (int i = 0; i < (int)NumberOfProjectiles.STotal; i++) {
             Projectile proj = ProjectileDatabase.GetProjectile(ProjectileType);
             Run.Instance.AddChild(proj);
             skill.SetSkillCollision(proj.Hitbox);
@@ -699,10 +709,10 @@ public interface IProjectileSkill {
                 effectivePierces = 999;
             }
             else {
-                effectivePierces = TotalPierces;
+                effectivePierces = (int)Pierces.STotal;
             }
             
-            proj.SetProperties(BaseProjectileSpeed, -1, effectivePierces, 15f, false);
+            proj.SetProperties((float)ProjectileSpeed.STotal, -1, effectivePierces, 15f, false);
             projectiles.Add(proj);
         }
 
@@ -722,15 +732,11 @@ public interface IAreaSkill {
     void ApplyAreaSkillBehaviourToTargets(List<Actor> targets);
 
     // ===== Default functions =====
-    void BasicAreaSweepSkillBehaviour(Skill skill, string animationName, float animationPixelSize) {
+    void BasicAreaSweepSkillBehaviour(Skill skill, Vector3 targetPosition, string animationName, float animationPixelSize) {
         const int casts = 1; // Might allow skills to repeat in the future, but until then, this is here to make sure they only cast once
-        Vector3 targetPosition;
 
         if (IsNovaSkill) {
             targetPosition = skill.ActorOwner.GlobalPosition;
-        }
-        else {
-            targetPosition = skill.ActorOwner.GlobalPosition; // temp
         }
 
         for (int i = 0; i < casts; i++) {

@@ -63,6 +63,7 @@ public static class UILib {
 	public static readonly Texture2D TextureSkillPrismaticBolt = GD.Load<Texture2D>("res://textures/skills/skill_prismaticBolt.png");
 	public static readonly Texture2D TextureSkillFireNova = GD.Load<Texture2D>("res://textures/skills/skill_fireNova.png");
 	public static readonly Texture2D TextureSkillSoulrend = GD.Load<Texture2D>("res://textures/skills/skill_soulrend.png");
+	public static readonly Texture2D TextureSkillFireball = GD.Load<Texture2D>("res://textures/skills/skill_fireball.png");
 
 	public static readonly Texture2D GoldPileTiny = GD.Load<Texture2D>("res://textures/goldDrop0.png");
 	public static readonly Texture2D GoldPileSmall = GD.Load<Texture2D>("res://textures/goldDrop1.png");

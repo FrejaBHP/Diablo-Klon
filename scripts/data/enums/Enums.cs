@@ -115,6 +115,7 @@ public enum ESkillName {
 	CobraShot,
 	Soulrend,
 	Cleave,
+	Fireball,
 	COUNT
 }
 

@@ -99,6 +99,13 @@ public partial class Stat {
 		}
 	}
 
+    public void ResetNonBaseValues() {
+        sAdded = 0;
+        sIncreased = 0;
+        sMore = 1;
+        CalculateStats();
+    }
+
     public void SetAddedIncreasedMore(double added, double increased = 0, double more = 1) {
         sAdded = added;
         sIncreased = increased;
@@ -107,7 +114,7 @@ public partial class Stat {
     }
 
     private void CalculateStats() {
-        sTotal = (sBase + sAdded) * (1 + sIncreased) * sMore;
+        STotal = (sBase + sAdded) * (1 + sIncreased) * sMore;
         StatTotalChanged?.Invoke(sTotal);
     }
 

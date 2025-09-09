@@ -6,17 +6,14 @@ public class SPrismaticBolt : Skill, ISpell, IProjectileSkill {
     public Stat BaseCastSpeedModifiers { get; set; } = new(0, false);
     public Stat ActiveCastSpeedModifiers { get; set; } = new(0, false);
 
-    public float BaseProjectileSpeed { get; set; } = 15f;
     public double BaseProjectileLifetime { get; set; } = 2f;
     public ESkillProjectileType ProjectileType { get; set; } = ESkillProjectileType.Default;
     
-    public int BasePierces { get; set; } = 0;
-    public int AddedPierces { get; set; } = 0;
-    public int TotalPierces { get; set; }
+    public Stat Pierces { get; set; } = new(0, true, 0);
+    public Stat NumberOfProjectiles { get; set; } = new (1, true, 0);
+    public Stat ProjectileSpeed { get; set; } = new(15, false, 0);
+
     public bool AlwaysPierces { get; set; } = false;
-    public int BaseProjectiles { get; set; } = 1;
-    public int AddedProjectiles { get; set; } = 0;
-    public int TotalProjectiles { get; set; }
 
     public bool CanFireSequentially { get; set; } = true;
     public bool FiresSequentially { get; set; } = false;
@@ -50,14 +47,12 @@ public class SPrismaticBolt : Skill, ISpell, IProjectileSkill {
         DamageCategory = EDamageCategory.Spell;
         Texture = UILib.TextureSkillPrismaticBolt;
 
-        ManaCost = 1;
+        ManaCost.SBase = 3;
 
         CastRange = 15f;
 
+        CriticalStrikeChance.SBase = 0.06;
         AddedDamageModifier = 2;
-
-        TotalPierces = BasePierces;
-        TotalProjectiles = BaseProjectiles;
     }
 
     protected override void OnSkillLevelChanged() {

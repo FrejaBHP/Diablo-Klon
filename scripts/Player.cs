@@ -799,15 +799,18 @@ public partial class Player : Actor {
 		DamageMods.IncreasedAll = StatDictionary[EStatName.IncreasedAllDamage];
 		DamageMods.MoreAll = MultiplicativeStatDictionary[EStatName.MoreAllDamage];
 
-		DamageMods.IncreasedBleedMagnitude = StatDictionary[EStatName.IncreasedBleedMagnitude];
-		DamageMods.MoreBleedMagnitude = MultiplicativeStatDictionary[EStatName.MoreBleedMagnitude];
-		DamageMods.IncreasedIgniteMagnitude = StatDictionary[EStatName.IncreasedIgniteMagnitude];
-		DamageMods.MoreIgniteMagnitude = MultiplicativeStatDictionary[EStatName.MoreIgniteMagnitude];
-		DamageMods.IncreasedPoisonMagnitude = StatDictionary[EStatName.IncreasedPoisonMagnitude];
-		DamageMods.MorePoisonMagnitude = MultiplicativeStatDictionary[EStatName.MorePoisonMagnitude];
+		DamageMods.IncreasedBleedMagnitude = StatDictionary[EStatName.IncreasedBleedDamageMult];
+		DamageMods.MoreBleedMagnitude = MultiplicativeStatDictionary[EStatName.MoreBleedDamageMult];
+		DamageMods.IncreasedIgniteMagnitude = StatDictionary[EStatName.IncreasedIgniteDamageMult];
+		DamageMods.MoreIgniteMagnitude = MultiplicativeStatDictionary[EStatName.MoreIgniteDamageMult];
+		DamageMods.IncreasedPoisonMagnitude = StatDictionary[EStatName.IncreasedPoisonDamageMult];
+		DamageMods.MorePoisonMagnitude = MultiplicativeStatDictionary[EStatName.MorePoisonDamageMult];
 
 		AreaOfEffect.SIncreased = StatDictionary[EStatName.IncreasedAreaOfEffect];
 		AreaOfEffect.SMore = MultiplicativeStatDictionary[EStatName.MoreAreaOfEffect];
+
+		ProjectileSpeed.SIncreased = StatDictionary[EStatName.IncreasedProjectileSpeed];
+		ProjectileSpeed.SMore = MultiplicativeStatDictionary[EStatName.MoreProjectileSpeed];
 
 		if (IsMainHandTwoHandedMelee) {
 			DamageMods.IncreasedAll += StatDictionary[EStatName.IncreasedDamageTwoHanded];

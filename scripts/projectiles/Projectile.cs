@@ -21,7 +21,9 @@ public partial class Projectile : Node3D {
     public float DistanceTravelled { get; protected set; } = 0f;
     public bool CanShotgun { get; protected set; } = false;
 
-    public HashSet<Actor> ActorsHitThisGroup;
+    public bool CanHitActors { get; set; } = true;
+
+    public HashSet<Actor> ActorsHitThisGroup { get; set; }
 
     public override void _Ready() {
         Hitbox = GetNode<Area3D>("Hitbox");
@@ -99,14 +101,20 @@ public partial class Projectile : Node3D {
     }
 
     protected virtual void OnCollideWithTarget(Actor actor) {
-        TargetHit?.Invoke(actor);
+        if (CanHitActors) {
+            SignalTargetHit(actor);
         
-        if (Pierces < 1) {
-            QueueFree();
+            if (Pierces < 1) {
+                QueueFree();
+            }
+            else {
+                Pierces--;
+            }
         }
-        else {
-            Pierces--;
-        }
+    }
+
+    protected void SignalTargetHit(Actor actor) {
+        TargetHit?.Invoke(actor);
     }
 
     protected virtual void OnBodyExited(Node3D body) {

@@ -390,7 +390,7 @@ public partial class InventoryItem : PanelContainer {
 		HBoxContainer levelLabel = GenerateBaseStatLabel("Level:", $"{skillItem.SkillReference.Level + 1}", false);
 		tooltipContent.StatsContainer.AddChild(levelLabel);
 
-		HBoxContainer costLabel = GenerateBaseStatLabel("Cost:", skillItem.SkillReference.ManaCost.ToString() + " Mana", false);
+		HBoxContainer costLabel = GenerateBaseStatLabel("Cost:", skillItem.SkillReference.ManaCost.SBase.ToString("F0") + " Mana", false);
 		tooltipContent.StatsContainer.AddChild(costLabel);
 
 		if (skillItem.SkillReference.Type == ESkillType.Attack) {
@@ -403,9 +403,12 @@ public partial class InventoryItem : PanelContainer {
 
 		if (skillItem.SkillReference.Type == ESkillType.Spell) {
 			if (skillItem.SkillReference is ISpell spell) {
-				HBoxContainer castTimeLabel = GenerateBaseStatLabel("Cast Time:", spell.BaseCastTime.ToString() + " sec", false);
+				HBoxContainer castTimeLabel = GenerateBaseStatLabel("Cast Time:", spell.BaseCastTime.ToString("0.##") + " sec", false);
 				tooltipContent.StatsContainer.AddChild(castTimeLabel);
 			}
+
+			HBoxContainer critBaseLabel = GenerateBaseStatLabel("Critical Strike Chance:", skillItem.SkillReference.CriticalStrikeChance.SBase.ToString("P0"), false);
+			tooltipContent.StatsContainer.AddChild(critBaseLabel);
 			
 			HBoxContainer dmgLabel = GenerateBaseStatLabel("Added Damage Effectiveness:", skillItem.SkillReference.GetDamageModifier() + "%", false);
 			tooltipContent.StatsContainer.AddChild(dmgLabel);
@@ -469,8 +472,10 @@ public partial class InventoryItem : PanelContainer {
 		Label tagsLabel = GenerateGreyLabel(sbTags.ToString());
 		tooltipContent.StatsContainer.AddChild(tagsLabel);
 
-		//HBoxContainer levelLabel = GenerateBaseStatLabel("Level:", $"{supportGem.Level + 1}", false);
-		//tooltipContent.StatsContainer.AddChild(levelLabel);
+		if (supportGem.ManaCostMultiplier != 1) {
+			HBoxContainer costLabel = GenerateBaseStatLabel("Cost Multiplier:", $"{supportGem.ManaCostMultiplier:P0}", false);
+			tooltipContent.StatsContainer.AddChild(costLabel);
+		}
 
 		tooltipContent.DescriptionLabel.Text = supportGem.Description;
 

@@ -9,17 +9,14 @@ public class SPiercingShot : Skill, IAttack, IProjectileSkill {
     public Stat BaseAttackSpeedModifiers { get; set; } = new(0, false);
     public Stat ActiveAttackSpeedModifiers { get; set; } = new(0, false);
 
-    public float BaseProjectileSpeed { get; set; } = 15f;
     public double BaseProjectileLifetime { get; set; } = 2f;
     public ESkillProjectileType ProjectileType { get; set; } = ESkillProjectileType.Default;
     
-    public int BasePierces { get; set; } = 2;
-    public int AddedPierces { get; set; } = 0;
-    public int TotalPierces { get; set; }
+    public Stat Pierces { get; set; } = new(2, true, 0);
+    public Stat NumberOfProjectiles { get; set; } = new (1, true, 0);
+    public Stat ProjectileSpeed { get; set; } = new(15, false, 0);
+
     public bool AlwaysPierces { get; set; } = false;
-    public int BaseProjectiles { get; set; } = 1;
-    public int AddedProjectiles { get; set; } = 0;
-    public int TotalProjectiles { get; set; }
 
     public bool CanFireSequentially { get; set; } = true;
     public bool FiresSequentially { get; set; } = false;
@@ -39,7 +36,7 @@ public class SPiercingShot : Skill, IAttack, IProjectileSkill {
         Name = "Piercing Shot";
         Description = "Fires a penetrating arrow in a straight line with a bow.";
         Effects = [
-            $"Pierces {BasePierces} targets"
+            $"Pierces {Pierces.SBase} targets"
         ];
 
         SkillName = ESkillName.PiercingShot;
@@ -49,12 +46,9 @@ public class SPiercingShot : Skill, IAttack, IProjectileSkill {
         DamageCategory = EDamageCategory.Ranged;
         Texture = UILib.TextureSkillPiercingShot;
 
-        ManaCost = 1;
+        ManaCost.SBase = 2;
 
         CastRange = 15f;
-
-        TotalPierces = BasePierces;
-        TotalProjectiles = BaseProjectiles;
     }
 
     protected override void OnSkillLevelChanged() {

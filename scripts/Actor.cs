@@ -323,7 +323,7 @@ public partial class Actor : CharacterBody3D {
     public Dictionary<EEffectName, AttachedEffect> UniqueEffects = new();
     public Dictionary<EEffectName, List<AttachedEffect>> StackableEffects = new();
 
-    public int ActorLevel = 1;
+    public int ActorLevel { get; set; } = 1;
     protected int maxLevel = 40;
 
     public EActorFlags ActorFlags { get; set; }
@@ -332,6 +332,7 @@ public partial class Actor : CharacterBody3D {
     public Stat BlockChance = new(0, false, 0, 0.75);
     public Stat BlockEffectiveness = new(0.5, false, 0, 0.8);
     public Stat AreaOfEffect = new(0, false);
+    public Stat ProjectileSpeed = new(0, false);
 
     public ActorBasicStats BasicStats = new();
     public DamageModifiers DamageMods = new();
@@ -430,15 +431,15 @@ public partial class Actor : CharacterBody3D {
 		{ EStatName.AddedCritMulti, 				0 },
 
         { EStatName.AddedBleedChance, 			    0 },
-        { EStatName.IncreasedBleedMagnitude,        0 },
+        { EStatName.IncreasedBleedDamageMult,       0 },
         { EStatName.IncreasedBleedDuration,         0 },
         { EStatName.FasterBleed, 			        0 },
         { EStatName.AddedIgniteChance, 			    0 },
-        { EStatName.IncreasedIgniteMagnitude,       0 },
+        { EStatName.IncreasedIgniteDamageMult,      0 },
         { EStatName.IncreasedIgniteDuration,        0 },
         { EStatName.FasterIgnite, 			        0 },
         { EStatName.AddedPoisonChance, 			    0 },
-        { EStatName.IncreasedPoisonMagnitude,       0 },
+        { EStatName.IncreasedPoisonDamageMult,      0 },
         { EStatName.IncreasedPoisonDuration,        0 },
         { EStatName.FasterPoison, 			        0 },
 
@@ -474,6 +475,7 @@ public partial class Actor : CharacterBody3D {
         { EStatName.DamageAsExtraChaos, 			0 },
 
         { EStatName.DamageTakenFromMana, 			0 },
+        { EStatName.IncreasedProjectileSpeed, 		0 },
 	};
 
     public Dictionary<EStatName, double> MultiplicativeStatDictionary = new() {
@@ -504,9 +506,9 @@ public partial class Actor : CharacterBody3D {
         { EStatName.MoreSkillSpeedShield, 		    1 },
         { EStatName.MoreCritChance, 		    	1 },
 
-        { EStatName.MoreBleedMagnitude,             1 },
-        { EStatName.MoreIgniteMagnitude,            1 },
-        { EStatName.MorePoisonMagnitude,            1 },
+        { EStatName.MoreBleedDamageMult,            1 },
+        { EStatName.MoreIgniteDamageMult,           1 },
+        { EStatName.MorePoisonDamageMult,           1 },
 
         { EStatName.MoreBleedDuration, 				1 },
         { EStatName.MoreIgniteDuration, 			1 },
@@ -519,6 +521,8 @@ public partial class Actor : CharacterBody3D {
         { EStatName.MoreArmour, 		    		1 },
         { EStatName.MoreEvasion, 		    		1 },
         { EStatName.MoreEnergyShield,	    		1 },
+
+        { EStatName.MoreProjectileSpeed, 			1 },
 	};
 
     public Dictionary<EStatName, double> CombinedEffectStatDictionary = new();

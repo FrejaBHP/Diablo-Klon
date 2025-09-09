@@ -39,7 +39,7 @@ public class SCleave : Skill, IAttack, IMeleeSkill, IAreaSkill {
         DamageCategory = EDamageCategory.Melee;
         Texture = UILib.TextureSkillCleave;
 
-        ManaCost = 1;
+        ManaCost.SBase = 2;
 
         CastRange = BaseAttackRange;
 

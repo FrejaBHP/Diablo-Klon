@@ -9,17 +9,14 @@ public class SCobraShot : Skill, IAttack, IProjectileSkill {
     public Stat BaseAttackSpeedModifiers { get; set; } = new(0, false);
     public Stat ActiveAttackSpeedModifiers { get; set; } = new(0, false);
 
-    public float BaseProjectileSpeed { get; set; } = 15f;
     public double BaseProjectileLifetime { get; set; } = 2f;
     public ESkillProjectileType ProjectileType { get; set; } = ESkillProjectileType.Default;
     
-    public int BasePierces { get; set; } = 0;
-    public int AddedPierces { get; set; } = 0;
-    public int TotalPierces { get; set; }
+    public Stat Pierces { get; set; } = new(0, true, 0);
+    public Stat NumberOfProjectiles { get; set; } = new (2, true, 0);
+    public Stat ProjectileSpeed { get; set; } = new(25, false, 0);
+
     public bool AlwaysPierces { get; set; } = false;
-    public int BaseProjectiles { get; set; } = 2;
-    public int AddedProjectiles { get; set; } = 0;
-    public int TotalProjectiles { get; set; }
 
     public bool CanFireSequentially { get; set; } = true;
     public bool FiresSequentially { get; set; } = false;
@@ -42,7 +39,7 @@ public class SCobraShot : Skill, IAttack, IProjectileSkill {
         Name = "Cobra Shot";
         Description = "Fires twin arrows with a chance to Poison. Requires a bow.";
         Effects = [
-            $"Fires {BaseProjectiles} projectiles",
+            $"Fires {NumberOfProjectiles.SBase} projectiles",
             $"{BaseStatusEffectModifiers.Poison.SBaseChance:P0} chance to Poison on Hit",
             $"{BaseStatusEffectModifiers.Poison.SMoreDuration - 1:P0} more Poison duration"
         ];
@@ -54,12 +51,9 @@ public class SCobraShot : Skill, IAttack, IProjectileSkill {
         DamageCategory = EDamageCategory.Ranged;
         Texture = UILib.TextureSkillCobraShot;
 
-        ManaCost = 1;
+        ManaCost.SBase = 2;
 
         CastRange = 15f;
-
-        TotalPierces = BasePierces;
-        TotalProjectiles = BaseProjectiles;
     }
 
     protected override void OnSkillLevelChanged() {

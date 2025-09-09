@@ -30,7 +30,7 @@ public class SThrust : Skill, IAttack, IMeleeSkill {
         DamageCategory = EDamageCategory.Melee;
         Texture = UILib.TextureSkillThrust;
 
-        ManaCost = 1;
+        ManaCost.SBase = 2;
 
         CastRange = BaseAttackRange;
 

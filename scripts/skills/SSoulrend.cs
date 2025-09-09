@@ -3,21 +3,18 @@ using System;
 using System.Collections.Generic;
 
 public class SSoulrend : Skill, ISpell, IProjectileSkill, IAreaSkill, IDurationSkill {
-    public double BaseCastTime { get; set; } = 0.70;
+    public double BaseCastTime { get; set; } = 0.75;
     public Stat BaseCastSpeedModifiers { get; set; } = new(0, false);
     public Stat ActiveCastSpeedModifiers { get; set; } = new(0, false);
 
-    public float BaseProjectileSpeed { get; set; } = 5f;
     public double BaseProjectileLifetime { get; set; } = 4f;
     public ESkillProjectileType ProjectileType { get; set; } = ESkillProjectileType.Soulrend;
 
-    public int BasePierces { get; set; } = 0;
-    public int AddedPierces { get; set; } = 0;
-    public int TotalPierces { get; set; }
+    public Stat Pierces { get; set; } = new(0, true, 0);
+    public Stat NumberOfProjectiles { get; set; } = new (1, true, 0);
+    public Stat ProjectileSpeed { get; set; } = new(5, false, 0);
+
     public bool AlwaysPierces { get; set; } = true;
-    public int BaseProjectiles { get; set; } = 1;
-    public int AddedProjectiles { get; set; } = 0;
-    public int TotalProjectiles { get; set; }
 
     public bool CanFireSequentially { get; set; } = true;
     public bool FiresSequentially { get; set; } = false;
@@ -70,14 +67,13 @@ public class SSoulrend : Skill, ISpell, IProjectileSkill, IAreaSkill, IDurationS
         DamageCategory = EDamageCategory.Spell;
         Texture = UILib.TextureSkillSoulrend;
 
-        ManaCost = 1;
+        ManaCost.SBase = 3;
 
         CastRange = 15f;
 
-        AddedDamageModifier = 1.35;
+        CriticalStrikeChance.SBase = 0.05;
+        AddedDamageModifier = 1.3;
 
-        TotalPierces = BasePierces;
-        TotalProjectiles = BaseProjectiles;
         TotalAreaRadius = BaseAreaRadius;
         TotalDuration = BaseDuration;
     }
@@ -117,7 +113,7 @@ public class SSoulrend : Skill, ISpell, IProjectileSkill, IAreaSkill, IDurationS
             List<Projectile> projectiles = pSkill.BasicProjectileSkillBehaviour(this, mouseAimPosition);
 
             foreach (Projectile proj in projectiles) {
-                SSoulrendProjectile srProj = proj as SSoulrendProjectile;
+                SoulrendProjectile srProj = proj as SoulrendProjectile;
                 srProj.SetAoEProperties(TotalAreaRadius);
                 SetSkillCollision(srProj.AoE);
                 SetSkillCollision(srProj.SeekerRadius);

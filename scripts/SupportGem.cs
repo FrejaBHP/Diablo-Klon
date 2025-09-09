@@ -9,6 +9,7 @@ public abstract class SupportGem : Item {
     public bool AffectsDamageModifiers { get; protected set; }
     public bool AffectsStatusModifiers { get; protected set; }
 	public ESkillTags SkillTags { get; protected set; }
+    public double ManaCostMultiplier { get; protected set; } = 1;
 
 	public SupportGem() {
 		ItemAllBaseType = EItemAllBaseType.SkillSupport;
@@ -28,6 +29,7 @@ public abstract class SupportGem : Item {
 
     public virtual void ApplyToDamageModifiers(DamageModifiers dmgMods) {}
     public virtual void ApplyToStatusModifiers(StatusEffectModifiers seMods) {}
+    public virtual void ModifySkill(Skill skill) {}
     public virtual void ModifyAttackSkill(IAttack attack) {}
     public virtual void ModifySpellSkill(ISpell spell) {}
     public virtual void ModifyMeleeSkill(IMeleeSkill mSkill) {}
@@ -45,6 +47,7 @@ public partial class SuppAttackSpeed : SupportGem {
         AffectsDamageModifiers = false;
         AffectsStatusModifiers = false;
         SkillTags = ESkillTags.Attack;
+        ManaCostMultiplier = 1.1;
     }
 
     public override void RollForVariant() {
@@ -73,6 +76,7 @@ public partial class SuppCastSpeed : SupportGem {
         AffectsDamageModifiers = false;
         AffectsStatusModifiers = false;
         SkillTags = ESkillTags.Spell;
+        ManaCostMultiplier = 1.1;
     }
 
     public override void RollForVariant() {
@@ -101,6 +105,7 @@ public partial class SuppPierce : SupportGem {
         AffectsDamageModifiers = false;
         AffectsStatusModifiers = false;
         SkillTags = ESkillTags.Projectile;
+        ManaCostMultiplier = 1.15;
     }
 
     public override void RollForVariant() {
@@ -116,7 +121,7 @@ public partial class SuppPierce : SupportGem {
     }
 
     public override void ModifyProjectileSkill(IProjectileSkill pSkill) {
-        pSkill.AddedPierces += addedPierces;
+        pSkill.Pierces.SAdded += addedPierces;
     }
 }
 
@@ -130,6 +135,7 @@ public partial class SuppMultipleProjectiles : SupportGem {
         AffectsDamageModifiers = true;
         AffectsStatusModifiers = false;
         SkillTags = ESkillTags.Projectile;
+        ManaCostMultiplier = 1.25;
     }
 
     public override void RollForVariant() {
@@ -149,7 +155,7 @@ public partial class SuppMultipleProjectiles : SupportGem {
     }
 
     public override void ModifyProjectileSkill(IProjectileSkill pSkill) {
-        pSkill.AddedProjectiles += addedProjectiles;
+        pSkill.NumberOfProjectiles.SAdded += addedProjectiles;
     }
 }
 
@@ -162,6 +168,7 @@ public partial class SuppMoreDuration : SupportGem {
         AffectsDamageModifiers = false;
         AffectsStatusModifiers = false;
         SkillTags = ESkillTags.Duration;
+        ManaCostMultiplier = 1.15;
     }
 
     public override void RollForVariant() {
@@ -218,6 +225,7 @@ public partial class SuppMoreAoE : SupportGem {
         AffectsDamageModifiers = false;
         AffectsStatusModifiers = false;
         SkillTags = ESkillTags.Area;
+        ManaCostMultiplier = 1.15;
     }
 
     public override void RollForVariant() {
@@ -247,6 +255,7 @@ public partial class SuppConcAoE : SupportGem {
         AffectsDamageModifiers = true;
         AffectsStatusModifiers = false;
         SkillTags = ESkillTags.Area;
+        ManaCostMultiplier = 1.15;
     }
 
     public override void RollForVariant() {
@@ -282,6 +291,7 @@ public partial class SuppBleedChance : SupportGem {
         AffectsDamageModifiers = false;
         AffectsStatusModifiers = true;
         SkillTags = ESkillTags.None;
+        ManaCostMultiplier = 1.1;
     }
 
     public override void RollForVariant() {
@@ -330,6 +340,7 @@ public partial class SuppPoisonChance : SupportGem {
         AffectsDamageModifiers = false;
         AffectsStatusModifiers = true;
         SkillTags = ESkillTags.None;
+        ManaCostMultiplier = 1.1;
     }
 
     public override void RollForVariant() {
@@ -379,6 +390,7 @@ public partial class SuppBrutality : SupportGem {
         AffectsDamageModifiers = true;
         AffectsStatusModifiers = false;
         SkillTags = ESkillTags.None;
+        ManaCostMultiplier = 1.2;
     }
 
     public override void RollForVariant() {
@@ -400,7 +412,7 @@ public partial class SuppBrutality : SupportGem {
         sb.Append($"Supported Skill deals {morePhysDamage - 1:P0} more Physical Damage\nSupported Skill deals no non-Physical Damage");
 
         if (variant == 1) {
-            sb.Append($"\nSupported Skill has {variantBleedDamageMagnitude - 1:P0} increased Bleed Magnitude");
+            sb.Append($"\nSupported Skill has {variantBleedDamageMagnitude - 1:P0} increased Bleed Damage Multiplier");
         }
 
         DescEffects = sb.ToString();
@@ -429,6 +441,7 @@ public partial class SuppBlisteringHeat : SupportGem {
         AffectsDamageModifiers = true;
         AffectsStatusModifiers = false;
         SkillTags = ESkillTags.None;
+        ManaCostMultiplier = 1.15;
     }
 
     public override void RollForVariant() {
@@ -460,6 +473,7 @@ public partial class SuppSheerCold : SupportGem {
         AffectsDamageModifiers = true;
         AffectsStatusModifiers = false;
         SkillTags = ESkillTags.None;
+        ManaCostMultiplier = 1.15;
     }
 
     public override void RollForVariant() {
@@ -491,6 +505,7 @@ public partial class SuppVolatileCurrent : SupportGem {
         AffectsDamageModifiers = true;
         AffectsStatusModifiers = false;
         SkillTags = ESkillTags.None;
+        ManaCostMultiplier = 1.15;
     }
 
     public override void RollForVariant() {
@@ -518,10 +533,11 @@ public partial class SuppDeadlyPoison : SupportGem {
 
     public SuppDeadlyPoison() {
         ItemName = "Deadly Poison Support";
-        Description = "Supports Skills that deal Damage";
+        Description = "Supports Skills that Hit Enemies";
         AffectsDamageModifiers = true;
         AffectsStatusModifiers = false;
         SkillTags = ESkillTags.None;
+        ManaCostMultiplier = 1.15;
     }
 
     public override void RollForVariant() {
@@ -533,7 +549,7 @@ public partial class SuppDeadlyPoison : SupportGem {
     }
 
     protected override void UpdateGemEffectsDescription() {
-        DescEffects = $"Supported Skill has {morePoisonMagnitude - 1:P0} more Poison Magnitude\nSupported Skill deals {1 - lessHitDamage:P0} less Damage with Hits";
+        DescEffects = $"Supported Skill has {morePoisonMagnitude - 1:P0} more Poison Damage Multiplier\nSupported Skill deals {1 - lessHitDamage:P0} less Damage with Hits";
     }
 
     public override void ApplyToDamageModifiers(DamageModifiers dmgMods) {
@@ -548,10 +564,11 @@ public partial class SuppHemorrhage : SupportGem {
 
     public SuppHemorrhage() {
         ItemName = "Hemorrhage Support";
-        Description = "Supports Skills that deal Damage";
+        Description = "Supports Skills that Hit Enemies";
         AffectsDamageModifiers = true;
         AffectsStatusModifiers = false;
         SkillTags = ESkillTags.None;
+        ManaCostMultiplier = 1.15;
     }
 
     public override void RollForVariant() {
@@ -563,7 +580,7 @@ public partial class SuppHemorrhage : SupportGem {
     }
 
     protected override void UpdateGemEffectsDescription() {
-        DescEffects = $"Supported Skill has {moreBleedMagnitude - 1:P0} more Bleed Magnitude\nSupported Skill deals {1 - lessHitDamage:P0} less Damage with Hits";
+        DescEffects = $"Supported Skill has {moreBleedMagnitude - 1:P0} more Bleed Damage Multiplier\nSupported Skill deals {1 - lessHitDamage:P0} less Damage with Hits";
     }
 
     public override void ApplyToDamageModifiers(DamageModifiers dmgMods) {
@@ -577,11 +594,12 @@ public partial class SuppSearingHeat : SupportGem {
     private const double lessHitDamage = 0.75;
 
     public SuppSearingHeat() {
-        ItemName = "Searing Heat Support";
-        Description = "Supports Skills that deal Damage";
+        ItemName = "Searing Warmth Support";
+        Description = "Supports Skills that Hit Enemies";
         AffectsDamageModifiers = true;
         AffectsStatusModifiers = false;
         SkillTags = ESkillTags.None;
+        ManaCostMultiplier = 1.15;
     }
 
     public override void RollForVariant() {
@@ -593,7 +611,7 @@ public partial class SuppSearingHeat : SupportGem {
     }
 
     protected override void UpdateGemEffectsDescription() {
-        DescEffects = $"Supported Skill has {moreIgniteMagnitude - 1:P0} more Ignite Magnitude\nSupported Skill deals {1 - lessHitDamage:P0} less Damage with Hits";
+        DescEffects = $"Supported Skill has {moreIgniteMagnitude - 1:P0} more Ignite Damage Multiplier\nSupported Skill deals {1 - lessHitDamage:P0} less Damage with Hits";
     }
 
     public override void ApplyToDamageModifiers(DamageModifiers dmgMods) {
@@ -602,3 +620,89 @@ public partial class SuppSearingHeat : SupportGem {
     }
 }
 
+public partial class SuppMoreProjSpeed : SupportGem {
+    private const double moreSpeed = 1.4;
+
+    public SuppMoreProjSpeed() {
+        ItemName = "More Projectile Speed Support";
+        Description = "Supports Projectile Skills";
+        AffectsDamageModifiers = false;
+        AffectsStatusModifiers = false;
+        SkillTags = ESkillTags.Projectile;
+        ManaCostMultiplier = 1.1;
+    }
+
+    public override void RollForVariant() {
+        OnVariantChosen();
+    }
+
+    protected override void OnVariantChosen() {
+        UpdateGemEffectsDescription();
+    }
+
+    protected override void UpdateGemEffectsDescription() {
+        DescEffects = $"Supported Skill has {moreSpeed - 1:P0} more Projectile Speed";
+    }
+
+    public override void ModifyProjectileSkill(IProjectileSkill pSkill) {
+        pSkill.ProjectileSpeed.SMore *= moreSpeed;
+    }
+}
+
+public partial class SuppLessProjSpeed : SupportGem {
+    private const double moreSpeed = 0.6;
+
+    public SuppLessProjSpeed() {
+        ItemName = "Less Projectile Speed Support";
+        Description = "Supports Projectile Skills";
+        AffectsDamageModifiers = false;
+        AffectsStatusModifiers = false;
+        SkillTags = ESkillTags.Projectile;
+        ManaCostMultiplier = 1.1;
+    }
+
+    public override void RollForVariant() {
+        OnVariantChosen();
+    }
+
+    protected override void OnVariantChosen() {
+        UpdateGemEffectsDescription();
+    }
+
+    protected override void UpdateGemEffectsDescription() {
+        DescEffects = $"Supported Skill has {1 - moreSpeed:P0} less Projectile Speed";
+    }
+
+    public override void ModifyProjectileSkill(IProjectileSkill pSkill) {
+        pSkill.ProjectileSpeed.SMore *= moreSpeed;
+    }
+}
+
+public partial class SuppCritChance : SupportGem {
+    private const double increasedCritChance = 1;
+
+    public SuppCritChance() {
+        ItemName = "Critical Chance Support";
+        Description = "Supports Skills that Hit Enemies";
+        AffectsDamageModifiers = false;
+        AffectsStatusModifiers = false;
+        SkillTags = ESkillTags.None;
+        ManaCostMultiplier = 1.1;
+    }
+
+    public override void RollForVariant() {
+        OnVariantChosen();
+    }
+
+    protected override void OnVariantChosen() {
+        UpdateGemEffectsDescription();
+    }
+
+    protected override void UpdateGemEffectsDescription() {
+        DescEffects = $"Supported Skill has {increasedCritChance:P0} increased Critical Strike Chance";
+    }
+
+    public override void ModifySkill(Skill skill) {
+        skill.CriticalStrikeChance.SIncreased += increasedCritChance;
+    }
+}

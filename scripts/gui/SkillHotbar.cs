@@ -116,7 +116,7 @@ public partial class SkillHotbar : Control {
 		tooltipContent.NameLabel.Text = skill.Name;
 		tooltipContent.NameLabel.AddThemeColorOverride("font_color", UILib.ColorSkill);
 
-		tooltipContent.CostLabel.Text = $"{skill.ManaCost} Mana";
+		tooltipContent.CostLabel.Text = $"{skill.ManaCost.STotal:0.#} Mana";
 
 		if (skill.Type == ESkillType.Attack) {
 			IAttack attack = skill as IAttack;
@@ -230,25 +230,25 @@ public partial class SkillHotbar : Control {
             if (ps.AlwaysPierces) {
                 tooltipContent.EffectContainer.AddChild(GenerateAffixLabel("Pierces all targets"));
             }
-            else if (ps.TotalPierces != 0) {
+            else if (ps.Pierces.STotal != 0) {
                 string pierceString;
 
-                if (ps.TotalPierces == 1) {
-                    pierceString = $"Pierces {ps.TotalPierces} target";
+                if (ps.Pierces.STotal != 1) {
+                    pierceString = $"Pierces {ps.Pierces.STotal} targets";
                 }
                 else {
-                    pierceString = $"Pierces {ps.TotalPierces} targets";
+                    pierceString = $"Pierces {ps.Pierces.STotal} target";
                 }
 
                 tooltipContent.EffectContainer.AddChild(GenerateAffixLabel(pierceString));
             }
 
             string projString;
-            if (ps.TotalProjectiles == 1) {
-                projString = $"Fires {ps.TotalProjectiles} projectile";
+            if (ps.NumberOfProjectiles.STotal != 1) {
+                projString = $"Fires {ps.NumberOfProjectiles.STotal} projectiles";
             }
             else {
-                projString = $"Fires {ps.TotalProjectiles} projectiles";
+                projString = $"Fires {ps.NumberOfProjectiles.STotal} projectile";
             }
 
             tooltipContent.EffectContainer.AddChild(GenerateAffixLabel(projString));
@@ -256,14 +256,30 @@ public partial class SkillHotbar : Control {
 
         if (skill.Tags.HasFlag(ESkillTags.Area)) {
             IAreaSkill aSkill = skill as IAreaSkill;
+            string areaString;
 
-            tooltipContent.EffectContainer.AddChild(GenerateAffixLabel($"Radius is {aSkill.TotalAreaRadius:F2} metres"));
+            if (aSkill.TotalAreaRadius != 1) {
+                areaString = $"Radius is {aSkill.TotalAreaRadius:0.##} metres";
+            }
+            else {
+                areaString = $"Radius is {aSkill.TotalAreaRadius:F0} metre";
+            }
+
+            tooltipContent.EffectContainer.AddChild(GenerateAffixLabel(areaString));
         }
 
         if (skill.Tags.HasFlag(ESkillTags.Duration)) {
             IDurationSkill dSkill = skill as IDurationSkill;
+            string durationString;
 
-            tooltipContent.EffectContainer.AddChild(GenerateAffixLabel($"Duration is {dSkill.TotalDuration:F2} seconds"));
+            if (dSkill.TotalDuration != 1) {
+                durationString = $"Duration is {dSkill.TotalDuration:0.##} seconds";
+            }
+            else {
+                durationString = $"Duration is {dSkill.TotalDuration:F0} second";
+            }
+
+            tooltipContent.EffectContainer.AddChild(GenerateAffixLabel(durationString));
         }
 
         if (skill.ActiveStatusEffectModifiers.Bleed.CalculateTotalChance() != 0 && skill.ActiveDamageModifiers.Physical.SMore > 0) {

@@ -3,8 +3,8 @@ using System;
 using System.Collections.Generic;
 
 public static class ProjectileDatabase {
-    public static readonly PackedScene GenericProjectileScene = GD.Load<PackedScene>("res://scenes/skills/scene_projectile_generic.tscn");
-    public static readonly PackedScene SoulrendProjectileScene = GD.Load<PackedScene>("res://scenes/skills/scene_projectile_soulrend.tscn");
+    public static readonly PackedScene GenericProjectileScene = GD.Load<PackedScene>("res://scenes/projectiles/scene_projectile_generic.tscn");
+    public static readonly PackedScene SoulrendProjectileScene = GD.Load<PackedScene>("res://scenes/projectiles/scene_projectile_soulrend.tscn");
 
     public static Projectile GetProjectile(ESkillProjectileType projectileType) {
         Projectile newProjectile;

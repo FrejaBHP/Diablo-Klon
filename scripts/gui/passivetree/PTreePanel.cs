@@ -23,7 +23,6 @@ public partial class PTreePanel : PanelContainer {
     private Label pointLabel;
     private HBoxContainer clustersContainer;
 
-    private const int amountOfActiveClusters = 3;
     private List<PTreeCluster> clusterPool = new();
 
     private int passiveTreePoints = 10;

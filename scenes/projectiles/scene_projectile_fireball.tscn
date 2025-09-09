@@ -1,0 +1,5 @@
+[gd_scene load_steps=2 format=3 uid="uid://56v8uh303no5"]
+
+[ext_resource type="PackedScene" uid="uid://crxui3bhb6cxg" path="res://scenes/projectiles/scene_projectile_generic.tscn" id="1_cfmgt"]
+
+[node name="FireballProjectile" instance=ExtResource("1_cfmgt")]
