@@ -542,5 +542,12 @@ public static class ItemDataTables {
 			Texture = UILib.TextureItemD2JewelGreenF,
 			MinimumLevel = 0,
 		},
+
+		new SupportGemData {
+			SkillTags = ESkillTags.None,
+			SupportType = typeof(SuppChain),
+			Texture = UILib.TextureItemD2JewelGreenF,
+			MinimumLevel = 0,
+		},
 	];
 }

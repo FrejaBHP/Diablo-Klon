@@ -9,6 +9,8 @@ public partial class AreaOfEffectInstant : Node3D {
     public ShapeCast3D ShapeCastSweep { get; protected set; }
     protected CylinderShape3D collisionShape;
     public AnimatedSprite3D AreaAnimation;
+
+    private bool hasAnimation = true;
     
     public override void _Ready() {
         ShapeCastSweep = GetNode<ShapeCast3D>("ShapeCastSweep");
@@ -18,6 +20,15 @@ public partial class AreaOfEffectInstant : Node3D {
 
     public void SetProperties(float newRadius, string animationName, float animationPixelSize, float animationScale) {
         collisionShape.Radius = newRadius;
+
+        if (animationName == null) {
+            animationName = "none";
+        }
+        
+        if (animationName == "none") {
+            hasAnimation = false;
+            return;
+        }
 
         AreaAnimation.PixelSize = animationPixelSize;
         Vector3 scale = AreaAnimation.Scale;
@@ -30,8 +41,10 @@ public partial class AreaOfEffectInstant : Node3D {
     }
 
     public async void Sweep() {
-        AreaAnimation.Visible = true;
-        AreaAnimation.Play();
+        if (hasAnimation) {
+            AreaAnimation.Visible = true;
+            AreaAnimation.Play();
+        }
 
         await ToSignal(GetTree(), SceneTree.SignalName.PhysicsFrame);
         ShapeCastSweep.ForceShapecastUpdate();
@@ -44,6 +57,10 @@ public partial class AreaOfEffectInstant : Node3D {
         }
         
         TargetsSwept?.Invoke(affectedTargets);
+
+        if (!hasAnimation) {
+            OnAnimationEnd();
+        }
     }
 
     protected void OnAnimationEnd() {

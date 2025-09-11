@@ -42,6 +42,7 @@ public abstract class Skill {
 
     public ESkillStatusEffectFlags StatusEffectFlags = new();
 
+    public Stat Chains { get; protected set; } = new(0, true, 0);
     public Stat ManaCost { get; protected set; } = new(0, false, 0);
     public double AddedDamageModifier { get; protected set; } = 1;
     public double SpeedModifier { get; protected set; } = 1;
@@ -212,7 +213,7 @@ public abstract class Skill {
         }
         if (baseHitFire > 0) {
             if (ActiveStatusEffectModifiers.Ignite.RollForProc()) {
-                double damage = baseHitFire * (1 + ActiveDamageModifiers.IncreasedIgniteMagnitude) * ActiveDamageModifiers.MoreIgniteMagnitude *  (1 + ActorOwner.StatusMods.Ignite.SFasterTicking);
+                double damage = baseHitFire * (1 + ActiveDamageModifiers.IncreasedIgniteMagnitude) * ActiveDamageModifiers.MoreIgniteMagnitude * (1 + ActorOwner.StatusMods.Ignite.SFasterTicking);
                 statusEffects.Add(new IgniteEffect(null, ActiveStatusEffectModifiers.Ignite.CalculateDurationModifier(), damage));
             }
         }
@@ -229,7 +230,7 @@ public abstract class Skill {
 
         if ((baseHitPhysical + baseHitChaos) > 0) {
             if (ActiveStatusEffectModifiers.Poison.RollForProc()) {
-                double damage = (baseHitPhysical + baseHitChaos) * (1 * ActiveDamageModifiers.IncreasedPoisonMagnitude) * ActiveDamageModifiers.MorePoisonMagnitude *  (1 + ActorOwner.StatusMods.Poison.SFasterTicking);
+                double damage = (baseHitPhysical + baseHitChaos) * (1 + ActiveDamageModifiers.IncreasedPoisonMagnitude) * ActiveDamageModifiers.MorePoisonMagnitude * (1 + ActorOwner.StatusMods.Poison.SFasterTicking);
                 statusEffects.Add(new PoisonEffect(null, ActiveStatusEffectModifiers.Poison.CalculateDurationModifier(), damage));
             }
         }
@@ -255,6 +256,7 @@ public abstract class Skill {
             ActiveDamageModifiers = ActorOwner.DamageMods + BaseDamageModifiers;
             ActiveStatusEffectModifiers = ActorOwner.StatusMods + BaseStatusEffectModifiers;
 
+            Chains.SAdded = 0;
             CriticalStrikeChance.SIncreased = ActorOwner.CritChanceMod.SIncreased;
             CriticalStrikeChance.SMore = ActorOwner.CritChanceMod.SMore;
 
@@ -712,7 +714,7 @@ public interface IProjectileSkill {
                 effectivePierces = (int)Pierces.STotal;
             }
             
-            proj.SetProperties((float)ProjectileSpeed.STotal, -1, effectivePierces, 15f, false);
+            proj.SetProperties((float)ProjectileSpeed.STotal, -1, effectivePierces, (int)skill.Chains.STotal, 15f, false);
             projectiles.Add(proj);
         }
 

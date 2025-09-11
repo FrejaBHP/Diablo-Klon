@@ -243,6 +243,18 @@ public partial class SkillHotbar : Control {
                 tooltipContent.EffectContainer.AddChild(GenerateAffixLabel(pierceString));
             }
 
+            if (skill.Chains.STotal != 0) {
+                string chainString;
+                if (skill.Chains.STotal != 1) {
+                    chainString = $"Chains {skill.Chains.STotal} times";
+                }
+                else {
+                    chainString = $"Chains {skill.Chains.STotal} time";
+                }
+
+                tooltipContent.EffectContainer.AddChild(GenerateAffixLabel(chainString));
+            }
+
             string projString;
             if (ps.NumberOfProjectiles.STotal != 1) {
                 projString = $"Fires {ps.NumberOfProjectiles.STotal} projectiles";

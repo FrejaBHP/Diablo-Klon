@@ -706,3 +706,37 @@ public partial class SuppCritChance : SupportGem {
         skill.CriticalStrikeChance.SIncreased += increasedCritChance;
     }
 }
+
+public partial class SuppChain : SupportGem {
+    private const int addedChains = 2;
+    private const double damagePenalty = 0.65;
+
+    public SuppChain() {
+        ItemName = "Chain Support";
+        Description = "Supports Projectile Skills";
+        AffectsDamageModifiers = true;
+        AffectsStatusModifiers = false;
+        SkillTags = ESkillTags.None;
+        ManaCostMultiplier = 1.25;
+    }
+
+    public override void RollForVariant() {
+        OnVariantChosen();
+    }
+
+    protected override void OnVariantChosen() {
+        UpdateGemEffectsDescription();
+    }
+
+    protected override void UpdateGemEffectsDescription() {
+        DescEffects = $"Supported Skill Chains {addedChains} additional times with Projectiles\nSupported Skill deals {1 - damagePenalty:P0} less Damage with Hits";
+    }
+
+    public override void ApplyToDamageModifiers(DamageModifiers dmgMods) {
+        dmgMods.HitDamageMultiplier *= damagePenalty;
+    }
+
+    public override void ModifySkill(Skill skill) {
+        skill.Chains.SAdded += addedChains;
+    }
+}

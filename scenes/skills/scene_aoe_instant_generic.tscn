@@ -24,4 +24,4 @@ pixel_size = 0.031
 axis = 1
 texture_filter = 4
 sprite_frames = ExtResource("1_c84fx")
-animation = &"fireNova"
+animation = &"none"

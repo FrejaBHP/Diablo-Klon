@@ -14,6 +14,7 @@ public partial class Projectile : Node3D {
     private Vector3 direction;
 
     public int Pierces { get; protected set; } = 0;
+    public int Chains { get; protected set; } = 0;
     public float ProjSpeed { get; protected set; } = 0f;
     public double ProjLifetime { get; protected set; } = 0;
     public double ProjTimeAlive { get; protected set; } = 0;
@@ -74,9 +75,10 @@ public partial class Projectile : Node3D {
         direction = Transform.Basis * new Vector3(0f, 0f, 1f).Normalized();
     }
 
-    public void SetProperties(float speed = 10f, double lifetime = 0, int pierce = 0, float range = 15f, bool canShotgun = false) {
+    public void SetProperties(float speed = 10f, double lifetime = 0, int pierce = 0, int chains = 0, float range = 15f, bool canShotgun = false) {
         ProjSpeed = speed;
         Pierces = pierce;
+        Chains = chains;
         ProjLifetime = lifetime;
         Range = range;
         CanShotgun = canShotgun;
@@ -103,13 +105,59 @@ public partial class Projectile : Node3D {
     protected virtual void OnCollideWithTarget(Actor actor) {
         if (CanHitActors) {
             SignalTargetHit(actor);
-        
-            if (Pierces < 1) {
-                QueueFree();
+            ProcessProjectileBehaviourStack();
+        }
+    }
+
+    protected void ProcessProjectileBehaviourStack() {
+        if (Pierces > 0) {
+            Pierces--;
+        }
+        else if (Chains > 0) {
+            Chain();
+            Chains--;
+        }
+        else {
+            QueueFree();
+        }
+    }
+
+    protected void Chain() {
+        AreaOfEffectInstant area = Skill.GenericAreaInstantScene.Instantiate<AreaOfEffectInstant>();
+        Run.Instance.AddChild(area);
+        area.ShapeCastSweep.SetCollisionMaskValue(3, Hitbox.GetCollisionMaskValue(3));
+        area.ShapeCastSweep.SetCollisionMaskValue(6, Hitbox.GetCollisionMaskValue(6));
+
+        area.TargetsSwept += GetChainCandidates;
+        area.GlobalPosition = GlobalPosition;
+        area.SetProperties(6f, null, 0f, 0f);
+        area.Sweep();
+    }
+
+    protected void GetChainCandidates(List<Actor> actors) {
+        actors.RemoveAll(ActorsHitThisGroup.Contains);
+        Actor newTarget = ProcessChainCandidates(actors);
+
+        if (newTarget != null) {
+            SetFacing(newTarget.GlobalPosition);
+        }
+    }
+
+    protected Actor ProcessChainCandidates(List<Actor> actors) {
+        if (actors.Count != 0) {
+            int shortestDistanceIndex = 0;
+            float shortestDistance = 100f;
+
+            for (int i = 0; i < actors.Count; i++) {
+                if (shortestDistance > GlobalPosition.DistanceSquaredTo(actors[i].GlobalPosition)) {
+                    shortestDistanceIndex = i;
+                }
             }
-            else {
-                Pierces--;
-            }
+
+            return actors[shortestDistanceIndex];
+        }
+        else {
+            return null;
         }
     }
 
