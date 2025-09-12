@@ -605,13 +605,8 @@ public partial class Actor : CharacterBody3D {
     }
 
     protected void ApplyRegen(double delta) {
-        double prevLife = BasicStats.CurrentLife;
         BasicStats.CurrentLife += BasicStats.TotalLifeRegen * delta;
         BasicStats.CurrentMana += BasicStats.TotalManaRegen * delta;
-
-        if (BasicStats.CurrentLife > prevLife) {
-            //GD.Print($"+{BasicStats.CurrentLife - prevLife}");
-        }
     }
 
     // Should really have a separate function first called something along the lines of "RegisterIncomingDamage". Name is confusing
