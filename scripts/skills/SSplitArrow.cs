@@ -71,6 +71,7 @@ public class SSplitArrow : Skill, IAttack, IProjectileSkill {
         if (ActorOwner != null) {
             IProjectileSkill pSkill = this;
             pSkill.BasicProjectileSkillBehaviour(this, mouseAimPosition);
+            DeductManaFromActor();
         }
     }
 

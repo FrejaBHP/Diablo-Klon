@@ -70,6 +70,7 @@ public class SPrismaticBolt : Skill, ISpell, IProjectileSkill {
         if (ActorOwner != null) {
             IProjectileSkill pSkill = this;
             pSkill.BasicProjectileSkillBehaviour(this, mouseAimPosition);
+            DeductManaFromActor();
 
             // Effect GUI test
             //ActorOwner.ReceiveEffect(new SpeedBurstTestEffect(ActorOwner));

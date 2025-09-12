@@ -718,7 +718,6 @@ public interface IProjectileSkill {
             projectiles.Add(proj);
         }
 
-        skill.DeductManaFromActor();
         return projectiles;
     }
 }
@@ -751,8 +750,6 @@ public interface IAreaSkill {
             area.SetProperties(TotalAreaRadius, animationName, animationPixelSize, TotalAreaRadius / BaseAreaRadius);
             area.Sweep();
         }
-
-        skill.DeductManaFromActor();
     }
 
     void BasicConeSweepSkillBehaviour(Skill skill, string animationName, float animationPixelSize, Vector3 direction, float coneDotMinimum) {
@@ -769,8 +766,6 @@ public interface IAreaSkill {
             area.SetProperties(TotalAreaRadius, animationName, animationPixelSize, TotalAreaRadius / BaseAreaRadius, skill.ActorOwner.OutgoingEffectAttachmentHeight, direction, coneDotMinimum);
             area.Sweep();
         }
-
-        skill.DeductManaFromActor();
     }
 
     /// <summary>

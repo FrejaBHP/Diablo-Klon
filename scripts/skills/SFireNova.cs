@@ -66,6 +66,7 @@ public class SFireNova : Skill, ISpell, IAreaSkill {
         if (ActorOwner != null) {
             IAreaSkill aSkill = this;
             aSkill.BasicAreaSweepSkillBehaviour(this, Vector3.Zero, "fireNova", pixelSize);
+            DeductManaFromActor();
         }
     }
 

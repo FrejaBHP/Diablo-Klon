@@ -119,6 +119,8 @@ public class SSoulrend : Skill, ISpell, IProjectileSkill, IAreaSkill, IDurationS
                 SetSkillCollision(srProj.SeekerRadius);
                 srProj.AoE.TargetsAffected += ApplyAreaSkillBehaviourToTargets;
             }
+
+            DeductManaFromActor();
         }
     }
 

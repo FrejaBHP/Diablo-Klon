@@ -86,6 +86,7 @@ public class SFireball : Skill, ISpell, IProjectileSkill, IAreaSkill {
         if (ActorOwner != null) {
             IProjectileSkill pSkill = this;
             pSkill.BasicProjectileSkillBehaviour(this, mouseAimPosition);
+            DeductManaFromActor();
         }
     }
 
