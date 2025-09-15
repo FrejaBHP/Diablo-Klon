@@ -343,9 +343,12 @@ public partial class Actor : CharacterBody3D {
     public EActorState ActorState = EActorState.Actionable;
 
     public Stat AttackSpeedMod = new(1, false);
-    public Stat CritChanceMod = new(1, false);
-    public Stat CritMultiplier = new(1.5, false, 0);
     public Stat CastSpeedMod = new(1, false);
+    public Stat CritChanceMod = new(1, false);
+    public Stat CritChanceAgainstLowLife = new(0, false);
+    public double CritChanceToStatus = 0;
+    public Stat CritMultiplier = new(1.5, false, 0);
+    public double CritMultiplierAgainstLowLife = 0;
     public Stat ExperienceMod = new(1, false, 0);
 
     public Stat MovementSpeed = new(0, false, 0);
@@ -420,6 +423,7 @@ public partial class Actor : CharacterBody3D {
         { EStatName.IncreasedDamageWithShield, 		0 },
         { EStatName.IncreasedDamageDualWield, 		0 },
         { EStatName.IncreasedDamageTwoHanded, 		0 },
+        { EStatName.IncreasedDamageToLowLife, 		0 },
         { EStatName.IncreasedAllDamage, 	    	0 },
 
 		{ EStatName.IncreasedAttackSpeed, 			0 },
@@ -428,7 +432,11 @@ public partial class Actor : CharacterBody3D {
         { EStatName.IncreasedCastSpeedDualWield, 	0 },
         { EStatName.IncreasedSkillSpeedShield, 		0 },
 		{ EStatName.IncreasedCritChance, 			0 },
+        { EStatName.IncreasedCritChanceToLowLife, 	0 },
+        { EStatName.IncreasedCritChanceToStatus, 	0 },
 		{ EStatName.AddedCritMulti, 				0 },
+        { EStatName.AddedCritMultiplierToLowLife, 	0 },
+        { EStatName.IncreasedStatusDamageWithCrit,  0 },
 
         { EStatName.AddedBleedChance, 			    0 },
         { EStatName.IncreasedBleedDamageMult,       0 },
@@ -497,6 +505,7 @@ public partial class Actor : CharacterBody3D {
         { EStatName.MoreDamageWithShield,			1 },
         { EStatName.MoreDamageDualWield,			1 },
         { EStatName.MoreDamageTwoHanded,			1 },
+        { EStatName.MoreDamageToLowLife,			1 },
         { EStatName.MoreAllDamage, 				    1 },
 
         { EStatName.MoreAttackSpeed, 		    	1 },
@@ -505,6 +514,7 @@ public partial class Actor : CharacterBody3D {
         { EStatName.MoreCastSpeedDualWield,			1 },
         { EStatName.MoreSkillSpeedShield, 		    1 },
         { EStatName.MoreCritChance, 		    	1 },
+        { EStatName.MoreCritChanceToLowLife, 		1 },
 
         { EStatName.MoreBleedDamageMult,            1 },
         { EStatName.MoreIgniteDamageMult,           1 },
@@ -630,11 +640,9 @@ public partial class Actor : CharacterBody3D {
 
         bool hitBlocked = false;
 
-        if (dmgCategory != EDamageCategory.Spell) {
-            if (RollForEvade(GetEvasionChance(Evasion.STotal, ActorLevel))) {
-                EmitSignal(SignalName.DamageEvaded);
-                return;
-            }
+        if (RollForEvade(GetEvasionChance(Evasion.STotal, ActorLevel))) {
+            EmitSignal(SignalName.DamageEvaded);
+            return;
         }
 
         double armourToDefendWith = Armour.STotal;
@@ -850,7 +858,7 @@ public partial class Actor : CharacterBody3D {
                 }
                 else {
                     kvp.Value.OnExpired();
-                    UniqueEffects[kvp.Key] = null;
+                    UniqueEffects.Remove(kvp.Key);
                     RemoveStatusFromFloatingBars(kvp.Key);
 
                     if (this is Player player) {

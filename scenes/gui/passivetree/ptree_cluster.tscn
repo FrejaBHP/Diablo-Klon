@@ -16,18 +16,16 @@ offset_bottom = 384.0
 grow_horizontal = 2
 script = ExtResource("1_aw6ie")
 
-[node name="ClusterCircleTexture" type="TextureRect" parent="."]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -192.0
-offset_right = 192.0
-offset_bottom = 384.0
-grow_horizontal = 2
-texture = ExtResource("2_j1bbp")
-expand_mode = 1
-metadata/_edit_lock_ = true
+[node name="Lines" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+
+[node name="Nodes" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
 
 [node name="ClusterCentre" type="TextureRect" parent="."]
 layout_mode = 1
@@ -42,5 +40,20 @@ offset_right = 10.0
 offset_bottom = 10.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 texture = ExtResource("3_3keaq")
 expand_mode = 1
+
+[node name="ClusterCircleTexture" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -192.0
+offset_right = 192.0
+offset_bottom = 384.0
+grow_horizontal = 2
+mouse_filter = 2
+texture = ExtResource("2_j1bbp")
+expand_mode = 1
+metadata/_edit_lock_ = true

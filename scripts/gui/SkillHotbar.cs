@@ -131,7 +131,7 @@ public partial class SkillHotbar : Control {
             }
 
             VBoxContainer mhDmgCon = GenerateDamageContainer();
-            SkillDamageRangeInfo mhDamageRangeInfo = DamageModifiers.CalculateAttackSkillDamageRangeWithHitMulti(skill.ActiveDamageModifiers, skill.ActorOwner.MainHandStats, skill.AddedDamageModifier, skill.SkillDamageTags);
+            SkillDamageRangeInfo mhDamageRangeInfo = DamageModifiers.CalculateAttackSkillDamageRangeWithHitMulti(skill.ActiveDamageModifiers, skill.ActorOwner.MainHandStats, skill.AddedDamageModifier, skill.SkillDamageTags, 0);
             
             if (mhDamageRangeInfo.PhysicalMin + mhDamageRangeInfo.PhysicalMax > 0) {
                 Label label = GenerateAffixLabel($"{Math.Round(mhDamageRangeInfo.PhysicalMin, digitsToRoundTo)} - {Math.Round(mhDamageRangeInfo.PhysicalMax, digitsToRoundTo)} Physical Damage");
@@ -158,7 +158,7 @@ public partial class SkillHotbar : Control {
 
             if (PlayerOwner.IsDualWielding) {
                 VBoxContainer ohDmgCon = GenerateDamageContainer();
-                SkillDamageRangeInfo ohDamageRangeInfo = DamageModifiers.CalculateAttackSkillDamageRangeWithHitMulti(skill.ActiveDamageModifiers, skill.ActorOwner.OffHandStats, skill.AddedDamageModifier, skill.SkillDamageTags);
+                SkillDamageRangeInfo ohDamageRangeInfo = DamageModifiers.CalculateAttackSkillDamageRangeWithHitMulti(skill.ActiveDamageModifiers, skill.ActorOwner.OffHandStats, skill.AddedDamageModifier, skill.SkillDamageTags, 0);
                 
                 if (ohDamageRangeInfo.PhysicalMin + ohDamageRangeInfo.PhysicalMax > 0) {
                     Label label = GenerateAffixLabel($"{Math.Round(ohDamageRangeInfo.PhysicalMin, digitsToRoundTo)} - {Math.Round(ohDamageRangeInfo.PhysicalMax, digitsToRoundTo)} Physical Damage");
@@ -192,7 +192,7 @@ public partial class SkillHotbar : Control {
             tooltipContent.TimeLabel.Text = $"{spell.BaseCastTime / spell.ActiveCastSpeedModifiers.STotal:F2}";
 
             VBoxContainer spellDmgCon = GenerateDamageContainer();
-            SkillDamageRangeInfo damageRangeInfo = DamageModifiers.CalculateSpellSkillDamageRangeWithHitMulti(skill.ActiveDamageModifiers, skill.AddedDamageModifier, skill.SkillDamageTags);
+            SkillDamageRangeInfo damageRangeInfo = DamageModifiers.CalculateSpellSkillDamageRangeWithHitMulti(skill.ActiveDamageModifiers, skill.AddedDamageModifier, skill.SkillDamageTags, 0);
 
             if (damageRangeInfo.PhysicalMin + damageRangeInfo.PhysicalMax > 0) {
                 Label label = GenerateAffixLabel($"{Math.Round(damageRangeInfo.PhysicalMin, digitsToRoundTo)} - {Math.Round(damageRangeInfo.PhysicalMax, digitsToRoundTo)} Physical Damage");

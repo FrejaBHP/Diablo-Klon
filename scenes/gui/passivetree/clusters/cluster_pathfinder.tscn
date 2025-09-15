@@ -6,7 +6,7 @@
 [node name="ClusterPathfinder" instance=ExtResource("1_hmopb")]
 ClusterName = "Pathfinder"
 
-[node name="TopStart" parent="." index="2" node_paths=PackedStringArray("NodesNext") instance=ExtResource("2_4e3tm")]
+[node name="TopStart" parent="Nodes" index="0" node_paths=PackedStringArray("NodesNext") instance=ExtResource("2_4e3tm")]
 layout_mode = 0
 offset_left = 178.0
 offset_top = 140.0
@@ -20,7 +20,7 @@ NodeDescription = "8% increased Attack Damage
 ConnectsToCentre = true
 NodesNext = [NodePath("../TopNotable")]
 
-[node name="TopNotable" parent="." index="3" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_4e3tm")]
+[node name="TopNotable" parent="Nodes" index="1" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_4e3tm")]
 layout_mode = 0
 offset_left = 172.0
 offset_top = 88.0
@@ -35,7 +35,7 @@ NodeDescription = "(Unimplemented) 20% of Physical Damage Converted to Fire Dama
 IsLocked = true
 NodesPrevious = [NodePath("../TopStart")]
 
-[node name="RightStart" parent="." index="4" node_paths=PackedStringArray("NodesNext") instance=ExtResource("2_4e3tm")]
+[node name="RightStart" parent="Nodes" index="2" node_paths=PackedStringArray("NodesNext") instance=ExtResource("2_4e3tm")]
 layout_mode = 0
 offset_left = 234.0
 offset_top = 178.0
@@ -49,7 +49,7 @@ NodeDescription = "15% increased Evasion Rating
 ConnectsToCentre = true
 NodesNext = [NodePath("../RightNotable")]
 
-[node name="RightNotable" parent="." index="5" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_4e3tm")]
+[node name="RightNotable" parent="Nodes" index="3" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_4e3tm")]
 layout_mode = 0
 offset_left = 288.0
 offset_top = 172.0
@@ -66,7 +66,7 @@ IsLocked = true
 NodesPrevious = [NodePath("../RightStart")]
 NodesNext = [NodePath("../BottomRightNode")]
 
-[node name="BottomRightNode" parent="." index="6" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_4e3tm")]
+[node name="BottomRightNode" parent="Nodes" index="4" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_4e3tm")]
 layout_mode = 0
 offset_left = 285.0
 offset_top = 233.0
@@ -82,7 +82,7 @@ IsLocked = true
 NodesPrevious = [NodePath("../RightNotable")]
 NodesNext = [NodePath("../BottomRightNotable")]
 
-[node name="BottomRightNotable" parent="." index="7" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_4e3tm")]
+[node name="BottomRightNotable" parent="Nodes" index="5" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_4e3tm")]
 layout_mode = 0
 offset_left = 240.0
 offset_top = 266.0

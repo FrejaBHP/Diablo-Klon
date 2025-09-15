@@ -99,7 +99,7 @@ public class SFireball : Skill, ISpell, IProjectileSkill, IAreaSkill {
 
     public void ApplyAreaSkillBehaviourToTargets(List<Actor> targets) {
         foreach (Actor actor in targets) {
-            SkillInfo info = CalculateOutgoingValuesIntoInfo(true);
+            SkillInfo info = CalculateOutgoingValuesIntoInfo(true, actor);
             actor.ReceiveHit(DamageCategory, info, ActorOwner.Penetrations, true);
         }
     }

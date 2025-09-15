@@ -14,7 +14,7 @@
 script = ExtResource("2_823s3")
 ClusterName = "Sorcerer"
 
-[node name="TopStart" parent="." index="2" node_paths=PackedStringArray("NodesNext") instance=ExtResource("2_yqqcn")]
+[node name="TopStart" parent="Nodes" index="0" node_paths=PackedStringArray("NodesNext") instance=ExtResource("2_yqqcn")]
 layout_mode = 0
 offset_left = 178.0
 offset_top = 142.0
@@ -29,7 +29,7 @@ NodeDescription = "4% increased Maximum Mana
 ConnectsToCentre = true
 NodesNext = [NodePath("../TopNotable")]
 
-[node name="TopNotable" parent="." index="3" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_yqqcn")]
+[node name="TopNotable" parent="Nodes" index="1" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_yqqcn")]
 layout_mode = 0
 offset_left = 172.0
 offset_top = 88.0
@@ -47,7 +47,7 @@ Arcane Surge grants 20% increased Cast Speed and
 IsLocked = true
 NodesPrevious = [NodePath("../TopStart")]
 
-[node name="RightStart" parent="." index="4" node_paths=PackedStringArray("NodesNext") instance=ExtResource("2_yqqcn")]
+[node name="RightStart" parent="Nodes" index="2" node_paths=PackedStringArray("NodesNext") instance=ExtResource("2_yqqcn")]
 layout_mode = 0
 offset_left = 214.0
 offset_top = 178.0
@@ -62,7 +62,7 @@ NodeDescription = "10% increased Spell Damage
 ConnectsToCentre = true
 NodesNext = [NodePath("../RightNotable")]
 
-[node name="RightNotable" parent="." index="5" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_yqqcn")]
+[node name="RightNotable" parent="Nodes" index="3" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_yqqcn")]
 layout_mode = 0
 offset_left = 256.0
 offset_top = 172.0
@@ -73,7 +73,7 @@ TreeNodeType = 1
 IsLocked = true
 NodesPrevious = [NodePath("../RightStart")]
 
-[node name="BottomStart" parent="." index="6" node_paths=PackedStringArray("NodesNext") instance=ExtResource("2_yqqcn")]
+[node name="BottomStart" parent="Nodes" index="4" node_paths=PackedStringArray("NodesNext") instance=ExtResource("2_yqqcn")]
 layout_mode = 0
 offset_left = 178.0
 offset_top = 214.0
@@ -88,7 +88,7 @@ NodeDescription = "5% of incoming Hit Damage is taken from Mana before Life
 ConnectsToCentre = true
 NodesNext = [NodePath("../BottomNotable")]
 
-[node name="BottomNotable" parent="." index="7" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_yqqcn")]
+[node name="BottomNotable" parent="Nodes" index="5" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_yqqcn")]
 layout_mode = 0
 offset_left = 172.0
 offset_top = 256.0
@@ -106,7 +106,7 @@ IsLocked = true
 NodesPrevious = [NodePath("../BottomStart")]
 NodesNext = [NodePath("../BottomLeftNode"), NodePath("../BottomRightNode")]
 
-[node name="BottomLeftNode" parent="." index="8" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_yqqcn")]
+[node name="BottomLeftNode" parent="Nodes" index="6" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_yqqcn")]
 layout_mode = 0
 offset_left = 132.0
 offset_top = 236.0
@@ -123,7 +123,7 @@ IsLocked = true
 NodesPrevious = [NodePath("../BottomNotable")]
 NodesNext = [NodePath("../BottomLeftNotable")]
 
-[node name="BottomLeftNotable" parent="." index="9" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_yqqcn")]
+[node name="BottomLeftNotable" parent="Nodes" index="7" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_yqqcn")]
 layout_mode = 0
 offset_left = 110.0
 offset_top = 274.0
@@ -139,7 +139,7 @@ NodeDescription = "40% of incoming Hit Damage is taken from Mana before Life"
 IsLocked = true
 NodesPrevious = [NodePath("../BottomLeftNode")]
 
-[node name="BottomRightNode" parent="." index="10" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_yqqcn")]
+[node name="BottomRightNode" parent="Nodes" index="8" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_yqqcn")]
 layout_mode = 0
 offset_left = 224.0
 offset_top = 236.0
@@ -156,7 +156,7 @@ IsLocked = true
 NodesPrevious = [NodePath("../BottomNotable")]
 NodesNext = [NodePath("../BottomRightNotable")]
 
-[node name="BottomRightNotable" parent="." index="11" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_yqqcn")]
+[node name="BottomRightNotable" parent="Nodes" index="9" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_yqqcn")]
 layout_mode = 0
 offset_left = 234.0
 offset_top = 274.0

@@ -20,6 +20,9 @@ public abstract class Skill {
     public Stat CriticalStrikeChance { get; protected set; } = new(0, false, 0, 100);
     public double CriticalStrikeMulti;
 
+    // These should probably be wrapped in their own struct along with other crit related things for ease of use?
+    public double MoreCriticalStrikeChanceToLowLife = 1;
+
     public string Name { get; protected set; }
     public string Description { get; protected set; }
     public string[] Effects { get; protected set; }
@@ -114,31 +117,66 @@ public abstract class Skill {
         }
     }
 
-    public SkillInfo CalculateOutgoingValuesIntoInfo(bool canCrit) {
+    public SkillInfo CalculateOutgoingValuesIntoInfo(bool canCrit, Actor target) {
+        bool targetIsLowLife = false;
+        if (target.BasicStats.CurrentLife < target.BasicStats.TotalLife * 0.5) {
+            targetIsLowLife = true;
+        }
+
+        bool targetHasDamagingStatus = false;
+        if (target.UniqueEffects.ContainsKey(EEffectName.Ignite) || target.UniqueEffects.ContainsKey(EEffectName.Bleed) || target.StackableEffects.ContainsKey(EEffectName.Poison)) {
+            targetHasDamagingStatus = true;
+        }
+
         EDamageInfoFlags damageInfoFlags = new();
         bool isCritical = false;
 
         SkillDamageRangeInfo damageRangeInfo;
+        double extraIncreasedDamage = 0;
+        double extraMoreDamage = 1;
+        double extraIncreasedStatusDamage = 0;
+        double extraIncreasedCritChance = 0;
+        double extraMoreCritChance = 1;
+        double extraCritMulti = 0;
+
+        if (targetIsLowLife) {
+            extraIncreasedDamage += ActiveDamageModifiers.IncreasedLowLife;
+            extraMoreDamage *= ActiveDamageModifiers.MoreLowLife;
+            extraIncreasedCritChance += ActorOwner.CritChanceAgainstLowLife.SIncreased;
+            extraMoreCritChance *= MoreCriticalStrikeChanceToLowLife;
+            extraCritMulti += ActorOwner.CritMultiplierAgainstLowLife;
+        }
+
+        if (targetHasDamagingStatus) {
+            extraIncreasedCritChance += ActorOwner.CritChanceToStatus;
+        }
 
         if (this is IAttack attack) {
             attack.GetUsedWeaponStats(ActorOwner, out ActorWeaponStats wStats);
-            Stat critChance = new(0, false, 0, 100);
-            critChance.SetAddedIncreasedMore(wStats.CritChance, CriticalStrikeChance.SIncreased, CriticalStrikeChance.SMore);
 
             if (canCrit) {
+                Stat critChance = new(0, false, 0, 100);
+                critChance.SetAddedIncreasedMore(wStats.CritChance, CriticalStrikeChance.SIncreased + extraIncreasedCritChance, CriticalStrikeChance.SMore * extraMoreCritChance);
                 isCritical = RollForCritical(critChance.STotal);
             }
 
             //damageRangeInfo = DamageModifiers.CalculateAttackSkillDamageRange(ActiveDamageModifiers, wStats, AddedDamageModifier, SkillDamageTags);
-            damageRangeInfo = DamageModifiers.CalculateAttackSkillDamageRangeWithHitMulti(ActiveDamageModifiers, wStats, AddedDamageModifier, SkillDamageTags);
+            damageRangeInfo = DamageModifiers.CalculateAttackSkillDamageRangeWithHitMulti(ActiveDamageModifiers, wStats, AddedDamageModifier, SkillDamageTags, extraIncreasedDamage);
         }
         else {
             if (canCrit) {
-                isCritical = RollForCritical(CriticalStrikeChance.STotal);
+                Stat critChance = new(CriticalStrikeChance.SBase, false, 0, 100);
+                critChance.SetAddedIncreasedMore(CriticalStrikeChance.SAdded, CriticalStrikeChance.SIncreased + extraIncreasedCritChance, CriticalStrikeChance.SMore * extraMoreCritChance);
+
+                isCritical = RollForCritical(critChance.STotal);
             }
 
             //damageRangeInfo = DamageModifiers.CalculateSpellSkillDamageRange(ActiveDamageModifiers, AddedDamageModifier, SkillDamageTags);
-            damageRangeInfo = DamageModifiers.CalculateSpellSkillDamageRangeWithHitMulti(ActiveDamageModifiers, AddedDamageModifier, SkillDamageTags);
+            damageRangeInfo = DamageModifiers.CalculateSpellSkillDamageRangeWithHitMulti(ActiveDamageModifiers, AddedDamageModifier, SkillDamageTags, extraIncreasedDamage);
+        }
+
+        if (extraMoreDamage != 1) {
+            damageRangeInfo *= extraMoreDamage;
         }
 
         double baseHitPhysical = DamageModifiers.RollDamageRange(damageRangeInfo.PhysicalMin, damageRangeInfo.PhysicalMax);
@@ -150,11 +188,13 @@ public abstract class Skill {
         if (isCritical) {
             damageInfoFlags |= EDamageInfoFlags.Critical;
 
-            baseHitPhysical *= CriticalStrikeMulti;
-            baseHitFire *= CriticalStrikeMulti;
-            baseHitCold *= CriticalStrikeMulti;
-            baseHitLightning *= CriticalStrikeMulti;
-            baseHitChaos *= CriticalStrikeMulti;
+            baseHitPhysical *= CriticalStrikeMulti + extraCritMulti;
+            baseHitFire *= CriticalStrikeMulti + extraCritMulti;
+            baseHitCold *= CriticalStrikeMulti + extraCritMulti;
+            baseHitLightning *= CriticalStrikeMulti + extraCritMulti;
+            baseHitChaos *= CriticalStrikeMulti + extraCritMulti;
+
+            extraIncreasedStatusDamage += ActiveDamageModifiers.IncreasedStatusDamageWithCrit;
         }
 
         SkillHitDamageInfo hitDamageInfo = new(baseHitPhysical, baseHitFire, baseHitCold, baseHitLightning, baseHitChaos);
@@ -207,13 +247,13 @@ public abstract class Skill {
         }*/
         if (baseHitPhysical > 0) {
             if (ActiveStatusEffectModifiers.Bleed.RollForProc()) {
-                double damage = baseHitPhysical * (1 + ActiveDamageModifiers.IncreasedBleedMagnitude) * ActiveDamageModifiers.MoreBleedMagnitude * (1 + ActorOwner.StatusMods.Bleed.SFasterTicking);
+                double damage = baseHitPhysical * (1 + ActiveDamageModifiers.IncreasedBleedMagnitude + extraIncreasedStatusDamage) * ActiveDamageModifiers.MoreBleedMagnitude * (1 + ActorOwner.StatusMods.Bleed.SFasterTicking);
                 statusEffects.Add(new BleedEffect(null, ActiveStatusEffectModifiers.Bleed.CalculateDurationModifier(), damage));
             }
         }
         if (baseHitFire > 0) {
             if (ActiveStatusEffectModifiers.Ignite.RollForProc()) {
-                double damage = baseHitFire * (1 + ActiveDamageModifiers.IncreasedIgniteMagnitude) * ActiveDamageModifiers.MoreIgniteMagnitude * (1 + ActorOwner.StatusMods.Ignite.SFasterTicking);
+                double damage = baseHitFire * (1 + ActiveDamageModifiers.IncreasedIgniteMagnitude + extraIncreasedStatusDamage) * ActiveDamageModifiers.MoreIgniteMagnitude * (1 + ActorOwner.StatusMods.Ignite.SFasterTicking);
                 statusEffects.Add(new IgniteEffect(null, ActiveStatusEffectModifiers.Ignite.CalculateDurationModifier(), damage));
             }
         }
@@ -230,7 +270,7 @@ public abstract class Skill {
 
         if ((baseHitPhysical + baseHitChaos) > 0) {
             if (ActiveStatusEffectModifiers.Poison.RollForProc()) {
-                double damage = (baseHitPhysical + baseHitChaos) * (1 + ActiveDamageModifiers.IncreasedPoisonMagnitude) * ActiveDamageModifiers.MorePoisonMagnitude * (1 + ActorOwner.StatusMods.Poison.SFasterTicking);
+                double damage = (baseHitPhysical + baseHitChaos) * (1 + ActiveDamageModifiers.IncreasedPoisonMagnitude + extraIncreasedStatusDamage) * ActiveDamageModifiers.MorePoisonMagnitude * (1 + ActorOwner.StatusMods.Poison.SFasterTicking);
                 statusEffects.Add(new PoisonEffect(null, ActiveStatusEffectModifiers.Poison.CalculateDurationModifier(), damage));
             }
         }
@@ -271,9 +311,7 @@ public abstract class Skill {
             }
 
             if (this is IAttack atSkill) {
-                // Does not contain all variables needed
                 atSkill.UpdateAttackSpeedValues(ActorOwner.AttackSpeedMod);
-                //attack.UpdateWeaponStats(ActorOwner.MainHandStats, ActorOwner.OffHandStats);
 
                 if (isPartOfCluster) {
                     foreach (SupportGem support in supportGems) {
@@ -285,7 +323,6 @@ public abstract class Skill {
             }
 
             if (this is ISpell spSkill) {
-                // Ditto
                 spSkill.UpdateCastSpeedValues(ActorOwner.CastSpeedMod);
 
                 if (isPartOfCluster) {

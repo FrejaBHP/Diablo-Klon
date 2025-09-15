@@ -69,7 +69,7 @@ public class SCobraShot : Skill, IAttack, IProjectileSkill {
     }
 
     public void ApplyProjectileSkillBehaviourToTarget(Actor target) {
-        SkillInfo info = CalculateOutgoingValuesIntoInfo(true);
+        SkillInfo info = CalculateOutgoingValuesIntoInfo(true, target);
         target.ReceiveHit(DamageCategory, info, ActorOwner.Penetrations, true);
     }
 }

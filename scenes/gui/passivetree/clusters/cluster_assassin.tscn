@@ -7,7 +7,7 @@
 [node name="ClusterAssassin" instance=ExtResource("1_20vh4")]
 ClusterName = "Assassin"
 
-[node name="TopLeftStart" parent="." index="2" node_paths=PackedStringArray("NodesNext") instance=ExtResource("2_l1pt6")]
+[node name="TopLeftStart" parent="Nodes" index="0" node_paths=PackedStringArray("NodesNext") instance=ExtResource("2_l1pt6")]
 layout_mode = 0
 offset_left = 152.0
 offset_top = 152.0
@@ -21,7 +21,7 @@ NodeDescription = "20% increased Critical Strike Chance"
 ConnectsToCentre = true
 NodesNext = [NodePath("../TopLeftNotable")]
 
-[node name="TopLeftNotable" parent="." index="3" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_l1pt6")]
+[node name="TopLeftNotable" parent="Nodes" index="1" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_l1pt6")]
 layout_mode = 0
 offset_left = 112.0
 offset_top = 112.0
@@ -38,7 +38,7 @@ NodeDescription = "(Unimplemented) 10% increased Attack and Cast Speed for 3 sec
 IsLocked = true
 NodesPrevious = [NodePath("../TopLeftStart")]
 
-[node name="TopRightStart" parent="." index="4" node_paths=PackedStringArray("NodesNext") instance=ExtResource("2_l1pt6")]
+[node name="TopRightStart" parent="Nodes" index="2" node_paths=PackedStringArray("NodesNext") instance=ExtResource("2_l1pt6")]
 layout_mode = 0
 offset_left = 204.0
 offset_top = 152.0
@@ -53,7 +53,7 @@ NodeDescription = "+5% to Critical Strike Multiplier
 ConnectsToCentre = true
 NodesNext = [NodePath("../TopRightNotable")]
 
-[node name="TopRightNotable" parent="." index="5" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_l1pt6")]
+[node name="TopRightNotable" parent="Nodes" index="3" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_l1pt6")]
 layout_mode = 0
 offset_left = 232.0
 offset_top = 112.0
@@ -71,22 +71,22 @@ IsLocked = true
 NodesPrevious = [NodePath("../TopRightStart")]
 NodesNext = [NodePath("../TopRightEdgeNode")]
 
-[node name="BottomLeftStart" parent="." index="6" node_paths=PackedStringArray("NodesNext") instance=ExtResource("2_l1pt6")]
+[node name="BottomLeftStart" parent="Nodes" index="4" node_paths=PackedStringArray("NodesNext") instance=ExtResource("2_l1pt6")]
 layout_mode = 0
 offset_left = 152.0
 offset_top = 204.0
 offset_right = 180.0
 offset_bottom = 232.0
 texture_normal = ExtResource("3_8vubm")
-StatNames = [90]
-StatValues = [0.1]
+StatNames = [90, 147]
+StatValues = [0.1, 0.15]
 NodeName = "Status Effect Damage and Critical Strike Chance"
-NodeDescription = "(Unimplemented) 15% increased Magnitude of Damaging Status Effects inflicted with Critical Strikes
+NodeDescription = "15% increased Damage with Damaging Status Effects inflicted with Critical Strikes
 10% increased Critical Strike Chance"
 ConnectsToCentre = true
 NodesNext = [NodePath("../BottomLeftNotable")]
 
-[node name="BottomLeftNotable" parent="." index="7" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_l1pt6")]
+[node name="BottomLeftNotable" parent="Nodes" index="5" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_l1pt6")]
 layout_mode = 0
 offset_left = 112.0
 offset_top = 232.0
@@ -94,14 +94,16 @@ offset_right = 152.0
 offset_bottom = 272.0
 disabled = true
 texture_normal = ExtResource("3_8vubm")
+StatNames = [147, 149]
+StatValues = [0.4, 0.4]
 TreeNodeType = 1
 NodeName = "Worsening Condition"
-NodeDescription = "(Unimplemented) Increased Magnitude of Damaging Status Effects inflicted with Critical Strikes
-(Unimplemented) Increased Critical Strike Chance against Enemies affected by Damaging Status Effects"
+NodeDescription = "40% increased Damage with Damaging Status Effects inflicted with Critical Strikes
+40% increased Critical Strike Chance against Enemies affected by Damaging Status Effects"
 IsLocked = true
 NodesPrevious = [NodePath("../BottomLeftStart")]
 
-[node name="BottomRightStart" parent="." index="8" node_paths=PackedStringArray("NodesNext") instance=ExtResource("2_l1pt6")]
+[node name="BottomRightStart" parent="Nodes" index="6" node_paths=PackedStringArray("NodesNext") instance=ExtResource("2_l1pt6")]
 layout_mode = 0
 offset_left = 204.0
 offset_top = 204.0
@@ -111,7 +113,7 @@ texture_normal = ExtResource("3_8vubm")
 ConnectsToCentre = true
 NodesNext = [NodePath("../BottomRightNotable")]
 
-[node name="BottomRightNotable" parent="." index="9" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_l1pt6")]
+[node name="BottomRightNotable" parent="Nodes" index="7" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_l1pt6")]
 layout_mode = 0
 offset_left = 232.0
 offset_top = 232.0
@@ -123,7 +125,7 @@ TreeNodeType = 1
 IsLocked = true
 NodesPrevious = [NodePath("../BottomRightStart")]
 
-[node name="TopRightEdgeNode" parent="." index="10" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_l1pt6")]
+[node name="TopRightEdgeNode" parent="Nodes" index="8" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_l1pt6")]
 layout_mode = 0
 offset_left = 224.0
 offset_top = 73.0
@@ -140,7 +142,7 @@ IsLocked = true
 NodesPrevious = [NodePath("../TopRightNotable")]
 NodesNext = [NodePath("../TopEdgeNotable")]
 
-[node name="TopEdgeNotable" parent="." index="11" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_l1pt6")]
+[node name="TopEdgeNotable" parent="Nodes" index="9" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_l1pt6")]
 layout_mode = 0
 offset_left = 172.0
 offset_top = 56.0
@@ -148,9 +150,11 @@ offset_right = 212.0
 offset_bottom = 96.0
 disabled = true
 texture_normal = ExtResource("3_8vubm")
+StatNames = [148, 151]
+StatValues = [0.5, 0.25]
 TreeNodeType = 1
 NodeName = "Cleaner"
-NodeDescription = "(Unimplemented) Increased Critical Strike Chance against Enemies with 50% Life or less
-(Unimplemented) Increased Critical Strike Multiplier against Enemies with 50% Life or less"
+NodeDescription = "50% increased Critical Strike Chance against Enemies with 50% Life or less
++25% Critical Strike Multiplier against Enemies with 50% Life or less"
 IsLocked = true
 NodesPrevious = [NodePath("../TopRightEdgeNode")]

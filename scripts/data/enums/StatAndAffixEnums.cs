@@ -166,6 +166,13 @@ public enum EStatName {
 	DamageTakenFromMana,
 	IncreasedProjectileSpeed,
 	MoreProjectileSpeed,
+	IncreasedDamageToLowLife,
+	MoreDamageToLowLife,
+	IncreasedStatusDamageWithCrit,
+	IncreasedCritChanceToLowLife,
+	IncreasedCritChanceToStatus,
+	MoreCritChanceToLowLife,
+	AddedCritMultiplierToLowLife
 }
 
 public enum EAffixPosition {

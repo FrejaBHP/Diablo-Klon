@@ -740,3 +740,61 @@ public partial class SuppChain : SupportGem {
         skill.Chains.SAdded += addedChains;
     }
 }
+
+public partial class SuppExecute : SupportGem {
+    private const double moreLowLifeDamage = 1.35;
+
+    public SuppExecute() {
+        ItemName = "Execute Support";
+        Description = "Supports Skills that deal Damage";
+        AffectsDamageModifiers = true;
+        AffectsStatusModifiers = false;
+        SkillTags = ESkillTags.None;
+        ManaCostMultiplier = 1.20;
+    }
+
+    public override void RollForVariant() {
+        OnVariantChosen();
+    }
+
+    protected override void OnVariantChosen() {
+        UpdateGemEffectsDescription();
+    }
+
+    protected override void UpdateGemEffectsDescription() {
+        DescEffects = $"Supported Skill deals {moreLowLifeDamage - 1:P0} more Damage with Hits against Enemies with 50% Life or less";
+    }
+
+    public override void ApplyToDamageModifiers(DamageModifiers dmgMods) {
+        dmgMods.MoreLowLife *= moreLowLifeDamage;
+    }
+}
+
+public partial class SuppCritChanceLowLife : SupportGem {
+    private const double moreCritChance = 1.4;
+
+    public SuppCritChanceLowLife() {
+        ItemName = "Assassin Support";
+        Description = "Supports Skills that Hit Enemies";
+        AffectsDamageModifiers = false;
+        AffectsStatusModifiers = false;
+        SkillTags = ESkillTags.None;
+        ManaCostMultiplier = 1.15;
+    }
+
+    public override void RollForVariant() {
+        OnVariantChosen();
+    }
+
+    protected override void OnVariantChosen() {
+        UpdateGemEffectsDescription();
+    }
+
+    protected override void UpdateGemEffectsDescription() {
+        DescEffects = $"Supported Skill has {moreCritChance - 1:P0} more Critical Strike Chance against Enemies at 50% Life or less";
+    }
+
+    public override void ModifySkill(Skill skill) {
+        skill.MoreCriticalStrikeChanceToLowLife *= moreCritChance;
+    }
+}

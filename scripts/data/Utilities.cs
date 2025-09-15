@@ -60,14 +60,19 @@ public static class Utilities {
         EStatName.MoreAreaDamage,
         EStatName.MoreDamageOverTime,
         EStatName.MoreAllDamage,
+		EStatName.MoreDamageToLowLife,
 
         EStatName.MoreAttackSpeed,
         EStatName.MoreCastSpeed,
         EStatName.MoreCritChance,
+		EStatName.MoreCritChanceToLowLife,
 
         EStatName.MoreBleedDuration,
+		EStatName.MoreBleedDamageMult,
         EStatName.MoreIgniteDuration,
+		EStatName.MoreIgniteDamageMult,
         EStatName.MorePoisonDuration,
+		EStatName.MorePoisonDamageMult,
 
         EStatName.MoreArmour,
         EStatName.MoreEvasion,

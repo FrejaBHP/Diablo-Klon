@@ -11,7 +11,7 @@
 [node name="ClusterJuggernaut" instance=ExtResource("1_tq2we")]
 ClusterName = "Juggernaut"
 
-[node name="TopStart" parent="." index="2" node_paths=PackedStringArray("NodesNext") instance=ExtResource("3_6afdj")]
+[node name="TopStart" parent="Nodes" index="0" node_paths=PackedStringArray("NodesNext") instance=ExtResource("3_6afdj")]
 layout_mode = 0
 offset_left = 178.0
 offset_top = 145.0
@@ -26,7 +26,7 @@ NodeDescription = "10% increased Damage while holding a Shield
 ConnectsToCentre = true
 NodesNext = [NodePath("../Unbreakable")]
 
-[node name="Unbreakable" parent="." index="3" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("3_6afdj")]
+[node name="Unbreakable" parent="Nodes" index="1" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("3_6afdj")]
 layout_mode = 0
 offset_left = 172.0
 offset_top = 96.0
@@ -44,7 +44,7 @@ IsLocked = true
 NodesPrevious = [NodePath("../TopStart")]
 NodesNext = [NodePath("../TopLeft"), NodePath("../TopRight")]
 
-[node name="TopLeft" parent="." index="4" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("3_6afdj")]
+[node name="TopLeft" parent="Nodes" index="2" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("3_6afdj")]
 layout_mode = 0
 offset_left = 146.0
 offset_top = 64.0
@@ -61,7 +61,7 @@ IsLocked = true
 NodesPrevious = [NodePath("../Unbreakable")]
 NodesNext = [NodePath("../Outmatch")]
 
-[node name="TopRight" parent="." index="5" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("3_6afdj")]
+[node name="TopRight" parent="Nodes" index="3" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("3_6afdj")]
 layout_mode = 0
 offset_left = 210.0
 offset_top = 64.0
@@ -78,7 +78,7 @@ IsLocked = true
 NodesPrevious = [NodePath("../Unbreakable")]
 NodesNext = [NodePath("../Unyielding")]
 
-[node name="Outmatch" parent="." index="6" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("3_6afdj")]
+[node name="Outmatch" parent="Nodes" index="4" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("3_6afdj")]
 layout_mode = 0
 offset_left = 97.0
 offset_top = 81.0
@@ -97,7 +97,7 @@ Damage is increased by 75% of Block Chance"
 IsLocked = true
 NodesPrevious = [NodePath("../TopLeft")]
 
-[node name="Unyielding" parent="." index="7" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("3_6afdj")]
+[node name="Unyielding" parent="Nodes" index="5" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("3_6afdj")]
 layout_mode = 0
 offset_left = 247.0
 offset_top = 81.0
@@ -114,7 +114,7 @@ Recover 1% Maximum Life on Block"
 IsLocked = true
 NodesPrevious = [NodePath("../TopRight")]
 
-[node name="RightStart" parent="." index="8" node_paths=PackedStringArray("NodesNext") instance=ExtResource("3_6afdj")]
+[node name="RightStart" parent="Nodes" index="6" node_paths=PackedStringArray("NodesNext") instance=ExtResource("3_6afdj")]
 layout_mode = 0
 offset_left = 211.0
 offset_top = 178.0
@@ -128,7 +128,7 @@ NodeDescription = "15% increased Armour"
 ConnectsToCentre = true
 NodesNext = [NodePath("../Unflinching")]
 
-[node name="Unflinching" parent="." index="9" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("3_6afdj")]
+[node name="Unflinching" parent="Nodes" index="7" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("3_6afdj")]
 layout_mode = 0
 offset_left = 248.0
 offset_top = 172.0

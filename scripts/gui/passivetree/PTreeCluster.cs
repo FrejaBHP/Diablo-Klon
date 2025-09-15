@@ -11,27 +11,29 @@ public partial class PTreeCluster : Control {
     public bool FirstTime { get; set; } = true;
 
     protected TextureRect clusterCentre;
+    protected Control nodes;
+    protected Control lines;
 
     public override void _Ready() {
         clusterCentre = GetNode<TextureRect>("ClusterCentre");
+        nodes = GetNode<Control>("Nodes");
+        lines = GetNode<Control>("Lines");
 
-        foreach (Node child in GetChildren()) {
-            if (child.IsClass("TextureButton")) {
-                PTreeNode treeNode = child as PTreeNode;
-                NodeList.Add(treeNode);
-                treeNode.NodeAllocated += OnNodeAllocated;
+        foreach (Node child in nodes.GetChildren()) {
+            PTreeNode treeNode = child as PTreeNode;
+            NodeList.Add(treeNode);
+            treeNode.NodeAllocated += OnNodeAllocated;
 
-                if (treeNode.ConnectsToCentre) {
-                    Vector2 startPos = clusterCentre.Position + clusterCentre.Size / 2;
-                    Vector2 endPos = treeNode.Position + treeNode.Size / 2;
-                    CreateConnectorLine(startPos, endPos);
-                }
+            if (treeNode.ConnectsToCentre) {
+                Vector2 startPos = clusterCentre.Position + clusterCentre.Size / 2;
+                Vector2 endPos = treeNode.Position + treeNode.Size / 2;
+                CreateConnectorLine(startPos, endPos);
+            }
 
-                foreach (PTreeNode followingNode in treeNode.NodesNext) {
-                    Vector2 startPos = treeNode.Position + treeNode.Size / 2;
-                    Vector2 endPos = followingNode.Position + followingNode.Size / 2;
-                    CreateConnectorLine(startPos, endPos);
-                }
+            foreach (PTreeNode followingNode in treeNode.NodesNext) {
+                Vector2 startPos = treeNode.Position + treeNode.Size / 2;
+                Vector2 endPos = followingNode.Position + followingNode.Size / 2;
+                CreateConnectorLine(startPos, endPos);
             }
         }
     }
@@ -42,15 +44,27 @@ public partial class PTreeCluster : Control {
         newLine.Width = 3f;
         newLine.AddPoint(start);
         newLine.AddPoint(end);
-        newLine.ZIndex = -1;
+        //newLine.ZIndex = -1;
+        //newLine.DefaultColor = Color.Color8(255, 200, 15);
+        newLine.DefaultColor = Color.Color8(100, 100, 100);
 
-        AddChild(newLine);
+        lines.AddChild(newLine);
     }
 
     public virtual void OnNodeAllocated(PTreeNode node) {
         foreach (PTreeNode tnode in node.NodesNext) {
             if (tnode.IsLocked) {
                 tnode.IsLocked = false;
+            }
+        }
+
+        ExperimentalFillLine(node.Position + node.Size / 2);
+    }
+
+    public void ExperimentalFillLine(Vector2 endPos) {
+        foreach (Line2D line in lines.GetChildren().Cast<Line2D>()) {
+            if (line.Points.Last() == endPos) {
+                line.DefaultColor = Color.Color8(255, 200, 15);
             }
         }
     }

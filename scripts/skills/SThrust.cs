@@ -68,7 +68,7 @@ public class SThrust : Skill, IAttack, IMeleeSkill {
     }
 
     public void ApplyMeleeSkillBehaviourToTarget(Actor target) {
-        SkillInfo info = CalculateOutgoingValuesIntoInfo(true); // Rerolls for every target atm
+        SkillInfo info = CalculateOutgoingValuesIntoInfo(true, target);
         target.ReceiveHit(DamageCategory, info, ActorOwner.Penetrations, true);
     }
 }

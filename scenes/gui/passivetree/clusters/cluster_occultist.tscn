@@ -8,7 +8,7 @@
 [node name="ClusterOccultist" instance=ExtResource("1_ak2p5")]
 ClusterName = "Occultist"
 
-[node name="TopStart" parent="." index="2" node_paths=PackedStringArray("NodesNext") instance=ExtResource("2_jgvr2")]
+[node name="TopStart" parent="Nodes" index="0" node_paths=PackedStringArray("NodesNext") instance=ExtResource("2_jgvr2")]
 layout_mode = 0
 offset_left = 178.0
 offset_top = 146.0
@@ -23,7 +23,7 @@ NodeDescription = "10% increased Chaos Damage
 ConnectsToCentre = true
 NodesNext = [NodePath("../TopNotable")]
 
-[node name="TopNotable" parent="." index="3" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_jgvr2")]
+[node name="TopNotable" parent="Nodes" index="1" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_jgvr2")]
 layout_mode = 0
 offset_left = 172.0
 offset_top = 96.0
@@ -41,7 +41,7 @@ IsLocked = true
 NodesPrevious = [NodePath("../TopStart")]
 NodesNext = [NodePath("../TopLeftNode"), NodePath("../TopRightNode")]
 
-[node name="TopLeftNode" parent="." index="4" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_jgvr2")]
+[node name="TopLeftNode" parent="Nodes" index="2" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_jgvr2")]
 layout_mode = 0
 offset_left = 140.0
 offset_top = 68.0
@@ -58,7 +58,7 @@ IsLocked = true
 NodesPrevious = [NodePath("../TopNotable")]
 NodesNext = [NodePath("../TopLeftNotable")]
 
-[node name="TopLeftNotable" parent="." index="5" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_jgvr2")]
+[node name="TopLeftNotable" parent="Nodes" index="3" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_jgvr2")]
 layout_mode = 0
 offset_left = 88.0
 offset_top = 88.0
@@ -75,7 +75,7 @@ NodeDescription = "Damage Penetrates 10% Chaos Resistance
 IsLocked = true
 NodesPrevious = [NodePath("../TopLeftNode")]
 
-[node name="TopRightNode" parent="." index="6" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_jgvr2")]
+[node name="TopRightNode" parent="Nodes" index="4" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_jgvr2")]
 layout_mode = 0
 offset_left = 216.0
 offset_top = 68.0
@@ -92,7 +92,7 @@ IsLocked = true
 NodesPrevious = [NodePath("../TopNotable")]
 NodesNext = [NodePath("../TopRightNotable")]
 
-[node name="TopRightNotable" parent="." index="7" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_jgvr2")]
+[node name="TopRightNotable" parent="Nodes" index="5" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_jgvr2")]
 layout_mode = 0
 offset_left = 256.0
 offset_top = 88.0
@@ -109,7 +109,7 @@ Deal 50% less Elemental Damage"
 IsLocked = true
 NodesPrevious = [NodePath("../TopRightNode")]
 
-[node name="LeftStart" parent="." index="8" node_paths=PackedStringArray("NodesNext") instance=ExtResource("2_jgvr2")]
+[node name="LeftStart" parent="Nodes" index="6" node_paths=PackedStringArray("NodesNext") instance=ExtResource("2_jgvr2")]
 layout_mode = 0
 offset_left = 146.0
 offset_top = 178.0
@@ -124,7 +124,7 @@ NodeDescription = "10% increased Chaos Damage
 ConnectsToCentre = true
 NodesNext = [NodePath("../LeftNotable")]
 
-[node name="LeftNotable" parent="." index="9" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_jgvr2")]
+[node name="LeftNotable" parent="Nodes" index="7" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_jgvr2")]
 layout_mode = 0
 offset_left = 96.0
 offset_top = 171.0
@@ -142,7 +142,7 @@ IsLocked = true
 NodesPrevious = [NodePath("../LeftStart")]
 NodesNext = [NodePath("../BottomLeftNode")]
 
-[node name="BottomLeftNode" parent="." index="10" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_jgvr2")]
+[node name="BottomLeftNode" parent="Nodes" index="8" node_paths=PackedStringArray("NodesPrevious", "NodesNext") instance=ExtResource("2_jgvr2")]
 layout_mode = 0
 offset_left = 131.0
 offset_top = 216.0
@@ -159,7 +159,7 @@ IsLocked = true
 NodesPrevious = [NodePath("../LeftNotable")]
 NodesNext = [NodePath("../BottomLeftNotable")]
 
-[node name="BottomLeftNotable" parent="." index="11" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_jgvr2")]
+[node name="BottomLeftNotable" parent="Nodes" index="9" node_paths=PackedStringArray("NodesPrevious") instance=ExtResource("2_jgvr2")]
 layout_mode = 0
 offset_left = 76.0
 offset_top = 224.0

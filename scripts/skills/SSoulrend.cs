@@ -125,7 +125,7 @@ public class SSoulrend : Skill, ISpell, IProjectileSkill, IAreaSkill, IDurationS
     }
 
     public void ApplyProjectileSkillBehaviourToTarget(Actor target) {
-        SkillInfo info = CalculateOutgoingValuesIntoInfo(true);
+        SkillInfo info = CalculateOutgoingValuesIntoInfo(true, target);
         target.ReceiveHit(DamageCategory, info, ActorOwner.Penetrations, true);
     }
 

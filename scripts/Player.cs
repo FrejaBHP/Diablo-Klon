@@ -732,7 +732,10 @@ public partial class Player : Actor {
 		CastSpeedMod.SMore = MultiplicativeStatDictionary[EStatName.MoreCastSpeed];
 		CritChanceMod.SIncreased = StatDictionary[EStatName.IncreasedCritChance];
 		CritChanceMod.SMore = MultiplicativeStatDictionary[EStatName.MoreCritChance];
+		CritChanceAgainstLowLife.SIncreased = StatDictionary[EStatName.IncreasedCritChanceToLowLife];
+		CritChanceAgainstLowLife.SMore = MultiplicativeStatDictionary[EStatName.MoreCritChanceToLowLife];
 		CritMultiplier.SAdded = StatDictionary[EStatName.AddedCritMulti];
+		CritMultiplierAgainstLowLife = StatDictionary[EStatName.AddedCritMultiplierToLowLife];
 
 		MovementSpeed.SIncreased = StatDictionary[EStatName.IncreasedMovementSpeed];
 
@@ -798,6 +801,8 @@ public partial class Player : Actor {
 		DamageMods.MoreDoT = MultiplicativeStatDictionary[EStatName.MoreDamageOverTime];
 		DamageMods.IncreasedAll = StatDictionary[EStatName.IncreasedAllDamage];
 		DamageMods.MoreAll = MultiplicativeStatDictionary[EStatName.MoreAllDamage];
+		DamageMods.IncreasedLowLife = StatDictionary[EStatName.IncreasedDamageToLowLife];
+		DamageMods.MoreLowLife = MultiplicativeStatDictionary[EStatName.MoreDamageToLowLife];
 
 		DamageMods.IncreasedBleedMagnitude = StatDictionary[EStatName.IncreasedBleedDamageMult];
 		DamageMods.MoreBleedMagnitude = MultiplicativeStatDictionary[EStatName.MoreBleedDamageMult];
