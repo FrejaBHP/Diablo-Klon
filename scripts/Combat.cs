@@ -82,6 +82,24 @@ public class DamageModifiers() {
     }
 
     public static SkillDamageRangeInfo ConvertSkillDamage(DamageModifiers damageMods, SkillDamageRangeInfo rangeInfo) {
+        /*
+        Converts the skill's damage in two steps:
+        1) Innate damage conversion, such as would be found on a skill itself
+        2) Everything else
+
+        Damage returned from 1) is treated just the same as were it the initial base damage for 2).
+        As an example, if you have 75% Phys to Fire in both steps and 100 Physical Damage,
+        it will get split 25/75 in 1), and then 6,25/93,75 in 2).
+
+        Damage converted in 1) into another type will also be applicable for conversion in 2).
+        If you have 100 Physical Damage, 50% Physical to Fire in 1), and 50% Fire to Cold in 2),
+        the split will be 50/50/0, and then 50/25/25.
+
+        Conversions happening in the same step will not account for any newly converted values.
+        With 100 Fire Damage, 50% Fire to Cold and 50% Cold to Lightning in 2) will result in a 50/50/0 split.
+        This is because the conversions only consider the initial damage, and as such there is no Cold Damage to convert into Lightning Damage.
+        */
+        
         return DamageConversionStep(damageMods, DamageConversionStep(damageMods, rangeInfo, true), false);
     }
 
