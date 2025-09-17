@@ -482,6 +482,11 @@ public partial class Actor : CharacterBody3D {
         { EStatName.DamageAsExtraLightning, 		0 },
         { EStatName.DamageAsExtraChaos, 			0 },
 
+        { EStatName.PhysToFireConversion, 			0 },
+        { EStatName.PhysToColdConversion, 			0 },
+        { EStatName.PhysToLightningConversion, 		0 },
+        { EStatName.PhysToChaosConversion, 			0 },
+
         { EStatName.DamageTakenFromMana, 			0 },
         { EStatName.IncreasedProjectileSpeed, 		0 },
 	};

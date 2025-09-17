@@ -798,3 +798,63 @@ public partial class SuppCritChanceLowLife : SupportGem {
         skill.MoreCriticalStrikeChanceToLowLife *= moreCritChance;
     }
 }
+
+public partial class SuppPhysToFire : SupportGem {
+    private const double physToFireConversion = 0.5;
+
+    public SuppPhysToFire() {
+        ItemName = "Physical to Fire Support";
+        Description = "Supports Skills that deal Damage";
+        AffectsDamageModifiers = true;
+        AffectsStatusModifiers = false;
+        SkillTags = ESkillTags.None;
+        ManaCostMultiplier = 1.10;
+    }
+
+    public override void RollForVariant() {
+        OnVariantChosen();
+    }
+
+    protected override void OnVariantChosen() {
+        UpdateGemEffectsDescription();
+    }
+
+    protected override void UpdateGemEffectsDescription() {
+        DescEffects = $"Supported Skill has {physToFireConversion:P0} of Physical Damage Converted to Fire Damage";
+    }
+
+    public override void ApplyToDamageModifiers(DamageModifiers dmgMods) {
+        dmgMods.Conversion.Physical.ToFire.Values[1] += physToFireConversion;
+    }
+}
+
+public partial class SuppEleToChaos : SupportGem {
+    private const double eleToChaosConversion = 0.33;
+
+    public SuppEleToChaos() {
+        ItemName = "Elemental Chaos Support";
+        Description = "Supports Skills that deal Damage";
+        AffectsDamageModifiers = true;
+        AffectsStatusModifiers = false;
+        SkillTags = ESkillTags.None;
+        ManaCostMultiplier = 1.10;
+    }
+
+    public override void RollForVariant() {
+        OnVariantChosen();
+    }
+
+    protected override void OnVariantChosen() {
+        UpdateGemEffectsDescription();
+    }
+
+    protected override void UpdateGemEffectsDescription() {
+        DescEffects = $"Supported Skill has {eleToChaosConversion:P0} of Elemental Damage Converted to Chaos Damage";
+    }
+
+    public override void ApplyToDamageModifiers(DamageModifiers dmgMods) {
+        dmgMods.Conversion.Fire.ToChaos.Values[1] += eleToChaosConversion;
+        dmgMods.Conversion.Cold.ToChaos.Values[1] += eleToChaosConversion;
+        dmgMods.Conversion.Lightning.ToChaos.Values[1] += eleToChaosConversion;
+    }
+}

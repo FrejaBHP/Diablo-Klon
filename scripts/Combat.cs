@@ -9,6 +9,8 @@ public class DamageModifiers() {
     public DamageTypeStat Lightning { get; protected set; } = new();
     public DamageTypeStat Chaos { get; protected set; } = new();
 
+    public DamageConversionTable Conversion { get; protected set; } = new();
+
     public double IncreasedAttack = 0;
     public double IncreasedSpell = 0;
     public double IncreasedMelee = 0;
@@ -79,6 +81,93 @@ public class DamageModifiers() {
         return damageStat;
     }
 
+    public static SkillDamageRangeInfo ConvertSkillDamage(DamageModifiers damageMods, SkillDamageRangeInfo rangeInfo) {
+        return DamageConversionStep(damageMods, DamageConversionStep(damageMods, rangeInfo, true), false);
+    }
+
+    private static SkillDamageRangeInfo DamageConversionStep(DamageModifiers damageMods, SkillDamageRangeInfo rangeInfo, bool useBase) {
+        double[] dmgVal = new double[10];
+        /* Equivalent to: 
+        double stepPhysMin = 0;
+        double stepPhysMax = 0;
+        double stepFireMin = 0;
+        double stepFireMax = 0;
+        double stepColdMin = 0;
+        double stepColdMax = 0;
+        double stepLightningMin = 0;
+        double stepLightningMax = 0;
+        double stepChaosMin = 0;
+        double stepChaosMax = 0;
+        */
+
+        if (rangeInfo.PhysicalMin != 0 && rangeInfo.PhysicalMax != 0) {
+            if (damageMods.Conversion.Physical.GetTotalConversionPercentage(useBase) != 0) {
+                double[] convertedValues = damageMods.Conversion.Physical.GetConvertedValues(rangeInfo.PhysicalMin, rangeInfo.PhysicalMax, useBase);
+                for (int i = 0; i < dmgVal.Length; i++) {
+                    dmgVal[i] += convertedValues[i];
+                }
+            }
+            else {
+                dmgVal[0] += rangeInfo.PhysicalMin;
+                dmgVal[1] += rangeInfo.PhysicalMax;
+            }
+        }
+        
+        if (rangeInfo.FireMin != 0 && rangeInfo.FireMax != 0) {
+            if (damageMods.Conversion.Fire.GetTotalConversionPercentage(useBase) != 0) {
+                double[] convertedValues = damageMods.Conversion.Fire.GetConvertedValues(rangeInfo.FireMin, rangeInfo.FireMax, useBase);
+                for (int i = 0; i < dmgVal.Length; i++) {
+                    dmgVal[i] += convertedValues[i];
+                }
+            }
+            else {
+                dmgVal[2] += rangeInfo.FireMin;
+                dmgVal[3] += rangeInfo.FireMax;
+            }
+        }
+
+        if (rangeInfo.ColdMin != 0 && rangeInfo.ColdMax != 0) {
+            if (damageMods.Conversion.Cold.GetTotalConversionPercentage(useBase) != 0) {
+                double[] convertedValues = damageMods.Conversion.Cold.GetConvertedValues(rangeInfo.ColdMin, rangeInfo.ColdMax, useBase);
+                for (int i = 0; i < dmgVal.Length; i++) {
+                    dmgVal[i] += convertedValues[i];
+                }
+            }
+            else {
+                dmgVal[4] += rangeInfo.ColdMin;
+                dmgVal[5] += rangeInfo.ColdMax;
+            }
+        }
+
+        if (rangeInfo.LightningMin != 0 && rangeInfo.LightningMax != 0) {
+            if (damageMods.Conversion.Lightning.GetTotalConversionPercentage(useBase) != 0) {
+                double[] convertedValues = damageMods.Conversion.Lightning.GetConvertedValues(rangeInfo.LightningMin, rangeInfo.LightningMax, useBase);
+                for (int i = 0; i < dmgVal.Length; i++) {
+                    dmgVal[i] += convertedValues[i];
+                }
+            }
+            else {
+                dmgVal[6] += rangeInfo.LightningMin;
+                dmgVal[7] += rangeInfo.LightningMax;
+            }
+        }
+
+        if (rangeInfo.ChaosMin != 0 && rangeInfo.ChaosMax != 0) {
+            if (damageMods.Conversion.Chaos.GetTotalConversionPercentage(useBase) != 0) {
+                double[] convertedValues = damageMods.Conversion.Chaos.GetConvertedValues(rangeInfo.ChaosMin, rangeInfo.ChaosMax, useBase);
+                for (int i = 0; i < dmgVal.Length; i++) {
+                    dmgVal[i] += convertedValues[i];
+                }
+            }
+            else {
+                dmgVal[8] += rangeInfo.ChaosMin;
+                dmgVal[9] += rangeInfo.ChaosMax;
+            }
+        }
+
+        return new SkillDamageRangeInfo(dmgVal[0], dmgVal[1], dmgVal[2], dmgVal[3], dmgVal[4], dmgVal[5], dmgVal[6], dmgVal[7], dmgVal[8], dmgVal[9]);
+    }
+
     public static SkillDamageRangeInfo CalculateBaseAttackDamage(DamageModifiers damageMods, ActorWeaponStats weaponStats, double addedMultiplier) {
         double physMin = (weaponStats.PhysMinDamage + damageMods.Physical.SMinAdded + damageMods.Physical.SAttackMinAdded) * addedMultiplier;
         double physMax = (weaponStats.PhysMaxDamage + damageMods.Physical.SMaxAdded + damageMods.Physical.SAttackMaxAdded) * addedMultiplier;
@@ -91,8 +180,21 @@ public class DamageModifiers() {
         double chaosMin = (weaponStats.ChaosMinDamage + damageMods.Chaos.SMinAdded + damageMods.Chaos.SAttackMinAdded) * addedMultiplier;
         double chaosMax = (weaponStats.ChaosMaxDamage + damageMods.Chaos.SMaxAdded + damageMods.Chaos.SAttackMaxAdded) * addedMultiplier;
 
-        double combinedMinDamage = physMin + fireMin + coldMin + lightningMin + chaosMin;
-        double combinedMaxDamage = physMax + fireMax + coldMax + lightningMax + chaosMax;
+        SkillDamageRangeInfo convDmgInfo = ConvertSkillDamage(damageMods, new SkillDamageRangeInfo(physMin, physMax, fireMin, fireMax, coldMin, coldMax, lightningMin, lightningMax, chaosMin, chaosMax));
+
+        physMin = convDmgInfo.PhysicalMin;
+        physMax = convDmgInfo.PhysicalMax;
+        fireMin = convDmgInfo.FireMin;
+        fireMax = convDmgInfo.FireMax;
+        coldMin = convDmgInfo.ColdMin;
+        coldMax = convDmgInfo.ColdMax;
+        lightningMin = convDmgInfo.LightningMin;
+        lightningMax = convDmgInfo.LightningMax;
+        chaosMin = convDmgInfo.ChaosMin;
+        chaosMax = convDmgInfo.ChaosMax;
+
+        double combinedMinDamage = convDmgInfo.PhysicalMin + convDmgInfo.FireMin + convDmgInfo.ColdMin + convDmgInfo.LightningMin + convDmgInfo.ChaosMin;
+        double combinedMaxDamage = convDmgInfo.PhysicalMax + convDmgInfo.FireMax + convDmgInfo.ColdMax + convDmgInfo.LightningMax + convDmgInfo.ChaosMax;
 
         if (damageMods.ExtraPhysical > 0) {
             physMin += combinedMinDamage * damageMods.ExtraPhysical;
@@ -270,6 +372,7 @@ public class DamageModifiers() {
 
     public DamageModifiers ShallowCopy() {
         DamageModifiers copy = (DamageModifiers)MemberwiseClone();
+        copy.Conversion = Conversion.ShallowCopy();
         copy.Physical = Physical.ShallowCopy();
         copy.Fire = Fire.ShallowCopy();
         copy.Cold = Cold.ShallowCopy();
@@ -281,6 +384,7 @@ public class DamageModifiers() {
 
     public static DamageModifiers operator +(DamageModifiers a, DamageModifiers b) {
         DamageModifiers c = new DamageModifiers();
+        c.Conversion = a.Conversion + b.Conversion;
 
         c.Physical = a.Physical + b.Physical;
         c.Fire = a.Fire + b.Fire;
@@ -330,6 +434,7 @@ public class DamageModifiers() {
 
     public static DamageModifiers operator -(DamageModifiers a, DamageModifiers b) {
         DamageModifiers c = new DamageModifiers();
+        c.Conversion = a.Conversion - b.Conversion;
 
         c.Physical = a.Physical - b.Physical;
         c.Fire = a.Fire - b.Fire;
@@ -409,6 +514,212 @@ public class StatusEffectModifiers() {
         c.Poison = a.Poison - b.Poison;
         c.Slow = a.Slow - b.Slow;
         
+        return c;
+    }
+}
+
+public struct DamageRange {
+    public double Minimum;
+    public double Maximum;
+
+    public DamageRange() {
+        Minimum = 0;
+        Maximum = 0;
+    }
+
+    public DamageRange(double min, double max) {
+        Minimum = min;
+        Maximum = max;
+    }
+
+    public static DamageRange operator *(DamageRange range, double mult) {
+        return new DamageRange(range.Minimum * mult, range.Maximum * mult);
+    }
+}
+
+public struct ConversionElement {
+    public EDamageType DamageType { get; private set; }
+    public ConversionMod ToPhysical = new(EDamageType.Physical, 0, 0);
+    public ConversionMod ToFire = new(EDamageType.Fire, 0, 0);
+    public ConversionMod ToCold = new(EDamageType.Cold, 0, 0);
+    public ConversionMod ToLightning = new(EDamageType.Lightning, 0, 0);
+    public ConversionMod ToChaos = new(EDamageType.Chaos, 0, 0);
+
+    public ConversionElement(EDamageType dmgType) {
+        DamageType = dmgType;
+    }
+
+    public readonly double GetTotalConversionPercentage(bool getBase) {
+        double total = 0;
+
+        int index = 0;
+        if (!getBase) {
+            index = 1;
+        }
+
+        ConversionMod[] elements = [
+            ToPhysical,
+            ToFire,
+            ToCold,
+            ToLightning,
+            ToChaos
+        ];
+
+        foreach (ConversionMod element in elements) {
+            if (DamageType != element.DamageType) {
+                total += element.Values[index];
+            }
+        }
+        
+        return total;
+    }
+
+    public readonly double[] GetFinalConversionPercentages(bool useBase) {
+        double[] percentages = new double[5];
+        double conversionPercentage = 0;
+
+        int index = 0;
+        if (!useBase) {
+            index = 1;
+        }
+
+        ConversionMod[] elements = [
+            ToPhysical,
+            ToFire,
+            ToCold,
+            ToLightning,
+            ToChaos
+        ];
+
+        foreach (ConversionMod element in elements) {
+            if (DamageType != element.DamageType) {
+                conversionPercentage += element.Values[index];
+            }
+        }
+
+        for (int i = 0; i < elements.Length; i++) {
+            if (DamageType != elements[i].DamageType) {
+                if (conversionPercentage > 1) {
+                    percentages[i] = elements[i].Values[index] / conversionPercentage;
+                }
+                else {
+                    percentages[i] = elements[i].Values[index];
+                }
+            }
+            else {
+                if (conversionPercentage < 1) {
+                    percentages[i] = 1 - conversionPercentage;
+                }
+                else {
+                    percentages[i] = 0;
+                }
+            }
+        }
+
+        //GD.Print($"Element: {DamageType}, Conversion: {percentages[0]:P0}/{percentages[1]:P0}/{percentages[2]:P0}/{percentages[3]:P0}/{percentages[4]:P0}");
+        
+        return percentages;
+    }
+
+    public readonly double[] GetConvertedValues(double minDamage, double maxDamage, bool useBase) {
+        double[] conversionPercentages = GetFinalConversionPercentages(useBase);
+        double[] damageValues = new double[10];
+
+        int j = 0;
+        for (int i = 0; i < conversionPercentages.Length; i++) {
+            damageValues[j] = minDamage * conversionPercentages[i];
+            damageValues[j + 1] = maxDamage * conversionPercentages[i];
+
+            j += 2;
+        }
+
+        return damageValues;
+    }
+
+    public static ConversionElement operator +(ConversionElement a, ConversionElement b) {
+        ConversionElement c = new ConversionElement();
+
+        c.DamageType = a.DamageType;
+        c.ToPhysical = a.ToPhysical + b.ToPhysical;
+        c.ToFire = a.ToFire + b.ToFire;
+        c.ToCold = a.ToCold + b.ToCold;
+        c.ToLightning = a.ToLightning + b.ToLightning;
+        c.ToChaos = a.ToChaos + b.ToChaos;
+
+        return c;
+    }
+
+    public static ConversionElement operator -(ConversionElement a, ConversionElement b) {
+        ConversionElement c = new ConversionElement();
+        
+        c.DamageType = a.DamageType;
+        c.ToPhysical = a.ToPhysical - b.ToPhysical;
+        c.ToFire = a.ToFire - b.ToFire;
+        c.ToCold = a.ToCold - b.ToCold;
+        c.ToLightning = a.ToLightning - b.ToLightning;
+        c.ToChaos = a.ToChaos - b.ToChaos;
+
+        return c;
+    }
+}
+
+public struct ConversionMod {
+    public EDamageType DamageType { get; private set; }
+    public double[] Values { get; private set; } = new double[2];
+
+    public ConversionMod(EDamageType dmgType) {
+        DamageType = dmgType;
+        Values[0] = 0;
+        Values[1] = 0;
+    }
+    
+    public ConversionMod(EDamageType dmgType, double basec, double addedc) {
+       DamageType = dmgType;
+       Values[0] = basec;
+       Values[1] = addedc;
+    }
+
+    public static ConversionMod operator +(ConversionMod a, ConversionMod b) {
+        return new ConversionMod(a.DamageType, a.Values[0] + b.Values[0], a.Values[1] + b.Values[1]);
+    }
+
+    public static ConversionMod operator -(ConversionMod a, ConversionMod b) {
+        return new ConversionMod(a.DamageType, a.Values[0] - b.Values[0], a.Values[1] - b.Values[1]);
+    }
+}
+
+public class DamageConversionTable() {
+    public ConversionElement Physical = new(EDamageType.Physical);
+    public ConversionElement Fire = new(EDamageType.Fire);
+    public ConversionElement Cold = new(EDamageType.Cold);
+    public ConversionElement Lightning = new(EDamageType.Lightning);
+    public ConversionElement Chaos = new(EDamageType.Chaos);
+
+    public DamageConversionTable ShallowCopy() {
+        return (DamageConversionTable)MemberwiseClone();
+    }
+
+    public static DamageConversionTable operator +(DamageConversionTable a, DamageConversionTable b) {
+        DamageConversionTable c = new DamageConversionTable();
+
+        c.Physical = a.Physical + b.Physical;
+        c.Fire = a.Fire + b.Fire;
+        c.Cold = a.Cold + b.Cold;
+        c.Lightning = a.Lightning + b.Lightning;
+        c.Chaos = a.Chaos + b.Chaos;
+
+        return c;
+    }
+
+    public static DamageConversionTable operator -(DamageConversionTable a, DamageConversionTable b) {
+        DamageConversionTable c = new DamageConversionTable();
+
+        c.Physical = a.Physical - b.Physical;
+        c.Fire = a.Fire - b.Fire;
+        c.Cold = a.Cold - b.Cold;
+        c.Lightning = a.Lightning - b.Lightning;
+        c.Chaos = a.Chaos - b.Chaos;
+
         return c;
     }
 }

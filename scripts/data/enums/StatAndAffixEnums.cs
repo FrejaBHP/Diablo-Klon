@@ -172,7 +172,32 @@ public enum EStatName {
 	IncreasedCritChanceToLowLife,
 	IncreasedCritChanceToStatus,
 	MoreCritChanceToLowLife,
-	AddedCritMultiplierToLowLife
+	AddedCritMultiplierToLowLife,
+
+	PhysToFireConversion,
+	PhysToColdConversion,
+	PhysToLightningConversion,
+	PhysToChaosConversion,
+
+	FireToPhysConversion,
+	FireToColdConversion,
+	FireToLightningConversion,
+	FireToChaosConversion,
+
+	ColdToPhysConversion,
+	ColdToFireConversion,
+	ColdToLightningConversion,
+	ColdToChaosConversion,
+
+	LightningToPhysConversion,
+	LightningToFireConversion,
+	LightningToColdConversion,
+	LightningToChaosConversion,
+
+	ChaosToPhysConversion,
+	ChaosToFireConversion,
+	ChaosToColdConversion,
+	ChaosToLightningConversion,
 }
 
 public enum EAffixPosition {

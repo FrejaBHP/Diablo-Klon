@@ -27,11 +27,13 @@ offset_top = 88.0
 offset_right = 212.0
 offset_bottom = 128.0
 disabled = true
+StatNames = [152, 153, 154]
+StatValues = [0.25, 0.25, 0.25]
 TreeNodeType = 1
 NodeName = "Natural Attunement"
-NodeDescription = "(Unimplemented) 20% of Physical Damage Converted to Fire Damage
-(Unimplemented) 20% of Physical Damage Converted to Cold Damage
-(Unimplemented) 20% of Physical Damage Converted to Lightning Damage"
+NodeDescription = "25% of Physical Damage Converted to Fire Damage
+25% of Physical Damage Converted to Cold Damage
+25% of Physical Damage Converted to Lightning Damage"
 IsLocked = true
 NodesPrevious = [NodePath("../TopStart")]
 

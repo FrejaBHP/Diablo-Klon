@@ -842,6 +842,31 @@ public partial class Player : Actor {
 			CastSpeedMod.SMore *= MultiplicativeStatDictionary[EStatName.MoreSkillSpeedShield];
 		}
 
+		DamageMods.Conversion.Physical.ToFire.Values[1] = StatDictionary[EStatName.PhysToFireConversion];
+		DamageMods.Conversion.Physical.ToCold.Values[1] = StatDictionary[EStatName.PhysToColdConversion];
+		DamageMods.Conversion.Physical.ToLightning.Values[1] = StatDictionary[EStatName.PhysToLightningConversion];
+		DamageMods.Conversion.Physical.ToChaos.Values[1] = StatDictionary[EStatName.PhysToChaosConversion];
+
+		DamageMods.Conversion.Fire.ToPhysical.Values[1] = StatDictionary[EStatName.FireToPhysConversion];
+		DamageMods.Conversion.Fire.ToCold.Values[1] = StatDictionary[EStatName.FireToColdConversion];
+		DamageMods.Conversion.Fire.ToLightning.Values[1] = StatDictionary[EStatName.FireToLightningConversion];
+		DamageMods.Conversion.Fire.ToChaos.Values[1] = StatDictionary[EStatName.FireToChaosConversion];
+
+		DamageMods.Conversion.Cold.ToPhysical.Values[1] = StatDictionary[EStatName.ColdToPhysConversion];
+		DamageMods.Conversion.Cold.ToFire.Values[1] = StatDictionary[EStatName.ColdToFireConversion];
+		DamageMods.Conversion.Cold.ToLightning.Values[1] = StatDictionary[EStatName.ColdToLightningConversion];
+		DamageMods.Conversion.Cold.ToChaos.Values[1] = StatDictionary[EStatName.ColdToChaosConversion];
+
+		DamageMods.Conversion.Lightning.ToPhysical.Values[1] = StatDictionary[EStatName.LightningToPhysConversion];
+		DamageMods.Conversion.Lightning.ToFire.Values[1] = StatDictionary[EStatName.LightningToFireConversion];
+		DamageMods.Conversion.Lightning.ToCold.Values[1] = StatDictionary[EStatName.LightningToColdConversion];
+		DamageMods.Conversion.Lightning.ToChaos.Values[1] = StatDictionary[EStatName.LightningToChaosConversion];
+
+		DamageMods.Conversion.Chaos.ToPhysical.Values[1] = StatDictionary[EStatName.ChaosToPhysConversion];
+		DamageMods.Conversion.Chaos.ToFire.Values[1] = StatDictionary[EStatName.ChaosToFireConversion];
+		DamageMods.Conversion.Chaos.ToCold.Values[1] = StatDictionary[EStatName.ChaosToColdConversion];
+		DamageMods.Conversion.Chaos.ToLightning.Values[1] = StatDictionary[EStatName.ChaosToLightningConversion];
+
 		DamageMods.ExtraPhysical = StatDictionary[EStatName.DamageAsExtraPhysical];
 		DamageMods.ExtraFire = StatDictionary[EStatName.DamageAsExtraFire];
 		DamageMods.ExtraCold = StatDictionary[EStatName.DamageAsExtraCold];
