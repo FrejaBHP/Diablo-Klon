@@ -487,6 +487,26 @@ public partial class Actor : CharacterBody3D {
         { EStatName.PhysToLightningConversion, 		0 },
         { EStatName.PhysToChaosConversion, 			0 },
 
+        { EStatName.FireToPhysConversion, 			0 },
+        { EStatName.FireToColdConversion, 			0 },
+        { EStatName.FireToLightningConversion, 		0 },
+        { EStatName.FireToChaosConversion, 			0 },
+
+        { EStatName.ColdToPhysConversion, 			0 },
+        { EStatName.ColdToFireConversion, 			0 },
+        { EStatName.ColdToLightningConversion, 		0 },
+        { EStatName.ColdToChaosConversion, 			0 },
+
+        { EStatName.LightningToPhysConversion, 		0 },
+        { EStatName.LightningToFireConversion, 		0 },
+        { EStatName.LightningToColdConversion, 		0 },
+        { EStatName.LightningToChaosConversion, 	0 },
+
+        { EStatName.ChaosToPhysConversion, 			0 },
+        { EStatName.ChaosToFireConversion, 			0 },
+        { EStatName.ChaosToColdConversion, 		    0 },
+        { EStatName.ChaosToLightningConversion, 	0 },
+
         { EStatName.DamageTakenFromMana, 			0 },
         { EStatName.IncreasedProjectileSpeed, 		0 },
 	};
