@@ -57,6 +57,13 @@ public partial class Run : Node3D {
 	public bool Act2Completed { get; private set; } = false;
 	public bool Act3Completed { get; private set; } = false;
 
+	private DropDataTable currentDropDataTable;
+	public int LootLuck { get; set; }
+	public double ItemQuantityBonus { get; set; }
+	public double ItemRarityBonus { get; set; }
+	public double GoldBonus { get; set; }
+	public double ExperienceBonus { get; set; }
+
     public override void _Ready() {
         Instance = this;
 
@@ -68,6 +75,7 @@ public partial class Run : Node3D {
 		//GameSettings.Instance.ApplyPlayerSettings();
 
 		StartNewRun();
+		currentDropDataTable = ItemDropData.GetCurrentDropDataTable(AreaLevel);
     }
 
 	public void StartNewRun() {
@@ -182,6 +190,7 @@ public partial class Run : Node3D {
 		}
 
 		ProgressAct(CurrentMap.MapType == EMapType.Objective || CurrentMap.MapType == EMapType.Miniboss);
+		currentDropDataTable = ItemDropData.GetCurrentDropDataTable(AreaLevel);
 	}
 
 	public void SpawnPortal() {
@@ -318,6 +327,46 @@ public partial class Run : Node3D {
 	public void AwardExperience(double baseAmount) {
 		PlayerActor.GainExperience(baseAmount);
 	}
+
+	/// <summary>
+	/// Takes an Enemy instance, and rolls for how many items should be dropped from its death
+	/// </summary>
+	/// <param name="enemy"></param>
+	/// <returns></returns>
+	public bool RollForEnemyItems(EnemyBase enemy) {
+        double chance = 0;
+        bool haveItemsDropped = false;
+
+        switch (enemy.EnemyRarity) {
+            case EEnemyRarity.Normal:
+                chance = currentDropDataTable.NormalItemChance;
+                break;
+            
+            case EEnemyRarity.Magic:
+                chance = currentDropDataTable.MagicItemChance;
+                break;
+
+            case EEnemyRarity.Rare:
+                chance = currentDropDataTable.RareItemChance;
+                break;
+            
+            default:
+                break;
+        }
+
+        while (chance >= 1) {
+            chance -= 1;
+            CurrentMap.ObjectiveController?.AddItemToRewards(ItemGeneration.GenerateItemFromCategory(EItemCategory.None));
+            haveItemsDropped = true;
+        }
+
+        if (chance != 0 && chance >= Utilities.RNG.NextDouble()) {
+            CurrentMap.ObjectiveController?.AddItemToRewards(ItemGeneration.GenerateItemFromCategory(EItemCategory.None));
+            haveItemsDropped = true;
+        }
+        
+        return haveItemsDropped;
+    }
 
 	#endregion
 }

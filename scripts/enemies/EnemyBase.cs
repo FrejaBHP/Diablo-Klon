@@ -22,11 +22,8 @@ public partial class EnemyBase : Actor {
     protected int goldBounty = 0;
     protected int experienceBounty = 0;
 
-    protected EEnemyRarity enemyRarity = EEnemyRarity.Normal;
-    protected const double normalDropChance = 0.1;
-    protected const double magicDropChance = 0.33;
-    protected const double rareDropChance = 1;
-    protected bool canDropItems = true;
+    public EEnemyRarity EnemyRarity { get; protected set; } = EEnemyRarity.Normal;
+    public bool CanDropItems { get; protected set; } = true;
 
     public override void _Ready() {
         base._Ready();
@@ -44,7 +41,7 @@ public partial class EnemyBase : Actor {
         navAgent.VelocityComputed += OnVelocityComputed;
         AddFloatingBars(resBarAnchor);
 
-        if (enemyRarity != EEnemyRarity.Boss) {
+        if (EnemyRarity != EEnemyRarity.Boss) {
             ApplyAreaLevelScaling();
         }
 
@@ -66,7 +63,7 @@ public partial class EnemyBase : Actor {
 	}
 
     public void SetRarity(EEnemyRarity rarity) {
-        enemyRarity = rarity;
+        EnemyRarity = rarity;
     }
 
     public void ApplyAreaLevelScaling() {
@@ -234,41 +231,6 @@ public partial class EnemyBase : Actor {
         damageLabel.Start();
     }
 
-    protected bool RollToDropItems() {
-        double chance = 0;
-        bool haveItemsDropped = false;
-
-        switch (enemyRarity) {
-            case EEnemyRarity.Normal:
-                chance = normalDropChance;
-                break;
-            
-            case EEnemyRarity.Magic:
-                chance = magicDropChance;
-                break;
-
-            case EEnemyRarity.Rare:
-                chance = rareDropChance;
-                break;
-            
-            default:
-                break;
-        }
-
-        while (chance >= 1) {
-            chance -= 1;
-            Run.Instance.CurrentMap.ObjectiveController?.AddItemToRewards(ItemGeneration.GenerateItemFromCategory(EItemCategory.None));
-            haveItemsDropped = true;
-        }
-
-        if (chance != 0 && chance >= Utilities.RNG.NextDouble()) {
-            Run.Instance.CurrentMap.ObjectiveController?.AddItemToRewards(ItemGeneration.GenerateItemFromCategory(EItemCategory.None));
-            haveItemsDropped = true;
-        }
-        
-        return haveItemsDropped;
-    }
-
     public override void OnNoLifeLeft() {
         ActorState = EActorState.Dying;
         Die();
@@ -285,8 +247,8 @@ public partial class EnemyBase : Actor {
             Run.Instance.AwardExperience(experienceBounty);
         }
 
-        if (canDropItems) {
-            RollToDropItems();
+        if (CanDropItems) {
+            Run.Instance.RollForEnemyItems(this);
         }
         
         EmitSignal(SignalName.EnemyDied);
