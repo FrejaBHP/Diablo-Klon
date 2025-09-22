@@ -8,7 +8,7 @@ public class DropDataTable() {
     public double RareItemChance { get; set; } = 1;
     public double UniqueItemChance { get; set; } = 5;
 
-    // Chances of Enemies of a rarity succeeding on dropping an item of rarity
+    // Chances of Enemies of a rarity succeeding on rolling an item of rarity
     public double NormalUniqueChance { get; set; } = 0.0005;
     public double NormalRareChance { get; set; }
     public double NormalMagicChance { get; set; }

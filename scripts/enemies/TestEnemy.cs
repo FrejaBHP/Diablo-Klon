@@ -7,8 +7,8 @@ public partial class TestEnemy : EnemyBase {
 		BasicStats.BaseMana = 0;
 		RefreshLifeMana();
 
-        goldBounty = 3;
-        experienceBounty = 1;
+        GoldBounty.SBase = 3;
+        ExperienceBounty.SBase = 1;
     }
 
     public override void _Ready() {
@@ -29,7 +29,6 @@ public partial class TestEnemy : EnemyBase {
         Skill skillThrust = new SThrust();
         skillThrust.Level = 0;
         AddSkill(skillThrust);
-        //CalculateStats();
     }
 
     public override void _PhysicsProcess(double delta) {

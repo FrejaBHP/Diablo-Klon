@@ -57,12 +57,13 @@ public partial class Run : Node3D {
 	public bool Act2Completed { get; private set; } = false;
 	public bool Act3Completed { get; private set; } = false;
 
+	private EnemyRarityTable currentEnemyRarityTable;
 	private DropDataTable currentDropDataTable;
 	public int LootLuck { get; set; }
-	public double ItemQuantityBonus { get; set; }
-	public double ItemRarityBonus { get; set; }
-	public double GoldBonus { get; set; }
-	public double ExperienceBonus { get; set; }
+	public double ItemQuantityBonus { get; set; } = 0;
+	public double ItemRarityBonus { get; set; } = 0;
+	public double GoldBonus { get; set; } = 0;
+	public double ExperienceBonus { get; set; } = 0;
 
     public override void _Ready() {
         Instance = this;
@@ -75,6 +76,7 @@ public partial class Run : Node3D {
 		//GameSettings.Instance.ApplyPlayerSettings();
 
 		StartNewRun();
+		currentEnemyRarityTable = EnemyRarityData.GetCurrentRarityTable(AreaLevel);
 		currentDropDataTable = ItemDropData.GetCurrentDropDataTable(AreaLevel);
     }
 
@@ -190,6 +192,7 @@ public partial class Run : Node3D {
 		}
 
 		ProgressAct(CurrentMap.MapType == EMapType.Objective || CurrentMap.MapType == EMapType.Miniboss);
+		currentEnemyRarityTable = EnemyRarityData.GetCurrentRarityTable(AreaLevel);
 		currentDropDataTable = ItemDropData.GetCurrentDropDataTable(AreaLevel);
 	}
 
@@ -335,38 +338,102 @@ public partial class Run : Node3D {
 	/// <returns></returns>
 	public bool RollForEnemyItems(EnemyBase enemy) {
         double chance = 0;
+		double uniqueChance = 0;
+		double rareChance = 0;
+		double magicChance = 0;
+		int itemLevel = AreaLevel;
         bool haveItemsDropped = false;
 
         switch (enemy.EnemyRarity) {
             case EEnemyRarity.Normal:
                 chance = currentDropDataTable.NormalItemChance;
+				uniqueChance = currentDropDataTable.NormalUniqueChance;
+				rareChance = currentDropDataTable.NormalRareChance;
+				magicChance = currentDropDataTable.NormalMagicChance;
                 break;
             
             case EEnemyRarity.Magic:
                 chance = currentDropDataTable.MagicItemChance;
+				uniqueChance = currentDropDataTable.MagicUniqueChance;
+				rareChance = currentDropDataTable.MagicRareChance;
+				magicChance = currentDropDataTable.MagicMagicChance;
+				itemLevel += 1;
                 break;
 
             case EEnemyRarity.Rare:
                 chance = currentDropDataTable.RareItemChance;
+				uniqueChance = currentDropDataTable.RareUniqueChance;
+				rareChance = currentDropDataTable.RareRareChance;
+				magicChance = currentDropDataTable.RareMagicChance;
+				itemLevel += 2;
+                break;
+			
+			case EEnemyRarity.Unique:
+                chance = currentDropDataTable.UniqueItemChance;
+				uniqueChance = currentDropDataTable.UniqueUniqueChance;
+				rareChance = currentDropDataTable.UniqueRareChance;
+				magicChance = currentDropDataTable.UniqueMagicChance;
+				itemLevel += 2;
                 break;
             
             default:
                 break;
         }
 
+		chance *= 			1 + ItemQuantityBonus;
+		uniqueChance *= 	1 + ItemRarityBonus;
+		rareChance *= 		1 + ItemRarityBonus;
+		magicChance *= 		1 + ItemRarityBonus;
+
         while (chance >= 1) {
             chance -= 1;
-            CurrentMap.ObjectiveController?.AddItemToRewards(ItemGeneration.GenerateItemFromCategory(EItemCategory.None));
+			CreateItem(uniqueChance, rareChance, magicChance, itemLevel);
             haveItemsDropped = true;
         }
 
         if (chance != 0 && chance >= Utilities.RNG.NextDouble()) {
-            CurrentMap.ObjectiveController?.AddItemToRewards(ItemGeneration.GenerateItemFromCategory(EItemCategory.None));
+			CreateItem(uniqueChance, rareChance, magicChance, itemLevel);
             haveItemsDropped = true;
         }
         
         return haveItemsDropped;
     }
+
+	protected void CreateItem(double uniqueChance, double rareChance, double magicChance, int itemLevel) {
+		//GD.Print($"Unique: {uniqueChance}, Rare: {rareChance}, Magic: {magicChance}");
+		if (RollForRarity(uniqueChance)) {
+			CurrentMap.ObjectiveController?.AddItemToRewards(ItemGeneration.GenerateItemFromCategory(EItemCategory.None, itemLevel, EItemRarity.Unique));
+		}
+		else if (RollForRarity(rareChance)) {
+			CurrentMap.ObjectiveController?.AddItemToRewards(ItemGeneration.GenerateItemFromCategory(EItemCategory.None, itemLevel, EItemRarity.Rare));
+		}
+		else if (RollForRarity(magicChance)) {
+			CurrentMap.ObjectiveController?.AddItemToRewards(ItemGeneration.GenerateItemFromCategory(EItemCategory.None, itemLevel, EItemRarity.Magic));
+		}
+		else {
+			CurrentMap.ObjectiveController?.AddItemToRewards(ItemGeneration.GenerateItemFromCategory(EItemCategory.None, itemLevel, EItemRarity.Common));
+		}
+	}
+
+	public EEnemyRarity RollForEnemyRarity() {
+		if (RollForRarity(currentEnemyRarityTable.RareChance)) {
+			return EEnemyRarity.Rare;
+		}
+		else if (RollForRarity(currentEnemyRarityTable.MagicChance)) {
+			return EEnemyRarity.Magic;
+		}
+		else {
+			return EEnemyRarity.Normal;
+		}
+	}
+
+	protected static bool RollForRarity(double chance) {
+		double roll = Utilities.RNG.NextDouble();
+		if (roll <= chance) {
+			return true;
+		}
+		return false;
+	}
 
 	#endregion
 }

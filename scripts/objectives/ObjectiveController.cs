@@ -44,6 +44,19 @@ public abstract partial class ObjectiveController : Node {
         ObjectiveHUD.SetItemReward(ItemRewardPool.Count);
     }
 
+    public void SpawnEnemy(EEnemyType type) {
+        EEnemyRarity randomRarity = Run.Instance.RollForEnemyRarity();
+        Vector3 spawnPos = NavigationServer3D.MapGetRandomPoint(LinkedMap.GetWorld3D().NavigationMap, 1, false);
+        spawnPos.Y -= 0.5f;
+        
+        EnemyBase enemy = EnemyDatabase.EnemyDictionary[type].Scene.Instantiate<EnemyBase>();
+        LinkedMap.EnemiesNode.AddChild(enemy);
+        enemy.GlobalPosition = spawnPos;
+        enemy.SetRarity(randomRarity);
+
+        enemy.EnemyDied += OnEnemyKilled;
+    }
+
     public void DestroyController() {
         QueueFree();
     }

@@ -11,8 +11,8 @@ public partial class TestEnemy3 : EnemyBase {
 
         CastSpeedMod.SMore = 0.8;
 
-        goldBounty = 3;
-        experienceBounty = 1;
+        GoldBounty.SBase = 3;
+        ExperienceBounty.SBase = 1;
     }
 
     public override void _Ready() {

@@ -1,19 +1,23 @@
-[gd_scene load_steps=7 format=3 uid="uid://ctw6e5lim1ji"]
+[gd_scene load_steps=8 format=3 uid="uid://ctw6e5lim1ji"]
 
 [ext_resource type="Script" uid="uid://bggk1hqv04l1" path="res://scripts/enemies/EnemyBase.cs" id="1_fr7lv"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tlqyv"]
 
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_fr7lv"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fr7lv"]
+resource_local_to_scene = true
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dqkch"]
+resource_local_to_scene = true
+next_pass = SubResource("ShaderMaterial_fr7lv")
 albedo_color = Color(1, 0.196078, 0.196078, 1)
 metallic_specular = 0.0
 emission_enabled = true
 emission = Color(1, 1, 1, 1)
 emission_energy_multiplier = 0.03
 backlight = Color(0.647059, 0.611765, 1, 1)
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_fr7lv"]
-material = SubResource("StandardMaterial3D_dqkch")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qlg0r"]
 
@@ -34,6 +38,7 @@ shape = SubResource("CapsuleShape3D_tlqyv")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 layers = 4
 mesh = SubResource("CapsuleMesh_fr7lv")
+surface_material_override/0 = SubResource("StandardMaterial3D_dqkch")
 
 [node name="DirectionMesh" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0.6)

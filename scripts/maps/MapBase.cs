@@ -110,19 +110,4 @@ public partial class MapBase : Node3D {
         EmitSignal(SignalName.MapObjectiveFinished);
         ObjectiveController?.DestroyController();
     }
-
-    public void SpawnEnemy(EEnemyType type) {
-        Vector3 spawnPos = NavigationServer3D.MapGetRandomPoint(GetWorld3D().NavigationMap, 1, false);
-        spawnPos.Y -= 0.5f;
-        
-        EnemyBase enemy = EnemyDatabase.EnemyDictionary[type].Scene.Instantiate<EnemyBase>();
-        EnemiesNode.AddChild(enemy);
-        enemy.GlobalPosition = spawnPos;
-
-        enemy.EnemyDied += OnEnemyKilled;
-    }
-
-	public void OnEnemyKilled() {
-        ObjectiveController?.OnEnemyKilled();
-	}
 }

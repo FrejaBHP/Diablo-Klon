@@ -111,7 +111,7 @@ public partial class LowerHUD : Control {
     }
 
     public void UpdateExperienceBar(double newExp) {
-        experienceLabel.Text = $"{newExp} / {experienceBarMaxValue}";
+        experienceLabel.Text = $"{newExp:F0} / {experienceBarMaxValue}";
         experienceBar.Value = (newExp / experienceBarMaxValue) * 100;
     }
 

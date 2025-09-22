@@ -216,13 +216,13 @@ public partial class SurvivalController : ObjectiveController {
         if (isGroup) {
             EEnemyType type = ActiveSpawnPool.GetRandomItem();
             for (int i = 0; i < amount; i++) {
-                LinkedMap.SpawnEnemy(type);
+                SpawnEnemy(type);
             }
         }
         else {
             for (int i = 0; i < amount; i++) {
                 EEnemyType type = ActiveSpawnPool.GetRandomItem();
-                LinkedMap.SpawnEnemy(type);
+                SpawnEnemy(type);
             }
         }
 

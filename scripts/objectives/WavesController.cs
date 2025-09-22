@@ -106,7 +106,7 @@ public partial class WavesController : ObjectiveController {
 	public void SpawnWave() {
 		foreach (EnemyWaveComponent comp in ActiveWave.WaveComponents) {
 			for (int i = 0; i < comp.EnemyCount; i++) {
-				LinkedMap.SpawnEnemy(comp.EnemyType);
+				SpawnEnemy(comp.EnemyType);
 
                 EnemiesToSpawn--;
                 RemainingEnemies++;

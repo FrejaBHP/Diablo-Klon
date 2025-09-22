@@ -74,3 +74,86 @@ public static class EnemyDatabase {
         TestWave
     ]);
 }
+
+
+
+
+public class EnemyRarityTable {
+    public double RareChance { get; set; }
+    public double MagicChance { get; set; }
+}
+
+public static class EnemyRarityData {
+    #region Tables
+    private static EnemyRarityTable actOneFirstTable = new() {
+        RareChance = 0.04,
+        MagicChance = 0.1
+    };
+
+    private static EnemyRarityTable actOneSecondTable = new() {
+        RareChance = 0.044,
+        MagicChance = 0.11
+    };
+
+    private static EnemyRarityTable actTwoFirstTable = new() {
+        RareChance = 0.048,
+        MagicChance = 0.12
+    };
+
+    private static EnemyRarityTable actTwoSecondTable = new() {
+        RareChance = 0.052,
+        MagicChance = 0.13
+    };
+
+    private static EnemyRarityTable actThreeFirstTable = new() {
+        RareChance = 0.056,
+        MagicChance = 0.14
+    };
+
+    private static EnemyRarityTable actThreeSecondTable = new() {
+        RareChance = 0.06,
+        MagicChance = 0.15
+    };
+    #endregion
+
+    public static EnemyRarityTable GetCurrentRarityTable(int level) {
+        EnemyRarityTable table;
+
+        if (level >= 25) {
+            table = actThreeSecondTable;
+        }
+        else if (level >= 20) {
+            table = actThreeFirstTable;
+        }
+        else if (level >= 15) {
+            table = actTwoSecondTable;
+        }
+        else if (level >= 10) {
+            table = actTwoFirstTable;
+        }
+        else if (level >= 5) {
+            table = actOneSecondTable;
+        }
+        else {
+            table = actOneFirstTable;
+        }
+
+        return table;
+    }
+
+    public static readonly Dictionary<EStatName, double> MagicStatDictionary = new() {
+        { EStatName.MoreMaxLife, 2.5 },
+        { EStatName.MoreAttackSpeed, 1.15 },
+        { EStatName.MoreCastSpeed, 1.15 },
+        { EStatName.MoreAllDamage, 1.1 },
+        { EStatName.IncreasedMovementSpeed, 0.1 },
+    };
+
+    public static readonly Dictionary<EStatName, double> RareStatDictionary = new() {
+        { EStatName.MoreMaxLife, 4.5 },
+        { EStatName.MoreAttackSpeed, 1.25 },
+        { EStatName.MoreCastSpeed, 1.25 },
+        { EStatName.MoreAllDamage, 1.15 },
+        { EStatName.IncreasedMovementSpeed, 0.15 },
+    };
+}
