@@ -11,9 +11,7 @@ public partial class TestEnemy2 : EnemyBase {
         ExperienceBounty.SBase = 1;
     }
 
-    public override void _Ready() {
-        base._Ready();
-
+    public override void Setup() {
         // PS dmg% = 130%
         UnarmedMinDamage = 5;
         UnarmedMaxDamage = 8;
@@ -22,20 +20,23 @@ public partial class TestEnemy2 : EnemyBase {
         MainHandStats.PhysMinDamage = UnarmedMinDamage;
         MainHandStats.PhysMaxDamage = UnarmedMaxDamage;
 
-        MovementSpeed.SBase = 3.5;
+        MovementSpeed.SBase = 3.25;
         Evasion.SBase = 0; // 67
 
         Skill skillPiercingShot = new SPiercingShot();
         skillPiercingShot.Level = 0;
         AddSkill(skillPiercingShot);
+
+        AIControllerBasicMelee aic = new AIControllerBasicMelee();
+        aic.AttachToEnemy(this);
+        aic.PreferredMinDistanceFromTarget = 3f;
     }
 
     public override void _PhysicsProcess(double delta) {
         base._PhysicsProcess(delta);
-        BasicChaseAIProcess(delta);
     }
 
-    protected override void UsePrimarySkill() {
+    public override void UsePrimarySkill() {
         currentlyUsedSkill = Skills[0];
 
         ActorState = EActorState.UsingSkill;

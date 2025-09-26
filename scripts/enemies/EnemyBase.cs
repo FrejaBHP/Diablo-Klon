@@ -11,17 +11,17 @@ public partial class EnemyBase : Actor {
     [Signal]
     public delegate void EnemyDiedEventHandler();
 
+    public AIController CAIController { get; protected set; }
+
     protected Marker3D resBarAnchor;
     protected NavigationAgent3D navAgent;
     protected Timer navUpdateTimer;
     protected Timer skillTimer;
     protected Timer skillUsePointTimer;
-    protected RayCast3D lineOfSightCast;
+    public RayCast3D LineOfSightCast { get; protected set; }
+    public RayCast3D WallCast { get; protected set; }
 
     protected Label3D debugLabel;
-
-    protected Actor actorTarget;
-    protected bool isChasingTarget = false;
 
     protected Skill currentlyUsedSkill = null;
 
@@ -41,12 +41,19 @@ public partial class EnemyBase : Actor {
 
     public override void _Ready() {
         base._Ready();
+        PreSetup();
+        Setup();
+        PostSetup();
+    }
+
+    public virtual void PreSetup() {
         IsIgnoringWeaponRestrictions = true;
         IsIgnoringManaCosts = true;
 
         skillTimer = GetNode<Timer>("SkillTimer");
         skillUsePointTimer = GetNode<Timer>("SkillUsePointTimer");
-        lineOfSightCast = GetNode<RayCast3D>("LoSCast");
+        WallCast = GetNode<RayCast3D>("WallCast");
+        LineOfSightCast = GetNode<RayCast3D>("LoSCast");
         debugLabel = GetNode<Label3D>("Label3D");
         navUpdateTimer = GetNode<Timer>("NavigationUpdateTimer");
         resBarAnchor = GetNode<Marker3D>("ResBarAnchor");
@@ -62,7 +69,13 @@ public partial class EnemyBase : Actor {
         }
 
         AddToGroup("Enemy");
+    }
 
+    public virtual void Setup() {
+
+    }
+
+    public virtual void PostSetup() {
         CallDeferred(MethodName.NavSetup);
     }
 
@@ -70,6 +83,32 @@ public partial class EnemyBase : Actor {
         ApplyRegen(delta);
         TickEffects(delta);
         TakeDamageOverTime();
+        CAIController?.Update(delta);
+        ApplyMovement(delta);
+
+        if (CAIController != null) {
+            debugLabel.Text = CAIController.CurrentAIState.GetStateName();
+        }
+    }
+
+    public void OnNavigationUpdateTimeout() {
+        if (CAIController.IsAttackingTarget && CAIController.ActorTarget != null) {
+            if (CAIController.IsChasingTarget) {
+                SetNavigationTarget(CAIController.ActorTarget.GlobalPosition);
+            }
+        }
+    }
+
+    public void ApplyMovement(double delta) {
+        DoGravity(delta);
+        MoveAndSlide();
+    }
+
+    public void ResetPlaneVelocity() {
+        Vector3 velocity = Velocity;
+        velocity.X = 0f;
+        velocity.Z = 0f;
+        Velocity = velocity;
     }
 
     public void AddSkill(Skill skill) {
@@ -349,24 +388,17 @@ public partial class EnemyBase : Actor {
         navAgent.SetNavigationMap(GetWorld3D().NavigationMap);
         
         // Temp
-        SetActorTarget(Run.Instance.PlayerActor);
-    }
-
-    public void OnNavigationUpdateTimeout() {
-        if (isChasingTarget && actorTarget != null) {
-            SetNavigationTarget(actorTarget.GlobalPosition);
-        }
+        CAIController.SetTarget(Run.Instance.PlayerActor);
+        //GD.Print("AIC Target set");
     }
 
     public void SetActorTarget(Actor target) {
-        actorTarget = target;
-        SetNavigationTarget(target.GlobalPosition);
-        isChasingTarget = true;
         navUpdateTimer.Start();
     }
 
     public void SetNavigationTarget(Vector3 targetPosition) {
         navAgent.TargetPosition = targetPosition;
+        ProcessNavigation();
     }
 
     public void ProcessNavigation() {
@@ -381,7 +413,6 @@ public partial class EnemyBase : Actor {
 
         Vector3 nextPathPosition = navAgent.GetNextPathPosition();
         Vector3 newVelocity = GlobalPosition.DirectionTo(nextPathPosition with { Y = GlobalPosition.Y }) * (float)MovementSpeed.STotal;
-        FacePathPosition();
 
         if (navAgent.AvoidanceEnabled) {
             navAgent.Velocity = newVelocity;
@@ -395,17 +426,93 @@ public partial class EnemyBase : Actor {
         Velocity = newVelocity;
     }
 
-    protected void FacePathPosition() {
-        if (isChasingTarget && actorTarget != null) {
+    public bool CanSeeTarget() {
+        LineOfSightCast.TargetPosition = CAIController.ActorTarget.GlobalPosition - GlobalPosition;
+        LineOfSightCast.ForceRaycastUpdate();
+
+        if (LineOfSightCast.IsColliding()) {
+            Node3D collider = (Node3D)LineOfSightCast.GetCollider();
+
+            if (collider.IsClass("StaticBody3D")) {
+                return false;
+            }
+        }
+        else {
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool IsFacingTarget() {
+        Vector3 facing = GlobalTransform.Basis.Z;
+        Vector3 target = GlobalPosition.DirectionTo(CAIController.ActorTarget.GlobalPosition);
+        float dot = facing.Dot(target);
+
+        if (dot >= 0.99f) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public Vector3 GetDirectionAwayFromTarget() {
+        Vector3 target = GlobalPosition.DirectionTo(CAIController.ActorTarget.GlobalPosition);
+        target.X = -target.X;
+        target.Z = -target.Z;
+
+        return target;
+    }
+
+    public bool IsThereAWall(Vector3 direction, float distance) {
+        WallCast.TargetPosition = direction * 10;
+        WallCast.ForceRaycastUpdate();
+
+        if (WallCast.IsColliding()) {
+            Vector3 collisionPoint = WallCast.GetCollisionPoint();
+
+            if (GlobalPosition.DistanceTo(collisionPoint) > distance) {
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void TurnTowardsPathPosition() {
+        if (CAIController.IsAttackingTarget && CAIController.ActorTarget != null) {
             Vector3 direction = GlobalPosition.DirectionTo(navAgent.GetNextPathPosition() with { Y = GlobalPosition.Y });
 
             if (direction != Vector3.Zero) {
                 Basis lookTarget = Basis.LookingAt(direction, null, true);
-                Basis slerpTarget = Basis.Slerp(lookTarget, 0.08f);
+                Basis slerpTarget = Basis.Slerp(lookTarget, 0.1f);
                 Basis = slerpTarget.Orthonormalized();
             }
         }
     }
+
+    public void TurnTowardsTargetPosition() {
+        if (CAIController.IsAttackingTarget && CAIController.ActorTarget != null) {
+            Vector3 direction = GlobalPosition.DirectionTo(CAIController.ActorTarget.GlobalPosition with { Y = GlobalPosition.Y });
+
+            if (direction != Vector3.Zero) {
+                Basis lookTarget = Basis.LookingAt(direction, null, true);
+                Basis slerpTarget = Basis.Slerp(lookTarget, 0.1f);
+                Basis = slerpTarget.Orthonormalized();
+            }
+        }
+    }
+    #endregion
+
+    // ===== AI =====
+    #region AI
+    public void SetAIController(AIController controller) {
+        CAIController = controller;
+    }
+
     #endregion
 
     protected override void UpdateLifeDisplay(double newCurrentLife) {
@@ -433,27 +540,32 @@ public partial class EnemyBase : Actor {
 
     // ===== Combat =====
     #region Combat
-    protected virtual void UsePrimarySkill() {
+    public virtual void UsePrimarySkill() {
 
     }
 
-    protected void BasicChaseAIProcess(double delta) {
-        if (isChasingTarget && actorTarget != null) {
-            if (GlobalPosition.DistanceTo(actorTarget.GlobalPosition) < Skills[0].CastRange - 0.25f && ActorState != EActorState.UsingSkill) {
-                lineOfSightCast.ForceRaycastUpdate();
+    public float GetDistanceToTarget() {
+        return GlobalPosition.DistanceTo(CAIController.ActorTarget.GlobalPosition);
+    }
 
-                if (lineOfSightCast.IsColliding()) {
-                    UsePrimarySkill();
-                }
-            }
+    public float GetSkillUseRange(int skillIndex) {
+        if (skillIndex >= 0 && Skills.Count > skillIndex) {
+            return Skills[skillIndex].CastRange - 0.25f;
         }
-
-        if (ActorState == EActorState.Actionable) {
-            ProcessNavigation();
+        else {
+            GD.PrintErr("Trying to get skill indexed outside of array bounds");
+            return 0f;
         }
+    }
 
-        DoGravity(delta);
-        MoveAndSlide();
+    public bool IsWithinSkillRangeOfTarget(int skillIndex) {
+        if (skillIndex >= 0 && Skills.Count > skillIndex) {
+            return GetDistanceToTarget() < GetSkillUseRange(skillIndex);
+        }
+        else {
+            GD.PrintErr("Trying to get skill indexed outside of array bounds");
+            return false;
+        }
     }
 
     public override void OnHitTaken(double damage, bool wasBlocked, bool isCritical, bool createDamageText) {

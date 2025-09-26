@@ -11,9 +11,7 @@ public partial class TestEnemy : EnemyBase {
         ExperienceBounty.SBase = 1;
     }
 
-    public override void _Ready() {
-        base._Ready();
-
+    public override void Setup() {
         // Thrust dmg% = 160%
         UnarmedMinDamage = 4;
         UnarmedMaxDamage = 7;
@@ -22,21 +20,25 @@ public partial class TestEnemy : EnemyBase {
         MainHandStats.PhysMinDamage = UnarmedMinDamage;
         MainHandStats.PhysMaxDamage = UnarmedMaxDamage;
 
-        MovementSpeed.SBase = 4;
+        MovementSpeed.SBase = 3.5;
         Evasion.SBase = 0; // 67
         BlockChance.SBase = 0.20;
 
         Skill skillThrust = new SThrust();
         skillThrust.Level = 0;
         AddSkill(skillThrust);
+        
+        AIControllerBasicMelee aic = new AIControllerBasicMelee();
+        aic.AttachToEnemy(this);
     }
+
 
     public override void _PhysicsProcess(double delta) {
         base._PhysicsProcess(delta);
-        BasicChaseAIProcess(delta);
+        //BasicChaseAIProcess(delta);
     }
 
-    protected override void UsePrimarySkill() {
+    public override void UsePrimarySkill() {
         currentlyUsedSkill = Skills[0];
 
         ActorState = EActorState.UsingSkill;

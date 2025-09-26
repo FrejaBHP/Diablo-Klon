@@ -15,24 +15,25 @@ public partial class TestEnemy3 : EnemyBase {
         ExperienceBounty.SBase = 1;
     }
 
-    public override void _Ready() {
-        base._Ready();
-
-        MovementSpeed.SBase = 3.25;
+    public override void Setup() {
+        MovementSpeed.SBase = 3;
         Evasion.SBase = 0; // 67
 
         Skill skillSoulrend = new SSoulrend();
         skillSoulrend.Level = 0;
         baseCastTime = ((ISpell)skillSoulrend).BaseCastTime;
         AddSkill(skillSoulrend);
+
+        AIControllerBasicMelee aic = new AIControllerBasicMelee();
+        aic.AttachToEnemy(this);
+        aic.PreferredMinDistanceFromTarget = 3f;
     }
 
     public override void _PhysicsProcess(double delta) {
         base._PhysicsProcess(delta);
-        BasicChaseAIProcess(delta);
     }
 
-    protected override void UsePrimarySkill() {
+    public override void UsePrimarySkill() {
         currentlyUsedSkill = Skills[0];
 
         ActorState = EActorState.UsingSkill;
